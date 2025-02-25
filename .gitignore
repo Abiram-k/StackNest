@@ -1,0 +1,24 @@
+# Ignore node_modules in both frontend and backend
+Frontend/node_modules/
+Backend/node_modules/
+
+# Ignore .env files in both frontend and backend
+Frontend/.env
+Backend/.env
+
+# Ignore dist folders in both frontend and backend
+Frontend/dist/
+Backend/dist/
+
+# Ignore logs in both frontend and backend
+Frontend/logs/
+Backend/logs/
+
+# Ignore .idea in both frontend and backend
+Frontend/.idea/ 
+Backend/.idea/
+
+# Ignore .vscode in both frontend and backend
+Frontend/.vscode/
+Backend/.vscode/
+
