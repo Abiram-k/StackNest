@@ -4,6 +4,9 @@ import { IUser } from "../interfaces/IUser";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
+    googleId: {
+      type: String,
+    },
     name: {
       type: String,
       required: true,
@@ -19,8 +22,6 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     password: {
       type: String,
-      required: true,
-      validate: (value: string) => value.length >= 6,
     },
     role: {
       type: String,

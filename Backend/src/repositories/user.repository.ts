@@ -1,7 +1,18 @@
+import { IOTP } from "../interfaces/IOtp";
+import Otp from "../models/otp.model";
 import User from "../models/user.model";
 
 class UserRepository {
-    
+ 
+  async findUserByGoogleId(googleId: string) {
+    try {
+      return await User.findOne({
+        googleId,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
   async findOneByEmail(email: string) {
     try {
       return await User.findOne({

@@ -18,3 +18,10 @@ connectDB()
   .catch((error) => {
     console.log("Failed to connect with Data base", error);
   });
+
+  const exitHandler = (signal: string) => {
+    console.log(`⚠️ Received ${signal}. Closing app...`);
+    process.exit(0);
+  };
+  
+  process.on("SIGINT", () => exitHandler("SIGINT"));
