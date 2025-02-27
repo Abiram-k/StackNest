@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
 import { IUser } from "../interfaces/IUser";
+import { v4 as uuidv4 } from "uuid";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -22,6 +23,7 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     password: {
       type: String,
+      default: null,
     },
     role: {
       type: String,
@@ -32,7 +34,8 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       unique: true,
       default: function () {
-        return this.email ? this.email.split("@")[0] : "";
+        const uniqueId = uuidv4().substring(0, 6);
+        return this.name ? `${this.name.toLowerCase()}_${uniqueId}` : "";
       },
     },
     avatar: {
@@ -88,6 +91,12 @@ const userSchema = new mongoose.Schema<IUser>(
         },
       ],
       default: [],
+    },
+    resetToken: { type: String, default: undefined },
+    resetTokenExpiration: { type: Date, default: undefined },
+    failedLoginAttempts: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

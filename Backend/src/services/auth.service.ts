@@ -19,6 +19,8 @@ import { hashPassword } from "../utils/hashPassword";
 import otpRepository from "../repositories/otp.repository";
 import { generateOTP } from "../utils/generateOTP";
 import nodemailer from "nodemailer";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { sendPasswordResetEmail } from "../utils/email";
 config();
 
 const transporter = nodemailer.createTransport({
@@ -28,16 +30,18 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
 class AuthService {
   async authenticateGoogleUser(token: string) {
     const payload = await googleUserResponse(token);
 
     if (!payload) throw new Error("Invalid google token");
-
+    const isExistUser = await userRepository.findOneByEmail(payload.email);
+    if (isExistUser) {
+      await userRepository.updateUserWithGoogleId(payload.email, payload.id);
+    }
     const user = await userRepository.findUserByGoogleId(payload.id);
 
-    if (!user) {
+    if (!user && !isExistUser) {
       const newUser = await userRepository.create({
         googleId: payload.id,
         email: payload.email,
@@ -47,8 +51,8 @@ class AuthService {
       });
 
       const token = generateJWT({
-        email: newUser.email,
-        id: newUser._id as Types.ObjectId,
+        // email: newUser.email,
+        userId: newUser._id as Types.ObjectId,
         role: newUser.role,
       });
 
@@ -59,28 +63,110 @@ class AuthService {
   async login({ email, password, captchaToken }: LoginUser) {
     {
       try {
+        const user = await userRepository.findOneByEmail(email);
+        if (!user) throw new Error("User not found");
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+          const user = await userRepository.updateFailedAttempts(email);
+
+          if (user) {
+            const { failedLoginAttempts = 0 } = user;
+
+            if (failedLoginAttempts >= 3 && failedLoginAttempts % 3 == 0) {
+              throw new Error("Captcha required");
+            }
+            throw new Error("Invalid password");
+          }
+        }
+
         if (captchaToken) {
           const captchaResponse = await verifyCaptcha(captchaToken);
           if (!captchaResponse) throw new Error("Captcha verification failed");
         }
 
-        const user = await userRepository.findOneByEmail(email);
+        await userRepository.updateLastLogin(email);
+        await userRepository.resetFailedAttempts(email);
 
-        if (!user) throw new Error("User not found");
+        const payload = { userId: user._id as Types.ObjectId, role: user.role };
+        const accessToken = generateAccessToken(payload);
+        const refreshToken = generateRefreshToken(payload);
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordValid) throw new Error("Invalid password");
-        const token = generateJWT({
-          email: user.email,
-          id: user._id as Types.ObjectId,
-          role: user.role,
-        });
-        return { token };
+        return { accessToken, refreshToken };
       } catch (error) {
         throw error;
       }
     }
+  }
+
+  async generateAccessToken(refreshToken: string) {
+    try {
+      const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET as string;
+      const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET as string;
+
+      if (!REFRESH_TOKEN_SECRET || !ACCESS_TOKEN_SECRET) {
+        throw new Error(
+          "Missing JWT ( while generating ... ) secrets in environment variables"
+        );
+      }
+
+      const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET as string);
+      if (!decoded) throw new Error("Invalid refresh token");
+      if (typeof decoded === "object" && "userId" in decoded) {
+        const newAccessToken = jwt.sign(
+          { userId: decoded.userId },
+          ACCESS_TOKEN_SECRET,
+          { expiresIn: "15m" }
+        );
+
+        return newAccessToken;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    try {
+      const isExistUser = await userRepository.findOneByEmail(email);
+      if (!isExistUser) throw new Error("Email not registered");
+
+      const JWT_SECRET = process.env.JWT_SECRET;
+      if (!JWT_SECRET) {
+        throw new Error("JWT_SECRET, not in environment variables.");
+      }
+      const resetToken = jwt.sign({ userId: isExistUser._id }, JWT_SECRET, {
+        expiresIn: "15m",
+      });
+      await userRepository.setPassResetToken({ email, resetToken });
+
+      await sendPasswordResetEmail(isExistUser.email, resetToken);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async resetPassword(token: string, password: string): Promise<void> {
+    const hashedPassword = await hashPassword(password);
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined in environment variables.");
+    }
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    const data = {
+      id: decoded?.userId,
+      resetToken: token,
+    };
+    console.log(token, password);
+    console.log(data);
+    const user = await userRepository.findUserByRestToken(data);
+
+    if (!user) throw new Error("Invalid or token expired");
+
+    await userRepository.updatePassword({
+      email: user?.email,
+      password: hashedPassword,
+    });
   }
 
   async initiateRegistration(email: string): Promise<void> {
@@ -109,10 +195,15 @@ class AuthService {
     }
   }
   async register({ email, password, name, otp }: typeRegisterUserWithOtp) {
-    if (!otp) throw new Error("Otp not get");
-    console.log(otp);
+    const validOtp = await otpRepository.findOtpByMail(email);
+
+    console.log("orgOTP: ", validOtp?.otp, validOtp?.expiresAt, "otp: ", otp);
+    if (!validOtp || validOtp?.otp != otp || validOtp.expiresAt < new Date())
+      throw new Error("Otp expired, Try again!");
+
+    await otpRepository.deleteByEmail(email);
     try {
-      const hashedPassword = await hashPassword(password); // Implement hash function
+      const hashedPassword = await hashPassword(password);
 
       const user = await userRepository.create({
         email,

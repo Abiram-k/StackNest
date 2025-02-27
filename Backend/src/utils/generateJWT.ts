@@ -4,42 +4,41 @@ import { config } from "dotenv";
 config();
 
 interface JwtPayload {
-  id: Types.ObjectId;
-  email: string;
+  userId: Types.ObjectId;
   role: string;
 }
 
-export const generateJWT = ({ id, email, role }: JwtPayload) => {
+export const generateJWT = (data: JwtPayload) => {
   if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET is not defined in the environment variables");
   }
   const token = jwt.sign(
-    { id, email, role },
+    {data },
     process.env.JWT_SECRET as string,
     { expiresIn: "7d" }
   );
   return token;
 };
 
-export const generateAccessToken = ({ id, email, role }: JwtPayload) => {
-  if (!process.env.JWT_SECRET) {
-    throw new Error("JWT_SECRET is not defined in the environment variables");
+export const generateAccessToken = (data: JwtPayload) => {
+  if (!process.env.ACCESS_TOKEN_SECRET) {
+    throw new Error("ACCESS_TOKEN_SECRET is not defined in the environment variables");
   }
   const token = jwt.sign(
-    { id, email, role },
-    process.env.JWT_SECRET as string,
+    { data },
+    process.env.ACCESS_TOKEN_SECRET as string,
     { expiresIn: "15m" }
   );
   return token;
 };
 
-export const generateRefreshToken = ({ id, email, role }: JwtPayload) => {
-  if (!process.env.JWT_SECRET) {
-    throw new Error("JWT_SECRET is not defined in the environment variables");
+export const generateRefreshToken = (data: JwtPayload) => {
+  if (!process.env.REFRESH_TOKEN_SECRET) {
+    throw new Error("REFRESH_TOKEN_SECRET is not defined in the environment variables");
   }
   const token = jwt.sign(
-    { id, email, role },
-    process.env.JWT_SECRET as string,
+    { data },
+    process.env.REFRESH_TOKEN_SECRET as string,
     { expiresIn: "7d" }
   );
   return token;

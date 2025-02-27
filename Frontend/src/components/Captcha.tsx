@@ -13,6 +13,11 @@ export const Captcha = forwardRef<ReCAPTCHA, CaptchaProps>(
         ref={ref}
         onChange={onVerify}
         {...props}
+        size="normal"
+        badge="inline" 
+        data-testid="captcha"
+        hl="en"
+        isolated 
       />
     );
   }

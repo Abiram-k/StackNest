@@ -1,68 +1,58 @@
 import { GalleryVerticalEnd } from "lucide-react";
-import { useLoginForm } from "@/hooks/useLoginForm";
+import { useLoginForm } from "@/hooks/useForm";
 import { useMutation } from "@tanstack/react-query";
 import { loginSchema } from "@/validation/schema";
-import { LoginUser } from "../../../../types/user";
-import { useEffect, useRef } from "react";
+import { LoginUser } from "../../../../../types/user";
+import { useRef, useState } from "react";
 import { login } from "@/api/user/authapi";
-import { Form } from "@/components/form";
+import { Form } from "@/components/Form";
 import { Link } from "react-router-dom";
-import images from "../../assets/login-img.jpg";
+import images from "../../../assets/login-img.jpg";
 import toast from "react-hot-toast";
-import logo from "../../assets/stacknest-logo.png";
+import logo from "../../../assets/stacknest-logo.png";
 import ReCAPTCHA from "react-google-recaptcha";
-import { Captcha } from "@/components/Captcha";
+import { useAxiosWithAuth } from "@/api/api";
 
-export const LoginPage = () => {
-  const captchaRef = useRef<ReCAPTCHA>(null);
-  const captchaTokenRef = useRef<string | null>(null);
 
+export const AdminLoginPage = () => {
+  
+  const axiosPrivate = useAxiosWithAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useLoginForm({
     schema: loginSchema,
-    defaultValues: { email: "", password: "", captchaToken: "" },
+    defaultValues: { email: "", password: "" },
   });
 
   const { mutate, isPending, reset } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      console.log(data);
+      if (data && data.accessToken) axiosPrivate.updateToken(data.accessToken);
       toast.success(data?.message || "Login successful");
+      reset();
     },
     onError: (error) => {
       console.error("Login failed:", error);
       toast.error(error.message || "Something went wrong!");
+      reset();
     },
   });
 
   const onSubmit = (data: LoginUser) => {
-    mutate(data);
+   
+    mutate(data );
   };
 
-  useEffect(() => {
-    return () => {
-      reset();
-    };
-  }, []);
-
   return (
-    <div className="grid min-h-svh lg:grid-cols-2">
-      <Captcha
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY as string}
-              ref={captchaRef}
-              onVerify={(token: string | null) => {
-                captchaTokenRef.current = token || "";
-              }}
-            />
+    <div className="grid min-h-svh lg:grid-cols-2 ">
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <Link to="/" className="flex items-center gap-2 font-medium">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <GalleryVerticalEnd className="size-4" />
-              <img src={logo} alt="stack nest logo icon" />
+              <img src={logo} alt="stack nest logo icon" loading="lazy" />
             </div>
             Stack Nest
           </Link>
@@ -70,14 +60,34 @@ export const LoginPage = () => {
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
             <Form
+              inputs={[
+                {
+                  id: "email",
+                  label: "Email",
+                  type: "email",
+                  name: "email",
+                  placeholder: "me@example.com",
+                },
+                {
+                  id: "password",
+                  label: "Password",
+                  type: "password",
+                  name: "password",
+                  placeholder: "********",
+                },
+              ]}
+              isRegister={false}
               onSubmit={handleSubmit(onSubmit)}
-              primaryTitle="Login to your account"
+              buttonText="Sing in"
+              isOAuth={false} 
+              primaryTitle="Welcome Admin ! "
               secondaryTitle="Enter your email below to login to your account"
               register={register}
               errors={errors}
+              linkText=""
+              linkRedirect=""
               isPending={isPending}
             />
-            
           </div>
         </div>
       </div>
@@ -86,6 +96,7 @@ export const LoginPage = () => {
           src={images}
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          loading="lazy"
         />
       </div>
     </div>
