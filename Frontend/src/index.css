@@ -45,13 +45,13 @@
 }
 @theme {
 
-  --color-primary-500: #5B52E5;
+  --color-primary-500: #7848F4;
   --color-border-500:#E0E0E0;
-  --color-card-bg: #FAFAFA;
+  --color-card-bg-500: #FAFAFA;
 
-  --color-primary-600: #6C63FF;
+  --color-primary-600: #5A32B8;
   --color-border-600: #333333;
-  --color-card-600: #1A1A1A;
+  --color-card-bg-600: #1A1A1A;
 
 }
 
@@ -135,8 +135,11 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: "Roboto", sans-serif;
+
   }
 }
+
 @keyframes caret-blink {
   0%, 70%, 100% {
     opacity: 1;

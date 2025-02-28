@@ -6,10 +6,11 @@ import { axiosInstancePublic } from "../api";
 
 const login = async (data: LoginUser): Promise<LoginResponse> => {
   try {
-    const response = await axiosInstancePublic.post(`/auth/login`, data);
+    const response = await axiosInstancePublic.post(`/users/auth/login`, data);
     return response.data;
   } catch (error: any) {
-    console.log(error);
+    console.log("Error occured")
+    console.error(error);
     if (error.isAxiosError)
       throw new Error(error.response?.data.message || "Something went wrong");
 
@@ -20,7 +21,7 @@ const login = async (data: LoginUser): Promise<LoginResponse> => {
 const initiateRegistration = async (email: string): Promise<void> => {
   try {
     const response = await axiosInstancePublic.post(
-      `/auth/initiate-registration`,
+      `/users/auth/initiate-registration`,
       { email }
     );
     return response.data;
@@ -34,7 +35,7 @@ const initiateRegistration = async (email: string): Promise<void> => {
 
 const createUser = async (data: typeRegisterUserWithOtp): Promise<void> => {
   try {
-    const response = await axiosInstancePublic.post(`/auth/register`, data);
+    const response = await axiosInstancePublic.post(`/users/auth/register`, data);
     return response.data;
   } catch (error: any) {
     if (error.isAxiosError)
@@ -47,7 +48,7 @@ const createUser = async (data: typeRegisterUserWithOtp): Promise<void> => {
 const forgotPassword = async (data: { email: string }): Promise<void> => {
   try {
     const response = await axiosInstancePublic.post(
-      `/auth/forgot-password`,
+      `/users/auth/forgot-password`,
       data
     );
     return response.data;
@@ -65,7 +66,7 @@ const resetPassword = async (data: {
 }): Promise<void> => {
   try {
     const response = await axiosInstancePublic.post(
-      `/auth/reset-password`,
+      `/users/auth/reset-password`,
       data
     );
     return response.data;

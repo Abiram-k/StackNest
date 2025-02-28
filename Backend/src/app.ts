@@ -2,9 +2,10 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import publicRoutes from "../src/routes/public.routes";
+import adminRoutes from "./routes/admin.routes";
 import userRoutes from "../src/routes/user.routes";
 import cookieParser from "cookie-parser";
+import errorHandler from "./middlewares/errorHandling";
 
 
 const app = express();
@@ -23,17 +24,18 @@ app.get("/", (req: Request, res: Response) => {
   }); 
 });
 
-app.use("/auth", publicRoutes);
 app.use("/users",userRoutes);
+app.use("/admin",adminRoutes);
 
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-  console.log("From Centeralized Error Handler: ",error.message);
-  console.error(error.stack);
-  res.status(500).json({
-    success: false,
-    message: error.message || "Internal Server Error",
-  }); 
-});
+app.use(errorHandler);
+// app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+//   console.log("From Centeralized Error Handler: ",error.message);
+//   console.error(error.stack);
+//   res.status(500).json({
+//     success: false,
+//     message: error.message || "Internal Server Error",
+//   }); 
+// });
 
 
 

@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 import { errorText } from "./ui/errorText";
 import GoogleAuth from "./authBotton/googleLoginbtn";
 import GithubAuth from "./authBotton/githubAuth";
-import OtpModal from "./OtpModal";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 type inputTypes = {
   id: string;
@@ -46,6 +47,7 @@ export const Form = ({
   isPending,
   ...props
 }: FormProps) => {
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <form
       className={cn("flex flex-col gap-6", className)}
@@ -65,7 +67,7 @@ export const Form = ({
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
                 <Link
-                  to="/user/auth/verify-email"
+                  to="/auth/verify-email"
                   className="ml-auto text-sm underline-offset-4 hover:underline mb-1"
                 >
                   Forgot your password?
@@ -77,16 +79,47 @@ export const Form = ({
               </Label>
             )}
 
-            <Input
+            {/* <Input
               id={input.name}
               type={input.type}
               placeholder={input.placeholder}
               {...register(input.name)}
-            />
+            /> */}
+            <div className="relative">
+              <Input
+                id={input.name}
+                type={
+                  input.type == "password"
+                    ? showPassword
+                      ? "text"
+                      : "password"
+                    : input.type
+                }
+                value={input.type}
+                placeholder={input.placeholder}
+                {...register(input.name)}
+              />
+              {input.type === "password" && (
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              )}
+            </div>
             {errorText(errors, input.name)}
           </div>
         ))}
-
+        {errors.root && (
+          <p className="text-red-500 text-sm">{errors.root.message}</p>
+        )}
         {/* {isRegister ? (
           <OtpModal onSubmit={onSubmit} />
         ) : ( */}

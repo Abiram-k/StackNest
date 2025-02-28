@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-let memoryToken = "";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -10,82 +9,81 @@ export const axiosInstancePublic = axios.create({
 });
 
 export const useAxiosWithAuth = () => {
-  const accessTokenRef = useRef<string>(memoryToken);
   const navigate = useNavigate();
+  const accessToken = useRef<string>("");
+  const isRefreshing = useRef(false);
+  const refreshSubscribers = useRef<((token: string) => void)[]>([]);
 
   const updateToken = (newToken: string) => {
-    memoryToken = newToken;
-    accessTokenRef.current = newToken;
+    accessToken.current = newToken;
   };
 
-  let isRefreshing = false;
-  let refreshSubscribers: ((token: string) => void)[] = [];
+  const refreshAccessToken = async (): Promise<string> => {
+    if (isRefreshing.current) {
+      return new Promise((resolve) => {
+        refreshSubscribers.current.push((token) => resolve(token));
+      });
+    }
+
+    isRefreshing.current = true;
+
+    try {
+      const { data } = await axios.get(
+        `${BASE_URL}/auth/refresh-token?role=user`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      const newToken = data.accessToken;
+      updateToken(newToken);
+
+      refreshSubscribers.current.forEach((cb) => cb(newToken));
+      refreshSubscribers.current = [];
+
+      return newToken;
+    } catch (error) {
+      accessToken.current = "";
+      navigate("/auth/login");
+      throw error;
+    } finally {
+      isRefreshing.current = false;
+    }
+  };
 
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
     withCredentials: true,
   });
 
-  const refreshAccessToken = async () => {
-    if (isRefreshing) {
-      return new Promise((resolve) => refreshSubscribers.push(resolve));
+  axiosInstance.interceptors.request.use((config) => {
+    if (accessToken.current) {
+      config.headers.Authorization = `Bearer ${accessToken.current}`;
     }
-
-    isRefreshing = true;
-    try {
-      const response = await axios.get(`${BASE_URL}/users/auth/refresh-token`, {
-        withCredentials: true,
-      });
-      const newAccessToken = response.data.accessToken;
-      console.log(newAccessToken, "from intercepter");
-      accessTokenRef.current = newAccessToken;
-
-      refreshSubscribers.forEach((callback) => callback(newAccessToken));
-      refreshSubscribers = [];
-
-      return newAccessToken;
-    } catch (error) {
-      console.error("Error refreshing access token:", error);
-      navigate("/user/auth/login");
-      return null;
-    } finally {
-      isRefreshing = false;
-    }
-  };
-
-  axiosInstance.interceptors.request.use(
-    (config) => {
-      if (accessTokenRef.current) {
-        config.headers.Authorization = `Bearer ${accessTokenRef.current}`;
-      }
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
+    return config;
+  });
 
   axiosInstance.interceptors.response.use(
     (response) => response,
-
     async (error) => {
       const originalRequest = error.config;
 
       if (error.response?.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
-        const newAccessToken = await refreshAccessToken();
-
-        if (newAccessToken) {
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-          return axiosInstance(originalRequest); // retrying again by generating new refresh token
+        try {
+          originalRequest._retry = true;
+          const newToken = await refreshAccessToken();
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return axiosInstance(originalRequest);
+        } catch (refreshError) {
+          return Promise.reject(refreshError);
         }
       }
-
       return Promise.reject(error);
     }
   );
 
   useEffect(() => {
-    console.log(memoryToken)
-    if (memoryToken) {
+    if (accessToken.current) {
       refreshAccessToken();
     }
   }, []);

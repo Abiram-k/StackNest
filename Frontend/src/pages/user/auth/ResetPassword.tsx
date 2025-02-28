@@ -7,7 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { verifyPasswordSchemaType } from "../../../../../types/user";
 
-export const ResetPassword = () => {
+ const ResetPassword = () => {
   const {
     register,
     handleSubmit,
@@ -24,7 +24,7 @@ export const ResetPassword = () => {
     mutationFn: resetPassword,
     onSuccess: () => {
       toast.success("Password updated ");
-      navigate("/user/auth/login");
+      navigate("/auth/login");
       reset();
     },
     onError: (error:any) => {
@@ -67,7 +67,7 @@ export const ResetPassword = () => {
             secondaryTitle="Update to your password and login "
             register={register}
             linkText="Remember your password?"
-            linkRedirect="/user/auth/login"
+            linkRedirect="/auth/login"
             errors={errors}
             isPending={isPending}
           />
@@ -76,3 +76,5 @@ export const ResetPassword = () => {
     </div>
   );
 };
+
+export default ResetPassword;

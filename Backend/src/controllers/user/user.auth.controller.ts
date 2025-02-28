@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import AuthService from "../services/auth.service";
-import authService from "../services/auth.service";
-import {LoginResponse} from '../../../types/index'
+import AuthService from "../../services/user/user.auth.service";
+import authService from "../../services/user/user.auth.service";
+import { LoginResponse } from "../../../../types/index";
 
 class AuthController {
   async googleAuth(req: Request, res: Response, next: NextFunction) {
@@ -10,22 +10,32 @@ class AuthController {
 
       if (!token) throw new Error("Google token is required");
 
-      const resToken = await AuthService.authenticateGoogleUser(token);
-      res.json({
-        success: true,
-        message: "User logged in successfully",
-        token: resToken,
+      const authResponse = await AuthService.authenticateGoogleUser(token);
+      if (!authResponse) {
+        throw new Error("Authentication failed: No response from service");
+      }
+      const { accessToken, refreshToken } = authResponse;
+
+      res.cookie("userRefreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
       });
+
+      const data: LoginResponse = {
+        success: true,
+        accessToken,
+        message: "Login successfull",
+      };
+      res.json(data);
     } catch (error: any) {
-      next(error);  
+      next(error);
     }
   }
 
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password, captchaToken } = req.body;
-
-      // if (!captchaToken) throw new Error("Captcha is required");
 
       if (!email || !password)
         throw new Error("Email and password are required");
@@ -36,17 +46,19 @@ class AuthController {
         captchaToken,
       });
 
-      res.cookie("refreshToken", refreshToken, { // sting refresh token in cookies of backend
+      res.cookie("refreshToken", refreshToken, {
+        // sting refresh token in cookies of backend
         httpOnly: true,
         secure: true,
         sameSite: "strict",
       });
 
-      const data:LoginResponse = { success: true,
+      const data: LoginResponse = {
+        success: true,
         accessToken,
-        message: "Login successfull",}
+        message: "Login successfull",
+      };
       res.json(data);
-
     } catch (error: any) {
       next(error);
     }
@@ -58,6 +70,8 @@ class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
+      const role = req.query.role;
+      console.log(role, "ROLE");
       const refreshToken = req.cookies.refreshToken;
       if (!refreshToken) {
         res.status(401).json({ message: "Unauthorized" });

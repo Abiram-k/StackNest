@@ -15,6 +15,7 @@ const GithubAuth = () => {
       variant="outline"
       className="w-full cursor-pointer"
       onClick={loginWithGitHub}
+      disabled={true}
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path

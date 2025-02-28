@@ -29,6 +29,7 @@ export const generateAccessToken = (data: JwtPayload) => {
     process.env.ACCESS_TOKEN_SECRET as string,
     { expiresIn: "15m" }
   );
+  
   return token;
 };
 

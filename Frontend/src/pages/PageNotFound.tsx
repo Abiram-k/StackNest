@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export const PageNotFound = () => {
+ const PageNotFound = () => {
     
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center px-4">
@@ -39,3 +39,5 @@ export const PageNotFound = () => {
     </div>
   );
 };
+
+export default PageNotFound;

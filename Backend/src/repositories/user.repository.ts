@@ -145,7 +145,21 @@ class UserRepository {
 
   async resetFailedAttempts(email: string) {
     try {
-      return await User.findOneAndUpdate({ email }, { failedLoginAttempts: 0 });
+      return await User.findOneAndUpdate({ email }, { failedLoginAttempts: 0,isBlocked:false,blockedUntil:null });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async blockUserAfterFailedAttempt (email:string) {
+    try {
+      return await User.findOneAndUpdate(
+        { email },
+       {isBlocked:true,
+        blockedUntil:new Date(Date.now() + 30 * 60 * 1000)
+       },
+        { new: true }
+      );
     } catch (error) {
       throw error;
     }

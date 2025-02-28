@@ -98,6 +98,8 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Number,
       default: 0,
     },
+    blockedUntil: { type: Date, default: null },
+
   },
   { timestamps: true }
 );

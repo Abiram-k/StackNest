@@ -14,6 +14,7 @@ export interface IUser extends Document {
   lastLogin: Date;
   friends: string[];
   isBlocked: boolean;
+  blockedUntil:Date;
   isVerified: boolean;
   premiumHistory: {
     status: "active" | "expired" | "pending";

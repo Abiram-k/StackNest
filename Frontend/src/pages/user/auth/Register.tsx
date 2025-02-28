@@ -14,7 +14,7 @@ import { useState } from "react";
 import OtpModal from "@/components/OtpModal";
 import { Spinner } from "@/components/ui/spinner";
 
-export const RegisterPage = () => {
+ const RegisterPage = () => {
   const [userData, setUserData] = useState<RegisterUser>({
     name: "",
     email: "",
@@ -61,7 +61,7 @@ export const RegisterPage = () => {
       console.log(data);
       toast.success("Otp Verified");
       setIsModalOpen(false);
-      navigate("/user/auth/login");
+      navigate("/auth/login");
     },
     onError: (error) => {
       console.error("Registration failed:", error);
@@ -147,7 +147,7 @@ export const RegisterPage = () => {
                   secondaryTitle="Enter your details below to register your account"
                   register={register}
                   linkText="Already have an account?"
-                  linkRedirect="/user/auth/login"
+                  linkRedirect="/auth/login"
                   errors={errors}
                   isPending={initiatingPending}
                 /> 
@@ -166,3 +166,6 @@ export const RegisterPage = () => {
     </>
   );
 };
+
+
+export default RegisterPage;

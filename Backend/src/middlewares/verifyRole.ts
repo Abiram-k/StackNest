@@ -7,7 +7,7 @@ interface AuthRequest extends Request {
   };
 }
 
-export const verifyRole = (
+export const verifyAdmin = (
   req: AuthRequest,
   res: Response,
   next: NextFunction
@@ -17,3 +17,4 @@ export const verifyRole = (
   }
   next();
 };
+

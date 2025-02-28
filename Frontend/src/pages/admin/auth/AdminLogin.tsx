@@ -3,23 +3,21 @@ import { useLoginForm } from "@/hooks/useForm";
 import { useMutation } from "@tanstack/react-query";
 import { loginSchema } from "@/validation/schema";
 import { LoginUser } from "../../../../../types/user";
-import { useRef, useState } from "react";
-import { login } from "@/api/user/authapi";
+import { login } from "@/api/admin/authapi";
 import { Form } from "@/components/Form";
 import { Link } from "react-router-dom";
 import images from "../../../assets/login-img.jpg";
 import toast from "react-hot-toast";
 import logo from "../../../assets/stacknest-logo.png";
-import ReCAPTCHA from "react-google-recaptcha";
 import { useAxiosWithAuth } from "@/api/api";
 
-
-export const AdminLoginPage = () => {
-  
+ const AdminLoginPage = () => {
   const axiosPrivate = useAxiosWithAuth();
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useLoginForm({
     schema: loginSchema,
@@ -33,16 +31,24 @@ export const AdminLoginPage = () => {
       toast.success(data?.message || "Login successful");
       reset();
     },
-    onError: (error) => {
+    onError: (error: { statusCode: number; message: string }) => {
       console.error("Login failed:", error);
+
+      if (error.statusCode == 403) {
+        setError("root", {
+          type: "manual",
+          message: error.message || "Something went wrong!",
+        });
+        return;
+      }
+
       toast.error(error.message || "Something went wrong!");
       reset();
     },
   });
 
   const onSubmit = (data: LoginUser) => {
-   
-    mutate(data );
+    mutate(data);
   };
 
   return (
@@ -79,7 +85,7 @@ export const AdminLoginPage = () => {
               isRegister={false}
               onSubmit={handleSubmit(onSubmit)}
               buttonText="Sing in"
-              isOAuth={false} 
+              isOAuth={false}
               primaryTitle="Welcome Admin ! "
               secondaryTitle="Enter your email below to login to your account"
               register={register}
@@ -102,3 +108,6 @@ export const AdminLoginPage = () => {
     </div>
   );
 };
+
+
+export default AdminLoginPage;

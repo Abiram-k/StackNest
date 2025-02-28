@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { forgotPassword } from "@/api/user/authapi";
 import toast from "react-hot-toast";
 
-export const ForgotPassword = () => {
+ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -23,7 +23,7 @@ export const ForgotPassword = () => {
 
   const { mutate, reset, isPending } = useMutation({
     mutationFn: forgotPassword,
-    onSuccess: (data) => {
+    onSuccess: () => {
       setIsSuccess(true);
       reset();
     },
@@ -75,3 +75,5 @@ export const ForgotPassword = () => {
     </div>
   );
 };
+
+export default ForgotPassword;
