@@ -22,6 +22,7 @@ import {
   sendPasswordResetEmail,
   sendPasswordUpdated,
 } from "../../utils/email";
+import { IUser } from "../../types/IUser";
 
 config();
 
@@ -31,7 +32,7 @@ class AuthService {
       const payload = await googleUserResponse(token);
 
       if (!payload) throw createHttpError(404, "Invalid google token");
-      const isExistUser = await userRepository.findOneByEmail(payload.email);
+      const isExistUser = await userRepository.findByEmail(payload.email);
       if (isExistUser) {
         await userRepository.updateUserWithGoogleId(payload.email, payload.id);
       }
@@ -63,8 +64,8 @@ class AuthService {
   async login({ email, password, captchaToken }: LoginUser) {
     {
       try {
-        console.log(email, password, captchaToken )
-        const user = await userRepository.findOneByEmail(email);
+        // console.log(email, password, captchaToken )
+        const user = await userRepository.findByEmail(email);
         if (!user || user.role == "admin")
           throw createHttpError(401, "Email not found");
 
@@ -111,6 +112,7 @@ class AuthService {
         await userRepository.resetFailedAttempts(email);
 
         const payload = { userId: user._id as Types.ObjectId, role: user.role };
+
         const accessToken = generateAccessToken(payload);
         const refreshToken = generateRefreshToken(payload);
 
@@ -133,17 +135,15 @@ class AuthService {
       }
 
       const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET as string);
+      console.log(decoded);
       if (!decoded) throw new Error("Invalid refresh token");
       if (typeof decoded === "object" && "userId" in decoded) {
-
-        const newAccessToken = jwt.sign(
-          { userId: decoded.userId, role: decoded.role },
-          ACCESS_TOKEN_SECRET,
-          { expiresIn: "15m" }
-        );
-
+        const newAccessToken = generateAccessToken({
+          userId: decoded.userId,
+          role: decoded.role,
+        });
+        // console.log("NEW TOKEN: ",newAccessToken)
         return newAccessToken;
-
       }
     } catch (error) {
       throw error;
@@ -151,7 +151,7 @@ class AuthService {
   }
   async forgotPassword(email: string): Promise<void> {
     try {
-      const isExistUser = await userRepository.findOneByEmail(email);
+      const isExistUser = await userRepository.findByEmail(email);
       if (!isExistUser) throw createHttpError(404, "Email not registered");
 
       const JWT_SECRET = process.env.JWT_SECRET;
@@ -196,7 +196,7 @@ class AuthService {
 
   async initiateRegistration(email: string): Promise<void> {
     try {
-      const isExist = await userRepository.findOneByEmail(email);
+      const isExist = await userRepository.findByEmail(email);
       if (isExist) throw createHttpError(400, "User already exisit");
 
       const otp = generateOTP();
@@ -234,6 +234,14 @@ class AuthService {
     } catch (error: any) {
       throw error;
     }
+  }
+
+  async getUserDetails(id: string) {
+    const user = await userRepository.findById(id);
+
+    if (!user) throw new Error("User not found");
+
+    return user;
   }
 }
 

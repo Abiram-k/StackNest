@@ -1,10 +1,13 @@
 import { typeUserResetToken } from "../../../types/user";
-import { IOTP } from "../interfaces/IOtp";
+import { IOTP } from "../types/IOtp";
 import Otp from "../models/otp.model";
 import User from "../models/user.model";
+import { IUserRepository } from "../interfaces/user.repository.interface";
+import { IUser } from "../types/IUser";
 
-class UserRepository {
-  async findUserByGoogleId(googleId: string) {
+class UserRepository implements IUserRepository {
+  
+  async findUserByGoogleId(googleId: string):Promise<IUser|null> {
     try {
       return await User.findOne({
         googleId,
@@ -13,7 +16,7 @@ class UserRepository {
       throw error;
     }
   }
-  async updateUserWithGoogleId(email: string, googleId: string) {
+  async updateUserWithGoogleId(email: string, googleId: string):Promise<boolean> {
     try {
       await User.findOneAndUpdate(
         { email },
@@ -30,7 +33,7 @@ class UserRepository {
       throw new Error("Failed to set reset token");
     }
   }
-  async findOneByEmail(email: string) {
+  async findByEmail(email: string): Promise<IUser | null> {
     try {
       return await User.findOne({
         email,
@@ -39,8 +42,15 @@ class UserRepository {
       throw error;
     }
   }
+  async findById(id: string) {
+    try {
+      return await User.findById(id).select("firstName userName country description gender");
+    } catch (error) {
+      throw error;
+    }
+  }
 
-  async create(userData: any) {
+  async create(userData: Partial<IUser>):Promise<IUser> {
     try {
       return await User.create(userData);
     } catch (error) {
@@ -65,7 +75,7 @@ class UserRepository {
   }: {
     email: string;
     resetToken: string;
-  }) {
+  }):Promise<boolean> {
     try {
       const updatedUser = await User.findOneAndUpdate(
         { email },
@@ -89,7 +99,7 @@ class UserRepository {
   }: {
     email: string;
     password: string;
-  }) {
+  }):Promise<boolean> {
     try {
       const updatedUser = await User.findOneAndUpdate(
         { email },
@@ -107,7 +117,7 @@ class UserRepository {
       throw new Error("Failed to update password");
     }
   }
-  async findUserByRestToken(data: typeUserResetToken) {
+  async findUserByRestToken(data: typeUserResetToken):Promise<IUser | null> {
     try {
       return User.findOne({
         _id: data.id,
@@ -119,7 +129,7 @@ class UserRepository {
     }
   }
 
-  async getFailedAttempts(email: string) {
+  async getFailedAttempts(email: string):Promise<number | undefined> {
     try {
       const user = await User.findOne({ email });
       return user?.failedLoginAttempts;
@@ -127,7 +137,7 @@ class UserRepository {
       throw error;
     }
   }
-  async updateFailedAttempts(email: string) {
+  async updateFailedAttempts(email: string): Promise<IUser | null> {
     try {
       return await User.findOneAndUpdate(
         { email },
@@ -143,27 +153,35 @@ class UserRepository {
     }
   }
 
-  async resetFailedAttempts(email: string) {
-    try {
-      return await User.findOneAndUpdate({ email }, { failedLoginAttempts: 0,isBlocked:false,blockedUntil:null });
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async blockUserAfterFailedAttempt (email:string) {
+  async resetFailedAttempts(email: string): Promise<IUser | null> {
     try {
       return await User.findOneAndUpdate(
         { email },
-       {isBlocked:true,
-        blockedUntil:new Date(Date.now() + 30 * 60 * 1000)
-       },
-        { new: true }
+        { failedLoginAttempts: 0, isBlocked: false, blockedUntil: null }
       );
     } catch (error) {
       throw error;
     }
   }
+
+  async blockUserAfterFailedAttempt(email: string): Promise<IUser> {
+    try {
+      const user = await User.findOneAndUpdate(
+        { email },
+        {
+          isBlocked: true,
+          blockedUntil: new Date(Date.now() + 30 * 60 * 1000),
+        },
+        { new: true }
+      );
+      if (!user) throw new Error("User not found");
+      return user;
+
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }
 
 export default new UserRepository();

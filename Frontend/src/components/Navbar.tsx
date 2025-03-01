@@ -112,35 +112,35 @@ const Navbar = ({ isAuthintacted }: { isAuthintacted: boolean }) => {
         >
           <div className="flex flex-col items-center gap-4 py-4">
             <Link
-              to="/"
+              to="/user/home"
               className="text-md font-medium hover:text-primary transition-colors"
               onClick={() => setIsOpen(false)}
             >
               Home
             </Link>
             <Link
-              to="/about"
+              to="/user/about"
               className="text-md font-medium hover:text-primary transition-colors"
               onClick={() => setIsOpen(false)}
             >
               About
             </Link>
             <Link
-              to="/challenge"
+              to="/user/challenge"
               className="text-md font-medium hover:text-primary transition-colors"
               onClick={() => setIsOpen(false)}
             >
               Daily Challenge
             </Link>
             <Link
-              to="/highlights"
+              to="/user/highlights"
               className="text-md font-medium hover:text-primary transition-colors"
               onClick={() => setIsOpen(false)}
             >
               Highlights
             </Link>
             <Link
-              to="/contact"
+              to="/user/contact"
               className="text-md font-medium hover:text-primary transition-colors"
               onClick={() => setIsOpen(false)}
             >

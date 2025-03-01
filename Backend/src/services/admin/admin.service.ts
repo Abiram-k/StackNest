@@ -8,11 +8,11 @@ import {
   generateRefreshToken,
 } from "../../utils/generateJWT";
 
-class AuthService {
+class AdminService {
   async login({ email, password }: LoginUser) {
     {
       try {
-        const user = await userRepository.findOneByEmail(email);
+        const user = await userRepository.findByEmail(email);
 
         if (!user || user.role == "user") throw createHttpError(404, "Email not found");
 
@@ -61,4 +61,4 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+export default new AdminService();

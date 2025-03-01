@@ -18,18 +18,18 @@ const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div >
+    <div className="z-50" >
       <button
-        className={`fixed  top-30   z-50 left-4 p-2 rounded-lg shadow-sm ${
-          isOpen ? "left-50" : "left-4"
+        className={`fixed  top-30  left-4 p-2 rounded-lg z-50 shadow-sm ${
+          isOpen ? "sm:left-30 md:left-50" : "left-4"
         } transition-all duration-300`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        {isOpen ? <X className="h-6 w-6 cursor-pointer" /> : <Menu className="h-6 w-6 cursor-pointer" />}
       </button>
 
       {isOpen && (
-        <aside className="fixed left-0 top-20 w-64 h-[calc(100vh-5rem)] border-r bg-white">
+        <aside className="fixed left-0 top-20 w-64 h-[calc(100vh-5rem)] border-r bg-white ">
           <nav className="p-4 space-y-2 flex justify-center align-middle flex-col h-3/4">
             <NavLink
               to="/user/profile"

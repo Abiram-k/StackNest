@@ -2,7 +2,7 @@
 
 
 import { Request, Response, NextFunction } from "express";
-import authService from "../../services/admin/admin.auth.service";
+import authService from "../../services/admin/admin.service";
 import {LoginResponse} from '../../../../types/index'
 import createHttpError from 'http-errors';
 

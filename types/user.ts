@@ -21,3 +21,13 @@ export type verifyPasswordSchemaType = {
   password: string;
   confirmPassword:string;
 };
+
+
+export type verifyUserProfileSchemaType = {
+  firstName: string;
+  userName:string;
+  gender?:string;
+  country:string;
+  description?:string
+  mobileNumber:string
+}

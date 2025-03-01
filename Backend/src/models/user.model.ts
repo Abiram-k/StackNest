@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
-import { IUser } from "../interfaces/IUser";
+import { IUser } from "../types/IUser";
 import { v4 as uuidv4 } from "uuid";
 
 const userSchema = new mongoose.Schema<IUser>(

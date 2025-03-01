@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom"
 
 const ProfileLayout = () => {
   return (
-    <div>
+    <div className="flex md:gap-90">
       <SideBar/>
       <Outlet/>
     </div>

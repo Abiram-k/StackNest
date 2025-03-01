@@ -45,6 +45,7 @@ export const Form = ({
   linkRedirect,
   buttonText,
   isPending,
+  
   ...props
 }: FormProps) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -58,7 +59,7 @@ export const Form = ({
         <h1 className="text-2xl font-bold">{primaryTitle}</h1>
         <p className="text-balance text-sm text-muted-foreground">
           {secondaryTitle}
-        </p>
+        </p> 
       </div>
       <div className="grid gap-6">
         {inputs?.map((input, index) => (
@@ -95,7 +96,6 @@ export const Form = ({
                       : "password"
                     : input.type
                 }
-                value={input.type}
                 placeholder={input.placeholder}
                 {...register(input.name)}
               />

@@ -13,7 +13,7 @@ export const generateJWT = (data: JwtPayload) => {
     throw new Error("JWT_SECRET is not defined in the environment variables");
   }
   const token = jwt.sign(
-    {data },
+    data,
     process.env.JWT_SECRET as string,
     { expiresIn: "7d" }
   );
@@ -25,7 +25,7 @@ export const generateAccessToken = (data: JwtPayload) => {
     throw new Error("ACCESS_TOKEN_SECRET is not defined in the environment variables");
   }
   const token = jwt.sign(
-    { data },
+    data,
     process.env.ACCESS_TOKEN_SECRET as string,
     { expiresIn: "15m" }
   );
@@ -38,9 +38,9 @@ export const generateRefreshToken = (data: JwtPayload) => {
     throw new Error("REFRESH_TOKEN_SECRET is not defined in the environment variables");
   }
   const token = jwt.sign(
-    { data },
+    data,
     process.env.REFRESH_TOKEN_SECRET as string,
-    { expiresIn: "7d" }
+    { expiresIn: "7d" } 
   );
   return token;
 };

@@ -1,5 +1,6 @@
 import express from 'express';
-import authController from '../controllers/user/user.auth.controller';
+import authController from '../controllers/user/user.controller';
+import { verifyUser } from '../middlewares/verifyUser';
 
 const router = express.Router();
 
@@ -17,5 +18,9 @@ router.post('/auth/register',authController.register);
 //forgotPassword
 router.post("/auth/forgot-password",authController.forgotPassword);
 router.post("/auth/reset-password",authController.resetPassword);
+
+
+router.put("/details",verifyUser,authController.updateUserProfile);
+router.get("/details",verifyUser,authController.getUserData);
 
 export default router;

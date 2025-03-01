@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Captcha } from "@/components/Captcha";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useAxiosWithAuth } from "@/api/api";
 import Logo from "@/components/Logo";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/redux/slice/userSlice";
@@ -22,7 +21,6 @@ const LoginPage = () => {
   const captchaRef = useRef<ReCAPTCHA>(null);
   const captchaTokenRef = useRef<string>("");
   const [enableCaptcha, setEnableCaptcha] = useState<boolean>(false);
-  const axiosPrivate = useAxiosWithAuth();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
@@ -37,10 +35,8 @@ const LoginPage = () => {
   const { mutate, isPending, reset } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      if (data && data.accessToken) {
-        console.log(data);
-        axiosPrivate.updateToken(data.accessToken);
-      }
+      console.log(data);
+      
       toast.success(data?.message || "Login successful");
       setEnableCaptcha(false);
       dispatch(setCredentials({}));
@@ -93,7 +89,7 @@ const LoginPage = () => {
                   {
                     id: "email",
                     label: "Email",
-                    type: "email",
+                    type: "text",
                     name: "email",
                     placeholder: "me@example.com",
                   },

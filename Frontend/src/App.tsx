@@ -15,6 +15,7 @@ import ProfilePage from "./pages/user/others/Profile";
 import ProfileLayout from "./layouts/ProfileLayout";
 import AboutPage from "./pages/user/others/AboutPage";
 import ContactPage from "./pages/user/others/ContactPage";
+import { getUserProfile } from "./api/user/userapi";
 
 const Layout = lazy(() => import("./layouts/Layout"));
 const HomePage = lazy(() => import("./pages/user/others/HomePage"));
@@ -64,7 +65,7 @@ function App() {
           <Route path="about" element={<AboutPage/>}/>
           <Route path="contact" element={<ContactPage/>}/>
           <Route path="profile" element={<ProfileLayout />}>
-            <Route index element={<ProfilePage />} />
+            <Route index element={<ProfilePage />}/>
 
           </Route>
         </Route>

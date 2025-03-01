@@ -1,4 +1,4 @@
-import { IOTP } from "../interfaces/IOtp";
+import { IOTP } from "../types/IOtp";
 import Otp from "../models/otp.model";
 
 class OtpRepository {
