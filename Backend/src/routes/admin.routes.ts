@@ -1,10 +1,19 @@
 
 import express from 'express';
-import authController from "../controllers/admin/admin.auth.controller";
+import {AdminController} from "../controllers/admin/admin.controller";
+import { UserRepository } from '../repositories/user.repository';
+import { AdminService } from '../services/admin/admin.auth.service';
 
 const router = express.Router();
 
-router.post('/auth/login', authController.login);
+const adminRespository = new UserRepository()
+const adminService = new AdminService(adminRespository)
+const adminController = new AdminController(adminService);
+
+// auth 
+router.post('/auth/login', adminController.login.bind(adminController));
+
+//
 
 
 export default router;

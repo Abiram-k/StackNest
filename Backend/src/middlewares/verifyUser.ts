@@ -14,7 +14,6 @@ export const verifyUser = (
 ): void => {
 
   const token = req.headers.authorization?.split(" ")[1];
-  console.log(token)
 
   const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET as string;
 
@@ -32,7 +31,6 @@ export const verifyUser = (
 
   try {
     const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET) as DecodedToken;
-    console.log(decoded)
     req.user = decoded;
 
     next();

@@ -5,7 +5,7 @@ import User from "../models/user.model";
 import { IUserRepository } from "../interfaces/user.repository.interface";
 import { IUser } from "../types/IUser";
 
-class UserRepository implements IUserRepository {
+export class UserRepository implements IUserRepository {
   
   async findUserByGoogleId(googleId: string):Promise<IUser|null> {
     try {
@@ -42,9 +42,9 @@ class UserRepository implements IUserRepository {
       throw error;
     }
   }
-  async findById(id: string) {
+  async findById(id: string):Promise<IUser|null> {
     try {
-      return await User.findById(id).select("firstName userName country description gender");
+      return await User.findById(id).select("-password")
     } catch (error) {
       throw error;
     }
@@ -184,4 +184,3 @@ class UserRepository implements IUserRepository {
 
 }
 
-export default new UserRepository();

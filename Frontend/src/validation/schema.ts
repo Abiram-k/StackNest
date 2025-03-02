@@ -54,15 +54,19 @@ export const validateProfileSchema = yup.object({
   gender: yup.string().optional(),
 
   description: yup.string().optional(),
-  country: yup
-    .string()
-    .required("Country is required")
-    .min(3, "Country name must be at least 3 characters"),
+  avatar:yup.string().optional(),
+  email:yup.string().optional(),
+  country:yup.string().optional(),
+  mobileNumber:yup.string().optional(),
+  // country: yup
+  //   .string()
+  //   .required("Country is required")
+  //   .min(3, "Country name must be at least 3 characters"),
 
-  mobileNumber: yup
-    .string()
-    .required("Mobile Number is required")
-    .min(10, "Mobile Number must be at least 10 characters"),
+  // mobileNumber: yup
+  //   .string()
+  //   .required("Mobile Number is required")
+  //   .min(10, "Mobile Number must be at least 10 characters"),
 });
 
 // export type verifyUserProfileSchemaType = yup.InferType<typeof validateProfileSchema>;

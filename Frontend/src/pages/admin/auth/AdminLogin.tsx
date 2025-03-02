@@ -1,19 +1,14 @@
 import { GalleryVerticalEnd } from "lucide-react";
 import { useLoginForm } from "@/hooks/useForm";
-import { useMutation } from "@tanstack/react-query";
 import { loginSchema } from "@/validation/schema";
 import { LoginUser } from "../../../../../types/user";
-import { login } from "@/api/admin/authapi";
-import { Form } from "@/components/Form";
+import { Form } from "@/components/forms/Form";
 import { Link } from "react-router-dom";
 import images from "../../../assets/login-img.jpg";
-import toast from "react-hot-toast";
 import logo from "../../../assets/stacknest-logo.png";
-import { useAxiosWithAuth } from "@/api/api";
+import { useLogin } from "@/hooks/useLogin";
 
  const AdminLoginPage = () => {
-  const axiosPrivate = useAxiosWithAuth();
-
   const {
     register,
     handleSubmit,
@@ -24,28 +19,7 @@ import { useAxiosWithAuth } from "@/api/api";
     defaultValues: { email: "", password: "" },
   });
 
-  const { mutate, isPending, reset } = useMutation({
-    mutationFn: login,
-    onSuccess: (data) => {
-      if (data && data.accessToken) axiosPrivate.updateToken(data.accessToken);
-      toast.success(data?.message || "Login successful");
-      reset();
-    },
-    onError: (error: { statusCode: number; message: string }) => {
-      console.error("Login failed:", error);
-
-      if (error.statusCode == 403) {
-        setError("root", {
-          type: "manual",
-          message: error.message || "Something went wrong!",
-        });
-        return;
-      }
-
-      toast.error(error.message || "Something went wrong!");
-      reset();
-    },
-  });
+  const { mutate, isPending } = useLogin(setError,"admin")
 
   const onSubmit = (data: LoginUser) => {
     mutate(data);
@@ -93,6 +67,7 @@ import { useAxiosWithAuth } from "@/api/api";
               linkText=""
               linkRedirect=""
               isPending={isPending}
+              linkTitle=""
             />
           </div>
         </div>

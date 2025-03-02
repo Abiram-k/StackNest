@@ -1,13 +1,11 @@
-import { Form } from "@/components/Form";
+import { Form } from "@/components/forms/Form";
 import { verifyPasswordSchema } from "@/validation/schema";
 import { useVerifyPassword } from "@/hooks/useForm";
-import { resetPassword } from "@/api/user/authapi";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useSearchParams } from "react-router-dom";
 import { verifyPasswordSchemaType } from "../../../../../types/user";
+import { useResetPassword } from "@/hooks/useResetPassword";
 
- const ResetPassword = () => {
+const ResetPassword = () => {
   const {
     register,
     handleSubmit,
@@ -17,21 +15,10 @@ import { verifyPasswordSchemaType } from "../../../../../types/user";
     defaultValues: { password: "", confirmPassword: "" },
   });
   const [searchParams] = useSearchParams();
+
   const token = searchParams.get("token");
 
-  const navigate = useNavigate();
-  const { mutate, reset, isPending } = useMutation({
-    mutationFn: resetPassword,
-    onSuccess: () => {
-      toast.success("Password updated ");
-      navigate("/auth/login");
-      reset();
-    },
-    onError: (error:any) => {
-      toast.error(error.message || "Failed to updated Password");
-      reset();
-    },
-  });
+  const { mutate, isPending } = useResetPassword();
 
   const onSubmit = (data: verifyPasswordSchemaType) => {
     console.log(data);
@@ -66,7 +53,8 @@ import { verifyPasswordSchemaType } from "../../../../../types/user";
             primaryTitle="Change Your Password"
             secondaryTitle="Update to your password and login "
             register={register}
-            linkText="Remember your password?"
+            linkTitle="Remember your password?"
+            linkText="SignIn"
             linkRedirect="/auth/login"
             errors={errors}
             isPending={isPending}

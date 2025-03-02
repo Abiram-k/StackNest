@@ -24,10 +24,17 @@ export type verifyPasswordSchemaType = {
 
 
 export type verifyUserProfileSchemaType = {
+  email?:string,
+  avatar?:string;
   firstName: string;
   userName:string;
   gender?:string;
-  country:string;
+  country?:string;
   description?:string
-  mobileNumber:string
+  mobileNumber?:string
+}
+
+export type axiosResponse = {
+  success:boolean;
+  message:string
 }

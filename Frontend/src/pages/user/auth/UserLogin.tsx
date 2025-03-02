@@ -1,61 +1,29 @@
 import { useLoginForm } from "@/hooks/useForm";
-import { useMutation } from "@tanstack/react-query";
 import { loginSchema } from "@/validation/schema";
 import { LoginUser } from "../../../../../types/user";
-import { useRef, useState } from "react";
-import { login } from "@/api/user/authapi";
-import { Form } from "@/components/Form";
+import { Form } from "@/components/forms/Form";
 import images from "../../../assets/login-img.jpg";
 import toast from "react-hot-toast";
-import ReCAPTCHA from "react-google-recaptcha";
-import { Captcha } from "@/components/Captcha";
+import { Captcha } from "@/components/auth/Captcha";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import Logo from "@/components/Logo";
-import { useDispatch } from "react-redux";
-import { setCredentials } from "@/redux/slice/userSlice";
-import { useNavigate } from "react-router-dom"; 
+import Logo from "@/components/ui/Logo"; 
+import { useLogin } from "@/hooks/useLogin";
 
 const sitekey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const LoginPage = () => {
-  const captchaRef = useRef<ReCAPTCHA>(null);
-  const captchaTokenRef = useRef<string>("");
-  const [enableCaptcha, setEnableCaptcha] = useState<boolean>(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit, 
+    setError,
     formState: { errors },
   } = useLoginForm({ 
     schema: loginSchema,
     defaultValues: { email: "", password: "" },
   });
 
-  const { mutate, isPending, reset } = useMutation({
-    mutationFn: login,
-    onSuccess: (data) => {
-      console.log(data);
-      
-      toast.success(data?.message || "Login successful");
-      setEnableCaptcha(false);
-      dispatch(setCredentials({}));
-      navigate("/user/home"); 
-      reset(); 
-    },
-    onError: (error) => {
-      captchaRef.current?.reset();
-      captchaTokenRef.current = "";
-      if (error.message == "Captcha required") {
-        setEnableCaptcha(true);
-        return;
-      }
-      setEnableCaptcha(false);
-      console.error("Login failed:", error);
-      toast.error(error.message || "Something went wrong!");
-      reset();
-    },
-  });
+  const { mutate, isPending, enableCaptcha, captchaRef,captchaTokenRef } = useLogin(setError,"users");
 
   const onSubmit = (data: LoginUser) => {
     if (!captchaTokenRef.current && enableCaptcha) {
@@ -108,7 +76,8 @@ const LoginPage = () => {
                 secondaryTitle="Enter your email below to login to your account"
                 register={register}
                 errors={errors}
-                linkText="Don't have an account?"
+                linkTitle="Don't have an account?"
+                linkText="SignUp"
                 linkRedirect="/auth/register"
                 isPending={isPending}
               />
@@ -126,5 +95,4 @@ const LoginPage = () => {
     </div>
   );
 };
-
 export default LoginPage;

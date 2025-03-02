@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { Form } from "@/components/Form";
+import { Form } from "@/components/forms/Form";
 import { verifyEmailSchema } from "@/validation/schema";
 import { useVerifyEmail } from "@/hooks/useForm";
-import { ArrowLeftButton } from "@/components/ArrowLeftButton";
+import { ArrowLeftButton } from "@/components/ui/ArrowLeftButton";
 import { EmailSendedSuccess } from "@/components/EmailSendedSucess";
-import { useMutation } from "@tanstack/react-query";
-import { forgotPassword } from "@/api/user/authapi";
-import toast from "react-hot-toast";
+import { useForgotPassword } from "@/hooks/useForgotPassword";
 
  const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -21,18 +19,7 @@ import toast from "react-hot-toast";
     defaultValues: { email: "" },
   });
 
-  const { mutate, reset, isPending } = useMutation({
-    mutationFn: forgotPassword,
-    onSuccess: () => {
-      setIsSuccess(true);
-      reset();
-    },
-    onError: (error:any) => {
-      toast.error(error.message)
-      setIsSuccess(false);
-      reset();
-    },
-  });
+  const {mutate,isPending} = useForgotPassword(setIsSuccess)
 
   const onSubmit = (data: { email: string }) => {
     setEmail(data?.email);
@@ -62,8 +49,9 @@ import toast from "react-hot-toast";
               primaryTitle="Forgot Password"
               secondaryTitle="We'll send you a link to reset your password"
               register={register}
-              linkText="Remember your password?"
-              linkRedirect="/user/auth/login"
+              linkText="SignIn"
+              linkRedirect="/auth/login"
+              linkTitle="Remember your password?"
               errors={errors}
               isPending={isPending}
             />

@@ -1,20 +1,19 @@
 import { GalleryVerticalEnd } from "lucide-react";
 import { useRegisterForm } from "@/hooks/useForm";
-import { useMutation } from "@tanstack/react-query";
 import { registerSchema } from "@/validation/schema";
 import { RegisterUser } from "../../../../../types/user";
-import { Form } from "@/components/Form";
-import { Link, useNavigate } from "react-router-dom";
+import { Form } from "@/components/forms/Form";
+import { Link } from "react-router-dom";
 import images from "../../../assets/login-img.jpg";
-import toast from "react-hot-toast";
 import logo from "../../../assets/stacknest-logo.png";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { createUser, initiateRegistration } from "@/api/user/authapi";
 import { useState } from "react";
 import OtpModal from "@/components/OtpModal";
 import { Spinner } from "@/components/ui/spinner";
+import { useInitiateRegistration } from "@/hooks/useInitiateRegistration";
+import { useVerifyOtp } from "@/hooks/useVerifyOtp";
 
- const RegisterPage = () => {
+const RegisterPage = () => {
   const [userData, setUserData] = useState<RegisterUser>({
     name: "",
     email: "",
@@ -22,7 +21,6 @@ import { Spinner } from "@/components/ui/spinner";
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -32,47 +30,15 @@ import { Spinner } from "@/components/ui/spinner";
     defaultValues: { email: "", password: "", name: "", confirmPassword: "" },
   });
 
-  const {
-    mutate: initiateRegistrationMutate,
-    isPending: initiatingPending,
-    reset: initiatingReset,
-  } = useMutation({
-    // mutationFn: createUser,
-    mutationFn: initiateRegistration,
-    onSuccess: (data) => {
-      console.log(data);
-      toast.success("Otp Sended to your Gmail");
-      setIsModalOpen(true);
-    },
-    onError: (error) => {
-      console.error("Registration failed:", error);
-      toast.error(error.message || "Something went wrong!");
-      initiatingReset();
-    },
-  });
+  const { initiateRegistrationMutate, initiatingPending } =
+    useInitiateRegistration(setIsModalOpen);
 
-  const {
-    mutate: verifyOtpMutate,
-    isPending: verifyOtpPending,
-    reset: VerifyOtpReset,
-  } = useMutation({
-    mutationFn: createUser,
-    onSuccess: (data) => {
-      console.log(data);
-      toast.success("Otp Verified");
-      setIsModalOpen(false);
-      navigate("/auth/login");
-    },
-    onError: (error) => {
-      console.error("Registration failed:", error);
-      toast.error(error.message || "Something went wrong!");
-      VerifyOtpReset();
-    },
-  });
+  const { verifyOtpMutate, verifyOtpPending } = useVerifyOtp(setIsModalOpen);
+
 
   const onSubmit = (data: RegisterUser) => {
-    setUserData(data); // setting user data for registeration after otp verification
-    initiateRegistrationMutate(data.email);
+    setUserData(data);
+    initiateRegistrationMutate({email:data.email});
   };
 
   const verifyOtp = (otp: string) => {
@@ -146,11 +112,12 @@ import { Spinner } from "@/components/ui/spinner";
                   primaryTitle="Register Now"
                   secondaryTitle="Enter your details below to register your account"
                   register={register}
-                  linkText="Already have an account?"
+                  linkTitle="Already have an account?"
+                  linkText="SingIn"
                   linkRedirect="/auth/login"
                   errors={errors}
                   isPending={initiatingPending}
-                /> 
+                />
               </GoogleOAuthProvider>
             </div>
           </div>
@@ -166,6 +133,5 @@ import { Spinner } from "@/components/ui/spinner";
     </>
   );
 };
-
 
 export default RegisterPage;

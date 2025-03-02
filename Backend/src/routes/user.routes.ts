@@ -1,26 +1,17 @@
 import express from 'express';
-import authController from '../controllers/user/user.controller';
 import { verifyUser } from '../middlewares/verifyUser';
+import { UserRepository } from '../repositories/user.repository';
+import { UserService } from '../services/user/user.service';
+import { UserController } from '../controllers/user/user.controller';
 
 const router = express.Router();
 
-//login
-router.post('/auth/login', authController.login);
-router.get("/auth/refresh-token", authController.generateAccessToken);
-
-//OAuth  
-router.post('/auth/google/callback', authController.googleAuth);
-
-//registration
-router.post("/auth/initiate-registration",authController.initiateRegistration);
-router.post('/auth/register',authController.register);
-
-//forgotPassword
-router.post("/auth/forgot-password",authController.forgotPassword);
-router.post("/auth/reset-password",authController.resetPassword);
+const userRespository = new UserRepository()
+const userService = new UserService(userRespository)
+const userController = new UserController(userService);
 
 
-router.put("/details",verifyUser,authController.updateUserProfile);
-router.get("/details",verifyUser,authController.getUserData);
+// router.put("/details",verifyUser,userController.updateUserProfile.bind(userController));
+router.get("/details",verifyUser,userController.getUserData.bind(userController));
 
 export default router;
