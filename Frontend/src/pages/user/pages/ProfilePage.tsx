@@ -2,10 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Edit2 } from "lucide-react";
 import DetailsForm from "@/components/forms/DetailsForm";
 import { verifyUserProfile } from "@/hooks/useForm";
-import { validateProfileSchema } from "@/validation/schema";
+import { validateProfileSchema } from "@/validation/userDetailsSchema";
 import { useEffect, useState } from "react";
 import { verifyUserProfileSchemaType } from "../../../../../types/user";
-import { useUserProfile } from "@/hooks/useUserProfile";
+import { useUpdateUserProfile, useUserProfile } from "@/hooks/useUserProfile";
+import ProfileImageUploader from "@/components/ProfileImageUploader";
+import { Spinner } from "@/components/ui/spinner";
 
 const initialValue = {
   avatar: "",
@@ -40,7 +42,7 @@ export default function ProfilePage() {
     },
   });
 
-  const { data: user, isLoading } = useUserProfile();
+  const { data: user, isPending: fetchIsPending } = useUserProfile();
 
   useEffect(() => {
     if (user?.userDetails) {
@@ -49,17 +51,24 @@ export default function ProfilePage() {
     }
   }, [user?.userDetails]);
 
-  const onsubmit = (data: Partial<verifyUserProfileSchemaType>) => {
+  const { updateMutation, isPending } = useUpdateUserProfile(setIsEditing);
+
+  const onsubmit = (data: verifyUserProfileSchemaType) => {
     console.log(data);
-    // mutate(data);
+    updateMutation(data);
   };
 
   const handleIsEditing = () => {
     setIsEditing((prev) => !prev);
   };
 
+  const handleImageUpdate = (imageUrl: string | undefined) => {
+    setFormData({ ...formData, avatar: imageUrl });
+  };
+
   return (
     <div className="min-h-screen w-full bg-white mt-10 ">
+      {fetchIsPending || (isPending && <Spinner />)}
       <div className=" pt-16">
         <main className=" p-8">
           <div className="max-full ">
@@ -80,22 +89,19 @@ export default function ProfilePage() {
                 onClick={handleIsEditing}
                 variant="secondary"
                 size="sm"
-                className="absolute right-0 cursor-pointer  md:right-60 top-0"
+                className="absolute right-0 md:right-60 top-0 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-300"
               >
                 <Edit2 className="h-4 w-4 mr-2" />
                 Edit
               </Button>
 
-              <div className="flex items-center gap-4 mb-6">
-                <img
-                  src={formData.avatar}
-                  alt="Profile"
-                  width={80}
-                  height={80}
-                  className="rounded-full"
+              <div className="flex  gap-4 mb-6">
+                <ProfileImageUploader
+                  isEditing={isEditing}
+                  onImageChange={handleImageUpdate}
                 />
                 <div>
-                  <h2 className="text-xl font-semibold">
+                  <h2 className="text-xl  font-semibold">
                     {formData.firstName || "no Name"}
                   </h2>
                   <p className="text-gray-600">
@@ -109,9 +115,9 @@ export default function ProfilePage() {
                 formData={formData}
                 register={register}
                 errors={errors}
-                isPending={isLoading}
+                isPending={isPending}
                 onSubmit={handleSubmit(onsubmit)}
-                submitButtonText="Save Changes"
+                submitButtonText="Submit"
                 fields={[
                   [
                     {

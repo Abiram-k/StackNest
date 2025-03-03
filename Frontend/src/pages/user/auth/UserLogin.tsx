@@ -23,7 +23,7 @@ const LoginPage = () => {
     defaultValues: { email: "", password: "" },
   });
 
-  const { mutate, isPending, enableCaptcha, captchaRef,captchaTokenRef } = useLogin(setError,"users");
+  const { mutate, isPending, enableCaptcha, captchaRef,captchaTokenRef } = useLogin(setError,"user");
 
   const onSubmit = (data: LoginUser) => {
     if (!captchaTokenRef.current && enableCaptcha) {

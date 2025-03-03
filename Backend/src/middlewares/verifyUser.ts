@@ -3,10 +3,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import createHttpError from 'http-errors'
 import { AuthRequest, DecodedToken } from "../types/IAuth";
 
-
-
-
-
 export const verifyUser = (
   req: AuthRequest,
   res: Response,
@@ -31,7 +27,11 @@ export const verifyUser = (
 
   try {
     const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET) as DecodedToken;
-    req.user = decoded;
+
+    req.user = {
+      userId:decoded.userId,
+      role:decoded.role
+    };
 
     next();
   } catch (error) {

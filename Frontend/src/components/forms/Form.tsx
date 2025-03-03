@@ -128,7 +128,7 @@ export const Form = ({
           type="submit"
           className={`${
             isPending && "cursor-progress"
-          } "w-full  bg-primary-500 dark:bg-primary-600 hover:bg-[#4a43c4] dark:hover:bg-[#4a43c4]/90 cursor-pointer"`}
+          } w-full  bg-primary-500 dark:bg-primary-600 hover:bg-primary-600/90  cursor-pointer`}
         >
           {isPending ? `${buttonText} ... ` : buttonText}
         </Button>

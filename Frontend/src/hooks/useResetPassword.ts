@@ -1,5 +1,5 @@
 import { HttpService } from "@/api/httpService";
-import { UserAuthService } from "@/api/user/userAuthService";
+import { UserAuthService } from "@/api/authService";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";

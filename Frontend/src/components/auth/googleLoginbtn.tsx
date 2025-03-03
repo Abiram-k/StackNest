@@ -1,26 +1,24 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { Button } from "../ui/button";
-import axios from "axios";
 import toast from "react-hot-toast";
+import { axiosInstancePublic } from "@/api/apiSevice";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 const GoogleAuth = () => {
-  const handleSuccess = async (tokenResponse: any) => {
-    console.log(tokenResponse);
-    const { access_token } = tokenResponse;
-    console.log(access_token);
 
-    const response = await axios.post(
-      `${BASE_URL}/users/auth/google/callback`,
+  const handleSuccess = async (tokenResponse: any) => {
+    const { access_token } = tokenResponse;
+    const response = await axiosInstancePublic.post(
+      `/auth/google/callback`,
       { token: access_token }
     );
+
     const data = response.data;
 
     if (data.success) {
       console.log(data)
       toast.success("Login Successful");
-      // localStorage.setItem("token", data.token);
     }
+    
   };
   const login = useGoogleLogin({
     onSuccess: handleSuccess,
@@ -60,7 +58,6 @@ const GoogleAuth = () => {
         Login with Google
       </Button>
     </div>
-    // </GoogleOAuthProvider>
   );
 };
 

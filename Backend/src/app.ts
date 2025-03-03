@@ -26,7 +26,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.use("/users/auth", AuthRoutes);
+app.use("/auth", AuthRoutes);
 app.use("/users", userRoutes);
 app.use("/admin", adminRoutes);
 

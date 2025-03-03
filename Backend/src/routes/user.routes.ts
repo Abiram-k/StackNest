@@ -11,7 +11,7 @@ const userService = new UserService(userRespository)
 const userController = new UserController(userService);
 
 
-// router.put("/details",verifyUser,userController.updateUserProfile.bind(userController));
+router.put("/details",verifyUser,userController.updateUserProfile.bind(userController));
 router.get("/details",verifyUser,userController.getUserData.bind(userController));
 
 export default router;

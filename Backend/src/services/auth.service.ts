@@ -1,18 +1,18 @@
 import bcrypt from "bcrypt";
-import { UserRepository } from "../../repositories/user.repository";
-import { LoginUser, typeRegisterUserWithOtp } from "../../../../types/user";
+import { UserRepository } from "../repositories/user.repository";
+import { LoginUser, typeRegisterUserWithOtp } from "../../../types/user";
 import { config } from "dotenv";
 import { Types } from "mongoose";
 import {
   generateAccessToken,
   generateJWT,
   generateRefreshToken,
-} from "../../utils/generateJWT";
-import { googleUserResponse } from "../../config/googleAuth";
-import { verifyCaptcha } from "../../config/captchaVerify";
-import { hashPassword } from "../../utils/hashPassword";
-import otpRepository from "../../repositories/otp.repository";
-import { generateOTP } from "../../utils/generateOTP";
+} from "../utils/generateJWT";
+import { googleUserResponse } from "../config/googleAuth";
+import { verifyCaptcha } from "../config/captchaVerify";
+import { hashPassword } from "../utils/hashPassword";
+import otpRepository from "../repositories/otp.repository";
+import { generateOTP } from "../utils/generateOTP";
 import jwt from "jsonwebtoken";
 import createHttpError from "http-errors";
 import {
@@ -20,13 +20,11 @@ import {
   sendWelcomeMail,
   sendPasswordResetEmail,
   sendPasswordUpdated,
-} from "../../utils/email";
+} from "../utils/email";
 
 config();
 
-
-export class UserAuthService {
-
+export class AuthService {
   private userRepository: UserRepository;
 
   constructor(userRepository: UserRepository) {
@@ -38,44 +36,54 @@ export class UserAuthService {
       const payload = await googleUserResponse(token);
 
       if (!payload) throw createHttpError(404, "Invalid google token");
-      const isExistUser = await this.userRepository.findByEmail(payload.email);
-      if (isExistUser) {
+
+      const isExistUserWithEmail = await this.userRepository.findByEmail(
+        payload.email
+      );
+      const isExistUserWithGooglId =
+        await this.userRepository.findUserByGoogleId(payload.id);
+
+      if (isExistUserWithEmail && !isExistUserWithGooglId) {
         await this.userRepository.updateUserWithGoogleId(
           payload.email,
           payload.id
         );
       }
-      const user = await this.userRepository.findUserByGoogleId(payload.id);
 
-      if (!user && !isExistUser) {
-        const newUser = await this.userRepository.create({
+      if (!isExistUserWithGooglId && !isExistUserWithEmail) {
+        await this.userRepository.create({
           googleId: payload.id,
           email: payload.email,
-          name: payload.given_name,
+          firstName: payload.given_name,
           role: "user",
           avatar: payload.picture,
         });
-
-        const data = {
-          userId: newUser._id as Types.ObjectId,
-          role: newUser.role,
-        };
-        const accessToken = generateAccessToken(data);
-        const refreshToken = generateRefreshToken(data);
-
-        return { accessToken, refreshToken };
       }
+
+      const user = await this.userRepository.findUserByGoogleId(payload.id);
+
+      if (!user) throw new Error("User not found with google id");
+      const data = {
+        userId: user._id as Types.ObjectId,
+        role: user.role,
+      };
+
+      const accessToken = generateAccessToken(data);
+      const refreshToken = generateRefreshToken(data);
+
+      return { accessToken, refreshToken };
     } catch (error) {
       throw error;
     }
   }
 
-  async login({ email, password, captchaToken }: LoginUser) {
+  async login({ email, password, captchaToken, role }: LoginUser) {
     {
       try {
-        // console.log(email, password, captchaToken )
         const user = await this.userRepository.findByEmail(email);
-        if (!user || user.role == "admin")
+        
+
+        if (!user || user?.role !== role)
           throw createHttpError(401, "Email not found");
 
         if (user.isBlocked) {
@@ -204,7 +212,6 @@ export class UserAuthService {
   }
 
   async initiateRegistration(email: string): Promise<void> {
-
     try {
       const isExist = await this.userRepository.findByEmail(email);
       if (isExist) throw createHttpError(400, "User already exisit");
@@ -221,11 +228,9 @@ export class UserAuthService {
       throw error;
     }
   }
+
   async register({ email, password, name, otp }: typeRegisterUserWithOtp) {
-
     const validOtp = await otpRepository.findOtpByMail(email);
-
-    // console.log("orgOTP: ", validOtp?.otp, validOtp?.expiresAt, "otp: ", otp);
 
     if (!validOtp || validOtp?.otp != otp || validOtp.expiresAt < new Date())
       throw createHttpError(404, "Otp expired, Try again!");
@@ -238,11 +243,10 @@ export class UserAuthService {
       const user = await this.userRepository.create({
         email,
         password: hashedPassword,
-        name,
+        firstName: name,
       });
 
       await sendWelcomeMail(name, email);
-      // await transporter.sendMail(welcomeMailOptions);
       return { success: true, user };
     } catch (error: any) {
       throw error;

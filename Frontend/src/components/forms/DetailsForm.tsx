@@ -41,64 +41,52 @@ const DetailsForm = ({
     switch (field.type) {
       case "select":
         return (
-          // <select
-          //   id="gender"
-          //   {...register(field.name)}
-          //   onChange={(e) => field.setValue(field.name, e.target.value)}
-          //   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus-visible:border-gray-200 focus:border-primary-500 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-300"
-          //   defaultValue={formData.gender}
-          //   disabled={!isEditing}
-          // >
-          //   <option value="">Select Gender</option>
-          //   {field.options?.map((option) => (
-          //     <option key={option.value} value={option.value}>
-          //       {option.value}
-          //     </option>
-          //   ))}
-          // </select>
           <div className="relative w-full">
-  <select
-    id="gender"
-    {...register(field.name)}
-    onChange={(e) => field.setValue(field.name, e.target.value)}
-    className="w-full px-3 py-2 border border-gray-300 rounded-lg 
-               focus:outline-none focus:ring-1 focus-visible:border-gray-200 
-               focus:border-primary-500 bg-white dark:bg-gray-900 dark:text-white 
-               dark:border-gray-300 appearance-none relative"
-    defaultValue={formData.gender}
-    disabled={!isEditing}
-  >
-    <option value="">Select Gender</option>
-    {field.options?.map((option) => (
-      <option key={option.value} value={option.value}>
-        {option.value}
-      </option>
-    ))}
-  </select>
-  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-5 h-5 text-gray-500 dark:text-gray-400"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-    >
-      <path
-        fillRule="evenodd"
-        d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z"
-        clipRule="evenodd"
-      />
-    </svg>
-  </div>
-</div>
-
+            <select
+              id="gender"
+              {...register(field.name)}
+              onChange={(e) => field.setValue(field.name, e.target.value)}
+              className={`w-full px-3 py-2 border rounded-lg 
+                focus:outline-none focus:ring-1 focus-visible:border-gray-200 
+                focus:border-primary-500 bg-white dark:bg-gray-900 dark:text-white 
+                dark:border-gray-300 appearance-none relative 
+                ${isEditing ? "border-black" : "border-gray-300"}`}
+              defaultValue={formData.gender}
+              disabled={!isEditing}
+            >
+              <option value="">Select Gender</option>
+              {field.options?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.value}
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
         );
 
       case "textarea":
         return (
           <textarea
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus-visible:border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-300"
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus-visible:border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-300 ${
+              isEditing ? "border-black" : "border-gray-300"
+            }`}
             placeholder={field.placeholder}
             {...register(field.name)}
+            disabled={!isEditing}
           />
         );
 
@@ -108,6 +96,8 @@ const DetailsForm = ({
             type={field.type}
             placeholder={field.placeholder}
             {...register(field.name)}
+            disabled={!isEditing}
+            className={`${isEditing ? "border-black" : "border-gray-300"}`}
           />
         );
     }
@@ -135,9 +125,9 @@ const DetailsForm = ({
           <div className="mt-8 flex justify-start">
             <Button
               type="submit"
-              className="w-full md:w-auto bg-primary-500 dark:bg-primary-600"
+              className="w-full md:w-auto transition-all duration-400 ease-in-out transform hover:scale-105  bg-primary-500 dark:bg-primary-600 cursor-pointer hover:bg-primary-600/90"
             >
-              {isPending ? submitButtonText + "..." : submitButtonText}
+              {isPending ? submitButtonText + " ..." : submitButtonText}
             </Button>
           </div>
         )}

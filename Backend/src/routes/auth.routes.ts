@@ -1,27 +1,28 @@
 import express from 'express';
-import {UserAuthController} from '../controllers/user/user.auth.controller';
-import { UserAuthService } from '../services/user/user.auth.service';
 import { UserRepository } from '../repositories/user.repository';
+import { AuthController } from '../controllers/auth.controller';
+import { AuthService } from '../services/auth.service';
 
 const router = express.Router();
 
 const userRespository = new UserRepository()
-const userAuthService = new UserAuthService(userRespository)
-const userAuthController = new UserAuthController(userAuthService);
+const authService = new AuthService(userRespository)
+const authController = new AuthController(authService);
+
 //login
-router.post('/login', userAuthController.login.bind(userAuthController));
-router.get("/refresh-token", userAuthController.generateAccessToken.bind(userAuthController));
+router.post('/login', authController.login.bind(authController));
+router.get("/refresh-token", authController.generateAccessToken.bind(authController));
 
 //OAuth  
-router.post('/google/callback', userAuthController.googleAuth.bind(userAuthController));
+router.post('/google/callback', authController.googleAuth.bind(authController));
 
 //registration
-router.post("/initiate-registration",userAuthController.initiateRegistration.bind(userAuthController));
-router.post('/register',userAuthController.register.bind(userAuthController));
+router.post("/initiate-registration",authController.initiateRegistration.bind(authController));
+router.post('/register',authController.register.bind(authController));
 
 //forgotPassword
-router.post("/forgot-password",userAuthController.forgotPassword.bind(userAuthController));
-router.post("/reset-password",userAuthController.resetPassword.bind(userAuthController));
+router.post("/forgot-password",authController.forgotPassword.bind(authController));
+router.post("/reset-password",authController.resetPassword.bind(authController));
 
 
 export default router;

@@ -1,5 +1,6 @@
+import { logout } from "@/redux/slice/userSlice";
+import { store } from "@/redux/store";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -8,13 +9,11 @@ export const axiosInstancePublic = axios.create({
   withCredentials:true
 });
 
-// Create a single axios instance
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
 });
 
-// Utility to manage auth state
 let accessToken = "";
 let isRefreshing = false;
 let refreshSubscribers: ((token: string) => void)[] = [];
@@ -23,7 +22,6 @@ const updateToken = (newToken: string) => {
   accessToken = newToken;
 };
 
-// Separate function to handle token refresh
 const refreshAccessToken = async (): Promise<string | undefined> => {
   if (isRefreshing) {
     return new Promise((resolve) => {
@@ -34,7 +32,7 @@ const refreshAccessToken = async (): Promise<string | undefined> => {
   isRefreshing = true;
 
   try {
-    const { data } = await axios.get(`${BASE_URL}/users/auth/refresh-token`, {
+    const { data } = await axios.get(`${BASE_URL}/auth/refresh-token`, {
       withCredentials: true,
     });
     updateToken(data.accessToken);
@@ -49,7 +47,6 @@ const refreshAccessToken = async (): Promise<string | undefined> => {
   }
 };
 
-// Request interceptor
 axiosInstance.interceptors.request.use(async(config) => {
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
@@ -57,7 +54,6 @@ axiosInstance.interceptors.request.use(async(config) => {
   return config;
 });
 
-// Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -71,8 +67,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         updateToken("");
-        const navigate = useNavigate();
-        navigate("/auth/login");
+        store.dispatch(logout())
         return Promise.reject(refreshError);
       }
     }
@@ -80,7 +75,6 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// Hook to initialize token check
 // export const useAxiosWithAuth = () => {
 //   const navigate = useNavigate();
 

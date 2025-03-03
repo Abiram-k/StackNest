@@ -7,7 +7,7 @@ import { Outlet } from 'react-router-dom'
 const Layout = () => {
   return (
    <>
-   <Navbar isAuthintacted={true}/>
+   <Navbar isAuthintacted={true} isAdmin={false}/>
    <Outlet/>
    <Footer/>
    </>

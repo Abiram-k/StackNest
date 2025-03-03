@@ -11,7 +11,7 @@ import RoomSection from "@/components/user/RoomSection";
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white">
-      <Navbar isAuthintacted={false} />
+      <Navbar isAuthintacted={false} isAdmin={false} />
       <main className="pt-16">
         <HeroSection />
         <CreateRoomSection />

@@ -9,20 +9,23 @@ export class UserService {
   }
 
   async getUserDetails(id: string): Promise<verifyUserProfileSchemaType> {
-    console.log(id);
     const user = await this.userRepository.findById(id);
     if (!user) throw new Error("User not found");
     const data = {
-        email:user.email,
-        avatar: user.avatar,
-        firstName: user.name,
-      userName: user.userName,
+      email: user.email,
+      avatar: user.avatar,
+      firstName: user.firstName,
+      userName: user.userName, 
       gender: user.gender,
-      country: user.coutry,
+      country: user.country,
       description: user.description,
       mobileNumber: user.mobileNumber,
-    };
-    console.log(data);
+    }; 
     return data;
   }
+
+  async updateUserDetails(id: string, data: verifyUserProfileSchemaType) {
+    return await this.userRepository.findByIdAndUpdate(id,data);
+  }
+  
 }

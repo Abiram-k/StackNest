@@ -1,13 +1,13 @@
-import { typeUserResetToken } from "../../../types/user";
-import { IOTP } from "../types/IOtp";
-import Otp from "../models/otp.model";
+import {
+  typeUserResetToken,
+  verifyUserProfileSchemaType,
+} from "../../../types/user";
 import User from "../models/user.model";
 import { IUserRepository } from "../interfaces/user.repository.interface";
 import { IUser } from "../types/IUser";
 
 export class UserRepository implements IUserRepository {
-  
-  async findUserByGoogleId(googleId: string):Promise<IUser|null> {
+  async findUserByGoogleId(googleId: string): Promise<IUser | null> {
     try {
       return await User.findOne({
         googleId,
@@ -16,7 +16,10 @@ export class UserRepository implements IUserRepository {
       throw error;
     }
   }
-  async updateUserWithGoogleId(email: string, googleId: string):Promise<boolean> {
+  async updateUserWithGoogleId(
+    email: string,
+    googleId: string
+  ): Promise<boolean> {
     try {
       await User.findOneAndUpdate(
         { email },
@@ -42,17 +45,20 @@ export class UserRepository implements IUserRepository {
       throw error;
     }
   }
-  async findById(id: string):Promise<IUser|null> {
+  async findById(id: string): Promise<IUser | null> {
     try {
-      return await User.findById(id).select("-password")
+      return await User.findById(id).select("-password");
     } catch (error) {
       throw error;
     }
   }
 
-  async create(userData: Partial<IUser>):Promise<IUser> {
+  async create(userData: Partial<IUser>): Promise<IUser> {
     try {
-      return await User.create(userData);
+      console.log("Hey req from repo google create user");
+      const user = await User.create(userData);
+      console.log("From repository", user);
+      return user;
     } catch (error) {
       throw error;
     }
@@ -75,7 +81,7 @@ export class UserRepository implements IUserRepository {
   }: {
     email: string;
     resetToken: string;
-  }):Promise<boolean> {
+  }): Promise<boolean> {
     try {
       const updatedUser = await User.findOneAndUpdate(
         { email },
@@ -99,7 +105,7 @@ export class UserRepository implements IUserRepository {
   }: {
     email: string;
     password: string;
-  }):Promise<boolean> {
+  }): Promise<boolean> {
     try {
       const updatedUser = await User.findOneAndUpdate(
         { email },
@@ -117,7 +123,7 @@ export class UserRepository implements IUserRepository {
       throw new Error("Failed to update password");
     }
   }
-  async findUserByRestToken(data: typeUserResetToken):Promise<IUser | null> {
+  async findUserByRestToken(data: typeUserResetToken): Promise<IUser | null> {
     try {
       return User.findOne({
         _id: data.id,
@@ -129,7 +135,7 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async getFailedAttempts(email: string):Promise<number | undefined> {
+  async getFailedAttempts(email: string): Promise<number | undefined> {
     try {
       const user = await User.findOne({ email });
       return user?.failedLoginAttempts;
@@ -176,11 +182,32 @@ export class UserRepository implements IUserRepository {
       );
       if (!user) throw new Error("User not found");
       return user;
-
     } catch (error) {
       throw error;
     }
   }
 
-}
+  async findByIdAndUpdate(
+    id: string,
+    data: verifyUserProfileSchemaType
+  ): Promise<IUser | null> {
+    try {
 
+      const filteredData = Object.fromEntries(
+        Object.entries(data).filter(([_, value]) => value !== "")
+      );
+      if (Object.keys(filteredData).length === 0) {
+        throw new Error("No valid fields provided for update.");
+      }
+      console.log(filteredData);
+
+      return await User.findByIdAndUpdate(id, filteredData, {
+        upsert: true,
+        new: true,
+      });
+
+    } catch (error) {
+      throw error;
+    }
+  }
+}

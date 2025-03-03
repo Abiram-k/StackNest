@@ -7,8 +7,9 @@ const userSchema = new mongoose.Schema<IUser>(
   {
     googleId: {
       type: String,
+      default: "",
     },
-    name: {
+    firstName: {
       type: String,
       required: true,
       minLength: 4,
@@ -23,7 +24,24 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     password: {
       type: String,
-      default: null,
+      default: "",
+    },
+    country: {
+      type: String,
+      default: "",
+    },
+    description: {
+      type: String,
+      default: "",
+    },
+    mobileNumber: {
+      type: String,
+      default: "",
+    },
+    gender: {
+      type: "String",
+      enu: ["Male", "Female", "Others", ""],
+      default: "",
     },
     role: {
       type: String,
@@ -33,20 +51,22 @@ const userSchema = new mongoose.Schema<IUser>(
     userName: {
       type: String,
       unique: true,
-      default: function () {
-        const uniqueId = uuidv4().substring(0, 6);
-        return this.name ? `${this.name.toLowerCase()}_${uniqueId}` : "";
-      },
+      // default: function () {
+      //   const uniqueId = uuidv4().substring(0, 6);
+      //   return this.firstName
+      //     ? `${this.firstName?.toLowerCase()}_${uniqueId}`
+      //     : "";
+      // },
     },
     avatar: {
       type: String,
-      default: function () {
-        const hash = crypto
-          .createHash("md5")
-          .update(this.email.trim().toLowerCase())
-          .digest("hex");
-        return `https://www.gravatar.com/avatar/${hash}?d=robohash`;
-      },
+      // default: function () {
+      //   const hash = crypto
+      //     .createHash("md5")
+      //     .update(this.email.trim().toLowerCase())
+      //     .digest("hex");
+      //   return `https://www.gravatar.com/avatar/${hash}?d=robohash`;
+      // },
     },
     streak: {
       type: Number,
@@ -99,7 +119,6 @@ const userSchema = new mongoose.Schema<IUser>(
       default: 0,
     },
     blockedUntil: { type: Date, default: null },
-
   },
   { timestamps: true }
 );

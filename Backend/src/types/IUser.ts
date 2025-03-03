@@ -1,15 +1,16 @@
 import { Document, Types } from "mongoose";
 
 export interface IUser extends Document {
+  _id:Types.ObjectId;
   googleId: string;
-  name: string;
+  firstName: string;
   email: string;
   password: string;
-  coutry:string;
+  country:string;
   description:string;
-  gender:"Male" | "Female" | "Others";
+  gender?:"Male" | "Female" | "Others";
   mobileNumber:string;
-  role: "user" | "admin";
+  role: "user" | "admin"; 
   userName: string;
   avatar: string;
   streak: number;

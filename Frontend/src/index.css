@@ -143,6 +143,10 @@ html, body {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
 }
+::selection {
+  background-color: #7f77ed; /* Green background */
+  color: white; /* White text */
+}
 
 html::-webkit-scrollbar, 
 body::-webkit-scrollbar {

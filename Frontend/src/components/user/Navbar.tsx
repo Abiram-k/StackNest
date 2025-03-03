@@ -5,32 +5,45 @@ import { Heart, Search, User, Menu, X } from "lucide-react";
 import Logo from "../ui/Logo";
 import { CustomNavLink } from "../ui/customNavLink";
 
-const Navbar = ({ isAuthintacted }: { isAuthintacted: boolean }) => {
+const Navbar = ({
+  isAuthintacted,
+  isAdmin,
+}: {
+  isAuthintacted: boolean;
+  isAdmin: Boolean;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <nav className="fixed top-0 w-full bg-background z-50 border-b shadow-sm">
       <div className="container mx-auto px-2 sm:px-4 lg:px-6">
         <div className="flex h-20 items-center justify-between">
-          <Logo />
+          <Logo isAdmin={true}/>
 
           <div className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
             <div className="flex items-center gap-6">
-              <CustomNavLink to="/user/home" end>
-                Home
-              </CustomNavLink>
-              <CustomNavLink to="/user/about" end>
-                About
-              </CustomNavLink>
-              <CustomNavLink to="/user/challenge" end>
-                Challenge
-              </CustomNavLink>
-              <CustomNavLink to="/user/highlights" end>
-                Highlights
-              </CustomNavLink>
-              <CustomNavLink to="/user/contact" end>
-                Contact
-              </CustomNavLink>
-             
+              {!isAdmin ? (
+                <>
+                  <CustomNavLink to="/user/home" end>
+                    Home
+                  </CustomNavLink>
+                  <CustomNavLink to="/user/about" end>
+                    About
+                  </CustomNavLink>
+                  <CustomNavLink to="/user/challenge" end>
+                    Challenge
+                  </CustomNavLink>
+                  <CustomNavLink to="/user/highlights" end>
+                    Highlights
+                  </CustomNavLink>
+                  <CustomNavLink to="/user/contact" end>
+                    Contact
+                  </CustomNavLink>
+                </>
+              ) : (
+                <h1 className="text-xl uppercase font-bold text-gray-900 dark:text-white text-center mt-4">
+                  Admin Portal
+                </h1>
+              )}
             </div>
           </div>
 
@@ -74,15 +87,20 @@ const Navbar = ({ isAuthintacted }: { isAuthintacted: boolean }) => {
                   <Heart className="h-7 w-7" />
                 </Button>
                 <Link to={"/user/profile"}>
-                <Button variant="ghost" size="icon" className="hover:bg-muted">
-                  <User className="h-7 w-7" />
-                </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:bg-muted"
+                  >
+                    <User className="h-7 w-7" />
+                  </Button>
                 </Link>
+                {!isAdmin &&
 
                 <button
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="md:hidden p-2 rounded-md 
-              cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary"
+                onClick={() => setIsOpen(!isOpen)}
+                className="md:hidden p-2 rounded-md 
+                cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary"
                   aria-label="Toggle navigation menu"
                 >
                   {isOpen ? (
@@ -91,6 +109,7 @@ const Navbar = ({ isAuthintacted }: { isAuthintacted: boolean }) => {
                     <Menu className="h-6 w-6" />
                   )}
                 </button>
+                }
               </>
             )}
           </div>

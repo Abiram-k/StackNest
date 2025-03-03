@@ -23,5 +23,7 @@ export class UserProfileService {
   async updateUserProfile(data:verifyUserProfileSchemaType):Promise<axiosResponse>{
     return this.httpService.put<axiosResponse>("/users/details", data)
   }
+
+  
 }
 
