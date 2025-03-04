@@ -11,11 +11,11 @@ const userSlice = createSlice({
     setCredentials: (state, action) => {
       state.isAuthenticated = true;
     },
-    logout: (state) => {
+    userLogout: (state) => {
       state.isAuthenticated = false;
     },
   },
 });
 
-export const { setCredentials, logout } = userSlice.actions;
+export const { setCredentials, userLogout } = userSlice.actions;
 export default userSlice.reducer;

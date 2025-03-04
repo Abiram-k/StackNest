@@ -8,6 +8,8 @@ import AuthRoutes from "../src/routes/auth.routes";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandling";
 import { config } from "dotenv";
+import { verifyUser } from "./middlewares/verifyUser";
+import { verifyAdmin } from "./middlewares/verifyAdmin";
 config();
 
 const app = express();
@@ -15,7 +17,7 @@ const app = express();
 // Middlewares
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true })); //http://localhost:5173
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(helmet());
 app.use(morgan("dev"));
 
@@ -27,8 +29,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/auth", AuthRoutes);
-app.use("/users", userRoutes);
-app.use("/admin", adminRoutes);
+app.use("/users", verifyUser, userRoutes);
+app.use("/admin", verifyUser, verifyAdmin, adminRoutes);
 
 app.use(errorHandler);
 

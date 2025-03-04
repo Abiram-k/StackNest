@@ -11,11 +11,11 @@ const initialState = {
     setCredentials: (state, action) => {
       state.isAuthenticated = true;
     },
-    logout: (state) => {
+    adminLogout: (state) => {
       state.isAuthenticated = false;
     },
   },
 });
 
-export const { setCredentials, logout } = adminSlice.actions;
+export const { setCredentials, adminLogout } = adminSlice.actions;
 export default adminSlice.reducer;

@@ -3,11 +3,12 @@ import { Edit2 } from "lucide-react";
 import DetailsForm from "@/components/forms/DetailsForm";
 import { verifyUserProfile } from "@/hooks/useForm";
 import { validateProfileSchema } from "@/validation/userDetailsSchema";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { verifyUserProfileSchemaType } from "../../../../../types/user";
 import { useUpdateUserProfile, useUserProfile } from "@/hooks/useUserProfile";
 import ProfileImageUploader from "@/components/ProfileImageUploader";
 import { Spinner } from "@/components/ui/spinner";
+import { ImageService } from "@/api/imageService";
 
 const initialValue = {
   avatar: "",
@@ -23,6 +24,8 @@ export default function ProfilePage() {
   const [formData, setFormData] =
     useState<verifyUserProfileSchemaType>(initialValue);
   const [isEditing, setIsEditing] = useState(false);
+  const selectedAvatar = useRef<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -33,6 +36,7 @@ export default function ProfilePage() {
   } = verifyUserProfile({
     schema: validateProfileSchema,
     defaultValues: {
+      avatar: "",
       firstName: "",
       userName: "",
       country: "",
@@ -53,22 +57,41 @@ export default function ProfilePage() {
 
   const { updateMutation, isPending } = useUpdateUserProfile(setIsEditing);
 
-  const onsubmit = (data: verifyUserProfileSchemaType) => {
-    console.log(data);
-    updateMutation(data);
+  const onsubmit = async (data: verifyUserProfileSchemaType) => {
+    try {
+      setIsLoading(true);
+      if (selectedAvatar.current) {
+        const imageService = new ImageService();
+        const cloudinaryImgURL = await imageService.uploadImage(
+          selectedAvatar.current,
+          "stackNest"
+        );
+        setValue("avatar", cloudinaryImgURL);
+      }
+      updateMutation(data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log("cloudinary error", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleIsEditing = () => {
     setIsEditing((prev) => !prev);
   };
 
-  const handleImageUpdate = (imageUrl: string | undefined) => {
-    setFormData({ ...formData, avatar: imageUrl });
+  const handleImageUpdate = (file: File) => {
+    // alert(imageUrl);
+    // if (!imageUrl) return;
+    // setValue("avatar", imageUrl);
+    // setFormData({ ...formData, avatar: imageUrl });
+    selectedAvatar.current = file;
   };
 
   return (
     <div className="min-h-screen w-full bg-white mt-10 ">
-      {fetchIsPending || (isPending && <Spinner />)}
+      {(isLoading || fetchIsPending || isPending) && <Spinner />}
       <div className=" pt-16">
         <main className=" p-8">
           <div className="max-full ">
@@ -97,9 +120,11 @@ export default function ProfilePage() {
 
               <div className="flex  gap-4 mb-6">
                 <ProfileImageUploader
+                  avatar={formData.avatar}
                   isEditing={isEditing}
                   onImageChange={handleImageUpdate}
                 />
+
                 <div>
                   <h2 className="text-xl  font-semibold">
                     {formData.firstName || "no Name"}

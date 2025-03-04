@@ -14,7 +14,7 @@ export class AuthController {
   async googleAuth(req: Request, res: Response, next: NextFunction) {
     try {
       const { token } = req.body;
-      console.log(token)
+      console.log(token);
       if (!token) throw new Error("Google token is required");
 
       const authResponse = await this.authService.authenticateGoogleUser(token);
@@ -48,20 +48,18 @@ export class AuthController {
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password, captchaToken, role } = req.body;
-      console.log(email,password,captchaToken,role);
+      console.log(email, password, captchaToken, role);
 
       if (!email || !password)
         throw new Error("Email and password are required");
 
       if (!role) throw new Error("Role is required");
 
-
-
       const { accessToken, refreshToken } = await this.authService.login({
         email,
         password,
         captchaToken,
-        role
+        role,
       });
 
       res.cookie(`${role}RefreshToken`, refreshToken, {
@@ -91,14 +89,23 @@ export class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      // const role = req.query.role;
-      const refreshToken = req.cookies.userRefreshToken;
+      console.log("REQ GOTTEND", req.query);
+      const { role } = req.query;
+      if (!role) {
+        console.log("No role founded during generating new access token");
+        return;
+      }
+
+      // const refreshToken = req.cookies.userRefreshToken;
+      const refreshToken = req.cookies[`${role}RefreshToken`];
+
       if (!refreshToken) {
         res.status(401).json({ message: "Unauthorized" });
         return;
       }
       const newAccessToken = await this.authService.generateAccessToken(
-        refreshToken
+        refreshToken,
+        
       );
 
       res.json({

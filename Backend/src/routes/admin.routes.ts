@@ -1,13 +1,9 @@
-
-import express from 'express';
-import {AdminController} from "../controllers/admin/admin.controller";
-import { UserRepository } from '../repositories/user.repository';
+import express from "express";
+import { adminController } from "../config/di";
 
 const router = express.Router();
 
-
-
-//
+router.get("/users", adminController.fetchAllUsers.bind(adminController));
 
 
 export default router;

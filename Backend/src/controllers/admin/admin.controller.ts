@@ -1,42 +1,35 @@
-import { Request, Response, NextFunction } from "express";
-import { AdminService } from "../../services/admin/admin.auth.service";
-import { LoginResponse } from "../../../../types/index";
-import createHttpError from "http-errors";
+import { NextFunction, Request, Response } from "express";
+import { AdminService } from "../../services/admin/admin.service";
 
 export class AdminController {
-  private readonly adminService: AdminService;
-
+  private adminService: AdminService;
   constructor(adminService: AdminService) {
     this.adminService = adminService;
   }
 
-  async login(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const { email, password, captchaToken } = req.body;
+  async fetchAllUsers(req: Request, res: Response, next: NextFunction) {
 
-      if (!email || !password)
-        throw createHttpError(401, "Email and password are required");
+    const filter = req.query.filter ? String(req.query.filter) : "";
+    const sort = req.query.sort ? String(req.query.sort) : "";
+    const search = req.query.search ? String(req.query.search) : "";
+    const page = req.query.page ? parseInt(req.query.page as string) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
 
-      const { accessToken, refreshToken } = await this.adminService.login({
-        email,
-        password,
-        captchaToken,
-      });
+    const { users, totalPages } = await this.adminService.fetchAllUsers(
+      filter,
+      sort,
+      search,
+      page,
+      limit
+    );
 
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-      });
-
-      const data: LoginResponse = {
+    res
+      .status(200)
+      .json({
+        message: "Users fetched",
         success: true,
-        accessToken,
-        message: "Login successfull",
-      };
-      res.json(data);
-    } catch (error: any) {
-      next(error);
-    }
+        users:users,
+        totalPages:totalPages
+      });
   }
 }

@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema<IUser>(
   {
     googleId: {
       type: String,
+      unique:true,
       default: "",
     },
     firstName: {
@@ -51,22 +52,9 @@ const userSchema = new mongoose.Schema<IUser>(
     userName: {
       type: String,
       unique: true,
-      // default: function () {
-      //   const uniqueId = uuidv4().substring(0, 6);
-      //   return this.firstName
-      //     ? `${this.firstName?.toLowerCase()}_${uniqueId}`
-      //     : "";
-      // },
     },
     avatar: {
       type: String,
-      // default: function () {
-      //   const hash = crypto
-      //     .createHash("md5")
-      //     .update(this.email.trim().toLowerCase())
-      //     .digest("hex");
-      //   return `https://www.gravatar.com/avatar/${hash}?d=robohash`;
-      // },
     },
     streak: {
       type: Number,
@@ -123,4 +111,28 @@ const userSchema = new mongoose.Schema<IUser>(
   { timestamps: true }
 );
 
+userSchema.index({ role: 1 });
+userSchema.index({ email: 1, isBlocked: 1 });
+userSchema.index({ friends: 1 });
+userSchema.index({ lastLogin: -1 });
+userSchema.index({ "premiumHistory.status": 1 });
+userSchema.index({ isBlocked: 1 });
+
+userSchema.pre("save", function (next) {
+  if (!this.avatar) {
+    const hash = crypto
+      .createHash("md5")
+      .update(this.email.trim().toLowerCase())
+      .digest("hex");
+    this.avatar = `https://www.gravatar.com/avatar/${hash}?d=robohash`;
+  }
+  if (!this.userName) {
+    const uniqueId = uuidv4().substring(0, 6);
+    this.userName = this.firstName
+      ? `${this.firstName?.toLowerCase()}_${uniqueId}`
+      : "";
+  }
+
+  next();
+});
 export default mongoose.model("User", userSchema);

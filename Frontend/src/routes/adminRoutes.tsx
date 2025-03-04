@@ -1,8 +1,9 @@
 import AdminLayout from "@/layouts/AdminLayout";
-import Dashboard from "@/pages/admin/pages/Dashboard";
-import UserManagement from "@/pages/admin/pages/UserManagement";
 import { lazy } from "react";
 const AdminLoginPage = lazy(() => import("../pages/admin/auth/AdminLogin"));
+const Dashboard = lazy(() => import("../pages/admin/pages/Dashboard"));
+const UserManagement = lazy(() => import("../pages/admin/pages/UserManagement"));
+
 import { RouteObject } from "react-router-dom";
 
 export const adminRoutes: RouteObject[] = [

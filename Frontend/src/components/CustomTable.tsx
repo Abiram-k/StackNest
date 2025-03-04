@@ -7,88 +7,78 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Switch } from "@/components/ui/switch";
+import { useState } from "react";
+import { IUser } from "../../../types/user";
 
-const CustomTable = () => {
+type customTableType = {
+  data: IUser[] | undefined;
+};
+const CustomTable = ({ data }: customTableType) => {
+  const [isChecked, setIsChecked] = useState<{ [key: string]: boolean }>({});
+
+  const handleToggle = (userName: string, isBlocked: boolean) => {
+    setIsChecked((prev) => ({
+      ...prev,
+      [userName]: !isBlocked,
+    }));
+  };
+
   return (
     <div>
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Sl.No</TableHead>
-            <TableHead>Profile</TableHead>
-            <TableHead>User Name</TableHead>
-            <TableHead className="text-right">Email</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className=" text-center font-extrabold">Sl.No</TableHead>
+            <TableHead className="text-center font-extrabold">
+              Profile
+            </TableHead>
+            <TableHead className="text-center font-extrabold">
+              User Name
+            </TableHead>
+            <TableHead className="text-center font-extrabold">Email</TableHead>
+            <TableHead className="text-center font-extrabold">
+              Block/Unblock
+            </TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
+        <TableBody className="text-[16px]">
+          {data?.map((user, index) => (
+            <TableRow key={user._id}>
+              <TableCell className="font-medium text-center">
+                {index + 1}
+              </TableCell>
+              <TableCell>
+                <img
+                  src={
+                    user.avatar
+                      ? user.avatar
+                      : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                  }
+                  alt=" user profile"
+                  width={50}
+                  className="rounded-full  mx-auto"
+                />
+              </TableCell>
+              <TableCell className="text-center ">
+                {user.firstName || "No name"}
+              </TableCell>
+              <TableCell className="text-center">
+                {user.email ? user.email : "noName@gmail.com"}
+              </TableCell>
+              <TableCell className="text-center">
+                <Switch
+                  checked={isChecked[user.userName] ?? user.isBlocked}
+                  onCheckedChange={() =>
+                    handleToggle(
+                      user.userName,
+                      isChecked[user.userName] || user.isBlocked
+                    )
+                  }
+                />
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>

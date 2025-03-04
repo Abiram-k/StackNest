@@ -1,11 +1,15 @@
-import React from 'react'
+import { RootState } from "@/redux/store";
+import { ReactNode } from "react";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-const ProtectAdminLogin = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+const ProtectAdminLogin = ({ children }: { children: ReactNode }) => {
+  const { isAuthenticated } = useSelector((state: RootState) => state.admin);
 
-export default ProtectAdminLogin
+  if (isAuthenticated) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+  return children;
+};
+
+export default ProtectAdminLogin;

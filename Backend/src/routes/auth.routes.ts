@@ -1,13 +1,14 @@
 import express from 'express';
-import { UserRepository } from '../repositories/user.repository';
-import { AuthController } from '../controllers/auth.controller';
-import { AuthService } from '../services/auth.service';
+import { authController } from '../config/di';
+// import { UserRepository } from '../repositories/user.repository';
+// import { AuthController } from '../controllers/auth.controller';
+// import { AuthService } from '../services/auth.service';
 
 const router = express.Router();
 
-const userRespository = new UserRepository()
-const authService = new AuthService(userRespository)
-const authController = new AuthController(authService);
+// const userRespository = new UserRepository()
+// const authService = new AuthService(userRespository)
+// const authController = new AuthController(authService);
 
 //login
 router.post('/login', authController.login.bind(authController));

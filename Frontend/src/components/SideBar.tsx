@@ -1,4 +1,4 @@
-import { logout } from "@/redux/slice/userSlice";
+import {  userLogout } from "@/redux/slice/userSlice";
 import { Button } from "./ui/button";
 import { LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -60,7 +60,7 @@ const SideBar = ({ navItems }: sideBarPropsType) => {
               variant="destructive"
               className="w-full cursor-pointer"
               onClick={() => {
-                dispatch(logout());
+                dispatch(userLogout());
               }}
             >
               <LogOut className="h-5 w-5 mr-2" />

@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import { UserRepository } from "../repositories/user.repository";
 import { LoginUser, typeRegisterUserWithOtp } from "../../../types/user";
 import { config } from "dotenv";
 import { Types } from "mongoose";
@@ -21,15 +20,19 @@ import {
   sendPasswordResetEmail,
   sendPasswordUpdated,
 } from "../utils/email";
+import {
+  IUserAuthRepository,
+  IUserBaseRepository,
+} from "../interfaces/user.repository.interface";
+import { IUser } from "../types/IUser";
 
 config();
 
 export class AuthService {
-  private userRepository: UserRepository;
-
-  constructor(userRepository: UserRepository) {
-    this.userRepository = userRepository;
-  }
+  constructor(
+    private baseRepo: IUserBaseRepository<IUser>,
+    private authRepo: IUserAuthRepository<IUser>
+  ) {}
 
   async authenticateGoogleUser(token: string) {
     try {
@@ -37,21 +40,19 @@ export class AuthService {
 
       if (!payload) throw createHttpError(404, "Invalid google token");
 
-      const isExistUserWithEmail = await this.userRepository.findByEmail(
+      const isExistUserWithEmail = await this.baseRepo.findByEmail(
         payload.email
       );
-      const isExistUserWithGooglId =
-        await this.userRepository.findUserByGoogleId(payload.id);
+      const isExistUserWithGooglId = await this.authRepo.findUserByGoogleId(
+        payload.id
+      );
 
       if (isExistUserWithEmail && !isExistUserWithGooglId) {
-        await this.userRepository.updateUserWithGoogleId(
-          payload.email,
-          payload.id
-        );
+        await this.authRepo.updateUserWithGoogleId(payload.email, payload.id);
       }
 
       if (!isExistUserWithGooglId && !isExistUserWithEmail) {
-        await this.userRepository.create({
+        await this.baseRepo.create({
           googleId: payload.id,
           email: payload.email,
           firstName: payload.given_name,
@@ -60,7 +61,7 @@ export class AuthService {
         });
       }
 
-      const user = await this.userRepository.findUserByGoogleId(payload.id);
+      const user = await this.authRepo.findUserByGoogleId(payload.id);
 
       if (!user) throw new Error("User not found with google id");
       const data = {
@@ -80,8 +81,7 @@ export class AuthService {
   async login({ email, password, captchaToken, role }: LoginUser) {
     {
       try {
-        const user = await this.userRepository.findByEmail(email);
-        
+        const user = await this.baseRepo.findByEmail(email);
 
         if (!user || user?.role !== role)
           throw createHttpError(401, "Email not found");
@@ -94,13 +94,13 @@ export class AuthService {
               "Account is temporarily blocked. Try again later."
             );
           } else {
-            await this.userRepository.resetFailedAttempts(email);
+            await this.authRepo.resetFailedAttempts(email);
           }
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-          const user = await this.userRepository.updateFailedAttempts(email);
+          const user = await this.authRepo.updateFailedAttempts(email);
 
           if (user) {
             const { failedLoginAttempts = 0 } = user;
@@ -110,7 +110,7 @@ export class AuthService {
             }
 
             if (failedLoginAttempts >= 6) {
-              await this.userRepository.blockUserAfterFailedAttempt(email);
+              await this.authRepo.blockUserAfterFailedAttempt(email);
               throw createHttpError(
                 403,
                 "You were blocked, try after 30 minutes"
@@ -125,8 +125,8 @@ export class AuthService {
           if (!captchaResponse) throw new Error("Captcha verification failed");
         }
 
-        await this.userRepository.updateLastLogin(email);
-        await this.userRepository.resetFailedAttempts(email);
+        await this.authRepo.updateLastLogin(email);
+        await this.authRepo.resetFailedAttempts(email);
 
         const payload = { userId: user._id as Types.ObjectId, role: user.role };
 
@@ -152,7 +152,8 @@ export class AuthService {
       }
 
       const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET as string);
-      console.log(decoded);
+
+      console.log(decoded, "DECODED");
       if (!decoded) throw new Error("Invalid refresh token");
       if (typeof decoded === "object" && "userId" in decoded) {
         const newAccessToken = generateAccessToken({
@@ -168,7 +169,7 @@ export class AuthService {
   }
   async forgotPassword(email: string): Promise<void> {
     try {
-      const isExistUser = await this.userRepository.findByEmail(email);
+      const isExistUser = await this.baseRepo.findByEmail(email);
       if (!isExistUser) throw createHttpError(404, "Email not registered");
 
       const JWT_SECRET = process.env.JWT_SECRET;
@@ -178,7 +179,7 @@ export class AuthService {
       const resetToken = jwt.sign({ userId: isExistUser._id }, JWT_SECRET, {
         expiresIn: "15m",
       });
-      await this.userRepository.setPassResetToken({ email, resetToken });
+      await this.authRepo.setPassResetToken({ email, resetToken });
 
       await sendPasswordResetEmail(isExistUser.email, resetToken);
     } catch (error) {
@@ -199,11 +200,11 @@ export class AuthService {
     };
     console.log(token, password);
     console.log(data);
-    const user = await this.userRepository.findUserByRestToken(data);
+    const user = await this.authRepo.findUserByRestToken(data);
 
     if (!user) throw createHttpError(404, "Invalid or token expired");
 
-    await this.userRepository.updatePassword({
+    await this.authRepo.updatePassword({
       email: user?.email,
       password: hashedPassword,
     });
@@ -213,7 +214,7 @@ export class AuthService {
 
   async initiateRegistration(email: string): Promise<void> {
     try {
-      const isExist = await this.userRepository.findByEmail(email);
+      const isExist = await this.baseRepo.findByEmail(email);
       if (isExist) throw createHttpError(400, "User already exisit");
 
       const otp = generateOTP();
@@ -240,7 +241,7 @@ export class AuthService {
     try {
       const hashedPassword = await hashPassword(password);
 
-      const user = await this.userRepository.create({
+      const user = await this.baseRepo.create({
         email,
         password: hashedPassword,
         firstName: name,
