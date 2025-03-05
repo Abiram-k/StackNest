@@ -1,4 +1,4 @@
-import { IUser } from "../../../../types/user";
+import { axiosResponse, IUser } from "../../../../types/user";
 import { HttpService } from "../httpService";
 
 interface UsersResponse {
@@ -18,4 +18,11 @@ export class AdminService {
     );
     return response;
   }
+
+  async blockUser(userName: string): Promise<axiosResponse> {
+    const response = await this.httpService.patch<axiosResponse>(`/admin/user/${userName}/block`);
+    return response;
+  }
+
+
 }

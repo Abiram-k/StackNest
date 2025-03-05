@@ -46,8 +46,8 @@ export default function ProfilePage() {
     },
   });
 
-  const { data: user, isPending: fetchIsPending } = useUserProfile();
-
+  const { data: user, isPending: fetchIsPending, isError } = useUserProfile();
+  
   useEffect(() => {
     if (user?.userDetails) {
       setFormData(user.userDetails);

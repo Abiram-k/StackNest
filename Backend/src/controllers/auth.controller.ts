@@ -89,7 +89,6 @@ export class AuthController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("REQ GOTTEND", req.query);
       const { role } = req.query;
       if (!role) {
         console.log("No role founded during generating new access token");
@@ -105,7 +104,6 @@ export class AuthController {
       }
       const newAccessToken = await this.authService.generateAccessToken(
         refreshToken,
-        
       );
 
       res.json({

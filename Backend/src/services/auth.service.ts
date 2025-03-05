@@ -43,6 +43,7 @@ export class AuthService {
       const isExistUserWithEmail = await this.baseRepo.findByEmail(
         payload.email
       );
+
       const isExistUserWithGooglId = await this.authRepo.findUserByGoogleId(
         payload.id
       );
@@ -87,6 +88,9 @@ export class AuthService {
           throw createHttpError(401, "Email not found");
 
         if (user.isBlocked) {
+          if (!user.blockedUntil) {
+            throw createHttpError(403, "You account has been suspended");
+          }
           const now = new Date();
           if (user.blockedUntil && user.blockedUntil > now) {
             throw createHttpError(
@@ -153,14 +157,14 @@ export class AuthService {
 
       const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET as string);
 
-      console.log(decoded, "DECODED");
       if (!decoded) throw new Error("Invalid refresh token");
+      
       if (typeof decoded === "object" && "userId" in decoded) {
         const newAccessToken = generateAccessToken({
           userId: decoded.userId,
           role: decoded.role,
         });
-        // console.log("NEW TOKEN: ",newAccessToken)
+        
         return newAccessToken;
       }
     } catch (error) {

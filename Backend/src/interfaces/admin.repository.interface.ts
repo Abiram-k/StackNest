@@ -10,4 +10,6 @@ export interface IAdminRepository<T> {
       page?: number,
       limit?: number
     ): Promise<{ users: T[]; totalPages: number }>;
+
+    blockUser(userName:string):Promise<boolean>;
   }

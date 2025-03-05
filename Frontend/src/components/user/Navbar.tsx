@@ -17,7 +17,7 @@ const Navbar = ({
     <nav className="fixed top-0 w-full bg-background z-50 border-b shadow-sm">
       <div className="container mx-auto px-2 sm:px-4 lg:px-6">
         <div className="flex h-20 items-center justify-between">
-          <Logo isAdmin={true}/>
+          <Logo isAdmin={true} />
 
           <div className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
             <div className="flex items-center gap-6">
@@ -26,14 +26,17 @@ const Navbar = ({
                   <CustomNavLink to="/user/home" end>
                     Home
                   </CustomNavLink>
-                  <CustomNavLink to="/user/about" end>
-                    About
+                  <CustomNavLink to="/user/rooms" end>
+                    Rooms
                   </CustomNavLink>
                   <CustomNavLink to="/user/challenge" end>
                     Challenge
                   </CustomNavLink>
                   <CustomNavLink to="/user/highlights" end>
                     Highlights
+                  </CustomNavLink>
+                  <CustomNavLink to="/user/about" end>
+                    About
                   </CustomNavLink>
                   <CustomNavLink to="/user/contact" end>
                     Contact
@@ -80,36 +83,47 @@ const Navbar = ({
               </>
             ) : (
               <>
-                <Button variant="ghost" size="icon" className="hover:bg-muted">
-                  <Search className="h-7 w-7" />
-                </Button>
-                <Button variant="ghost" size="icon" className="hover:bg-muted">
-                  <Heart className="h-7 w-7" />
-                </Button>
-                <Link to={"/user/profile"}>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="hover:bg-muted"
-                  >
-                    <User className="h-7 w-7" />
-                  </Button>
-                </Link>
-                {!isAdmin &&
-
-                <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="md:hidden p-2 rounded-md 
+                {!isAdmin && (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="hover:bg-muted"
+                    >
+                      <Search className="h-7 w-7" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="hover:bg-muted"
+                    >
+                      <Heart className="h-7 w-7" />
+                    </Button>
+                    <Link to={"/user/profile"}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-muted"
+                      >
+                        <User className="h-7 w-7" />
+                      </Button>
+                    </Link>
+                  </>
+                )}
+                {!isAdmin && (
+                  <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="md:hidden p-2 rounded-md 
                 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary"
-                  aria-label="Toggle navigation menu"
-                >
-                  {isOpen ? (
-                    <X className="h-6 w-6" />
-                  ) : (
-                    <Menu className="h-6 w-6" />
-                  )}
-                </button>
-                }
+                    aria-label="Toggle navigation menu"
+                  >
+                    {isOpen ? (
+                      <X className="h-6 w-6" />
+                    ) : (
+                      <Menu className="h-6 w-6" />
+                    )}
+                  </button>
+                )}
               </>
             )}
           </div>

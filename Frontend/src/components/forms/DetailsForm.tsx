@@ -24,7 +24,7 @@ interface DetailsFormProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   submitButtonText?: string;
   isEditing: boolean;
-  formData: verifyUserProfileSchemaType;
+  formData?: any;
 }
 
 const DetailsForm = ({

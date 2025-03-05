@@ -7,19 +7,23 @@ const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  console.error(error);
+  console.error(error, "From centralized");
 
   if (createHttpError.isHttpError(error)) {
+    
     res.status(error.statusCode).json({
-        success: false,
-        message: error.message || " Error Occured",
+      success: false,
+      message: error.message || " Error Occured",
     });
-    console.error(error.statusCode,error.message);
-} else {
+    console.error(error.statusCode, error.message);
+
+  } else {
+
     res.status(500).json({
       success: false,
       message: error.message || "Internal Server Error",
     });
+
   }
 };
 

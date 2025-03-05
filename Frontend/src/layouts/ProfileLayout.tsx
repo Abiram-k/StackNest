@@ -21,23 +21,23 @@ const navItems = [
   {
     name: "Posts",
     icon: <FileText className="h-5 w-5" />,
-    to: "/user/posts",
+    to: "/user/profileposts",
   },
-  {
-    name: "Rooms",
-    icon: <Layout className="h-5 w-5" />,
-    to: "/user/rooms",
-  },
-  { name: "Rooms", icon: <Home className="w-5 h-5" />, to: "/admin/rooms" },
+  // {
+  //   name: "Rooms",
+  //   icon: <Layout className="h-5 w-5" />,
+  //   to: "/user/profile/rooms",
+  // },
+  // { name: "Rooms", icon: <Home className="w-5 h-5" />, to: "/admin/rooms" },
   {
     name: "Friends",
     icon: <Users className="h-5 w-5" />,
-    to: "/user/friends",
+    to: "/user/profile/friends",
   },
   {
     name: "Daily challenge",
     icon: <Crown className="h-5 w-5" />,
-    to: "/user/premium",
+    to: "/user/profile/premium",
   },
   {
     name: "Notifications",
@@ -47,7 +47,7 @@ const navItems = [
   {
     name: "Settings",
     icon: <Settings className="h-5 w-5" />,
-    to: "/user/settings",
+    to: "/user/profile/settings",
   },
 ];
 

@@ -30,7 +30,7 @@ export default function ConfirmationDialog({
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-3 max-w-xs mx-auto">
           <button
             onClick={onConfirm}
-            className="bg-red-700 hover:bg-red-800 text-white py-3 px-6 rounded-full font-medium w-full transition-colors"
+            className="bg-red-700  hover:bg-red-800 text-white py-3 px-6 rounded-full font-medium w-full transition-colors"
           >
             Confirm
           </button>

@@ -26,8 +26,7 @@ export const useLogin = (
     mutationFn: (data: LoginUser) => userAuthService.login(data, role),
     onSuccess: (data) => {
       console.log(data);
-      toast.success(data?.message || "Login successful"); 
-
+      toast.success(data?.message || "Login successful");
       setEnableCaptcha(false);
       dispatch(setCredentials({}));
       if (role == "users") navigate("/user/home");

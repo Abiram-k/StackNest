@@ -2,23 +2,25 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { Button } from "../ui/button";
 import toast from "react-hot-toast";
 import { axiosInstancePublic } from "@/api/apiSevice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "@/redux/slice/userSlice";
 
 const GoogleAuth = () => {
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleSuccess = async (tokenResponse: any) => {
     const { access_token } = tokenResponse;
-    const response = await axiosInstancePublic.post(
-      `/auth/google/callback`,
-      { token: access_token }
-    );
-
+    const response = await axiosInstancePublic.post(`/auth/google/callback`, {
+      token: access_token,
+    });
     const data = response.data;
 
     if (data.success) {
-      console.log(data)
+      navigate("/user/home");
+      dispatch(setCredentials({}));
       toast.success("Login Successful");
     }
-    
   };
   const login = useGoogleLogin({
     onSuccess: handleSuccess,

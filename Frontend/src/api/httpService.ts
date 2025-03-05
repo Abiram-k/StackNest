@@ -17,6 +17,14 @@ export class HttpService {
       throw this.handleError(error);
     }
   }
+  async patch<T>(url: string): Promise<T> {
+    try {
+      const response = await axiosInstance.patch<T>(url);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
   async post<T>(url: string, data: any): Promise<T> {
     try {
       const response = await axiosInstance.post<T>(url, data);
@@ -39,5 +47,4 @@ export class HttpService {
       return new Error(error.response?.data.message || "Something went wrong");
     return new Error(error.message || "Something went wrong");
   }
-  
 }

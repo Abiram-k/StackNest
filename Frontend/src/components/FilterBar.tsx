@@ -9,7 +9,8 @@ type filterBarPropsType = {
   setSearchQuery: (value: string) => void;
   setFilterQuery: (value: string) => void;
   setSortedOrder: (value: string) => void;
-  filterOptions: optionType[];
+  filterOptions?: optionType[];
+  sortOptions?: optionType[];
 };
 
 const FilterBar = ({
@@ -17,6 +18,7 @@ const FilterBar = ({
   setFilterQuery,
   filterOptions,
   setSortedOrder,
+  sortOptions,
 }: filterBarPropsType) => {
   const [search, setSearch] = useState("");
 
@@ -46,7 +48,7 @@ const FilterBar = ({
             className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors duration-200 cursor-pointer [&>option]:bg-white [&>option]:text-gray-800"
           >
             <option value="">Filter by</option>
-            {filterOptions.map((option, index) => (
+            {filterOptions?.map((option, index) => (
               <option key={index} value={option.value}>
                 {option.label || option.value}
               </option>
@@ -74,7 +76,7 @@ const FilterBar = ({
             className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors duration-200 cursor-pointer [&>option]:bg-white [&>option]:text-gray-800"
           >
             <option value="">Select Order</option>
-            {filterOptions.map((option, index) => (
+            {sortOptions?.map((option, index) => (
               <option key={index} value={option.value}>
                 {option.label || option.value}
               </option>
