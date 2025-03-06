@@ -1,12 +1,12 @@
 import { NextFunction, Response } from "express";
 import { AuthRequest } from "../../types/IAuth";
-import { UserService } from "../../services/user/user.service";
+import { UserProfileService } from "../../services/user/user.profile.service";
 
-export class UserController {
-  private userService: UserService;
+export class UserProfileController {
+  private userProfileService: UserProfileService;
 
-  constructor(userService: UserService) {
-    this.userService = userService;
+  constructor(userProfileService: UserProfileService) {
+    this.userProfileService = userProfileService;
   }
 
   async getUserData(req: AuthRequest, res: Response, next: NextFunction) {
@@ -14,7 +14,7 @@ export class UserController {
       if (!req.user) throw new Error("No User in Req");
       const { userId } = req.user;
       if (!userId) throw new Error("User Id not get");
-      const userDetails = await this.userService.getUserDetails(userId);
+      const userDetails = await this.userProfileService.getUserDetails(userId);
       res.json({ success: true, userDetails, message: "User details fetched" });
     } catch (error) {
       next(error);
@@ -23,7 +23,7 @@ export class UserController {
 
   async updateUserProfile(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      await this.userService.updateUserDetails(
+      await this.userProfileService.updateUserDetails(
         req.user?.userId as string,
         req.body
       );

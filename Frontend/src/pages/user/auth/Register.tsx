@@ -1,6 +1,6 @@
 import { GalleryVerticalEnd } from "lucide-react";
-import { useRegisterForm } from "@/hooks/useForm";
-import { registerSchema } from "@/validation/schema";
+import { useRegisterForm } from "@/hooks/validation/useLoginForm";
+import { registerSchema } from "@/validation/authSchema";
 import { RegisterUser } from "../../../../../types/user";
 import { Form } from "@/components/forms/Form";
 import { Link } from "react-router-dom";

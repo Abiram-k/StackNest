@@ -1,5 +1,5 @@
-import { useLoginForm } from "@/hooks/useForm";
-import { loginSchema } from "@/validation/schema";
+import { useLoginForm } from "@/hooks/validation/useLoginForm";
+import { loginSchema } from "@/validation/authSchema";
 import { LoginUser } from "../../../../../types/user";
 import { Form } from "@/components/forms/Form";
 import images from "../../../assets/login-img.jpg";

@@ -1,6 +1,5 @@
 import {
   typeUserResetToken,
-  verifyUserProfileSchemaType,
 } from "../../../types/user";
 import User from "../models/user.model";
 import {

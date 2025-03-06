@@ -4,11 +4,12 @@ import AvatarGroup from "../avatar-group";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 interface Room {
-  id: string;
-  name: string;
+  roomId: string;
+  title: string;
   description: string;
   participants: { name: string; avatar: string }[];
-  hasAward?: boolean;
+  isPremium?: string;
+  limit: number;
 }
 
 interface RoomCardProps {
@@ -21,8 +22,8 @@ const RoomCard = ({ room, type }: RoomCardProps) => {
     <div className="bg-white rounded-lg shadow-md p-6 space-y-4">
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-semibold">{room.name}</h3>
-          <p className="text-sm text-gray-500">ID: {room.id}</p>
+          <h3 className="text-lg font-semibold">{room.title}</h3>
+          <p className="text-sm text-gray-500">ID: {room.roomId}</p>
         </div>
         <div className="flex gap-2">
           {type === "my-room" ? (
@@ -35,7 +36,9 @@ const RoomCard = ({ room, type }: RoomCardProps) => {
               </Button>
             </>
           ) : (
-            room.hasAward && <Trophy className="h-5 w-5 text-yellow-500" />
+            room.isPremium == "Yes" && (
+              <Trophy className="h-5 w-5 text-yellow-500" />
+            )
           )}
         </div>
       </div>
@@ -56,10 +59,11 @@ const RoomCard = ({ room, type }: RoomCardProps) => {
             }
           >
             {type === "my-room" ? "Enter" : "Join"}
-            
           </Button>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">10/20</span>
+            <span className="text-sm text-gray-500">
+              {room.participants.length}/{room.limit}
+            </span>
             <AvatarGroup>
               {room.participants.map((participant, i) => (
                 <Avatar key={i}>

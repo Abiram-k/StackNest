@@ -1,26 +1,30 @@
-import { UseFormSetValue } from "react-hook-form";
 import { Input } from "../ui/input";
-
 import { Button } from "../ui/button";
 import { errorText } from "../ui/errorText";
-import { verifyUserProfileSchemaType } from "../../../../types/user";
+import { Calendar } from "lucide-react";
 
 interface FormField {
-  name: keyof verifyUserProfileSchemaType;
+  name: any;
   label: string;
-  type: "text" | "select" | "multi-select" | "textarea" | "email" | "tel";
+  type:
+    | "text"
+    | "select"
+    | "multi-select"
+    | "textarea"
+    | "email"
+    | "tel"
+    | "date";
   placeholder?: string;
   options?: { value: string; label: string }[];
   defaultValue?: any;
-  setValue: UseFormSetValue<verifyUserProfileSchemaType>;
+  setValue: any;
 }
 
 interface DetailsFormProps {
-  fields: FormField[][]; // Array of columns with fields
+  fields: FormField[][];
   register: any;
   errors: any;
   isPending?: boolean;
-  // setValue:any;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   submitButtonText?: string;
   isEditing: boolean;
@@ -39,11 +43,38 @@ const DetailsForm = ({
 }: DetailsFormProps) => {
   const renderField = (field: FormField) => {
     switch (field.type) {
+      case "date":
+        return (
+          <div className="space-y-2">
+            <div className="flex gap-4">
+              <div className="relative flex-1">
+                <input
+                  // type="date"
+                  type="datetime-local"
+                  {...register("scheduledAt")}
+                  defaultValue={""}
+                  onChange={(e) => field.setValue("scheduledAt", e.target.value)}
+                  className="w-full border rounded-lg p-2.5 pr-10 focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+              </div>
+              {/* <div className="relative flex-1">
+                <input
+                  type="time"
+                  {...register("time")}
+                  defaultValue={""}
+                  onChange={(e) => field.setValue("time", e.target.value)}
+                  className="w-full border rounded-lg p-2.5 pr-10 focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+              </div> */}
+            </div>
+          </div>
+        );
+
       case "select":
         return (
           <div className="relative w-full">
             <select
-              id="gender"
+              id={field.name}
               {...register(field.name)}
               onChange={(e) => field.setValue(field.name, e.target.value)}
               className={`w-full px-3 py-2 border rounded-lg 
@@ -51,7 +82,7 @@ const DetailsForm = ({
                 focus:border-primary-500 bg-white dark:bg-gray-900 dark:text-white 
                 dark:border-gray-300 appearance-none relative 
                 ${isEditing ? "border-black" : "border-gray-300"}`}
-              defaultValue={formData.gender}
+              defaultValue={formData && formData[field.name]}
               disabled={!isEditing}
             >
               <option value="">Select Gender</option>

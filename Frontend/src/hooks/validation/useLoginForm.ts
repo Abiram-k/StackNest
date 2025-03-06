@@ -1,7 +1,7 @@
 import { useForm, UseFormReturn, DefaultValues } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { verifyPasswordSchemaType, verifyUserProfileSchemaType } from "../../../types/user";
+import { verifyPasswordSchemaType, verifyUserProfileSchemaType } from "../../../../types/user";
 
 type LoginSchemaType = {
   email: string;
@@ -80,16 +80,16 @@ export function useVerifyPassword({
   });
 }
 
-interface IverifyUserProfileProps{
-  schema: yup.ObjectSchema<verifyUserProfileSchemaType> ;
-  defaultValues: DefaultValues<verifyUserProfileSchemaType>;
-}
+// interface IverifyUserProfileProps{
+//   schema: yup.ObjectSchema<verifyUserProfileSchemaType> ;
+//   defaultValues: DefaultValues<verifyUserProfileSchemaType>;
+// }
 
-export function verifyUserProfile({
-  schema,defaultValues
-}:IverifyUserProfileProps) :UseFormReturn<verifyUserProfileSchemaType>{
-  return useForm<verifyUserProfileSchemaType>({
-    resolver:yupResolver(schema),
-    defaultValues
-  })
-}
+// export function verifyUserProfile({
+//   schema,defaultValues
+// }:IverifyUserProfileProps) :UseFormReturn<verifyUserProfileSchemaType>{
+//   return useForm<verifyUserProfileSchemaType>({
+//     resolver:yupResolver(schema),
+//     defaultValues
+//   })
+// }

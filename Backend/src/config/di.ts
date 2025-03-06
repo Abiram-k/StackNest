@@ -5,25 +5,36 @@ import {
   UserBaseRepository,
 } from "../repositories/user.repository";
 import { AuthController } from "../controllers/auth.controller";
-import { UserService } from "../services/user/user.service";
-import { UserController } from "../controllers/user/user.controller";
+import { UserProfileService } from "../services/user/user.profile.service";
+import { UserProfileController } from "../controllers/user/user.profile.controller";
 import { AdminController } from "../controllers/admin/admin.controller";
 import { AdminService } from "../services/admin/admin.service";
 import { AdminRespository } from "../repositories/admin.repository";
+import { UserRoomService } from "../services/user/user.room.service";
+import { UserRoomController } from "../controllers/user/user.room.controller";
+import { RoomRespository } from "../repositories/room.repository";
 
 // Respositories
 const userAuthRepository = new UserAuthRespository();
 const userBaseRepository = new UserBaseRepository();
 const adminRespository = new AdminRespository();
+const roomRespository = new RoomRespository();
 
 // Services
 const adminService = new AdminService(adminRespository);
 const authService = new AuthService(userBaseRepository, userAuthRepository);
-const userServie = new UserService(userBaseRepository);
+const userProfileService = new UserProfileService(userBaseRepository);
+const userRoomService = new UserRoomService(roomRespository);
 
 //  controllers
 const adminController = new AdminController(adminService);
 const authController = new AuthController(authService);
-const userController = new UserController(userServie);
+const userProfileController = new UserProfileController(userProfileService);
+const userRoomController = new UserRoomController(userRoomService);
 
-export { authController, userController,adminController };
+export {
+  authController,
+  userProfileController,
+  adminController,
+  userRoomController,
+};

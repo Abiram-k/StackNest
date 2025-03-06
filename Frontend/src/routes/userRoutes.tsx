@@ -1,4 +1,5 @@
 import ProfileLayout from "@/layouts/ProfileLayout";
+import CreateRoom from "@/pages/user/pages/CreateRoom";
 import ProtectHome from "@/protectedRoutes/user/ProtectHome";
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
@@ -27,8 +28,8 @@ export const userRoutes: RouteObject[] = [
       {
         path: "room",
         element: <RoomsListPage />,
-        // children: [{ path: "create", element: <CreateRoom /> }],
       },
+      { path: "room/create", element: <CreateRoom /> },
       {
         path: "profile",
         element: <ProfileLayout />,

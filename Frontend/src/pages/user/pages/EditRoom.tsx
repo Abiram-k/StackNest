@@ -4,18 +4,18 @@ import { validateRoomSchema } from "@/validation/roomSchema";
 import { ArrowLeft } from "lucide-react";
 import { RoomSchema } from "../../../../../types/user";
 import { useCreateRoom } from "@/hooks/room/useCreateRoom";
+import { useUpdateRoom } from "@/hooks/room/useUpdateRoom";
 
-export default function CreateRoom() {
+export default function EditRoom() {
   const {
     register,
-    reset,
     handleSubmit,
     setValue,
     formState: { errors },
   } = useVerifyRoomForm({
     schema: validateRoomSchema,
     defaultValues: {
-      scheduledAt: new Date(),
+      scheduledAt: undefined,
       description: "",
       isPremium: "No",
       isPrivate: "No",
@@ -25,12 +25,13 @@ export default function CreateRoom() {
     },
   });
 
-  const { mutate, isPending } = useCreateRoom();
+  const { mutate, isPending } = useUpdateRoom();
   const onSubmit = (data: RoomSchema) => {
     console.log(data);
-    mutate(data);
+    mutate({ id: "1232", data });
   };
 
+  
   return (
     <div className="min-h-screen bg-white mt-20">
       <div className="max-w-4xl mx-auto px-4 py-8">

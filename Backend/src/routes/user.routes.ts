@@ -1,17 +1,43 @@
-import express from 'express';
-import { verifyUser } from '../middlewares/verifyUser';
-import { UserService } from '../services/user/user.service';
-import { UserController } from '../controllers/user/user.controller';
-import { userController } from '../config/di';
+import express from "express";
+import { verifyUser } from "../middlewares/verifyUser";
+import { userProfileController, userRoomController } from "../config/di";
 
 const router = express.Router();
 
-// const userRespository = new UserRepository()
-// const userService = new UserService(userRespository)
-// const userController = new UserController(userService);
+// profile
+router.put(
+  "/details",
+  verifyUser,
+  userProfileController.updateUserProfile.bind(userProfileController)
+);
+router.get(
+  "/details",
+  verifyUser,
+  userProfileController.getUserData.bind(userProfileController)
+);
 
+//room
+router.post(
+  "/room",
+  verifyUser,
+  userRoomController.createRoom.bind(userRoomController)
+);
+router.put(
+  "/room",
+  verifyUser,
+  userRoomController.updateRoom.bind(userRoomController)
+);
 
-router.put("/details",verifyUser,userController.updateUserProfile.bind(userController));
-router.get("/details",verifyUser,userController.getUserData.bind(userController));
+router.get(
+  "/rooms/my-rooms",
+  verifyUser,
+  userRoomController.fetchMyRooms.bind(userRoomController)
+);
+router.get(
+  "/rooms/available-rooms",
+  verifyUser,
+  userRoomController.fetchAllAvailableRooms.bind(userRoomController)
+);
+
 
 export default router;

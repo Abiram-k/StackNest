@@ -6,9 +6,10 @@ export interface IRoom extends Document {
   description: string;
   host: Types.ObjectId;
   isBlocked: boolean;
+  startedAt:Date,
   participants: Types.ObjectId[];
-  isPrivate: boolean;
-  isPremium: boolean;
+  isPrivate: string;
+  isPremium: string;
   password?: string;
   scheduledAt?: Date;
   status: "online" | "offline" | "scheduled";

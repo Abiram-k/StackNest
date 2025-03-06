@@ -2,7 +2,7 @@ import { verifyUserProfileSchemaType } from "../../../../types/user";
 import { IUserBaseRepository } from "../../interfaces/user.repository.interface";
 import { IUser } from "../../types/IUser";
 
-export class UserService {
+export class UserProfileService {
   constructor(private baseRepo: IUserBaseRepository<IUser>) {}
 
   async getUserDetails(id: string): Promise<verifyUserProfileSchemaType> {

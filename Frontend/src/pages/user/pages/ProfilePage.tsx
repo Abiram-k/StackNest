@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Edit2 } from "lucide-react";
 import DetailsForm from "@/components/forms/DetailsForm";
-import { verifyUserProfile } from "@/hooks/useForm";
+import { verifyUserProfile } from "@/hooks/validation/useProfileForm";
 import { validateProfileSchema } from "@/validation/userDetailsSchema";
 import { useEffect, useRef, useState } from "react";
 import { verifyUserProfileSchemaType } from "../../../../../types/user";

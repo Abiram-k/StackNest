@@ -1,6 +1,6 @@
 import { Form } from "@/components/forms/Form";
-import { verifyPasswordSchema } from "@/validation/schema";
-import { useVerifyPassword } from "@/hooks/useForm";
+import { verifyPasswordSchema } from "@/validation/authSchema";
+import { useVerifyPassword } from "@/hooks/validation/useLoginForm";
 import { useSearchParams } from "react-router-dom";
 import { verifyPasswordSchemaType } from "../../../../../types/user";
 import { useResetPassword } from "@/hooks/useResetPassword";

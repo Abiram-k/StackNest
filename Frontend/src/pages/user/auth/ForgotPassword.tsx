@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Form } from "@/components/forms/Form";
-import { verifyEmailSchema } from "@/validation/schema";
-import { useVerifyEmail } from "@/hooks/useForm";
+import { verifyEmailSchema } from "@/validation/authSchema";
+import { useVerifyEmail } from "@/hooks/validation/useLoginForm";
 import { ArrowLeftButton } from "@/components/ui/ArrowLeftButton";
 import { EmailSendedSuccess } from "@/components/EmailSendedSucess";
 import { useForgotPassword } from "@/hooks/useForgotPassword";

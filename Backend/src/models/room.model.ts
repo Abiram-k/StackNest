@@ -25,8 +25,9 @@ const roomSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    isPrivate: { type: Boolean, default: false },
-    isPremium: { type: Boolean, default: false },
+    startedAt: { type: Date, required: true },
+    isPrivate: { type: String, default: "No" },
+    isPremium: { type: String, default: "No" },
     password: { type: String },
     scheduledAt: { type: Date, default: null },
     status: {
@@ -34,16 +35,15 @@ const roomSchema = new mongoose.Schema(
       enum: ["online", "offline", "scheduled"],
       default: "offline",
     },
-    endedAt: { type: Date, required: true },
+    endedAt: { type: Date, default: null },
     limit: { type: Number, default: 5 },
     createdAt: { type: Date, default: Date.now },
-    isBlocked:{
-        type:String,
-        default:false
-    }
+    isBlocked: {
+      type: String,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-
-export default mongoose.model<IRoom>("Room",roomSchema);
+export default mongoose.model<IRoom>("Room", roomSchema);

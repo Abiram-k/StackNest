@@ -26,7 +26,7 @@ const Navbar = ({
                   <CustomNavLink to="/user/home" end>
                     Home
                   </CustomNavLink>
-                  <CustomNavLink to="/user/rooms" end>
+                  <CustomNavLink to="/user/room" end>
                     Rooms
                   </CustomNavLink>
                   <CustomNavLink to="/user/challenge" end>
