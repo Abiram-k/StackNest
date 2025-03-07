@@ -5,12 +5,18 @@ import { ArrowLeft } from "lucide-react";
 import { RoomSchema } from "../../../../../types/user";
 import { useCreateRoom } from "@/hooks/room/useCreateRoom";
 import { useUpdateRoom } from "@/hooks/room/useUpdateRoom";
+import { data, useNavigate, useParams, useRouteError } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Spinner } from "@/components/ui/spinner";
+import { useFetchSelectedRoom } from "@/hooks/room/userFetchSelectedRoom";
+import { useEffect } from "react";
 
 export default function EditRoom() {
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useVerifyRoomForm({
     schema: validateRoomSchema,
@@ -25,18 +31,37 @@ export default function EditRoom() {
     },
   });
 
-  const { mutate, isPending } = useUpdateRoom();
+  const navigate = useNavigate();
+  const { roomId } = useParams<{ roomId: string }>();
+
+  if (!roomId) {
+    toast.success("Room ID is missing!");
+    return;
+  }
+
+  const { data: selectedRoom, isPending: isGetRoomPeding } =
+    useFetchSelectedRoom("users",roomId);
+    console.log(selectedRoom)
+
+  useEffect(() => {
+    reset(selectedRoom?.room);
+  }, [selectedRoom?.room]);
+
+  const { mutate, isPending: isUpdateRoomPending } = useUpdateRoom();
+
   const onSubmit = (data: RoomSchema) => {
-    console.log(data);
-    mutate({ id: "1232", data });
+    mutate({ id: roomId, data });
   };
 
-  
   return (
     <div className="min-h-screen bg-white mt-20">
+      {(isGetRoomPeding || isUpdateRoomPending) && <Spinner />}
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-gray-50 rounded-3xl p-8">
-          <button className="flex items-center text-gray-600 mb-6 hover:text-gray-900">
+          <button
+            className="flex items-center text-gray-600 mb-6 hover:text-gray-900"
+            onClick={() => navigate(-1)}
+          >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back
           </button>
@@ -106,13 +131,6 @@ export default function EditRoom() {
                   label: "Description",
                   type: "text",
                   placeholder: "Mobile  Descriptoin",
-                  setValue,
-                },
-                {
-                  name: "shedule_at",
-                  label: "Schedule At",
-                  type: "date",
-                  placeholder: "Select Date",
                   setValue,
                 },
               ],

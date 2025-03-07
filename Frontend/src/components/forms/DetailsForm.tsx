@@ -57,15 +57,6 @@ const DetailsForm = ({
                   className="w-full border rounded-lg p-2.5 pr-10 focus:ring-2 focus:ring-blue-500 outline-none"
                 />
               </div>
-              {/* <div className="relative flex-1">
-                <input
-                  type="time"
-                  {...register("time")}
-                  defaultValue={""}
-                  onChange={(e) => field.setValue("time", e.target.value)}
-                  className="w-full border rounded-lg p-2.5 pr-10 focus:ring-2 focus:ring-blue-500 outline-none"
-                />
-              </div> */}
             </div>
           </div>
         );
@@ -82,7 +73,7 @@ const DetailsForm = ({
                 focus:border-primary-500 bg-white dark:bg-gray-900 dark:text-white 
                 dark:border-gray-300 appearance-none relative 
                 ${isEditing ? "border-black" : "border-gray-300"}`}
-              defaultValue={formData && formData[field.name]}
+              // defaultValue={formData && formData[field.name]}
               disabled={!isEditing}
             >
               <option value="">Select Gender</option>

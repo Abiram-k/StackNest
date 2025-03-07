@@ -82,10 +82,6 @@ export default function ProfilePage() {
   };
 
   const handleImageUpdate = (file: File) => {
-    // alert(imageUrl);
-    // if (!imageUrl) return;
-    // setValue("avatar", imageUrl);
-    // setFormData({ ...formData, avatar: imageUrl });
     selectedAvatar.current = file;
   };
 

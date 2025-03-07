@@ -25,7 +25,7 @@ const roomSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    startedAt: { type: Date, required: true },
+    startedAt: { type: Date, default: null },
     isPrivate: { type: String, default: "No" },
     isPremium: { type: String, default: "No" },
     password: { type: String },

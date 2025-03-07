@@ -11,7 +11,7 @@ interface ConfirmationDialogProps {
 export default function ConfirmationDialog({
   onConfirm,
   onCancel,
-  message = "Once you confirm, it will remove from list and you can find from bottom permanently. Action can't be undone",
+  message = "Once you confirm, Action can't be undone",
   title = "Confirmation",
 }: ConfirmationDialogProps) {
   return (

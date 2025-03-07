@@ -11,6 +11,7 @@ export const verifyAdmin = (
   next: NextFunction
 ): void => {
   const authReq = req as AuthRequest;
+  console.log(authReq.user);
   if (!authReq.user || authReq.user.role !== "admin") {
     console.log("Access Denied: No Authrization ");
     res.status(403).json({ message: "Access Denied: No Authrization Only" });
@@ -18,4 +19,3 @@ export const verifyAdmin = (
   }
   next();
 };
-

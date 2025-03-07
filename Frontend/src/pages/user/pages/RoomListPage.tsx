@@ -1,63 +1,57 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Heading1, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RoomCard from "@/components/rooms/RoomCard";
 import { Outlet, useNavigate } from "react-router-dom";
 import FilterBar from "@/components/FilterBar";
 import Pagination from "@/components/Pagination";
 import { useFetchAllRooms, useFetchMyRooms } from "@/hooks/room/useFetchRooms";
+import { useRemoveRoom } from "@/hooks/room/useRemoveRoom";
+import ConfirmationDialog from "@/components/ui/confirmationDialog";
+import toast from "react-hot-toast";
 
-interface Room {
-  id: string;
-  name: string;
-  description: string;
-  participants: { name: string; avatar: string }[];
-  hasAward?: boolean;
-}
+const filterOptions = [{ value: "isPremium" }, { value: "isPrivate" }];
+const sortOptions = [{ value: "Ascending" }, { value: "Descending" }];
 
 export default function RoomsListPage() {
+  const [currentPage, setCurrentPage] = useState(0);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("");
+  const [removeByRoomId, setRemoveByRoomId] = useState("");
   const navigate = useNavigate();
 
-  const { data } = useFetchMyRooms();
-  const { data: availableRoomss } = useFetchAllRooms({ search, sort, filter });
-  console.log(availableRoomss, "ALL rooms");
+  const { data: myRooms, isPending: fetchMyRoomPending } = useFetchMyRooms();
+  const { data: availableRooms, isPending: fetchAllRoomsPending } =
+    useFetchAllRooms("users", {
+      search,
+      sort,
+      filter,
+      currentPage,
+    });
 
-  // const myRooms: Room[] = [
-  //   {
-  //     id: "29929292",
-  //     name: "CodeCrafters Hub",
-  //     description:
-  //       "A space for developers to discuss programming languages, best practices, and code optimization techniques. Share your projects, get feedback, and collaborate on open-source contributions.",
-  //     participants: [
-  //       { name: "User 1", avatar: "/placeholder.svg?height=32&width=32" },
-  //       { name: "User 2", avatar: "/placeholder.svg?height=32&width=32" },
-  //       { name: "User 3", avatar: "/placeholder.svg?height=32&width=32" },
-  //       { name: "User 4", avatar: "/placeholder.svg?height=32&width=32" },
-  //     ],
-  //   },
-  // ];
+  const handleEditRoom = (roomId: string) => {
+    navigate(`/user/room/${roomId}/edit`);
+  };
 
-  const availableRooms: Room[] = Array(6)
-    .fill(null)
-    .map((_, i) => ({
-      id: "29929292",
-      name: "CodeCrafters Hub",
-      description:
-        "A space for developers to discuss programming languages, best practices, and code optimization techniques. Share your projects, get feedback, and collaborate on open-source contributions.",
-      participants: [
-        { name: "User 1", avatar: "/placeholder.svg?height=32&width=32" },
-        { name: "User 2", avatar: "/placeholder.svg?height=32&width=32" },
-        { name: "User 3", avatar: "/placeholder.svg?height=32&width=32" },
-        { name: "User 4", avatar: "/placeholder.svg?height=32&width=32" },
-      ],
-      hasAward: i % 2 === 1,
-    }));
+  const { mutate: removeMutate } = useRemoveRoom();
+
+  const handleRemoveRoom = () => {
+    removeMutate(removeByRoomId);
+    setRemoveByRoomId("");
+  };
 
   return (
     <div className="min-h-screen mt-20">
+      {removeByRoomId && (
+        <ConfirmationDialog
+          onConfirm={handleRemoveRoom}
+          onCancel={() => {
+            toast.success("Action cancelled");
+            setRemoveByRoomId("");
+          }}
+        />
+      )}
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
@@ -72,9 +66,25 @@ export default function RoomsListPage() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {data?.myRooms.map((room) => (
-              <RoomCard key={room.roomId} room={room} type="my-room" />
-            ))}
+            {myRooms?.rooms?.length ? (
+              myRooms.rooms.map((room) => (
+                <RoomCard
+                  key={room.roomId}
+                  room={room}
+                  type="my-room"
+                  onEdit={handleEditRoom}
+                  onRemove={(value: string) => setRemoveByRoomId(value)}
+                />
+              ))
+            ) : (
+              <div className="col-span-full flex flex-col items-center justify-center py-10">
+                <p className="text-lg font-semibold text-gray-500">
+                  {fetchMyRoomPending
+                    ? "Loading ..."
+                    : "You're not created any rooms Yet. Create now!"}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -86,16 +96,33 @@ export default function RoomsListPage() {
               setSearchQuery={setSearch}
               setFilterQuery={setFilter}
               setSortedOrder={setSort}
+              filterOptions={filterOptions}
+              sortOptions={sortOptions}
             />
           </div>
 
-          {/* <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
-            {availableRooms.map((room, i) => (
-              <RoomCard key={`${room.id}-${i}`} room={room} type="available" />
-            ))}
-          </div> */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
+            {availableRooms?.rooms?.length ? (
+              availableRooms.rooms.map((room, i) => (
+                <RoomCard
+                  key={`${room.roomId}-${i}`}
+                  room={room}
+                  type="available"
+                />
+              ))
+            ) : (
+              <div className="col-span-full flex flex-col items-center justify-center py-10">
+                <p className="text-lg font-semibold text-gray-500">
+                  {fetchAllRoomsPending ? "Loading ..." : "No rooms available"}
+                </p>
+              </div>
+            )}
+          </div>
 
-          <Pagination totalPages={10} onPageChange={(value: number) => {}} />
+          <Pagination
+            totalPages={availableRooms?.totalPage || 1}
+            onPageChange={setCurrentPage}
+          />
         </div>
       </div>
     </div>

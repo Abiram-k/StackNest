@@ -32,7 +32,6 @@ const refreshAccessToken = async (
       refreshSubscribers.push((token) => resolve(token));
     });
   }
-
   isRefreshing = true;
 
   try {
@@ -78,7 +77,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
       let currentRole;
       try {
-        const role = originalRequest.url.includes("/admin") ? "admin" : "user";
+        const role = originalRequest.url.includes("admin") ? "admin" : "user";
         currentRole = role;
         const newToken = await refreshAccessToken(role);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;

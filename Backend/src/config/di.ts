@@ -10,7 +10,7 @@ import { UserProfileController } from "../controllers/user/user.profile.controll
 import { AdminController } from "../controllers/admin/admin.controller";
 import { AdminService } from "../services/admin/admin.service";
 import { AdminRespository } from "../repositories/admin.repository";
-import { UserRoomService } from "../services/user/user.room.service";
+import { RoomService } from "../services/room.service";
 import { UserRoomController } from "../controllers/user/user.room.controller";
 import { RoomRespository } from "../repositories/room.repository";
 
@@ -24,13 +24,13 @@ const roomRespository = new RoomRespository();
 const adminService = new AdminService(adminRespository);
 const authService = new AuthService(userBaseRepository, userAuthRepository);
 const userProfileService = new UserProfileService(userBaseRepository);
-const userRoomService = new UserRoomService(roomRespository);
+const roomService = new RoomService(roomRespository);
 
 //  controllers
-const adminController = new AdminController(adminService);
+const adminController = new AdminController(adminService,roomService);
 const authController = new AuthController(authService);
 const userProfileController = new UserProfileController(userProfileService);
-const userRoomController = new UserRoomController(userRoomService);
+const userRoomController = new UserRoomController(roomService);
 
 export {
   authController,

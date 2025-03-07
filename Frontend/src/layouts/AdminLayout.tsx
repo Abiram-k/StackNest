@@ -20,7 +20,11 @@ const navItems = [
     icon: <LayoutGrid className="w-5 h-5" />,
     to: "/admin/dashboard",
   },
-  { name: "Users", icon: <Users className="w-5 h-5" />, to: "/admin/user-management" },
+  {
+    name: "Users",
+    icon: <Users className="w-5 h-5" />,
+    to: "/admin/user-management",
+  },
   {
     name: "Premium Plans",
     icon: <CreditCard className="w-5 h-5" />,
@@ -31,7 +35,11 @@ const navItems = [
     icon: <Flag className="w-5 h-5" />,
     to: "/admni/banners",
   },
-  { name: "Rooms", icon: <Home className="w-5 h-5" />, to: "/admin/rooms" },
+  {
+    name: "Rooms",
+    icon: <Home className="w-5 h-5" />,
+    to: "/admin/room-management",
+  },
   {
     name: "Payments",
     icon: <DollarSign className="w-5 h-5" />,
@@ -58,11 +66,11 @@ const navItems = [
 const AdminLayout = () => {
   return (
     <>
-      <Navbar isAuthintacted={true}isAdmin={true} />
-        <SideBar navItems={navItems} />
-        <div className="bg-white w-screen px-7 md:px-10 mt-18 md:ps-30 ">
+      <Navbar isAuthintacted={true} isAdmin={true} />
+      <SideBar navItems={navItems} />
+      <div className="bg-white w-screen px-7 md:px-10 mt-18 md:ps-30 ">
         <Outlet />
-        </div>
+      </div>
     </>
   );
 };

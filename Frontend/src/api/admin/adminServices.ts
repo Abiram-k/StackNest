@@ -23,6 +23,4 @@ export class AdminService {
     const response = await this.httpService.patch<axiosResponse>(`/admin/user/${userName}/block`);
     return response;
   }
-
-
 }

@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 export interface IRoom extends Document {
+  _id:string;
   roomId: string;
   title: string;
   description: string;

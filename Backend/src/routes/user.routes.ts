@@ -7,37 +7,47 @@ const router = express.Router();
 // profile
 router.put(
   "/details",
-  verifyUser,
+  // verifyUser,
   userProfileController.updateUserProfile.bind(userProfileController)
 );
 router.get(
   "/details",
-  verifyUser,
+  // verifyUser,
   userProfileController.getUserData.bind(userProfileController)
 );
 
 //room
 router.post(
   "/room",
-  verifyUser,
+  // verifyUser,
   userRoomController.createRoom.bind(userRoomController)
 );
+
 router.put(
   "/room",
-  verifyUser,
+  // verifyUser,
   userRoomController.updateRoom.bind(userRoomController)
 );
 
 router.get(
-  "/rooms/my-rooms",
-  verifyUser,
+  "/room/my-rooms",
+  // verifyUser,
   userRoomController.fetchMyRooms.bind(userRoomController)
 );
 router.get(
-  "/rooms/available-rooms",
-  verifyUser,
+  "/room/available-rooms",
+  // verifyUser,
   userRoomController.fetchAllAvailableRooms.bind(userRoomController)
 );
 
+router.get(
+  "/room/:id",
+  userRoomController.fetchSelectedRoom.bind(userRoomController)
+);
+
+router.delete(
+  "/room/:id",
+  userRoomController.removeRoom.bind(userRoomController)
+);
 
 export default router;

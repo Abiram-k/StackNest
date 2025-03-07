@@ -15,7 +15,7 @@ export class AdminRespository implements IAdminRepository<IUser> {
 
       if (search) {
         query.$or = [
-          { name: { $regex: search, $options: "i" } },
+          { userName: { $regex: search, $options: "i" } },
           { email: { $regex: search, $options: "i" } },
         ];
       }
@@ -29,7 +29,7 @@ export class AdminRespository implements IAdminRepository<IUser> {
       query.role = "user";
 
       const totalUsers = await User.countDocuments(query);
-      const totalPages = Math.ceil(totalUsers / 10);
+      const totalPages = Math.ceil(totalUsers / limit);
       // let sortOption: {} = sort ? { [sort]: 1 } : { createdAt: -1 };
       let sortOption = {};
       if (sort) {

@@ -1,5 +1,6 @@
 import ProfileLayout from "@/layouts/ProfileLayout";
 import CreateRoom from "@/pages/user/pages/CreateRoom";
+import EditRoom from "@/pages/user/pages/EditRoom";
 import ProtectHome from "@/protectedRoutes/user/ProtectHome";
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
@@ -30,6 +31,7 @@ export const userRoutes: RouteObject[] = [
         element: <RoomsListPage />,
       },
       { path: "room/create", element: <CreateRoom /> },
+      {path:"room/:roomId/edit",element:<EditRoom/>},
       {
         path: "profile",
         element: <ProfileLayout />,
