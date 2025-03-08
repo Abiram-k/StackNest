@@ -7,21 +7,30 @@ import FilterBar from "@/components/FilterBar";
 import Pagination from "@/components/Pagination";
 import { useFetchAllRooms, useFetchMyRooms } from "@/hooks/room/useFetchRooms";
 import { useRemoveRoom } from "@/hooks/room/useRemoveRoom";
-import ConfirmationDialog from "@/components/ui/confirmationDialog";
+import ConfirmationDialog from "../../../components/modal/confirmationDialog";
 import toast from "react-hot-toast";
+import PasswordConfirmation from "@/components/modal/PasswordConfirmation";
+import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
+import { Spinner } from "@/components/ui/spinner";
 
 const filterOptions = [{ value: "isPremium" }, { value: "isPrivate" }];
 const sortOptions = [{ value: "Ascending" }, { value: "Descending" }];
 
 export default function RoomsListPage() {
+  
   const [currentPage, setCurrentPage] = useState(0);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("");
   const [removeByRoomId, setRemoveByRoomId] = useState("");
+  const [isModalPasswordModal, setIsModalPasswordModal] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState("");
   const navigate = useNavigate();
 
+  // to fetch my rooms
   const { data: myRooms, isPending: fetchMyRoomPending } = useFetchMyRooms();
+
+  // to fetch all rooms except ours
   const { data: availableRooms, isPending: fetchAllRoomsPending } =
     useFetchAllRooms("users", {
       search,
@@ -29,20 +38,58 @@ export default function RoomsListPage() {
       filter,
       currentPage,
     });
-
+  // onClick of edit icon
   const handleEditRoom = (roomId: string) => {
     navigate(`/user/room/${roomId}/edit`);
   };
 
+  // Backend call to remove room
   const { mutate: removeMutate } = useRemoveRoom();
 
+  // After confirmation from confirmation modal
   const handleRemoveRoom = () => {
     removeMutate(removeByRoomId);
     setRemoveByRoomId("");
   };
 
+  // hook to join room
+  const { mutate: joinRoomMutate, isPending: joinIsPending } = useJoinRoom();
+
+  // callback after clicking Enter <button>
+  const handleEnterRoom = (type: string, isPrivate: string, roomId: string) => {
+    setSelectedRoomId(roomId);
+    if (isPrivate == "Yes" && type != "my-room") {
+      setIsModalPasswordModal(true);
+    } else {
+      joinRoomMutate(roomId);
+    }
+  };
+
+  // verify-password, callback were passed in hook, so it join when it is success
+  const { mutate: verifyPasswordMutate, isPending: verifyingIsPending } =
+    useVerifyRoomPassword(() => {
+      joinRoomMutate(selectedRoomId);
+    });
+
+  // onClick for password modal confirm
+  const handleVerifyPassword = (password: string) => {
+    if (!selectedRoomId) {
+      toast.error("RoomId not found!");
+      return;
+    }
+
+    verifyPasswordMutate({ roomId: selectedRoomId, password });
+  };
+
   return (
-    <div className="min-h-screen mt-20">
+    <div className="min-h-screen ">
+      {isModalPasswordModal && (
+        <PasswordConfirmation
+          onCancel={() => setIsModalPasswordModal(false)}
+          onProceed={handleVerifyPassword}
+        />
+      )}
+
       {removeByRoomId && (
         <ConfirmationDialog
           onConfirm={handleRemoveRoom}
@@ -52,6 +99,9 @@ export default function RoomsListPage() {
           }}
         />
       )}
+
+      {(joinIsPending || verifyingIsPending) && <Spinner />}
+
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
@@ -74,6 +124,7 @@ export default function RoomsListPage() {
                   type="my-room"
                   onEdit={handleEditRoom}
                   onRemove={(value: string) => setRemoveByRoomId(value)}
+                  handleEnterRoom={handleEnterRoom}
                 />
               ))
             ) : (
@@ -108,6 +159,7 @@ export default function RoomsListPage() {
                   key={`${room.roomId}-${i}`}
                   room={room}
                   type="available"
+                  handleEnterRoom={handleEnterRoom}
                 />
               ))
             ) : (

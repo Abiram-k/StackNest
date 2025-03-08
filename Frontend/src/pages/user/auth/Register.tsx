@@ -8,7 +8,7 @@ import images from "../../../assets/login-img.jpg";
 import logo from "../../../assets/stacknest-logo.png";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useState } from "react";
-import OtpModal from "@/components/OtpModal";
+import OtpModal from "@/components/modal/OtpModal";
 import { Spinner } from "@/components/ui/spinner";
 import { useInitiateRegistration } from "@/hooks/useInitiateRegistration";
 import { useVerifyOtp } from "@/hooks/useVerifyOtp";

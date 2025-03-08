@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
-import ConfirmationDialog from "./ui/confirmationDialog";
+import ConfirmationDialog from "./modal/confirmationDialog";
 import toast from "react-hot-toast";
 
 export type Column<T extends { _id: string }> = {

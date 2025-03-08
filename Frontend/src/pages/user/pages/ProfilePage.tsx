@@ -47,7 +47,7 @@ export default function ProfilePage() {
   });
 
   const { data: user, isPending: fetchIsPending, isError } = useUserProfile();
-  
+
   useEffect(() => {
     if (user?.userDetails) {
       setFormData(user.userDetails);
@@ -86,9 +86,9 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white mt-10 ">
+    <div className="min-h-screen w-full bg-white  ">
       {(isLoading || fetchIsPending || isPending) && <Spinner />}
-      <div className=" pt-16">
+      <div className=" ">
         <main className=" p-8">
           <div className="max-full ">
             <div className="mb-8 flex flex-col md:flex-row w-full justify-between md:justify-normal md:gap-5 align-middle h-fit">

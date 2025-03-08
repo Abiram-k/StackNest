@@ -2,15 +2,13 @@ import { Edit, Lock, Trash2, Trophy } from "lucide-react";
 import { Button } from "../ui/button";
 import AvatarGroup from "../avatar-group";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { Spinner } from "../ui/spinner";
-import { useEffect } from "react";
 
 interface Room {
-  _id:string,
+  _id: string;
   roomId: string;
   title: string;
   description: string;
-  participants: { name: string; avatar: string }[];
+  participants: { userName: string; avatar: string }[];
   isPremium?: string;
   limit: number;
   isPrivate?: string;
@@ -21,6 +19,7 @@ interface RoomCardProps {
   type: "my-room" | "available";
   onEdit?: (value: string) => void;
   onRemove?: (value: string) => void;
+  handleEnterRoom?: (type: string, isPrivate: string, roomId: string) => void;
 }
 
 const RoomCard = ({
@@ -28,8 +27,8 @@ const RoomCard = ({
   type,
   onEdit,
   onRemove,
+  handleEnterRoom,
 }: RoomCardProps) => {
- 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 space-y-4 transition-transform duration-300 hover:scale-105 hover:shadow-lg">
       <div className="flex items-start justify-between">
@@ -80,6 +79,10 @@ const RoomCard = ({
             className={
               "bg-primary-600 dark:bg-primary-600 hover:bg-primary-500/90"
             }
+            onClick={() => {
+              handleEnterRoom &&
+                handleEnterRoom(type, room.isPrivate || "", room.roomId);
+            }}
           >
             {type === "my-room" ? "Enter" : "Join"}
           </Button>
@@ -92,9 +95,9 @@ const RoomCard = ({
                 <Avatar key={i}>
                   <AvatarImage
                     src={participant.avatar}
-                    alt={participant.name}
+                    alt={participant.userName}
                   />
-                  <AvatarFallback>{participant.name[0]}</AvatarFallback>
+                  <AvatarFallback>{participant.userName}</AvatarFallback>
                 </Avatar>
               ))}
             </AvatarGroup>

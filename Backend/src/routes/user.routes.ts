@@ -22,7 +22,6 @@ router.post(
   // verifyUser,
   userRoomController.createRoom.bind(userRoomController)
 );
-
 router.put(
   "/room",
   // verifyUser,
@@ -49,5 +48,17 @@ router.delete(
   "/room/:id",
   userRoomController.removeRoom.bind(userRoomController)
 );
+
+router.post(
+  "/room/join",
+  userRoomController.joinRoom.bind(userRoomController)
+);
+
+router.post(
+  "/room/verify-password/:roomId",
+  userRoomController.verifyPassword.bind(userRoomController)
+);
+
+
 
 export default router;

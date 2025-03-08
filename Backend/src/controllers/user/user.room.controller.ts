@@ -21,8 +21,6 @@ export class UserRoomController {
 
   async updateRoom(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("From room update service handler");
-
       const { id } = req.query;
       await this.roomService.updateRoom(id as string, req.body);
       res
@@ -95,6 +93,33 @@ export class UserRoomController {
       const { id } = req.params;
       await this.roomService.removeRoom(id);
       res.status(200).json({ message: "Room removed", success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async joinRoom(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { roomId } = req.body;
+      const user = req.user as { userId: Types.ObjectId; role: string };
+      await this.roomService.joinRoom(user.userId, roomId);
+      res
+        .status(200)
+        .json({ message: "Successfully joined in room", success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async verifyPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { roomId } = req.params;
+      const { password } = req.body;
+      const isVerified = await this.roomService.verifyPassword(
+        roomId,
+        password
+      );
+      if (!isVerified) throw new Error("Password verification failed");
+      res.status(200).json({ message: "Password verified", success: true });
     } catch (error) {
       next(error);
     }

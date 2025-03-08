@@ -2,7 +2,7 @@ import heroSectionImage from "../../assets/heroSection.png";
 
 const HeroSection = () => {
   return (
-    <section className="container mx-auto px-4 py-16 md:py-24">
+    <section className="container mx-auto px-4 pt-8 pb-16 ">
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-5xl font-bold mb-8">
           Unlock the Power of Developer Connection

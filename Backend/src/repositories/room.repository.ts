@@ -100,4 +100,45 @@ export class RoomRespository implements IRoomRepository<IRoom> {
       throw error;
     }
   }
+
+  async blockRoom(id: string): Promise<boolean> {
+    try {
+      const room = await Room.findById(id);
+      console.log(room);
+      const currentStatus = room?.isBlocked;
+      console.log(currentStatus);
+      const updatedRoom = await Room.findByIdAndUpdate(
+        id,
+        { $set: { isBlocked: !currentStatus } },
+        { new: true }
+      );
+      return !!updatedRoom;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findByRoomId(roomId: string): Promise<IRoom | null> {
+    try {
+      return await Room.findOne({ roomId });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addParticipant(
+    userId: Types.ObjectId,
+    roomId: string
+  ): Promise<boolean> {
+    try {
+      const isparticipantAdded = await Room.findOneAndUpdate(
+        { roomId },
+        { $addToSet: { participants: userId } },
+        { new: true }
+      );
+      return !!isparticipantAdded;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

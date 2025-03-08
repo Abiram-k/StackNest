@@ -9,32 +9,44 @@ export class RoomService {
   constructor(private roomRepo: IRoomRepository<IRoom>) {}
 
   async createRoom(host: Types.ObjectId, data: RoomSchema) {
-    const roomData: any = {};
-    if (data.scheduledAt) {
-      const localDate = new Date(data.scheduledAt);
-      const utcDate = new Date(
-        localDate.getTime() - localDate.getTimezoneOffset() * 60000
-      );
-      data.scheduledAt = utcDate;
-      roomData.status = "scheduled";
-      roomData.startedAt = null;
-    } else {
-      roomData.startedAt = new Date();
-      roomData.status = "online";
+    try {
+      const roomData: any = {};
+      if (data.scheduledAt) {
+        const localDate = new Date(data.scheduledAt);
+        const utcDate = new Date(
+          localDate.getTime() - localDate.getTimezoneOffset() * 60000
+        );
+        data.scheduledAt = utcDate;
+        roomData.status = "scheduled";
+        roomData.startedAt = null;
+      } else {
+        roomData.startedAt = new Date();
+        roomData.status = "online";
+      }
+      roomData.roomId = nanoid(8);
+      roomData.host = host;
+      return this.roomRepo.createRoom({ ...roomData, ...data });
+    } catch (error) {
+      throw error;
     }
-    roomData.roomId = nanoid(8);
-    roomData.host = host;
-    return this.roomRepo.createRoom({ ...roomData, ...data });
   }
 
   async updateRoom(roomId: string, data: RoomSchema) {
-    return await this.roomRepo.updateRoom(roomId, data);
+    try {
+      return await this.roomRepo.updateRoom(roomId, data);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async fetchMyRooms(id: Types.ObjectId) {
-    const myRooms = await this.roomRepo.findByHostId(id);
-    if (myRooms) return myRooms;
-    else throw createHttpError(404, "My Rooms not founded");
+    try {
+      const myRooms = await this.roomRepo.findByHostId(id);
+      if (myRooms) return myRooms;
+      else throw createHttpError(404, "My Rooms not founded");
+    } catch (error) {
+      throw error;
+    }
   }
 
   async fetchAvailableRooms(
@@ -46,34 +58,97 @@ export class RoomService {
     sort?: string,
     search?: string
   ) {
-    console.log(role, "Role from RoomService fetchAvailableRooms");
-
-    const availableRoom = await this.roomRepo.findAvailableRooms(
-      role,
-      page,
-      limit,
-      id,
-      filter,
-      sort,
-      search
-    );
-    if (availableRoom) return availableRoom;
-    else throw createHttpError(404, "Rooms not founded");
+    try {
+      const availableRoom = await this.roomRepo.findAvailableRooms(
+        role,
+        page,
+        limit,
+        id,
+        filter,
+        sort,
+        search
+      );
+      if (availableRoom) return availableRoom;
+      else throw createHttpError(404, "Rooms not founded");
+    } catch (error) {
+      throw error;
+    }
   }
 
   async fetchSelectedRoom(role: string, id: string) {
-    const room = await this.roomRepo.findSelectedRoom(role == "admin", id);
-    if (!room) throw createHttpError(404, "RoomId is incorrect, not found");
+    try {
+      const room = await this.roomRepo.findSelectedRoom(role == "admin", id);
+      if (!room) throw createHttpError(404, "RoomId is incorrect, not found");
 
-    return room;
+      return room;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async removeRoom(id: string) {
-    const isDeleted = await this.roomRepo.removeById(id);
-    if (!isDeleted) {
-      throw createHttpError(404, "RoomId not founded,while removing ");
-    } else {
-      return isDeleted;
+    try {
+      const isDeleted = await this.roomRepo.removeById(id);
+      if (!isDeleted) {
+        throw createHttpError(404, "RoomId not founded,while removing ");
+      } else {
+        return isDeleted;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async blockUser(id: string) {
+    try {
+      const isBlockedRoom = await this.roomRepo.blockRoom(id);
+      if (!isBlockedRoom) throw createHttpError(404, "Failed to block room");
+      return isBlockedRoom;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async joinRoom(userId: Types.ObjectId, roomId: string) {
+    try {
+      if (!userId) throw createHttpError(401, "Not Authenticated to join");
+      const room = await this.roomRepo.findByRoomId(roomId);
+      if (!room) throw createHttpError(404, "Room not found");
+
+      if (room.host == userId) {
+        console.log("Host joined the room");
+        return true;
+      }
+
+      if (room.participants.includes(userId)) {
+        throw createHttpError(400, "Already joined in the room");
+      }
+
+      if (room.participants.length >= room.limit) {
+        throw createHttpError(400, "Room is full");
+      }
+      const isAdded = await this.roomRepo.addParticipant(userId, roomId);
+      if (!isAdded) throw createHttpError(402, "Failed to add Participant");
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async verifyPassword(roomId: string, password: string) {
+    try {
+      if (!roomId || !password) {
+        console.log("Room id or password is missing!");
+        return;
+      }
+      const room = await this.roomRepo.findByRoomId(roomId);
+      if (!room) throw createHttpError(404, "Room not found");
+
+      if (room.password != password) {
+        throw createHttpError(402, "Invalid Password ");
+      }
+      return true;
+    } catch (error) {
+      throw error;
     }
   }
 }

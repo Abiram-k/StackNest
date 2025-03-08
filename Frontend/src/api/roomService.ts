@@ -3,15 +3,24 @@ import { HttpService } from "./httpService";
 import { axiosResponse } from "../../../types/user";
 import { Search } from "lucide-react";
 
+type host = {
+  userName: string;
+  avatar: string;
+  gender: string;
+  email: string;
+  lastLogin: string;
+  isVerified: boolean;
+};
+
 export interface IRoom extends Document {
   _id: string;
   roomId: string;
   title: string;
   description: string;
-  host: string;
+  host: host;
   isBlocked: boolean;
   startedAt: Date;
-  participants: { name: string; avatar: string }[];
+  participants: { userName: string; avatar: string }[];
   isPrivate: string;
   isPremium: string;
   password?: string;
@@ -65,5 +74,22 @@ export class RoomService {
 
   async removeRoom(id: string): Promise<axiosResponse> {
     return await this.httpService.delete(`users/room/${id}`);
+  }
+
+  async blockRoom(id: string): Promise<axiosResponse> {
+    return await this.httpService.patch(`admin/room/${id}`);
+  }
+
+  async joinRoom(data: { roomId: string }): Promise<axiosResponse> {
+    return await this.httpService.post("/users/room/join", data);
+  }
+
+  async verifyPassword(
+    roomId: string,
+    password: string
+  ): Promise<axiosResponse> {
+    return await this.httpService.post(`users/room/verify-password/${roomId}`, {
+      password,
+    });
   }
 }

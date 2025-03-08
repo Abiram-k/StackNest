@@ -32,7 +32,7 @@ export default function CreateRoom() {
   };
 
   return (
-    <div className="min-h-screen bg-white mt-20">
+    <div className="min-h-screen bg-white ">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-gray-50 rounded-3xl p-8">
           <button className="flex items-center text-gray-600 mb-6 hover:text-gray-900">

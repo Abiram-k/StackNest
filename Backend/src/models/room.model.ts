@@ -39,7 +39,7 @@ const roomSchema = new mongoose.Schema(
     limit: { type: Number, default: 5 },
     createdAt: { type: Date, default: Date.now },
     isBlocked: {
-      type: String,
+      type: Boolean,
       default: false,
     },
   },

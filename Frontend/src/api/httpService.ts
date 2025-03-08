@@ -1,6 +1,7 @@
 import { axiosInstance } from "./apiSevice";
 
 export class HttpService {
+
   async get<T>(url: string): Promise<T> {
     try {
       const response = await axiosInstance.get<T>(url);
@@ -9,6 +10,7 @@ export class HttpService {
       throw this.handleError(error);
     }
   }
+
   async put<T>(url: string, data: any): Promise<T> {
     try {
       const response = await axiosInstance.put<T>(url, data);
@@ -17,6 +19,7 @@ export class HttpService {
       throw this.handleError(error);
     }
   }
+
   async patch<T>(url: string): Promise<T> {
     try {
       const response = await axiosInstance.patch<T>(url);
@@ -25,6 +28,7 @@ export class HttpService {
       throw this.handleError(error);
     }
   }
+
   async post<T>(url: string, data: any): Promise<T> {
     try {
       const response = await axiosInstance.post<T>(url, data);
@@ -33,6 +37,7 @@ export class HttpService {
       throw this.handleError(error);
     }
   }
+
   async delete<T>(url: string): Promise<T> {
     try {
       const response = await axiosInstance.delete(url);
@@ -47,4 +52,6 @@ export class HttpService {
       return new Error(error.response?.data.message || "Something went wrong");
     return new Error(error.message || "Something went wrong");
   }
+
+  
 }

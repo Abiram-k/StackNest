@@ -7,7 +7,7 @@ export const useFetchSelectedRoom = (role: string, id: string) => {
   const roomService = new RoomService(httpService);
 
   return useQuery({
-    queryKey: ["myRooms"],
+    queryKey: ["selecteRoom"],
     queryFn: () => roomService.fetchSelectedRoom(role,id),
   });
 };

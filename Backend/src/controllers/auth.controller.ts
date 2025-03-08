@@ -14,7 +14,6 @@ export class AuthController {
   async googleAuth(req: Request, res: Response, next: NextFunction) {
     try {
       const { token } = req.body;
-      console.log(token);
       if (!token) throw new Error("Google token is required");
 
       const authResponse = await this.authService.authenticateGoogleUser(token);
@@ -48,7 +47,6 @@ export class AuthController {
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password, captchaToken, role } = req.body;
-      console.log(email, password, captchaToken, role);
 
       if (!email || !password)
         throw new Error("Email and password are required");
@@ -103,7 +101,7 @@ export class AuthController {
         return;
       }
       const newAccessToken = await this.authService.generateAccessToken(
-        refreshToken,
+        refreshToken
       );
 
       res.json({
@@ -158,14 +156,6 @@ export class AuthController {
       const { token, password } = req.body;
       await this.authService.resetPassword(token, password);
       res.status(200).json({ success: true, message: "OTP sent successfully" });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async updateUserProfile(req: Request, res: Response, next: NextFunction) {
-    try {
-      console.log(req.body);
     } catch (error) {
       next(error);
     }

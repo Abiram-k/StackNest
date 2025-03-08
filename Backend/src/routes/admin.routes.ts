@@ -19,5 +19,9 @@ router.get(
   "/room/:id",
   adminController.fetchSelectedRoom.bind(adminController)
 );
+router.patch(
+  "/room/:id",
+  adminController.blockRoom.bind(adminController)
+);
 
 export default router;

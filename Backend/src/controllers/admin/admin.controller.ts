@@ -98,4 +98,17 @@ export class AdminController {
       next(error);
     }
   }
+
+  async blockRoom(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      await this.roomService.blockUser(id);
+      res.status(200).json({
+        message: "Action success (block/unblock)",
+        success: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

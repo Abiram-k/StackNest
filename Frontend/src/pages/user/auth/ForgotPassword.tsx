@@ -3,7 +3,7 @@ import { Form } from "@/components/forms/Form";
 import { verifyEmailSchema } from "@/validation/authSchema";
 import { useVerifyEmail } from "@/hooks/validation/useLoginForm";
 import { ArrowLeftButton } from "@/components/ui/ArrowLeftButton";
-import { EmailSendedSuccess } from "@/components/EmailSendedSucess";
+import { EmailSendedSuccess } from "@/components/modal/EmailSendedSucess";
 import { useForgotPassword } from "@/hooks/useForgotPassword";
 
  const ForgotPassword = () => {
