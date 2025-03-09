@@ -23,13 +23,13 @@ export default function Dashboard() {
   // ];
 
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-screen dark:bg-black">
       {/* Main Content */}
-      <div className="flex-1 o p-8 overflow-y-hidden">
-        <h1 className="text-2xl font-bold mb-8 border-b-1 md:border-0 text-center md:text-start md:ms-10">
+      <div className="flex-1 o p-8  overflow-y-hidden">
+        <h1 className="text-2xl font-bold mb-8 border-0 text-center md:text-start md:ms-10">
           Analytics Overview
         </h1>
-{/*
+        {/*
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card>
             <CardHeader className="pb-2">
@@ -184,7 +184,6 @@ export default function Dashboard() {
           </Card>
         </div>
         */}
-
       </div>
     </div>
   );

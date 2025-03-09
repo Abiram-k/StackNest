@@ -17,7 +17,6 @@ const filterOptions = [{ value: "isPremium" }, { value: "isPrivate" }];
 const sortOptions = [{ value: "Ascending" }, { value: "Descending" }];
 
 export default function RoomsListPage() {
-  
   const [currentPage, setCurrentPage] = useState(0);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
@@ -38,6 +37,7 @@ export default function RoomsListPage() {
       filter,
       currentPage,
     });
+
   // onClick of edit icon
   const handleEditRoom = (roomId: string) => {
     navigate(`/user/room/${roomId}/edit`);
@@ -68,6 +68,7 @@ export default function RoomsListPage() {
   // verify-password, callback were passed in hook, so it join when it is success
   const { mutate: verifyPasswordMutate, isPending: verifyingIsPending } =
     useVerifyRoomPassword(() => {
+      setIsModalPasswordModal(false);
       joinRoomMutate(selectedRoomId);
     });
 
@@ -77,7 +78,6 @@ export default function RoomsListPage() {
       toast.error("RoomId not found!");
       return;
     }
-
     verifyPasswordMutate({ roomId: selectedRoomId, password });
   };
 
@@ -107,7 +107,7 @@ export default function RoomsListPage() {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">My Rooms</h1>
             <Button
-              className="bg-primary-500 dark:bg-primary-600 hover:bg-primary-600/90"
+              className="bg-primary-500 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300  hover:bg-primary-600/90"
               onClick={() => navigate("/user/room/create")}
             >
               <Plus className="w-4 h-4 mr-1" />

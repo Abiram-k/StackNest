@@ -3,6 +3,7 @@ import UserCard from "@/components/UserCard";
 import { useBlockUser } from "@/hooks/admin/useBlockUser";
 import { useBlockRoom } from "@/hooks/room/useBlockRoom";
 import { useFetchSelectedRoom } from "@/hooks/room/userFetchSelectedRoom";
+import { findTimeSpendBetweenDates } from "@/utils/findDurationBetweenDate";
 import {
   Trash2,
   LogOut,
@@ -46,7 +47,7 @@ export default function RoomDetails() {
   };
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen bg-white dark:bg-black">
       {(userBlockPending || isGetRoomPending) && <Spinner />}
 
       <div className="flex-1 overflow-y-auto">
@@ -74,7 +75,6 @@ export default function RoomDetails() {
                 <Lock size={20} />
               </button>
             )}
-            
           </div>
 
           <div className="flex gap-8">
@@ -155,17 +155,28 @@ export default function RoomDetails() {
             </div>
 
             <div className="w-1/3">
-              <div className="bg-primary-500 dark:bg-primary-600 text-white dark:text-black p-4 rounded-t-lg">
+              <div
+                className="bg-primary-500 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300 
+               text-white p-4 rounded-t-lg"
+              >
                 <h3 className="text-xl font-semibold">Participants</h3>
               </div>
-              <div className="border border-gray-200 rounded-b-lg overflow-hidden">
+              <div className="border border-gray-200 border-t-0 rounded-b-lg overflow-hidden">
                 <div className="max-h-[500px] overflow-y-auto">
                   {selectedRoom?.room?.participants?.length ? (
                     selectedRoom.room.participants.map((participant, index) => (
                       <ParticipantItem
                         key={index}
-                        userName="Sample Name"
-                        duration=""
+                        avatar={participant.user.avatar}
+                        userName={participant.user.userName}
+                        duration={
+                          !participant.leavedAt
+                            ? "Ongoing"
+                            : findTimeSpendBetweenDates(
+                                participant.joinedAt,
+                                participant.leavedAt
+                              )
+                        }
                       />
                     ))
                   ) : (
@@ -193,18 +204,20 @@ function InfoItem({ label, value }: { label: string; value: string }) {
 }
 
 function ParticipantItem({
+  avatar,
   userName,
   duration,
 }: {
+  avatar: string;
   userName: string;
   duration: string;
 }) {
   return (
-    <div className="flex items-center justify-between p-4 border-b border-gray-200 hover:bg-gray-50">
+    <div className="flex items-center justify-between p-4  border-gray-600 hover:bg-gray-50 border-b-1 dark:bg-transparent">
       <div className="flex items-center">
         <img
-          src="/placeholder.svg?height=48&width=48"
-          alt="Dianne Russell"
+          src={avatar}
+          alt={userName + "profile"}
           width={48}
           height={48}
           className="rounded-full mr-3"
@@ -212,7 +225,11 @@ function ParticipantItem({
         <span className="font-medium">{userName}</span>
       </div>
       <div className="flex items-center">
-        <span className="h-2 w-2 bg-red-500 rounded-full mr-2"></span>
+        <span
+          className={`${
+            duration != "Ongoing" ? "bg-red-500" : "bg-green-500"
+          } h-2 w-2 rounded-full mr-2`}
+        ></span>
         <span className="text-gray-500 text-sm">{duration || "00:00:00"}</span>
       </div>
     </div>

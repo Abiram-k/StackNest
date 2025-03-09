@@ -2,6 +2,8 @@ import { IOTP } from "../types/IOtp";
 import Otp from "../models/otp.model";
 
 class OtpRepository {
+
+
   async findOtpByMail(email: string): Promise<IOTP | null> {
     try {
       return await Otp.findOne({ email });
@@ -9,6 +11,7 @@ class OtpRepository {
       throw error;
     }
   }
+
   async deleteByEmail(email: string): Promise<void> {
     try {
       await Otp.deleteMany({ email });
@@ -16,6 +19,7 @@ class OtpRepository {
       throw error;
     }
   }
+  
   async create({ email, otp, expiresAt }: IOTP): Promise<void> {
     try {
       await Otp.create({

@@ -9,7 +9,7 @@ import RoomSection from "@/components/user/RoomSection";
 const HomePage = () => {
 
   return (
-    <div className="min-h-screen bg-white  ">
+    <div className="min-h-screen bg-white dark:bg-black  ">
       <main className="">
         <HeroSection />
         <CreateRoomSection />

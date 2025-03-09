@@ -41,7 +41,6 @@ export default function EditRoom() {
 
   const { data: selectedRoom, isPending: isGetRoomPeding } =
     useFetchSelectedRoom("users",roomId);
-    console.log(selectedRoom)
 
   useEffect(() => {
     reset(selectedRoom?.room);
@@ -50,16 +49,17 @@ export default function EditRoom() {
   const { mutate, isPending: isUpdateRoomPending } = useUpdateRoom();
 
   const onSubmit = (data: RoomSchema) => {
+    console.log(data,"Edit room")
     mutate({ id: roomId, data });
   };
 
   return (
-    <div className="min-h-screen bg-white ">
+    <div className="min-h-screen bg-white dark:bg-black">
       {(isGetRoomPeding || isUpdateRoomPending) && <Spinner />}
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-gray-50 rounded-3xl p-8">
+        <div className="bg-gray-50 dark:bg-black rounded-3xl p-8">
           <button
-            className="flex items-center text-gray-600 mb-6 hover:text-gray-900"
+            className="flex items-center text-gray-600 mb-6 hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-400"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="w-5 h-5 mr-2" />

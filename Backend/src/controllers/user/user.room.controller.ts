@@ -101,7 +101,7 @@ export class UserRoomController {
   async joinRoom(req: Request, res: Response, next: NextFunction) {
     try {
       const { roomId } = req.body;
-      const user = req.user as { userId: Types.ObjectId; role: string };
+      const user = req.user as { userId: string; role: string };
       await this.roomService.joinRoom(user.userId, roomId);
       res
         .status(200)

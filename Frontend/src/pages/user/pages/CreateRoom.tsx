@@ -4,6 +4,7 @@ import { validateRoomSchema } from "@/validation/roomSchema";
 import { ArrowLeft } from "lucide-react";
 import { RoomSchema } from "../../../../../types/user";
 import { useCreateRoom } from "@/hooks/room/useCreateRoom";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateRoom() {
   const {
@@ -24,6 +25,7 @@ export default function CreateRoom() {
       title: "",
     },
   });
+  const navigate = useNavigate();
 
   const { mutate, isPending } = useCreateRoom();
   const onSubmit = (data: RoomSchema) => {
@@ -32,10 +34,13 @@ export default function CreateRoom() {
   };
 
   return (
-    <div className="min-h-screen bg-white ">
+    <div className="min-h-screen bg-white dark:bg-black ">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-gray-50 rounded-3xl p-8">
-          <button className="flex items-center text-gray-600 mb-6 hover:text-gray-900">
+        <div className="bg-gray-50 dark:bg-black rounded-3xl p-8">
+          <button
+            className="flex items-center text-gray-600 mb-6 hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-400"
+            onClick={() => navigate(-1)}
+          >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back
           </button>

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Edit2 } from "lucide-react";
+import { Edit2, MessageCircle, X } from "lucide-react";
 import DetailsForm from "@/components/forms/DetailsForm";
 import { verifyUserProfile } from "@/hooks/validation/useProfileForm";
 import { validateProfileSchema } from "@/validation/userDetailsSchema";
@@ -9,6 +9,7 @@ import { useUpdateUserProfile, useUserProfile } from "@/hooks/useUserProfile";
 import ProfileImageUploader from "@/components/ProfileImageUploader";
 import { Spinner } from "@/components/ui/spinner";
 import { ImageService } from "@/api/imageService";
+import ChatBot from "./ChatBot";
 
 const initialValue = {
   avatar: "",
@@ -26,6 +27,7 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const selectedAvatar = useRef<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isChatBotOpen, setIsChatBotOpen] = useState(false);
 
   const {
     register,
@@ -86,16 +88,16 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white  ">
+    <div className="min-h-screen w-full bg-white  dark:bg-transparent">
       {(isLoading || fetchIsPending || isPending) && <Spinner />}
       <div className=" ">
         <main className=" p-8">
           <div className="max-full ">
             <div className="mb-8 flex flex-col md:flex-row w-full justify-between md:justify-normal md:gap-5 align-middle h-fit">
-              <Button className="bg-amber-500 cursor-pointer hover:bg-amber-600 text-white mb-2 w-fit">
+              <Button className="bg-amber-500 cursor-pointer hover:bg-amber-600 text-white mb-4 w-fit dark:hover:bg-amber-500/90 dark:bg-amber-500 dark:text-gray-100 ">
                 Check in
               </Button>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-500">
                 Check in daily to maintain your streak and stay on the
                 leaderboard!
                 <br />
@@ -108,7 +110,7 @@ export default function ProfilePage() {
                 onClick={handleIsEditing}
                 variant="secondary"
                 size="sm"
-                className="absolute right-0 md:right-60 top-0 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-300"
+                className="absolute right-0 md:right-60 top-0 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-primary-50/90 bg-primary-500 text-white dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-200"
               >
                 <Edit2 className="h-4 w-4 mr-2" />
                 Edit
@@ -122,10 +124,10 @@ export default function ProfilePage() {
                 />
 
                 <div>
-                  <h2 className="text-xl  font-semibold">
+                  <h2 className="text-xl  font-semibold ">
                     {formData.firstName || "no Name"}
                   </h2>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 dark:text-gray-500">
                     {formData.email || "noName@gmail.com"}
                   </p>
                 </div>
@@ -193,6 +195,19 @@ export default function ProfilePage() {
                   ],
                 ]}
               />
+            </div>
+            <div className="fixed bottom-10 right-10 md:bottom-20 md:right-20">
+              {isChatBotOpen && <ChatBot setIsOpen={setIsChatBotOpen} avatar={formData.avatar}/>}
+              <Button
+                onClick={() => setIsChatBotOpen(!isChatBotOpen)}
+                className={`rounded-full p-3 fixed bottom-10 right-10 md:bottom-20 md:right-20 ${
+                  isChatBotOpen
+                    ? "bg-red-500 hover:bg-red-600"
+                    : "bg-indigo-600 hover:bg-indigo-700"
+                }`}
+              >
+                {isChatBotOpen ? <X size={24} /> : <MessageCircle size={24} />}{" "}
+              </Button>
             </div>
           </div>
         </main>

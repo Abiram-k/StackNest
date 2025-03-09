@@ -41,9 +41,11 @@ const UserCard = ({
   };
 
   return (
-    <div className="max-w-sm rounded-lg h-fit bg-white shadow-lg hover:shadow-xl transition-all duration-300 p-6 space-y-4">
+    <div className="max-w-sm rounded-lg h-fit bg-white dark:bg-black shadow-lg hover:shadow-xl transition-all duration-300 p-6 space-y-4">
       <div className="flex items-start justify-between h-fit">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Host Profile</h2>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+          Host Profile
+        </h2>
         {!isCurrentUser && (
           <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
             <ShieldIcon className="inline-block w-4 h-4 mr-1" />
@@ -65,13 +67,16 @@ const UserCard = ({
         </div>
         <div className="flex-1">
           <div className="flex items-baseline gap-2">
-            <h2 className="text-xl font-bold text-gray-800 truncate">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-300 truncate">
               {userName}
             </h2>
             <span className="text-sm text-gray-500 capitalize">({gender})</span>
           </div>
           <div className="mt-1">
-            <p className="text-sm text-gray-600 truncate" title={email}>
+            <p
+              className="text-sm dark:text-gray-400 text-gray-600 truncate"
+              title={email}
+            >
               ✉️ {email}
             </p>
           </div>

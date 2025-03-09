@@ -1,11 +1,11 @@
 import ProfileLayout from "@/layouts/ProfileLayout";
-import CreateRoom from "@/pages/user/pages/CreateRoom";
-import EditRoom from "@/pages/user/pages/EditRoom";
-import ProtectHome from "@/protectedRoutes/user/ProtectHome";
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
+import ProtectHome from "@/protectedRoutes/user/ProtectHome";
 
-// const CreateRoom = lazy(() => import("@/pages/user/pages/CreateRoom"));
+const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
+const EditRoom = lazy(() => import("@/pages/user/pages/EditRoom"));
+const CreateRoom = lazy(() => import("@/pages/user/pages/CreateRoom"));
 const RoomsListPage = lazy(() => import("../pages/user/pages/RoomListPage"));
 const ProfilePage = lazy(() => import("../pages/user/pages/ProfilePage"));
 const AboutPage = lazy(() => import("../pages/user/pages/AboutPage"));
@@ -17,7 +17,7 @@ export const userRoutes: RouteObject[] = [
   {
     path: "user",
     element: (
-      <ProtectHome>
+      <ProtectHome>        
         <Layout />
       </ProtectHome>
     ),
@@ -31,11 +31,14 @@ export const userRoutes: RouteObject[] = [
         element: <RoomsListPage />,
       },
       { path: "room/create", element: <CreateRoom /> },
-      {path:"room/:roomId/edit",element:<EditRoom/>},
+      { path: "room/:roomId/edit", element: <EditRoom /> },
       {
         path: "profile",
         element: <ProfileLayout />,
-        children: [{ index: true, element: <ProfilePage /> }],
+        children: [
+          { index: true, element: <ProfilePage /> },
+          { path: "settings", element: <SettingsPage /> },
+        ],
       },
     ],
   },

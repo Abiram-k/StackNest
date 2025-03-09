@@ -17,5 +17,5 @@ export interface IRoomRepository<T> {
   removeById(id: string): Promise<boolean>;
   blockRoom(id: string): Promise<boolean>;
   findByRoomId(roomId: string): Promise<T | null>;
-  addParticipant(userId:Types.ObjectId,roomId: string): Promise<boolean>;
+  addParticipant(userId:string,roomId: string): Promise<boolean>;
 }

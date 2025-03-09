@@ -12,10 +12,11 @@ export const useBlockRoom = () => {
     mutationFn: (roomId: string) => roomService.blockRoom(roomId),
     onSuccess: () => {
       toast.success("Action Done");
-      queryClient.invalidateQueries({ queryKey: ["selecteRoom"] });
+      queryClient.invalidateQueries({ queryKey: ["selectedRoom"] });
+      queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
     onError: (error) => {
-      toast.error("Action Undon");
+      toast.error("Action Undone");
     },
   });
 

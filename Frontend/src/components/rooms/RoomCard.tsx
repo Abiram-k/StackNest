@@ -1,17 +1,20 @@
 import { Edit, Lock, Trash2, Trophy } from "lucide-react";
 import { Button } from "../ui/button";
-import AvatarGroup from "../avatar-group";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 interface Room {
   _id: string;
   roomId: string;
   title: string;
   description: string;
-  participants: { userName: string; avatar: string }[];
+  participants: {
+    user: { userName: string; avatar: string };
+    joinedAt: Date;
+    leavedAt: Date;
+  }[];
   isPremium?: string;
   limit: number;
   isPrivate?: string;
+  isBlocked: boolean;
 }
 
 interface RoomCardProps {
@@ -30,7 +33,7 @@ const RoomCard = ({
   handleEnterRoom,
 }: RoomCardProps) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 space-y-4 transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+    <div className="bg-white rounded-lg dark:bg-gray-900 shadow-md p-6 space-y-4 transition-transform duration-300 hover:scale-105 hover:shadow-lg">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-gray-500 mb-1">ID: {room.roomId}</p>
@@ -75,32 +78,39 @@ const RoomCard = ({
         </div>
 
         <div className="flex items-center justify-between">
-          <Button
-            className={
-              "bg-primary-600 dark:bg-primary-600 hover:bg-primary-500/90"
-            }
-            onClick={() => {
-              handleEnterRoom &&
-                handleEnterRoom(type, room.isPrivate || "", room.roomId);
-            }}
-          >
-            {type === "my-room" ? "Enter" : "Join"}
-          </Button>
+          {room.isBlocked ? (
+            <p className="text-orange-400">Room is temporarily unavailable</p>
+          ) : (
+            <Button
+              className={
+                "bg-primary-600 hover:bg-primary-500/90 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300"
+              }
+              onClick={() => {
+                handleEnterRoom &&
+                  handleEnterRoom(type, room.isPrivate || "", room.roomId);
+              }}
+            >
+              {type === "my-room" ? "Enter" : "Join"}
+            </Button>
+          )}
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-500">
               {room.participants.length}/{room.limit}
             </span>
-            <AvatarGroup>
-              {room.participants.map((participant, i) => (
-                <Avatar key={i}>
-                  <AvatarImage
-                    src={participant.avatar}
-                    alt={participant.userName}
+            <div className="flex -space-x-3">
+              {room.participants?.slice(0, 5).map((participant, i) => (
+                <div
+                  key={i}
+                  className="w-5 h-5 rounded-full overflow-hidden border-2 border-white"
+                >
+                  <img
+                    src={participant.user.avatar}
+                    alt={participant.user.userName}
+                    className="w-full h-full object-cover rounded-full"
                   />
-                  <AvatarFallback>{participant.userName}</AvatarFallback>
-                </Avatar>
+                </div>
               ))}
-            </AvatarGroup>
+            </div>
           </div>
         </div>
       </div>

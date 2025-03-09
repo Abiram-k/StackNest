@@ -28,28 +28,34 @@ const FilterBar = ({
         <input
           type="text"
           placeholder="Search"
-          className="w-full pl-4 pr-14 py-3 border-gray-300 rounded-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 shadow-sm"
+          className="w-full pl-4 pr-14 py-3 border -1 dark:border-gray-300 border-gray-300 rounded-full focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all duration-200 shadow-sm"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
         <button
           onClick={() => setSearchQuery(search)}
-          className="absolute cursor-pointer right-0 top-1/2 transform -translate-y-1/2 px-4 py-3 border-0 bg-gray-100 rounded-r-full hover:bg-gray-200 transition"
+          className="absolute cursor-pointer right-0 top-1/2 transform -translate-y-1/2 px-4 py-3 bg-gray-100 border-r border-2 dark:bg-transparent rounded-r-full hover:bg-gray-200 transition"
         >
           <Search className="h-5 w-5 text-gray-600" />
         </button>
       </div>
 
-      <div className="flex gap-4 w-full md:w-auto">
+      <div className="flex gap-4 w-full md:w-auto ">
         <div className="relative w-full sm:w-48">
           <select
             onChange={(e) => setFilterQuery(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors duration-200 cursor-pointer [&>option]:bg-white [&>option]:text-gray-800"
+            className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white appearance-none focus:outline-none focus:ring-2  focus:ring-gray-200 focus:border-gray-400 transition-colors duration-200 cursor-pointer [&>option]:bg-white [&>option]:text-gray-800 dark:bg-black"
           >
-            <option value="">Filter by</option>
+            <option value="" className="dark:bg-black dark:text-white">
+              Filter by
+            </option>
             {filterOptions?.map((option, index) => (
-              <option key={index} value={option.value}>
+              <option
+                key={index}
+                value={option.value}
+                className="dark:bg-black dark:text-white"
+              >
                 {option.label || option.value}
               </option>
             ))}
@@ -73,11 +79,17 @@ const FilterBar = ({
           <div className="relative w-full sm:w-48">
             <select
               onChange={(e) => setSortedOrder(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors duration-200 cursor-pointer [&>option]:bg-white [&>option]:text-gray-800"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors duration-200 dark:bg-transparent cursor-pointer [&>option]:bg-white [&>option]:text-gray-800"
             >
-              <option value="">Select Order</option>
+              <option value="" className="dark:bg-black dark:text-white">
+                Select Order
+              </option>
               {sortOptions?.map((option, index) => (
-                <option key={index} value={option.value}>
+                <option
+                  key={index}
+                  className="dark:bg-black dark:text-white"
+                  value={option.value}
+                >
                   {option.label || option.value}
                 </option>
               ))}

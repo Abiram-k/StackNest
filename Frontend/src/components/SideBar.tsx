@@ -1,4 +1,4 @@
-import {  userLogout } from "@/redux/slice/userSlice";
+import { userLogout } from "@/redux/slice/userSlice";
 import { Button } from "./ui/button";
 import { LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -12,29 +12,24 @@ type navItemType = {
 };
 type sideBarPropsType = {
   navItems: navItemType[];
-  
 };
 
 const SideBar = ({ navItems }: sideBarPropsType) => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   return (
-    <div className="z-50">
+    <div className="z-50 ">
       <button
-        className={`fixed  top-30  left-4 p-2 rounded-lg z-50 shadow-sm cursor-pointer ${
+        className={`fixed  top-30  dark:bg-gray-800 left-4 p-2 rounded-lg z-50 shadow-sm cursor-pointer ${
           isOpen ? "sm:left-30 md:left-50" : "left-4"
         } transition-all duration-300`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? (
-          <X className="h-6 w-6 " />
-        ) : (
-          <Menu className="h-6 w-6 " />
-        )}
+        {isOpen ? <X className="h-6 w-6 " /> : <Menu className="h-6 w-6 " />}
       </button>
 
       {isOpen && (
-        <aside className="fixed left-0 top-21 w-64 h-[calc(100vh-5.3rem)] border-r bg-white z-10 shadow-md transition-all duration-300">
+        <aside className="fixed left-0 top-21 w-64 h-[calc(100vh-5.3rem)] border-r bg-white dark:bg-black  z-10 shadow-md transition-all duration-300">
           <nav className="p-4 space-y-2 flex justify-center align-middle flex-col h-full">
             {navItems.map((navItem, index) => (
               <NavLink
@@ -42,10 +37,10 @@ const SideBar = ({ navItems }: sideBarPropsType) => {
                 key={index}
                 end
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg ${
+                  `flex items-center gap-3 px-4 transition-all duration-150   py-2 text-sm font-medium rounded-lg ${
                     isActive
-                      ? "bg-purple-100 text-purple-600"
-                      : "text-gray-600 hover:bg-gray-100"
+                      ? "bg-purple-100 text-primary-600"
+                      : "text-gray-600 dark:hover:text-primary-600  dark:text-gray-300 hover:text-primary-600 hover:bg-gray-100"
                   }`
                 }
               >
@@ -57,9 +52,10 @@ const SideBar = ({ navItems }: sideBarPropsType) => {
 
           <div className="absolute bottom-0 w-full p-4">
             <Button
-              variant="destructive"
-              className="w-full cursor-pointer"
+              variant="default"
+              className="w-full cursor-pointer bg-red-600 dark:bg-red-600 dark:text-white"
               onClick={() => {
+                window.location.reload();
                 dispatch(userLogout());
               }}
             >

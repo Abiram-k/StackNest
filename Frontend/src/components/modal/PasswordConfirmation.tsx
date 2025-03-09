@@ -22,7 +22,6 @@ export default function PasswordConfirmation({
     onProceed(password);
   };
 
-
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="w-full max-w-md bg-[#1a1a1a] rounded-2xl p-6 shadow-xl">
@@ -48,7 +47,7 @@ export default function PasswordConfirmation({
             <Button
               type="button"
               onClick={onCancel}
-              className="flex-1 h-12 rounded-full bg-transparent border border-transparent relative"
+              className="flex-1 h-12 rounded-full bg-transparent border border-transparent relative dark:text-white"
               style={{
                 backgroundImage:
                   "linear-gradient(#1a1a1a, #1a1a1a), linear-gradient(to right, #ff3366, #9933ff)",
@@ -61,7 +60,7 @@ export default function PasswordConfirmation({
 
             <Button
               type="submit"
-              className="flex-1 h-12 rounded-full bg-purple-600 hover:bg-purple-700 text-white border-0"
+              className="flex-1 h-12 rounded-full bg-priamry-500 hover:bg-primary-500/90 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300 text-white border-0"
             >
               Proceed
             </Button>

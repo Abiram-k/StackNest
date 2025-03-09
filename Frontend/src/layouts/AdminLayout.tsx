@@ -68,7 +68,7 @@ const AdminLayout = () => {
     <>
       <Navbar isAuthintacted={true} isAdmin={true} />
       <SideBar navItems={navItems} />
-      <div className="bg-white w-screen px-7 md:px-10 mt-18 md:ps-30 ">
+      <div className="bg-white dark:bg-black w-screen px-7 md:px-10 mt-18 md:ps-30 ">
         <Outlet />
       </div>
     </>

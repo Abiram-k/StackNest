@@ -2,7 +2,7 @@ import heroSectionImage from "../../assets/heroSection.png";
 
 const HeroSection = () => {
   return (
-    <section className="container mx-auto px-4 pt-8 pb-16 ">
+    <section className="container mx-auto dark:bg-black px-4 pt-8 pb-16 ">
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-5xl font-bold mb-8">
           Unlock the Power of Developer Connection
@@ -23,7 +23,6 @@ const HeroSection = () => {
             />
           </svg>
         </div>
-
       </div>
 
       <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -51,7 +50,7 @@ const HeroSection = () => {
           <div className="flex justify-center gap-8 md:justify-start">
             <div className="text-center p-4  bg-primary-500 text-white dark:bg-primary-600  rounded-lg">
               <div className="text-2xl font-bold ">2k+</div>
-              <div className="text-sm ">Tech Events Hosted</div>
+              <div className="text-sm ">Tech Rooms Hosted</div>
             </div>
             <div className="text-center p-4 bg-primary-500 text-white dark:bg-primary-600 rounded-lg ">
               <div className="text-2xl font-bold ">10K+</div>

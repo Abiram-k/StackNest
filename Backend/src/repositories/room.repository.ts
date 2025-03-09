@@ -17,8 +17,8 @@ export class RoomRespository implements IRoomRepository<IRoom> {
 
   async updateRoom(id: string, data: Partial<IRoom>): Promise<boolean> {
     try {
-      const result = await Room.findOneAndUpdate(
-        { roomId: id },
+      const result = await Room.findByIdAndUpdate(
+        id,
         { $set: data },
         { new: true }
       );
@@ -69,7 +69,8 @@ export class RoomRespository implements IRoomRepository<IRoom> {
 
       const rooms = await Room.find(query)
         .skip((page - 1) * limit)
-        .limit(limit);
+        .limit(limit)
+        .populate("participants.user");
 
       return { rooms, totalPages };
     } catch (error) {
@@ -84,7 +85,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
     try {
       let query = Room.findById(id);
       if (populateHost) {
-        query.populate("host");
+        query.populate("host").populate("participants.user");
       }
       return query.exec();
     } catch (error) {
@@ -127,13 +128,13 @@ export class RoomRespository implements IRoomRepository<IRoom> {
   }
 
   async addParticipant(
-    userId: Types.ObjectId,
+    userId: string,
     roomId: string
   ): Promise<boolean> {
     try {
       const isparticipantAdded = await Room.findOneAndUpdate(
         { roomId },
-        { $addToSet: { participants: userId } },
+        { $addToSet: { participants: { user: userId, joinedAt: new Date() } } },
         { new: true }
       );
       return !!isparticipantAdded;

@@ -20,11 +20,13 @@ const roomSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
-    participants: {
-      type: [Schema.Types.ObjectId],
-      ref: "User",
-      required: true,
-    },
+    participants: [
+      {
+        user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        joinedAt: { type: Date, default: Date.now },
+        leavedAt: { type: Date, default: null },
+      },
+    ],
     startedAt: { type: Date, default: null },
     isPrivate: { type: String, default: "No" },
     isPremium: { type: String, default: "No" },

@@ -33,7 +33,16 @@ export class RoomService {
 
   async updateRoom(roomId: string, data: RoomSchema) {
     try {
-      return await this.roomRepo.updateRoom(roomId, data);
+      const updatedData: Partial<IRoom> = {
+        title: data.title,
+        limit: data.limit,
+        isPrivate: data.isPrivate,
+        password: data.password,
+        isPremium: data.isPremium,
+        description: data.description,
+      };
+
+      await this.roomRepo.updateRoom(roomId, updatedData);
     } catch (error) {
       throw error;
     }
@@ -109,18 +118,23 @@ export class RoomService {
     }
   }
 
-  async joinRoom(userId: Types.ObjectId, roomId: string) {
+  async joinRoom(userId: string, roomId: string) {
     try {
       if (!userId) throw createHttpError(401, "Not Authenticated to join");
       const room = await this.roomRepo.findByRoomId(roomId);
       if (!room) throw createHttpError(404, "Room not found");
 
-      if (room.host == userId) {
+      if (room.host.toString() == userId) {
         console.log("Host joined the room");
         return true;
       }
 
-      if (room.participants.includes(userId)) {
+      if (room.isBlocked) {
+        throw createHttpError(400, "Room is unavailable");
+      }
+      
+      console.log("UserId: ", userId, "p.user_id: ");
+      if (room.participants.some((p) => p?.user?.toString() === userId)) {
         throw createHttpError(400, "Already joined in the room");
       }
 
@@ -128,6 +142,7 @@ export class RoomService {
         throw createHttpError(400, "Room is full");
       }
       const isAdded = await this.roomRepo.addParticipant(userId, roomId);
+
       if (!isAdded) throw createHttpError(402, "Failed to add Participant");
     } catch (error) {
       throw error;

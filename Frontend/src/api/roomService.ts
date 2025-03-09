@@ -20,7 +20,11 @@ export interface IRoom extends Document {
   host: host;
   isBlocked: boolean;
   startedAt: Date;
-  participants: { userName: string; avatar: string }[];
+  participants: {
+    user: { userName: string; avatar: string };
+    joinedAt: Date;
+    leavedAt: Date;
+  }[];
   isPrivate: string;
   isPremium: string;
   password?: string;

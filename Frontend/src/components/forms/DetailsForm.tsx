@@ -53,7 +53,9 @@ const DetailsForm = ({
                   type="datetime-local"
                   {...register("scheduledAt")}
                   defaultValue={""}
-                  onChange={(e) => field.setValue("scheduledAt", e.target.value)}
+                  onChange={(e) =>
+                    field.setValue("scheduledAt", e.target.value)
+                  }
                   className="w-full border rounded-lg p-2.5 pr-10 focus:ring-2 focus:ring-blue-500 outline-none"
                 />
               </div>
@@ -68,12 +70,11 @@ const DetailsForm = ({
               id={field.name}
               {...register(field.name)}
               onChange={(e) => field.setValue(field.name, e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg 
+              className={`w-full px-3 py-2 border-1 dark:border-gray-800 rounded-lg 
                 focus:outline-none focus:ring-1 focus-visible:border-gray-200 
-                focus:border-primary-500 bg-white dark:bg-gray-900 dark:text-white 
-                dark:border-gray-300 appearance-none relative 
+                focus:border-primary-500 bg-white dark:bg-black dark:text-white 
+                  appearance-none relative 
                 ${isEditing ? "border-black" : "border-gray-300"}`}
-              // defaultValue={formData && formData[field.name]}
               disabled={!isEditing}
             >
               <option value="">Select Gender</option>
@@ -103,9 +104,10 @@ const DetailsForm = ({
       case "textarea":
         return (
           <textarea
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus-visible:border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-300 ${
-              isEditing ? "border-black" : "border-gray-300"
-            }`}
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus-visible:border-gray-200 bg-white 
+              dark:border-1  dark:bg-black dark:text-white dark:border-gray-800 ${
+                isEditing ? "border-black" : "border-gray-300"
+              }`}
             placeholder={field.placeholder}
             {...register(field.name)}
             disabled={!isEditing}
@@ -147,7 +149,7 @@ const DetailsForm = ({
           <div className="mt-8 flex justify-start">
             <Button
               type="submit"
-              className="w-full md:w-auto transition-all duration-400 ease-in-out transform hover:scale-105  bg-primary-500 dark:bg-primary-600 cursor-pointer hover:bg-primary-600/90"
+              className="w-full md:w-auto transition-all duration-400 ease-in-out transform hover:scale-105  bg-primary-500 cursor-pointer hover:bg-primary-600/90 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300"
             >
               {isPending ? submitButtonText + " ..." : submitButtonText}
             </Button>

@@ -1,9 +1,11 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import sampleImage from '../../assets/roomImage.png'
+import sampleImage from "../../assets/roomImage.png";
+import { useNavigate } from "react-router-dom";
 
 const RoomSection = () => {
+  const navigate = useNavigate();
   return (
     <section className="container mx-auto px-4 py-12">
       <div className="grid md:grid-cols-2 gap-8">
@@ -21,10 +23,10 @@ const RoomSection = () => {
                   />
                 </div>
                 <h4 className="font-bold mb-2">Let you go insane</h4>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-gray-600 dark:text-gray-500 mb-4">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </p>
-                <Button className="bg-primary-500 text-white hover:bg-primary-500/90 dark:bg-primary-600">
+                <Button className="bg-primary-500 text-white hover:bg-primary-500/90 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300">
                   Join Now
                 </Button>
               </Card>
@@ -32,6 +34,7 @@ const RoomSection = () => {
           </div>
           <div className="text-center mt-8">
             <Button
+              onClick={() => navigate("/user/room")}
               variant="link"
               className="text-primary-500 dark:text-primary-600"
             >
@@ -53,10 +56,10 @@ const RoomSection = () => {
                   />
                 </div>
                 <h4 className="font-bold mb-2">General Community</h4>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-gray-600 dark:text-gray-500 mb-4">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </p>
-                <Button className="bg-primary-500 text-white hover:bg-primary-500/90 dark:bg-primary-600">
+                <Button className="bg-primary-500 text-white hover:bg-primary-500/90 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300">
                   Join Now
                 </Button>
               </Card>

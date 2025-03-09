@@ -143,11 +143,11 @@ const Navbar = ({
               Home
             </Link>
             <Link
-              to="/user/about"
+              to="/user/room"
               className="text-md font-medium hover:text-primary transition-colors"
               onClick={() => setIsOpen(false)}
             >
-              About
+              Room
             </Link>
             <Link
               to="/user/challenge"

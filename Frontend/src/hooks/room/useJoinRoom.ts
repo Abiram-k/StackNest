@@ -1,16 +1,18 @@
 import { HttpService } from "@/api/httpService";
 import { RoomService } from "@/api/roomService";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 const httpService = new HttpService();
 const roomService = new RoomService(httpService);
 
 export const useJoinRoom = () => {
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (roomId: string) => roomService.joinRoom({ roomId }),
     onSuccess: () => {
       toast.success("Joined successfully");
+      queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to join Room");
@@ -27,7 +29,6 @@ export const useVerifyRoomPassword = (onSuccess?: () => void) => {
 
     onSuccess: () => {
       if (onSuccess) onSuccess();
-      toast.success("Password verified");
     },
     onError: (error) => {
       toast.error(error.message || "Failed to verify password");

@@ -1,14 +1,14 @@
 import { Types } from "mongoose";
 
 export interface IRoom extends Document {
-  _id:string;
+  _id: string;
   roomId: string;
   title: string;
   description: string;
   host: Types.ObjectId;
   isBlocked: boolean;
-  startedAt:Date,
-  participants: Types.ObjectId[];
+  startedAt: Date;
+  participants: [{ user: Types.ObjectId; joinedATt: Date; leavedAt: Date }];
   isPrivate: string;
   isPremium: string;
   password?: string;

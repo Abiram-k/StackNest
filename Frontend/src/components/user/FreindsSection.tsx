@@ -27,17 +27,17 @@ const FreindsSection = () => {
             />
           </div>
           <h4 className="font-bold text-sm mb-2">Developer Name</h4>
-          <p className="text-xs text-gray-600 mb-4">
+          <p className="text-xs text-gray-600 dark:text-gray-500 mb-4">
             Full Stack Developer
           </p>
-          <Button className="w-full bg-purple-600 text-white hover:bg-purple-700">
+          <Button className="w-full bg-primary-500 text-white hover:bg-primary-500/90 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300">
             Connect
           </Button>
         </Card>
       ))}
     </div>
     <div className="text-center mt-8">
-      <Button variant="link" className="text-purple-600">
+      <Button variant="link" className="dark:text-primary-600 text-primary-500">
         Explore
       </Button>
     </div>
