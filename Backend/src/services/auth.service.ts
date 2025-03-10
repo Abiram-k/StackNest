@@ -158,13 +158,13 @@ export class AuthService {
       const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET as string);
 
       if (!decoded) throw new Error("Invalid refresh token");
-      
+
       if (typeof decoded === "object" && "userId" in decoded) {
         const newAccessToken = generateAccessToken({
           userId: decoded.userId,
           role: decoded.role,
         });
-        
+
         return newAccessToken;
       }
     } catch (error) {
@@ -237,7 +237,12 @@ export class AuthService {
   async register({ email, password, name, otp }: typeRegisterUserWithOtp) {
     const validOtp = await otpRepository.findOtpByMail(email);
 
-    if (!validOtp || validOtp?.otp != otp || validOtp.expiresAt < new Date())
+    if (!validOtp) throw createHttpError(404, "Otp is not found, Try again!");
+
+    if (validOtp?.otp != otp)
+      throw createHttpError(404, "Otp is Incorrect, Try again!");
+
+    if (validOtp?.otp != otp || validOtp.expiresAt < new Date())
       throw createHttpError(404, "Otp expired, Try again!");
 
     await otpRepository.deleteByEmail(email);

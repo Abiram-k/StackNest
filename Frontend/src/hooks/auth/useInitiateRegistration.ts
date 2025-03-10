@@ -16,12 +16,13 @@ export const useInitiateRegistration = (
   } = useMutation({
     mutationFn: (data:{ email:string}) => userAuthService.initiateRegistration(data),
     onSuccess: (data) => {
-      console.log(data);
+      toast.dismiss();
       toast.success("Otp Sended to your Gmail");
       setIsModalOpen(true);
     },
     onError: (error) => {
       console.error("Registration failed:", error);
+      toast.dismiss();
       toast.error(error.message || "Something went wrong!");
       initiatingReset();
     },

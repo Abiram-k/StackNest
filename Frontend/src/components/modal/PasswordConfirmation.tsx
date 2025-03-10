@@ -60,7 +60,7 @@ export default function PasswordConfirmation({
 
             <Button
               type="submit"
-              className="flex-1 h-12 rounded-full bg-priamry-500 hover:bg-primary-500/90 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300 text-white border-0"
+              className="flex-1 h-12 rounded-full bg-priamry-500 hover:bg-primary-500/90 bg-primary-500 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300 text-white border-0"
             >
               Proceed
             </Button>

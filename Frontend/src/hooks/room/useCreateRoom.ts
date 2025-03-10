@@ -17,12 +17,14 @@ export const useCreateRoom = () => {
   const mutation = useMutation({
     mutationFn: (data: RoomSchema) => roomService.createRoom(data),
     onSuccess: () => {
+      toast.dismiss();
       toast.success("Room created successfully");
       navigate("/user/room");
       queryClient.invalidateQueries({ queryKey: "rooms" });
     },
     onError: (error) => {
       console.log(error);
+      toast.dismiss();
       toast.error(error.message || "Failed to create room");
     },
   });

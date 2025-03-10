@@ -68,6 +68,7 @@ export class RoomService {
     search?: string
   ) {
     try {
+      console.log(role, page, limit, id, filter, sort, search);
       const availableRoom = await this.roomRepo.findAvailableRooms(
         role,
         page,
@@ -132,8 +133,7 @@ export class RoomService {
       if (room.isBlocked) {
         throw createHttpError(400, "Room is unavailable");
       }
-      
-      console.log("UserId: ", userId, "p.user_id: ");
+
       if (room.participants.some((p) => p?.user?.toString() === userId)) {
         throw createHttpError(400, "Already joined in the room");
       }

@@ -31,6 +31,7 @@ export const useVerifyRoomPassword = (onSuccess?: () => void) => {
       if (onSuccess) onSuccess();
     },
     onError: (error) => {
+      toast.dismiss();
       toast.error(error.message || "Failed to verify password");
     },
   });

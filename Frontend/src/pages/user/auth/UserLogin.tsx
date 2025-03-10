@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { Captcha } from "@/components/auth/Captcha";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Logo from "@/components/ui/Logo"; 
-import { useLogin } from "@/hooks/useLogin";
+import { useLogin } from "@/hooks/auth/useLogin";
 
 const sitekey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 

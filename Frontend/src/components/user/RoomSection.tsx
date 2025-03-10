@@ -44,8 +44,8 @@ const RoomSection = () => {
         </div>
 
         <div>
-          <h3 className="text-2xl font-bold mb-6">General Room</h3>
-          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+          {/* <h3 className="text-2xl font-bold mb-6">General Room</h3> */}
+          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-14">
             {[1, 2].map((item) => (
               <Card key={item} className="p-4 bg-yellow-100">
                 <div className="relative h-48 mb-4 rounded-lg overflow-hidden">

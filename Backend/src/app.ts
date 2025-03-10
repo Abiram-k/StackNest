@@ -10,9 +10,30 @@ import errorHandler from "./middlewares/errorHandling";
 import { config } from "dotenv";
 import { verifyUser } from "./middlewares/verifyUser";
 import { verifyAdmin } from "./middlewares/verifyAdmin";
+import http from "http";
+// import { initSocketIO } from "./socket";
 config();
 
 const app = express();
+// const server = http.createServer(app);
+// const io = initSocketIO(server);
+
+// io.on("connection", (socket) => {
+//   console.log(`User Connected: ${socket.id}`);
+
+//   socket.on("message", (data) => {
+//     console.log(`Message from ${socket.id}: ${data}`);
+//     io.emit("message", data);
+//   });
+
+//   socket.on("connect_error", (err) => {
+//     console.error(`Connection error: ${err.message}`);
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log(`User disconnected: ${socket.id}`);
+//   });
+// });
 
 // Middlewares
 app.use(cookieParser());

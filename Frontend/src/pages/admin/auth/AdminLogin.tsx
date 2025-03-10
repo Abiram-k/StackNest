@@ -6,7 +6,7 @@ import { Form } from "@/components/forms/Form";
 import { Link } from "react-router-dom";
 import images from "../../../assets/login-img.jpg";
 import logo from "../../../assets/stacknest-logo.png";
-import { useLogin } from "@/hooks/useLogin";
+import { useLogin } from "@/hooks/auth/useLogin";
 
  const AdminLoginPage = () => {
   const {

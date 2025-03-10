@@ -13,10 +13,12 @@ export const useBlockUser = () => {
     mutationFn: (userName: string) => adminService.blockUser(userName),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.dismiss();
       toast.success("Success");
     },
     onError: (error) => {
       toast.error(error.message || "Failed to block user");
+      toast.dismiss();
       toast.error("Error occured");
     },
   });

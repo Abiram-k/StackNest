@@ -5,9 +5,10 @@ import { useRef, useState } from "react";
 import { UserAuthService } from "@/api/authService";
 import { HttpService } from "@/api/httpService";
 import toast from "react-hot-toast";
-import { setCredentials } from "@/redux/slice/userSlice";
-import { LoginUser } from "../../../types/user";
+import { setUserCredentials } from "@/redux/slice/userSlice";
+import { LoginUser } from "../../../../types/user";
 import { UseFormSetError } from "react-hook-form";
+import { setAdminCredentials } from "@/redux/slice/adminSlice";
 
 export const useLogin = (
   setError: UseFormSetError<LoginUser>,
@@ -25,12 +26,16 @@ export const useLogin = (
   const mutation = useMutation({
     mutationFn: (data: LoginUser) => userAuthService.login(data, role),
     onSuccess: (data) => {
-      console.log(data);
+      toast.dismiss();
       toast.success(data?.message || "Login successful");
       setEnableCaptcha(false);
-      dispatch(setCredentials({}));
-      if (role == "users") navigate("/user/home");
-      else navigate("/admin/dashboard");
+      if (role == "user") {
+        dispatch(setUserCredentials({}));
+        navigate("/user/home");
+      } else {
+        dispatch(setAdminCredentials({}));
+        navigate("/admin/dashboard");
+      }
       mutation.reset();
     },
     onError: (error: any) => {
@@ -43,6 +48,8 @@ export const useLogin = (
       }
       setEnableCaptcha(false);
       console.error("Login failed:", error);
+      toast.dismiss();
+
       toast.error(error.message || "Something went wrong!");
       mutation.reset();
     },

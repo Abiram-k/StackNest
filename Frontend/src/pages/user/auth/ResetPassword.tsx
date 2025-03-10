@@ -3,7 +3,7 @@ import { verifyPasswordSchema } from "@/validation/authSchema";
 import { useVerifyPassword } from "@/hooks/validation/useLoginForm";
 import { useSearchParams } from "react-router-dom";
 import { verifyPasswordSchemaType } from "../../../../../types/user";
-import { useResetPassword } from "@/hooks/useResetPassword";
+import { useResetPassword } from "@/hooks/auth/useResetPassword";
 
 const ResetPassword = () => {
   const {

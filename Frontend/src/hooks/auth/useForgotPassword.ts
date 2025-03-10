@@ -14,6 +14,7 @@ export const useForgotPassword = (setIsSuccess:(value:boolean)=>void) => {
       reset();
     },
     onError: (error: any) => {
+      toast.dismiss();
       toast.error(error.message);
       setIsSuccess(false);
       reset();

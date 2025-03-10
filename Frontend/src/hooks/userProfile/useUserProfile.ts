@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   axiosResponse,
   verifyUserProfileSchemaType,
-} from "../../../types/user";
+} from "../../../../types/user";
 import toast from "react-hot-toast";
 
 const userProfileService = new UserProfileService(new HttpService());
@@ -34,10 +34,12 @@ export const useUpdateUserProfile = (
       console.log(data);
       setIsEditing(false);
       queryClient.invalidateQueries({ queryKey: ["userDetails"] });
+      toast.dismiss();
       toast.success("Profile updated");
     },
     onError: (error: any) => {
       reset();
+      toast.dismiss();
       toast.error(error.message || "Something went wrong!");
     },
   });

@@ -1,4 +1,6 @@
 import AdminLayout from "@/layouts/AdminLayout";
+import ProtectAdminLogin from "@/protectedRoutes/admin/ProtectAdminLogin";
+import ProtectDashboard from "@/protectedRoutes/admin/ProtectDashboard";
 import { lazy } from "react";
 
 const AdminLoginPage = lazy(() => import("../pages/admin/auth/AdminLogin"));
@@ -15,10 +17,23 @@ export const adminRoutes: RouteObject[] = [
     children: [
       {
         path: "auth",
-        children: [{ path: "login", element: <AdminLoginPage /> }],
+        children: [
+          {
+            path: "login",
+            element: (
+              <ProtectAdminLogin>
+                <AdminLoginPage />
+              </ProtectAdminLogin>
+            ),
+          },
+        ],
       },
       {
-        element: <AdminLayout />,
+        element: (
+          <ProtectDashboard>
+            <AdminLayout />
+          </ProtectDashboard>
+        ),
         children: [
           { path: "dashboard", element: <Dashboard /> },
           { path: "user-management", element: <UserManagement /> },

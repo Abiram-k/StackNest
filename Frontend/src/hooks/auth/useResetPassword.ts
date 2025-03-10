@@ -14,11 +14,13 @@ export const useResetPassword = () => {
     mutationFn: (data: { token?: string; password: string }) =>
       userAuthService.resetPassword(data),
     onSuccess: () => {
+      toast.dismiss();
       toast.success("Password updated ");
       navigate("/auth/login");
       reset();
     },
     onError: (error: any) => {
+      toast.dismiss();
       toast.error(error.message || "Failed to updated Password");
       reset();
     },

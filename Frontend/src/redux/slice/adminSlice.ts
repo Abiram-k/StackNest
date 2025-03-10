@@ -8,7 +8,7 @@ const initialState = {
   name: "admin",
   initialState,
   reducers: {
-    setCredentials: (state, action) => {
+    setAdminCredentials: (state, action) => {
       state.isAuthenticated = true;
     },
     adminLogout: (state) => {
@@ -17,5 +17,5 @@ const initialState = {
   },
 });
 
-export const { setCredentials, adminLogout } = adminSlice.actions;
+export const { setAdminCredentials, adminLogout } = adminSlice.actions;
 export default adminSlice.reducer;

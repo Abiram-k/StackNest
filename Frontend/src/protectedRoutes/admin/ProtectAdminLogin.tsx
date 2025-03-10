@@ -10,6 +10,6 @@ const ProtectAdminLogin = ({ children }: { children: ReactNode }) => {
     return <Navigate to="/admin/dashboard" replace />;
   }
   return children;
-};
+}; 
 
 export default ProtectAdminLogin;

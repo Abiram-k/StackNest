@@ -54,7 +54,7 @@ const navItems = [
 const ProfileLayout = () => {
   return (
     <div className="flex md:gap-90">
-      <SideBar navItems={navItems}/>
+      <SideBar navItems={navItems} role="user"/>
       <Outlet />
     </div>
   );

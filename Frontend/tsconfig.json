@@ -5,10 +5,12 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    // "resolveJsonModule": true,
+    // "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@types/*": ["../../types/*"] 
-        }
+      "@types/*": ["../../types/*"]
+    }
   }
 }

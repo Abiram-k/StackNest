@@ -15,10 +15,12 @@ export const useRemoveRoom = () => {
   const mutate = useMutation({
     mutationFn: (id: string) => roomService.removeRoom(id),
     onSuccess: (data) => {
+      toast.dismiss();
       toast.success("Room was removed");
       queryClient.invalidateQueries({ queryKey: ["myRooms"] });
     },
     onError: (error) => {
+      toast.dismiss();
       toast.error("Failed to remove room");
       console.log(error);
     },

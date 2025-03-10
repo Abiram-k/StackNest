@@ -67,7 +67,7 @@ const AdminLayout = () => {
   return (
     <>
       <Navbar isAuthintacted={true} isAdmin={true} />
-      <SideBar navItems={navItems} />
+      <SideBar navItems={navItems} role="admin" />
       <div className="bg-white dark:bg-black w-screen px-7 md:px-10 mt-18 md:ps-30 ">
         <Outlet />
       </div>

@@ -1,35 +1,34 @@
-// import { ChevronLeft, Plane } from "lucide-react";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Button } from "@/components/ui/button";
+import { ChevronLeft, Plane } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
   // Sample data for the charts
-  // const monthlyData = [
-  //   { month: "Jan", value: 35 },
-  //   { month: "Feb", value: 65 },
-  //   { month: "Mar", value: 45 },
-  //   { month: "Apr", value: 75 },
-  //   { month: "May", value: 60 },
-  //   { month: "Jun", value: 55 },
-  //   { month: "Jul", value: 40 },
-  // ];
+  const monthlyData = [
+    { month: "Jan", value: 35 },
+    { month: "Feb", value: 65 },
+    { month: "Mar", value: 45 },
+    { month: "Apr", value: 75 },
+    { month: "May", value: 60 },
+    { month: "Jun", value: 55 },
+    { month: "Jul", value: 40 },
+  ];
 
-  // const weeklySpending = [
-  //   { day: 10, value: 25 },
-  //   { day: 11, value: 35 },
-  //   { day: 12, value: 50 },
-  //   { day: 13, value: 30 },
-  //   { day: 14, value: 40 },
-  // ];
+  const weeklySpending = [
+    { day: 10, value: 25 },
+    { day: 11, value: 35 },
+    { day: 12, value: 50 },
+    { day: 13, value: 30 },
+    { day: 14, value: 40 },
+  ];
 
   return (
     <div className="flex h-screen dark:bg-black">
       {/* Main Content */}
-      <div className="flex-1 o p-8  overflow-y-hidden">
+      <div className="flex-1 o p-8 ">
         <h1 className="text-2xl font-bold mb-8 border-0 text-center md:text-start md:ms-10">
           Analytics Overview
         </h1>
-        {/*
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card>
             <CardHeader className="pb-2">
@@ -183,7 +182,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
-        */}
       </div>
     </div>
   );

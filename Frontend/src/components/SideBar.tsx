@@ -4,6 +4,7 @@ import { LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { adminLogout } from "@/redux/slice/adminSlice";
 
 type navItemType = {
   name: string;
@@ -11,10 +12,11 @@ type navItemType = {
   to: string;
 };
 type sideBarPropsType = {
+  role: string;
   navItems: navItemType[];
 };
 
-const SideBar = ({ navItems }: sideBarPropsType) => {
+const SideBar = ({ role, navItems }: sideBarPropsType) => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   return (
@@ -55,8 +57,9 @@ const SideBar = ({ navItems }: sideBarPropsType) => {
               variant="default"
               className="w-full cursor-pointer bg-red-600 dark:bg-red-600 dark:text-white"
               onClick={() => {
+                if (role == "user") dispatch(userLogout());
+                else dispatch(adminLogout());
                 window.location.reload();
-                dispatch(userLogout());
               }}
             >
               <LogOut className="h-5 w-5 mr-2" />

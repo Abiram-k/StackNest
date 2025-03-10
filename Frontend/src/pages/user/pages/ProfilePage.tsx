@@ -5,7 +5,10 @@ import { verifyUserProfile } from "@/hooks/validation/useProfileForm";
 import { validateProfileSchema } from "@/validation/userDetailsSchema";
 import { useEffect, useRef, useState } from "react";
 import { verifyUserProfileSchemaType } from "../../../../../types/user";
-import { useUpdateUserProfile, useUserProfile } from "@/hooks/useUserProfile";
+import {
+  useUpdateUserProfile,
+  useUserProfile,
+} from "@/hooks/userProfile/useUserProfile";
 import ProfileImageUploader from "@/components/ProfileImageUploader";
 import { Spinner } from "@/components/ui/spinner";
 import { ImageService } from "@/api/imageService";
@@ -48,7 +51,7 @@ export default function ProfilePage() {
     },
   });
 
-  const { data: user, isPending: fetchIsPending, isError } = useUserProfile();
+  const { data: user, isPending: fetchIsPending } = useUserProfile();
 
   useEffect(() => {
     if (user?.userDetails) {
@@ -197,16 +200,21 @@ export default function ProfilePage() {
               />
             </div>
             <div className="fixed bottom-10 right-10 md:bottom-20 md:right-20">
-              {isChatBotOpen && <ChatBot setIsOpen={setIsChatBotOpen} avatar={formData.avatar}/>}
+              {isChatBotOpen && (
+                <ChatBot
+                  setIsOpen={setIsChatBotOpen}
+                  avatar={formData.avatar}
+                />
+              )}
               <Button
                 onClick={() => setIsChatBotOpen(!isChatBotOpen)}
-                className={`rounded-full p-3 fixed bottom-10 right-10 md:bottom-20 md:right-20 ${
+                className={`rounded-full p-3 w-12 h-12 fixed bottom-10 right-10 md:bottom-20 md:right-20 ${
                   isChatBotOpen
                     ? "bg-red-500 hover:bg-red-600"
                     : "bg-indigo-600 hover:bg-indigo-700"
                 }`}
               >
-                {isChatBotOpen ? <X size={24} /> : <MessageCircle size={24} />}{" "}
+                {isChatBotOpen ? <X size={26} /> : <MessageCircle size={27} />}{" "}
               </Button>
             </div>
           </div>

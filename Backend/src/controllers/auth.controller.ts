@@ -92,7 +92,6 @@ export class AuthController {
         console.log("No role founded during generating new access token");
         return;
       }
-
       // const refreshToken = req.cookies.userRefreshToken;
       const refreshToken = req.cookies[`${role}RefreshToken`];
 

@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 
 const ProtectDashboard = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.admin);
+  
 
   if (!isAuthenticated) {
     return <Navigate to="/admin/auth/login" replace />;

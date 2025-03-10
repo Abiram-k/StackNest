@@ -4,7 +4,7 @@ import { verifyEmailSchema } from "@/validation/authSchema";
 import { useVerifyEmail } from "@/hooks/validation/useLoginForm";
 import { ArrowLeftButton } from "@/components/ui/ArrowLeftButton";
 import { EmailSendedSuccess } from "@/components/modal/EmailSendedSucess";
-import { useForgotPassword } from "@/hooks/useForgotPassword";
+import { useForgotPassword } from "@/hooks/auth/useForgotPassword";
 
  const ForgotPassword = () => {
   const [email, setEmail] = useState("");

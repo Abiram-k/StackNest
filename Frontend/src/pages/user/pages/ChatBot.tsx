@@ -1,12 +1,16 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useHappyFaceAi } from "@/hooks/userProfile/useHappyFaceAi";
+import { error } from "console";
 import { Bot, Check, Send, X } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 interface IChatBotType {
   setIsOpen: (value: boolean) => void;
   avatar?: string;
 }
+
 interface Message {
   id: number;
   text: string;
@@ -14,18 +18,29 @@ interface Message {
   timestamp: string;
   read?: boolean;
 }
+const questions = [
+  { emoji: "⚡", text: "What is StackNest?" },
+  { emoji: "💬", text: "How to join a room?" },
+  { emoji: "🤔", text: "How to get connections?" },
+];
 
 const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
   const [message, setMessage] = useState("");
-
   const [messages, setMessages] = useState<Message[]>([]);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length]);
+
+  const { mutate, isPending } = useHappyFaceAi();
 
   const handleSendMessage = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
       if (!message.trim()) return;
 
-      const newMessage: Message = {
+      const userMessage: Message = {
         id: messages.length + 1,
         text: message,
         sender: "user",
@@ -34,8 +49,39 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
           minute: "2-digit",
         }),
       };
-
-      setMessages([...messages, newMessage]);
+      setMessages((prev) => [...prev, userMessage]);
+      let botResponse: Message = {
+        id: 0,
+        text: "",
+        sender: "bot",
+        timestamp: "",
+      };
+      mutate(message, {
+        onSuccess: (data) => {
+          botResponse = {
+            id: messages.length + 1,
+            text: data.response,
+            sender: "bot",
+            timestamp: new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          };
+          setMessages((prev) => [...prev, botResponse]);
+        },
+        onError: () => {
+          botResponse = {
+            id: messages.length + 1,
+            text: "Some temperor",
+            sender: "bot",
+            timestamp: new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          };
+          setMessages((prev) => [...prev, botResponse]);
+        },
+      });
       setMessage("");
     },
     [message]
@@ -47,10 +93,15 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
         <div className="flex items-center space-x-2">
           <Bot className="text-white" size={24} />
           <div>
-            <h2 className="text-white font-medium">Main Title</h2>
-            <p className="text-indigo-200 text-xs">
-              <span className="text-green-400">●</span> Online
-            </p>
+            <h2 className="text-white font-medium">StackNest Assistant</h2>
+            <div className="flex gap-1 items-center">
+              <p className="text-indigo-200 text-xs">
+                <span className="text-green-400">●</span> Online
+              </p>
+              {isPending && (
+                <p className="text-orange-400 text-xs">proccessing ... </p>
+              )}
+            </div>
           </div>
         </div>
         <Button
@@ -73,10 +124,11 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
             }`}
           >
             {msg.sender === "bot" && (
-              <Avatar className="w-8 h-8 bg-indigo-600 mr-2">
+              <Avatar className="w-8 h-8 bg-indigo-600 mr-2 flex items-center justify-center">
                 <Bot className="text-white" size={16} />
               </Avatar>
             )}
+
             <div
               className={`max-w-[80%] rounded-lg p-3 ${
                 msg.sender === "user"
@@ -97,20 +149,23 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
             )}
           </div>
         ))}
+        <div ref={bottomRef} />
       </div>
 
       {/* Footer */}
       <div className="p-4 border-t">
         <div className="flex items-center justify-around mb-4">
-          <button className="text-sm text-gray-600 flex items-center">
-            ⚡ What is WappGPT?
-          </button>
-          <button className="text-sm text-gray-600 flex items-center">
-            💰 Pricing
-          </button>
-          <button className="text-sm text-gray-600 flex items-center">
-            🤔 FAQs
-          </button>
+          {questions.map((question, index) => (
+            <button
+              onClick={() => {
+                setMessage(question.text);
+              }}
+              key={index}
+              className="text-sm text-gray-600 flex items-center"
+            >
+              {question.emoji} {question.text}
+            </button>
+          ))}
         </div>
         <form
           onSubmit={handleSendMessage}

@@ -13,7 +13,7 @@ import PasswordConfirmation from "@/components/modal/PasswordConfirmation";
 import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
 import { Spinner } from "@/components/ui/spinner";
 
-const filterOptions = [{ value: "isPremium" }, { value: "isPrivate" }];
+const filterOptions = [{ value: "Premium" }, { value: "Private" }];
 const sortOptions = [{ value: "Ascending" }, { value: "Descending" }];
 
 export default function RoomsListPage() {
@@ -75,6 +75,7 @@ export default function RoomsListPage() {
   // onClick for password modal confirm
   const handleVerifyPassword = (password: string) => {
     if (!selectedRoomId) {
+      toast.dismiss();
       toast.error("RoomId not found!");
       return;
     }

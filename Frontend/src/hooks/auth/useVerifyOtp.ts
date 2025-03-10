@@ -3,7 +3,7 @@ import { UserAuthService } from "@/api/authService";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { typeRegisterUserWithOtp } from "../../../types/user";
+import { typeRegisterUserWithOtp } from "../../../../types/user";
 
 export const useVerifyOtp = (setIsModalOpen: (value: boolean) => void) => {
   const navigate = useNavigate();
@@ -18,13 +18,13 @@ export const useVerifyOtp = (setIsModalOpen: (value: boolean) => void) => {
     mutationFn: (data: typeRegisterUserWithOtp) =>
       userAuthService.createUser(data),
     onSuccess: (data) => {
-      console.log(data);
+      toast.dismiss();
       toast.success("Otp Verified");
       setIsModalOpen(false);
       navigate("/auth/login");
     },
     onError: (error) => {
-      console.error("Registration failed:", error);
+      toast.dismiss();
       toast.error(error.message || "Something went wrong!");
       VerifyOtpReset();
     },

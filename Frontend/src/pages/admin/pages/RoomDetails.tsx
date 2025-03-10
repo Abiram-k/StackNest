@@ -26,6 +26,7 @@ export default function RoomDetails() {
   const { roomId } = useParams<{ roomId: string }>();
 
   if (!roomId) {
+    toast.dismiss();
     toast.success("Room ID is missing!");
     return;
   }

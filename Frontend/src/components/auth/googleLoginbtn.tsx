@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { axiosInstancePublic } from "@/api/apiSevice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "@/redux/slice/userSlice";
+import { setUserCredentials } from "@/redux/slice/userSlice";
 
 const GoogleAuth = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const GoogleAuth = () => {
 
     if (data.success) {
       navigate("/user/home");
-      dispatch(setCredentials({}));
+      dispatch(setUserCredentials({}));
       toast.success("Login Successful");
     }
   };

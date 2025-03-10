@@ -15,6 +15,7 @@ export const useUpdateRoom = () => {
     mutationFn: ({id, data}:{ id: string; data: RoomSchema }) =>
       roomService.updateRoom(id, data),
     onSuccess: () => {
+      toast.dismiss();
       toast.success("Room Updated successfully");
       navigate("/user/room");
       queryClient.invalidateQueries({ queryKey: "rooms" });

@@ -28,7 +28,6 @@ export const verifyUser = async (
   }
 
   try {
-    // console.log("Token:", token, "ACCESS_TOKEN_SECRET:", ACCESS_TOKEN_SECRET);
     const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET) as DecodedToken;
     const userBaseRepository = new UserBaseRepository();
 
@@ -48,7 +47,6 @@ export const verifyUser = async (
 
     next();
   } catch (error: any) {
-
     if (error.name === "TokenExpiredError") {
       res.sendStatus(401);
       // throw createHttpError(401, "Access Denied: unAuthorized");

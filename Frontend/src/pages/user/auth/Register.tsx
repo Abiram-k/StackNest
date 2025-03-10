@@ -10,8 +10,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useState } from "react";
 import OtpModal from "@/components/modal/OtpModal";
 import { Spinner } from "@/components/ui/spinner";
-import { useInitiateRegistration } from "@/hooks/useInitiateRegistration";
-import { useVerifyOtp } from "@/hooks/useVerifyOtp";
+import { useInitiateRegistration } from "@/hooks/auth/useInitiateRegistration";
+import { useVerifyOtp } from "@/hooks/auth/useVerifyOtp";
 
 const RegisterPage = () => {
   const [userData, setUserData] = useState<RegisterUser>({
@@ -42,7 +42,7 @@ const RegisterPage = () => {
   };
 
   const verifyOtp = (otp: string) => {
-    setIsModalOpen(false);
+    // setIsModalOpen(false);
     verifyOtpMutate({ otp, ...userData });
   };
 

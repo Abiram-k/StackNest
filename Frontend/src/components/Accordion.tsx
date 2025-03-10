@@ -11,7 +11,7 @@ const MyAccordion = () => {
       <Accordion type="single" collapsible className="space-y-4">
         <AccordionItem
           value="item-1"
-          className="rounded-lg border bg-card shadow-sm px-4"
+          className="rounded-lg  bg-card shadow-sm px-4"
         >
           <AccordionTrigger className="text-left text-lg font-medium hover:no-underline md:text-xl md:px-4">
             <span className="w-full text-balance">
@@ -37,7 +37,7 @@ const MyAccordion = () => {
 
         <AccordionItem
           value="item-2"
-          className="rounded-lg border bg-card shadow-sm px-4"
+          className="rounded-lg  bg-card shadow-sm px-4"
         >
           <AccordionTrigger className="text-left text-lg font-medium hover:no-underline md:text-xl md:px-4">
             <span className="w-full text-balance">
@@ -61,7 +61,7 @@ const MyAccordion = () => {
 
         <AccordionItem
           value="item-3"
-          className="rounded-lg border bg-card shadow-sm px-4"
+          className="rounded-lg  bg-card shadow-sm px-4"
         >
           <AccordionTrigger className="text-left text-lg font-medium hover:no-underline md:text-xl md:px-4">
             <span className="w-full text-balance">
@@ -93,7 +93,7 @@ const MyAccordion = () => {
 
         <AccordionItem
           value="item-4"
-          className="rounded-lg border bg-card shadow-sm px-4"
+          className="rounded-lg  bg-card shadow-sm px-4"
         >
           <AccordionTrigger className="text-left text-lg font-medium hover:no-underline md:text-xl md:px-4">
             <span className="w-full text-balance">
@@ -119,7 +119,7 @@ const MyAccordion = () => {
 
         <AccordionItem
           value="item-5"
-          className="rounded-lg border bg-card shadow-sm px-4"
+          className="rounded-lg  bg-card shadow-sm px-4"
         >
           <AccordionTrigger className="text-left text-lg font-medium hover:no-underline md:text-xl md:px-4">
             <span className="w-full text-balance">
