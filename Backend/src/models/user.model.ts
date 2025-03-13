@@ -132,7 +132,6 @@ userSchema.pre("save", function (next) {
       ? `${this.firstName?.toLowerCase()}_${uniqueId}`
       : "";
   }
-
   next();
 });
 export default mongoose.model("User", userSchema);

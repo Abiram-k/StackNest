@@ -1,31 +1,38 @@
 import { nanoid } from "nanoid";
 import { RoomSchema } from "../../../types/user";
-import { IRoomRepository } from "../interfaces/room.repository.interface";
+import { IRoomRepository } from "../interfaces/repositories/room.repository.interface";
 import { IRoom } from "../types/IRoom";
 import { Types } from "mongoose";
 import createHttpError from "http-errors";
+import { IRoomService } from "../interfaces/services/room.service.interface";
 
-export class RoomService {
-  constructor(private roomRepo: IRoomRepository<IRoom>) {}
+export class RoomService implements IRoomService {
+  
+  constructor(private _roomRepo: IRoomRepository<IRoom>) {}
 
   async createRoom(host: Types.ObjectId, data: RoomSchema) {
     try {
       const roomData: any = {};
+
       if (data.scheduledAt) {
-        const localDate = new Date(data.scheduledAt);
-        const utcDate = new Date(
-          localDate.getTime() - localDate.getTimezoneOffset() * 60000
-        );
-        data.scheduledAt = utcDate;
-        roomData.status = "scheduled";
-        roomData.startedAt = null;
-      } else {
-        roomData.startedAt = new Date();
-        roomData.status = "online";
+        const scheduledDate = new Date(data.scheduledAt);
+        const currentDate = new Date();
+        if (scheduledDate < currentDate) {
+          roomData.startedAt = new Date();
+          roomData.status = "online";
+        } else {
+          const localDate = new Date(data.scheduledAt);
+          const utcDate = new Date(
+            localDate.getTime() - localDate.getTimezoneOffset() * 60000
+          );
+          data.scheduledAt = utcDate;
+          roomData.status = "scheduled";
+          roomData.startedAt = null;
+        }
       }
       roomData.roomId = nanoid(8);
       roomData.host = host;
-      return this.roomRepo.createRoom({ ...roomData, ...data });
+      return this._roomRepo.createRoom({ ...roomData, ...data });
     } catch (error) {
       throw error;
     }
@@ -42,7 +49,7 @@ export class RoomService {
         description: data.description,
       };
 
-      await this.roomRepo.updateRoom(roomId, updatedData);
+      await this._roomRepo.updateRoom(roomId, updatedData);
     } catch (error) {
       throw error;
     }
@@ -50,7 +57,7 @@ export class RoomService {
 
   async fetchMyRooms(id: Types.ObjectId) {
     try {
-      const myRooms = await this.roomRepo.findByHostId(id);
+      const myRooms = await this._roomRepo.findByHostId(id);
       if (myRooms) return myRooms;
       else throw createHttpError(404, "My Rooms not founded");
     } catch (error) {
@@ -68,8 +75,7 @@ export class RoomService {
     search?: string
   ) {
     try {
-      console.log(role, page, limit, id, filter, sort, search);
-      const availableRoom = await this.roomRepo.findAvailableRooms(
+      const availableRoom = await this._roomRepo.findAvailableRooms(
         role,
         page,
         limit,
@@ -87,7 +93,7 @@ export class RoomService {
 
   async fetchSelectedRoom(role: string, id: string) {
     try {
-      const room = await this.roomRepo.findSelectedRoom(role == "admin", id);
+      const room = await this._roomRepo.findSelectedRoom(role == "admin", id);
       if (!room) throw createHttpError(404, "RoomId is incorrect, not found");
 
       return room;
@@ -98,7 +104,7 @@ export class RoomService {
 
   async removeRoom(id: string) {
     try {
-      const isDeleted = await this.roomRepo.removeById(id);
+      const isDeleted = await this._roomRepo.removeById(id);
       if (!isDeleted) {
         throw createHttpError(404, "RoomId not founded,while removing ");
       } else {
@@ -111,7 +117,7 @@ export class RoomService {
 
   async blockUser(id: string) {
     try {
-      const isBlockedRoom = await this.roomRepo.blockRoom(id);
+      const isBlockedRoom = await this._roomRepo.blockRoom(id);
       if (!isBlockedRoom) throw createHttpError(404, "Failed to block room");
       return isBlockedRoom;
     } catch (error) {
@@ -122,7 +128,7 @@ export class RoomService {
   async joinRoom(userId: string, roomId: string) {
     try {
       if (!userId) throw createHttpError(401, "Not Authenticated to join");
-      const room = await this.roomRepo.findByRoomId(roomId);
+      const room = await this._roomRepo.findByRoomId(roomId);
       if (!room) throw createHttpError(404, "Room not found");
 
       if (room.host.toString() == userId) {
@@ -141,7 +147,7 @@ export class RoomService {
       if (room.participants.length >= room.limit) {
         throw createHttpError(400, "Room is full");
       }
-      const isAdded = await this.roomRepo.addParticipant(userId, roomId);
+      const isAdded = await this._roomRepo.addParticipant(userId, roomId);
 
       if (!isAdded) throw createHttpError(402, "Failed to add Participant");
     } catch (error) {
@@ -155,7 +161,7 @@ export class RoomService {
         console.log("Room id or password is missing!");
         return;
       }
-      const room = await this.roomRepo.findByRoomId(roomId);
+      const room = await this._roomRepo.findByRoomId(roomId);
       if (!room) throw createHttpError(404, "Room not found");
 
       if (room.password != password) {

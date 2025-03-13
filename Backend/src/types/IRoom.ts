@@ -8,7 +8,7 @@ export interface IRoom extends Document {
   host: Types.ObjectId;
   isBlocked: boolean;
   startedAt: Date;
-  participants: [{ user: Types.ObjectId; joinedATt: Date; leavedAt: Date }];
+  participants: [{ user: Types.ObjectId; joinedAt: Date; leavedAt: Date }];
   isPrivate: string;
   isPremium: string;
   password?: string;

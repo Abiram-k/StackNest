@@ -1,6 +1,13 @@
-import { IAdminRepository } from "../interfaces/admin.repository.interface";
+import { IAdminRepository } from "../interfaces/repositories/admin.repository.interface";
 import { IUser } from "../types/IUser";
 import User from "../models/user.model";
+
+enum FilterTags {
+  "isBlocked" = "Blocked",
+  "isPremium" = "Premium",
+  "isGoogleUser" = "Google users",
+  "isAscending" = "Ascending",
+}
 
 export class AdminRespository implements IAdminRepository<IUser> {
   async getUsers(
@@ -19,21 +26,20 @@ export class AdminRespository implements IAdminRepository<IUser> {
           { email: { $regex: search, $options: "i" } },
         ];
       }
-      if (filter == "Blocked") {
+      if (filter == FilterTags.isBlocked) {
         query.isBlocked = true;
-      } else if (filter == "Premium") {
+      } else if (filter == FilterTags.isPremium) {
         query.isVerified = true;
-      } else if (filter == "Google users") {
+      } else if (filter == FilterTags.isGoogleUser) {
         query.googleId = { $ne: "" };
       }
       query.role = "user";
 
       const totalUsers = await User.countDocuments(query);
       const totalPages = Math.ceil(totalUsers / limit);
-      // let sortOption: {} = sort ? { [sort]: 1 } : { createdAt: -1 };
       let sortOption = {};
       if (sort) {
-        if (sort == "Ascending") {
+        if (sort == FilterTags.isAscending) {
           sortOption = { createdAt: 1 };
         } else {
           sortOption = { createdAt: -1 };
@@ -55,13 +61,11 @@ export class AdminRespository implements IAdminRepository<IUser> {
     try {
       const user = await User.findOne({ userName });
       const currentStatus = user?.isBlocked;
-      console.log(currentStatus);
       const updatedUser = await User.findOneAndUpdate(
         { userName },
         { $set: { isBlocked: !currentStatus } },
         { new: true }
       );
-      console.log(updatedUser);
       if (updatedUser) return true;
       else return false;
     } catch (error) {

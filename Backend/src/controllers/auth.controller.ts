@@ -1,26 +1,64 @@
 import { Request, Response, NextFunction } from "express";
 import { LoginResponse } from "../../../types/index";
 import { config } from "dotenv";
-import { AuthService } from "../services/auth.service";
+// import { AuthService } from "../services/auth.service";
+import { HttpStatus } from "../constants/enum.statusCode";
+import { IAuthController } from "../interfaces/controllers/auth.controller.interface";
+import { IAuthService } from "../interfaces/services/auth.service.interface";
+import { plainToInstance } from "class-transformer";
+import { GoogleAuthDTO } from "../dtos/auth/googleAuth.dto";
+import { validate } from "class-validator";
+import { validateDtoError } from "../utils/ValidateDtoError";
+import { LoginDTO, ResLoginDTO } from "../dtos/auth/login.dto";
+import {
+  GenerateAccessDTO,
+  ResGenerateAccessDTO,
+} from "../dtos/auth/generateAccess.dto";
+import {
+  InitiateRegistrationDTO,
+  ResInitiateRegistrationDTO,
+} from "../dtos/auth/initiateRegistration.dto";
+import { RegisterDTO, ResRegisterDTO } from "../dtos/auth/register.dto";
+import {
+  ForgotPasswordDTO,
+  ResForgotPasswordDTO,
+} from "../dtos/auth/forgotPassword.dto";
+import {
+  ResetPasswordDTO,
+  ResResetPasswordDTO,
+} from "../dtos/auth/resetPassword.dto";
 config();
 
-export class AuthController {
-  private authService: AuthService;
+export class AuthController implements IAuthController {
+  private _authService: IAuthService;
 
-  constructor(authService: AuthService) {
-    this.authService = authService;
+  constructor(authService: IAuthService) {
+    this._authService = authService;
   }
 
-  async googleAuth(req: Request, res: Response, next: NextFunction) {
+  async googleAuth(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const { token } = req.body;
+      // const { token } = req.body;
+      const dto = plainToInstance(GoogleAuthDTO, req.body);
+      const errors = await validate(dto);
+      if (!validateDtoError(errors, res)) return;
+
+      const { token } = dto;
+
       if (!token) throw new Error("Google token is required");
 
-      const authResponse = await this.authService.authenticateGoogleUser(token);
+      const authResponse = await this._authService.authenticateGoogleUser(
+        token
+      );
 
       if (!authResponse) {
         throw new Error("Authentication failed: No response from service");
       }
+
       const { accessToken, refreshToken } = authResponse;
 
       res.cookie("userRefreshToken", refreshToken, {
@@ -38,22 +76,32 @@ export class AuthController {
         message: "Login successfull",
       };
 
-      res.json(data);
+      res.status(HttpStatus.OK).json(data);
     } catch (error: any) {
       next(error);
     }
   }
 
-  async login(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async login(
+    req: Request,
+    res: Response<ResLoginDTO>,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const { email, password, captchaToken, role } = req.body;
+      // const { email, password, captchaToken, role } = req.body;
+
+      const dto = plainToInstance(LoginDTO, req.body);
+      const errors = await validate(dto);
+      if (!validateDtoError(errors, res)) return;
+      const { email, password, captchaToken, role } = dto;
+
 
       if (!email || !password)
         throw new Error("Email and password are required");
 
       if (!role) throw new Error("Role is required");
 
-      const { accessToken, refreshToken } = await this.authService.login({
+      const { accessToken, refreshToken } = await this._authService.login({
         email,
         password,
         captchaToken,
@@ -75,7 +123,7 @@ export class AuthController {
         message: "Login successfull",
       };
 
-      res.json(data);
+      res.status(HttpStatus.OK).json(data);
     } catch (error: any) {
       next(error);
     }
@@ -83,27 +131,37 @@ export class AuthController {
 
   async generateAccessToken(
     req: Request,
-    res: Response,
+    res: Response<ResGenerateAccessDTO>,
     next: NextFunction
   ): Promise<void> {
     try {
       const { role } = req.query;
-      if (!role) {
-        console.log("No role founded during generating new access token");
-        return;
-      }
-      // const refreshToken = req.cookies.userRefreshToken;
+      const dto = plainToInstance(GenerateAccessDTO, req.query);
+      const errors = await validate(dto);
+      if (!validateDtoError(errors, res)) return;
+      // if (!role) {
+      //   console.log("No role founded during generating new access token");
+      //   return;
+      // }
       const refreshToken = req.cookies[`${role}RefreshToken`];
 
       if (!refreshToken) {
-        res.status(401).json({ message: "Unauthorized" });
+        res
+          .status(HttpStatus.UNAUTHORIZED)
+          .json({ success: false, message: "Unauthorized", accessToken: "" });
         return;
       }
-      const newAccessToken = await this.authService.generateAccessToken(
+
+      const newAccessToken = await this._authService.generateAccessToken(
         refreshToken
       );
 
-      res.json({
+      if (!newAccessToken) {
+        console.log("Failed to generate new access Token.");
+        return;
+      }
+
+      res.status(HttpStatus.OK).json({
         success: true,
         accessToken: newAccessToken,
         message: "Access token sended successfully",
@@ -113,11 +171,23 @@ export class AuthController {
     }
   }
 
-  async initiateRegistration(req: Request, res: Response, next: NextFunction) {
+  async initiateRegistration(
+    req: Request,
+    res: Response<ResInitiateRegistrationDTO>,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const { email } = req.body;
-      await this.authService.initiateRegistration(email);
-      res.status(200).json({ success: true, message: "OTP sent successfully" });
+      // const { email } = req.body;
+      const dto = plainToInstance(InitiateRegistrationDTO, req.body);
+      const errors = await validate(dto);
+      if (!validateDtoError(errors, res)) return;
+
+      const { email } = dto;
+
+      await this._authService.initiateRegistration(email);
+      res
+        .status(HttpStatus.OK)
+        .json({ success: true, message: "OTP sent successfully" });
     } catch (error) {
       next(error);
     }
@@ -125,36 +195,67 @@ export class AuthController {
 
   async register(
     req: Request,
-    res: Response,
+    res: Response<ResRegisterDTO>,
     next: NextFunction
   ): Promise<void> {
     try {
-      const { name, email, password, otp } = req.body;
-      if (!name || !email || !password) throw new Error("Credential missing!");
-      await this.authService.register({ name, email, password, otp });
-      res.status(200).json({ success: true });
+      // const { name, email, password, otp } = req.body;
+
+      const dto = plainToInstance(RegisterDTO, req.body);
+      const errors = await validate(dto);
+      if (!validateDtoError(errors, res)) return;
+      const { name, email, password, otp } = dto;
+
+      if (!name || !email || !password || !otp)
+        throw new Error("Credential missing!");
+      await this._authService.register({ name, email, password, otp });
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "User registered successfully", success: true });
     } catch (error: any) {
       next(error);
     }
   }
 
-  async forgotPassword(req: Request, res: Response, next: NextFunction) {
+  async forgotPassword(
+    req: Request,
+    res: Response<ResForgotPasswordDTO>,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const { email } = req.body;
-      await this.authService.forgotPassword(email);
+      // const { email } = req.body;
+
+      const dto = plainToInstance(ForgotPasswordDTO, req.body);
+      const errros = await validate(dto);
+      if (!validateDtoError(errros, res)) return;
+      const { email } = dto;
+
+      await this._authService.forgotPassword(email);
       res
-        .status(200)
+        .status(HttpStatus.OK)
         .json({ success: true, message: "Mail sended successfully" });
     } catch (error: any) {
       next(error);
     }
   }
 
-  async resetPassword(req: Request, res: Response, next: NextFunction) {
+  async resetPassword(
+    req: Request,
+    res: Response<ResResetPasswordDTO>,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const { token, password } = req.body;
-      await this.authService.resetPassword(token, password);
-      res.status(200).json({ success: true, message: "OTP sent successfully" });
+      // const { token, password } = req.body;
+
+      const dto = plainToInstance(ResetPasswordDTO, req.body);
+      const errros = await validate(dto);
+      if (!validateDtoError(errros, res)) return;
+      const { token, password } = dto;
+
+      await this._authService.resetPassword(token, password);
+      res
+        .status(HttpStatus.OK)
+        .json({ success: true, message: "OTP sent successfully" });
     } catch (error) {
       next(error);
     }

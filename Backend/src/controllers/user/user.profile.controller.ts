@@ -1,54 +1,94 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthRequest } from "../../types/IAuth";
-import { UserProfileService } from "../../services/user/user.profile.service";
+// import { UserProfileService } from "../../services/user.profile.service";
 
 import { config } from "dotenv";
 import axios from "axios";
 import { findAnswers } from "../../utils/qaMatcher";
+import { HttpStatus } from "../../constants/enum.statusCode";
+import { IUserProfileController } from "../../interfaces/controllers/user.profile.controller.interface";
+import { IUserProfileService } from "../../interfaces/services/user.profile.service.interface";
+import {
+  ResGetUserDataDTO,
+  ResProfileData,
+} from "../../dtos/user/profile/getUserData.dto";
+import { UserResTypeDTO } from "../../dtos/public/userData.dto";
+import { ResUpdateUserProfileDTO } from "../../dtos/user/profile/updateUserProfile.dto";
 config();
 
-const OPEN_AI_API_KEY = process.env.OPEN_AI_API_KEY;
 const HUG_FACE_API_KEY = process.env.HUG_FACE_API_KEY;
-export class UserProfileController {
-  private userProfileService: UserProfileService;
+export class UserProfileController implements IUserProfileController {
+  private _userProfileService: IUserProfileService;
 
-  constructor(userProfileService: UserProfileService) {
-    this.userProfileService = userProfileService;
+  constructor(userProfileService: IUserProfileService) {
+    this._userProfileService = userProfileService;
   }
 
-  async getUserData(req: AuthRequest, res: Response, next: NextFunction) {
+  async getUserData(
+    req: AuthRequest,
+    res: Response<ResGetUserDataDTO>,
+    next: NextFunction
+  ): Promise<void> {
     try {
       if (!req.user) throw new Error("No User in Req");
       const { userId } = req.user;
       if (!userId) throw new Error("User Id not get");
-      const userDetails = await this.userProfileService.getUserDetails(userId);
-      res.json({ success: true, userDetails, message: "User details fetched" });
+      const user = await this._userProfileService.getUserDetails(userId);
+
+      const formattedUsers: ResProfileData = {
+        firstName: user.firstName,
+        userName: user.userName,
+        email: user.email,
+        country: user.country,
+        description: user.description,
+        gender: user.gender,
+        mobileNumber: user.mobileNumber,
+        avatar: user.avatar,
+      };
+
+      res
+        .status(HttpStatus.OK)
+        .json({
+          success: true,
+          userDetails: formattedUsers,
+          message: "User details fetched",
+        });
     } catch (error) {
       next(error);
     }
   }
 
-  async updateUserProfile(req: AuthRequest, res: Response, next: NextFunction) {
+  async updateUserProfile(
+    req: AuthRequest,
+    res: Response<ResUpdateUserProfileDTO>,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      await this.userProfileService.updateUserDetails(
+      await this._userProfileService.updateUserDetails(
         req.user?.userId as string,
         req.body
       );
-      res.json({ success: true, message: "updated user profile" });
+      res
+        .status(HttpStatus.OK)
+        .json({ success: true, message: "updated user profile" });
     } catch (error) {
       next(error);
     }
   }
 
-  async chatBotResponse(req: Request, res: Response, next: NextFunction) {
+  async chatBotResponse(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     const { prompt } = req.body;
     if (!prompt) {
-      res.status(400).json({ error: "Prompt is required" });
+      res.status(HttpStatus.NOT_FOUND).json({ error: "Prompt is required" });
     }
 
     try {
       if (["hello", "hi", "hey", "hai"].includes(prompt.toLowerCase())) {
-        res.json({
+        res.status(HttpStatus.OK).json({
           response:
             "Hello! I'm StackNest Assistant. Ask me about collaboration features or technical help!",
         });
@@ -71,7 +111,7 @@ export class UserProfileController {
       const predefinedAnswer = findAnswers(prompt);
       if (predefinedAnswer) {
         setTimeout(() => {
-          res.json({ response: predefinedAnswer });
+          res.status(HttpStatus.OK).json({ response: predefinedAnswer });
         }, 2000);
         return;
       }
@@ -81,7 +121,7 @@ export class UserProfileController {
       );
 
       if (!isRelatedQuery) {
-        res.json({
+        res.status(HttpStatus.BAD_REQUEST).json({
           response:
             "Please ask questions related to the StackNest application.",
         });
@@ -94,7 +134,7 @@ export class UserProfileController {
           inputs: `As a StackNest assistant, answer concisely: ${prompt}`,
           parameters: {
             max_length: 150,
-            temperature: 0.3, // Less randomness
+            temperature: 0.3,
             top_p: 0.9,
             repetition_penalty: 1.5,
           },
@@ -107,7 +147,9 @@ export class UserProfileController {
           timeout: 30000,
         }
       );
-      res.json({ response: response.data[0].summary_text });
+      res
+        .status(HttpStatus.OK)
+        .json({ response: response.data[0].summary_text });
     } catch (error: any) {
       console.error("API Error:", error.response?.data || error.message);
       next("AI Processing failed");

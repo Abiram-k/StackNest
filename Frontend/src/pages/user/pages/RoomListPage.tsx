@@ -28,7 +28,6 @@ export default function RoomsListPage() {
 
   // to fetch my rooms
   const { data: myRooms, isPending: fetchMyRoomPending } = useFetchMyRooms();
-
   // to fetch all rooms except ours
   const { data: availableRooms, isPending: fetchAllRoomsPending } =
     useFetchAllRooms("users", {
@@ -36,6 +35,7 @@ export default function RoomsListPage() {
       sort,
       filter,
       currentPage,
+      limit: 10,
     });
 
   // onClick of edit icon
@@ -149,7 +149,7 @@ export default function RoomsListPage() {
               setFilterQuery={setFilter}
               setSortedOrder={setSort}
               filterOptions={filterOptions}
-              sortOptions={sortOptions}
+              // sortOptions={sortOptions}
             />
           </div>
 

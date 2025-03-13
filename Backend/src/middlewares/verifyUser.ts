@@ -5,6 +5,7 @@ import { AuthRequest, DecodedToken } from "../types/IAuth";
 import userModel from "../models/user.model";
 import { AdminRespository } from "../repositories/admin.repository";
 import { UserBaseRepository } from "../repositories/user.repository";
+import { HttpStatus } from "../constants/enum.statusCode";
 
 export const verifyUser = async (
   req: AuthRequest,
@@ -16,14 +17,14 @@ export const verifyUser = async (
   const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET as string;
 
   if (!process.env.JWT_SECRET) {
-    res.status(500).json({
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: "Server Error: JWT Access Secret(verify user) is missing",
     });
     return;
   }
 
   if (!token) {
-    res.status(401).json({ message: "Unauthorized" });
+    res.status(HttpStatus.UNAUTHORIZED).json({ message: "Unauthorized" });
     return;
   }
 
@@ -33,11 +34,14 @@ export const verifyUser = async (
 
     const user = await userBaseRepository.findById(decoded.userId as string);
     if (!user) {
-      throw createHttpError(404, "User not found");
+      throw createHttpError(HttpStatus.NOT_FOUND, "User not found");
     }
 
     if (user.isBlocked) {
-      throw createHttpError(403, "Access Denied: User is blocked");
+      throw createHttpError(
+        HttpStatus.FORBIDDEN,
+        "Access Denied: User is blocked"
+      );
     }
 
     req.user = {
@@ -48,8 +52,7 @@ export const verifyUser = async (
     next();
   } catch (error: any) {
     if (error.name === "TokenExpiredError") {
-      res.sendStatus(401);
-      // throw createHttpError(401, "Access Denied: unAuthorized");
+      res.sendStatus(HttpStatus.UNAUTHORIZED);
     }
     next(error);
   }

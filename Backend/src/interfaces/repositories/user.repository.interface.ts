@@ -1,15 +1,15 @@
 import {
   typeUserResetToken,
   verifyUserProfileSchemaType,
-} from "../../../types/user";
-import { IUser } from "../types/IUser";
+} from "../../../../types/user";
+import { IUser } from "../../types/IUser";
 
 export interface IUserBaseRepository<T> {
   create(userData: Partial<T>): Promise<T>;
   findById(id: string): Promise<T | null>;
   findByEmail(email: string): Promise<T | null>;
-  findByIdAndUpdate(id: string, data:any): Promise<T | null>;
-  findByUserName(userName:string):Promise<T | null>;
+  findByIdAndUpdate(id: string, data: any): Promise<T | null>;
+  findByUserName(userName: string): Promise<T | null>;
 }
 export interface IUserAuthRepository<T> {
   updateUserWithGoogleId(email: string, googleId: string): Promise<boolean>;

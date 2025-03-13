@@ -1,7 +1,7 @@
 import { useForm, UseFormReturn, DefaultValues } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { verifyPasswordSchemaType, verifyUserProfileSchemaType } from "../../../../types/user";
+import { verifyPasswordSchemaType } from "../../../../types/user";
 
 type LoginSchemaType = {
   email: string;

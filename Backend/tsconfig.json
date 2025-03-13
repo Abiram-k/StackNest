@@ -1,5 +1,7 @@
 {
     "compilerOptions": {
+      "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
       "target": "ES2020",
       "module": "ESNext",
       "moduleResolution": "node",

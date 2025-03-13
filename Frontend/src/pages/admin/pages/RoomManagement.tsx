@@ -33,6 +33,7 @@ const RoomManagement = () => {
     sort,
     search,
     currentPage,
+    limit: 10,
   });
 
   const handleVeiwMore = (id: string) => {

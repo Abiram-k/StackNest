@@ -23,15 +23,16 @@ import {
 import {
   IUserAuthRepository,
   IUserBaseRepository,
-} from "../interfaces/user.repository.interface";
+} from "../interfaces/repositories/user.repository.interface";
 import { IUser } from "../types/IUser";
+import { IAuthService } from "../interfaces/services/auth.service.interface";
 
 config();
 
-export class AuthService {
+export class AuthService implements IAuthService {
   constructor(
-    private baseRepo: IUserBaseRepository<IUser>,
-    private authRepo: IUserAuthRepository<IUser>
+    private _baseRepo: IUserBaseRepository<IUser>,
+    private _authRepo: IUserAuthRepository<IUser>
   ) {}
 
   async authenticateGoogleUser(token: string) {
@@ -39,21 +40,20 @@ export class AuthService {
       const payload = await googleUserResponse(token);
 
       if (!payload) throw createHttpError(404, "Invalid google token");
-
-      const isExistUserWithEmail = await this.baseRepo.findByEmail(
+      const isExistUserWithEmail = await this._baseRepo.findByEmail(
         payload.email
       );
 
-      const isExistUserWithGooglId = await this.authRepo.findUserByGoogleId(
+      const isExistUserWithGooglId = await this._authRepo.findUserByGoogleId(
         payload.id
       );
 
       if (isExistUserWithEmail && !isExistUserWithGooglId) {
-        await this.authRepo.updateUserWithGoogleId(payload.email, payload.id);
+        await this._authRepo.updateUserWithGoogleId(payload.email, payload.id);
       }
 
       if (!isExistUserWithGooglId && !isExistUserWithEmail) {
-        await this.baseRepo.create({
+        await this._baseRepo.create({
           googleId: payload.id,
           email: payload.email,
           firstName: payload.given_name,
@@ -62,7 +62,7 @@ export class AuthService {
         });
       }
 
-      const user = await this.authRepo.findUserByGoogleId(payload.id);
+      const user = await this._authRepo.findUserByGoogleId(payload.id);
 
       if (!user) throw new Error("User not found with google id");
       const data = {
@@ -82,8 +82,7 @@ export class AuthService {
   async login({ email, password, captchaToken, role }: LoginUser) {
     {
       try {
-        const user = await this.baseRepo.findByEmail(email);
-
+        const user = await this._baseRepo.findByEmail(email);
         if (!user || user?.role !== role)
           throw createHttpError(401, "Email not found");
 
@@ -98,13 +97,13 @@ export class AuthService {
               "Account is temporarily blocked. Try again later."
             );
           } else {
-            await this.authRepo.resetFailedAttempts(email);
+            await this._authRepo.resetFailedAttempts(email);
           }
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-          const user = await this.authRepo.updateFailedAttempts(email);
+          const user = await this._authRepo.updateFailedAttempts(email);
 
           if (user) {
             const { failedLoginAttempts = 0 } = user;
@@ -114,7 +113,7 @@ export class AuthService {
             }
 
             if (failedLoginAttempts >= 6) {
-              await this.authRepo.blockUserAfterFailedAttempt(email);
+              await this._authRepo.blockUserAfterFailedAttempt(email);
               throw createHttpError(
                 403,
                 "You were blocked, try after 30 minutes"
@@ -129,8 +128,8 @@ export class AuthService {
           if (!captchaResponse) throw new Error("Captcha verification failed");
         }
 
-        await this.authRepo.updateLastLogin(email);
-        await this.authRepo.resetFailedAttempts(email);
+        await this._authRepo.updateLastLogin(email);
+        await this._authRepo.resetFailedAttempts(email);
 
         const payload = { userId: user._id as Types.ObjectId, role: user.role };
 
@@ -173,7 +172,7 @@ export class AuthService {
   }
   async forgotPassword(email: string): Promise<void> {
     try {
-      const isExistUser = await this.baseRepo.findByEmail(email);
+      const isExistUser = await this._baseRepo.findByEmail(email);
       if (!isExistUser) throw createHttpError(404, "Email not registered");
 
       const JWT_SECRET = process.env.JWT_SECRET;
@@ -183,7 +182,7 @@ export class AuthService {
       const resetToken = jwt.sign({ userId: isExistUser._id }, JWT_SECRET, {
         expiresIn: "15m",
       });
-      await this.authRepo.setPassResetToken({ email, resetToken });
+      await this._authRepo.setPassResetToken({ email, resetToken });
 
       await sendPasswordResetEmail(isExistUser.email, resetToken);
     } catch (error) {
@@ -204,11 +203,11 @@ export class AuthService {
     };
     console.log(token, password);
     console.log(data);
-    const user = await this.authRepo.findUserByRestToken(data);
+    const user = await this._authRepo.findUserByRestToken(data);
 
     if (!user) throw createHttpError(404, "Invalid or token expired");
 
-    await this.authRepo.updatePassword({
+    await this._authRepo.updatePassword({
       email: user?.email,
       password: hashedPassword,
     });
@@ -218,7 +217,7 @@ export class AuthService {
 
   async initiateRegistration(email: string): Promise<void> {
     try {
-      const isExist = await this.baseRepo.findByEmail(email);
+      const isExist = await this._baseRepo.findByEmail(email);
       if (isExist) throw createHttpError(400, "User already exisit");
 
       const otp = generateOTP();
@@ -250,14 +249,14 @@ export class AuthService {
     try {
       const hashedPassword = await hashPassword(password);
 
-      const user = await this.baseRepo.create({
+      const user = await this._baseRepo.create({
         email,
         password: hashedPassword,
         firstName: name,
       });
 
       await sendWelcomeMail(name, email);
-      return { success: true, user };
+      return { message: "User registered", success: true, user };
     } catch (error: any) {
       throw error;
     }

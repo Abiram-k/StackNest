@@ -1,8 +1,14 @@
 import { Types } from "mongoose";
-import { IRoomRepository } from "../interfaces/room.repository.interface";
+import { IRoomRepository } from "../interfaces/repositories/room.repository.interface";
 import Room from "../models/room.model";
 import { IRoom } from "../types/IRoom";
 import { title } from "process";
+
+enum FilterTags {
+  "Private" = "Private",
+  "Premium" = "Premium",
+  "Live" = "Live",
+}
 
 export class RoomRespository implements IRoomRepository<IRoom> {
   async createRoom(data: Partial<IRoom>): Promise<boolean> {
@@ -29,7 +35,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
     }
   }
 
-  async findByHostId(id: Types.ObjectId): Promise<Partial<IRoom>[] | null> {
+  async findByHostId(id: Types.ObjectId): Promise<IRoom[] | null> {
     try {
       return await Room.find({ host: id });
     } catch (error) {
@@ -55,11 +61,11 @@ export class RoomRespository implements IRoomRepository<IRoom> {
         ];
       }
 
-      if (filter == "Private") {
+      if (filter == FilterTags.Private) {
         query.isPrivate = "Yes";
-      } else if (filter == "Premium") {
+      } else if (filter == FilterTags.Premium) {
         query.isPremium = "Yes";
-      } else if (filter == "Live") {
+      } else if (filter == FilterTags.Live) {
         query.status = "online";
       }
       if (role == "user") query.host = { $ne: id };
@@ -105,9 +111,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
   async blockRoom(id: string): Promise<boolean> {
     try {
       const room = await Room.findById(id);
-      console.log(room);
       const currentStatus = room?.isBlocked;
-      console.log(currentStatus);
       const updatedRoom = await Room.findByIdAndUpdate(
         id,
         { $set: { isBlocked: !currentStatus } },
@@ -127,10 +131,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
     }
   }
 
-  async addParticipant(
-    userId: string,
-    roomId: string
-  ): Promise<boolean> {
+  async addParticipant(userId: string, roomId: string): Promise<boolean> {
     try {
       const isparticipantAdded = await Room.findOneAndUpdate(
         { roomId },

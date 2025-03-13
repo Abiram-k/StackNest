@@ -20,7 +20,9 @@ export class AdminService {
   }
 
   async blockUser(userName: string): Promise<axiosResponse> {
-    const response = await this.httpService.patch<axiosResponse>(`/admin/user/${userName}/block`);
+    const response = await this.httpService.patch<axiosResponse>(
+      `/admin/user/${userName}/block`
+    );
     return response;
   }
 }

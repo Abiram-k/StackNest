@@ -105,7 +105,11 @@ const CustomTableComponent = <T extends { _id: string }>({
               </TableCell>
               {columns.map((col) => (
                 <TableCell key={col.key.toString()} className="text-center">
-                  {col.render ? col.render(item) : String(item[col.key])}
+                  {col.render
+                    ? col.render(item)
+                    : String(item[col.key]).length > 32
+                    ? String(item[col.key]).slice(0, 32) + "..."
+                    : String(item[col.key])}
                 </TableCell>
               ))}
 

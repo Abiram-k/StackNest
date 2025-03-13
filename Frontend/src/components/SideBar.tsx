@@ -55,7 +55,7 @@ const SideBar = ({ role, navItems }: sideBarPropsType) => {
           <div className="absolute bottom-0 w-full p-4">
             <Button
               variant="default"
-              className="w-full cursor-pointer bg-red-600 dark:bg-red-600 dark:text-white"
+              className="w-full cursor-pointer hover:bg-red-600/90 bg-red-600 dark:bg-red-600 dark:text-white"
               onClick={() => {
                 if (role == "user") dispatch(userLogout());
                 else dispatch(adminLogout());

@@ -14,23 +14,28 @@ export const useFetchMyRooms = () => {
   return mutation;
 };
 
-export const useFetchAllRooms = (role:string,{
-  search,
-  sort,
-  filter,
-  currentPage,
-}: {
-  search: string;
-  sort: string;
-  filter: string;
-  currentPage: number;
-}) => {
+export const useFetchAllRooms = (
+  role: string,
+  {
+    search,
+    sort,
+    filter,
+    currentPage,
+    limit = 10,
+  }: {
+    search: string;
+    sort: string;
+    filter: string;
+    currentPage: number;
+    limit: number;
+  }
+) => {
   const mutation = useQuery({
     queryKey: ["rooms", filter, sort, search, currentPage],
     queryFn: () =>
       roomService.fetchAvailableRooms(
         role,
-        `?filter=${filter}&search=${search}&sort=${sort}&page=${currentPage}&limit=10`
+        `?filter=${filter}&search=${search}&sort=${sort}&page=${currentPage}&limit=${limit}`
       ),
   });
 
