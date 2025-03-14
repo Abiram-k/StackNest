@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsString,
   MinLength,
@@ -29,6 +30,7 @@ export class CreateRoomDTO {
 
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   scheduledAt?: Date;
 }
 

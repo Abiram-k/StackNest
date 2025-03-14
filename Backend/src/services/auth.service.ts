@@ -26,6 +26,7 @@ import {
 } from "../interfaces/repositories/user.repository.interface";
 import { IUser } from "../types/IUser";
 import { IAuthService } from "../interfaces/services/auth.service.interface";
+import { HttpStatus } from "../constants/enum.statusCode";
 
 config();
 
@@ -39,7 +40,8 @@ export class AuthService implements IAuthService {
     try {
       const payload = await googleUserResponse(token);
 
-      if (!payload) throw createHttpError(404, "Invalid google token");
+      if (!payload)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Invalid google token");
       const isExistUserWithEmail = await this._baseRepo.findByEmail(
         payload.email
       );
@@ -84,16 +86,16 @@ export class AuthService implements IAuthService {
       try {
         const user = await this._baseRepo.findByEmail(email);
         if (!user || user?.role !== role)
-          throw createHttpError(401, "Email not found");
+          throw createHttpError(HttpStatus.NOT_FOUND, "Email not found");
 
         if (user.isBlocked) {
           if (!user.blockedUntil) {
-            throw createHttpError(403, "You account has been suspended");
+            throw createHttpError(HttpStatus.UNAUTHORIZED, "You account has been suspended");
           }
           const now = new Date();
           if (user.blockedUntil && user.blockedUntil > now) {
             throw createHttpError(
-              403,
+              HttpStatus.UNAUTHORIZED,
               "Account is temporarily blocked. Try again later."
             );
           } else {
@@ -109,13 +111,13 @@ export class AuthService implements IAuthService {
             const { failedLoginAttempts = 0 } = user;
 
             if (failedLoginAttempts >= 3 && failedLoginAttempts % 2 != 0) {
-              throw createHttpError(404, "Captcha required");
+              throw createHttpError(HttpStatus.NOT_FOUND, "Captcha required");
             }
 
             if (failedLoginAttempts >= 6) {
               await this._authRepo.blockUserAfterFailedAttempt(email);
               throw createHttpError(
-                403,
+                HttpStatus.UNAUTHORIZED,
                 "You were blocked, try after 30 minutes"
               );
             }
@@ -173,7 +175,8 @@ export class AuthService implements IAuthService {
   async forgotPassword(email: string): Promise<void> {
     try {
       const isExistUser = await this._baseRepo.findByEmail(email);
-      if (!isExistUser) throw createHttpError(404, "Email not registered");
+      if (!isExistUser)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Email not registered");
 
       const JWT_SECRET = process.env.JWT_SECRET;
       if (!JWT_SECRET) {
@@ -205,7 +208,8 @@ export class AuthService implements IAuthService {
     console.log(data);
     const user = await this._authRepo.findUserByRestToken(data);
 
-    if (!user) throw createHttpError(404, "Invalid or token expired");
+    if (!user)
+      throw createHttpError(HttpStatus.NOT_FOUND, "Invalid or token expired");
 
     await this._authRepo.updatePassword({
       email: user?.email,
@@ -218,11 +222,11 @@ export class AuthService implements IAuthService {
   async initiateRegistration(email: string): Promise<void> {
     try {
       const isExist = await this._baseRepo.findByEmail(email);
-      if (isExist) throw createHttpError(400, "User already exisit");
+      if (isExist) throw createHttpError(HttpStatus.BAD_REQUEST, "User already exisit");
 
       const otp = generateOTP();
       await otpRepository.deleteByEmail(email);
-      const expiresAt = new Date(Date.now() + 15 * 60000);
+      const expiresAt = new Date(Date.now() + 60000);
 
       await otpRepository.create({ email, otp, expiresAt });
 
@@ -236,13 +240,20 @@ export class AuthService implements IAuthService {
   async register({ email, password, name, otp }: typeRegisterUserWithOtp) {
     const validOtp = await otpRepository.findOtpByMail(email);
 
-    if (!validOtp) throw createHttpError(404, "Otp is not found, Try again!");
+    if (!validOtp)
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        "Otp is not found, Try again!"
+      );
 
     if (validOtp?.otp != otp)
-      throw createHttpError(404, "Otp is Incorrect, Try again!");
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        "Otp is Incorrect, Try again!"
+      );
 
     if (validOtp?.otp != otp || validOtp.expiresAt < new Date())
-      throw createHttpError(404, "Otp expired, Try again!");
+      throw createHttpError(HttpStatus.NOT_FOUND, "Otp expired, Try again!");
 
     await otpRepository.deleteByEmail(email);
 

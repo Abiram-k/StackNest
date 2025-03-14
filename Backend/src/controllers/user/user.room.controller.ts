@@ -47,7 +47,6 @@ export class UserRoomController implements IUserRoomController {
   ): Promise<void> {
     try {
       const user = req.user as { userId: Types.ObjectId; role: string };
-
       const dto = plainToInstance(CreateRoomDTO, req.body);
       const errors = await validate(dto);
       if (!validateDtoError(errors, res)) return;
@@ -237,8 +236,8 @@ export class UserRoomController implements IUserRoomController {
   ): Promise<void> {
     try {
       // const { roomId } = req.body;
-
-      const dto = plainToInstance(JoinRoomDTO, req.params);
+      console.log("Request got to join the room");
+      const dto = plainToInstance(JoinRoomDTO, req.body);
       const errors = await validate(dto);
       if (!validateDtoError(errors, res)) return;
       const { roomId } = dto;
@@ -263,7 +262,7 @@ export class UserRoomController implements IUserRoomController {
 
       // const { password } = req.body;
 
-      const dto = plainToInstance(VerifyPasswordDTO, req.params);
+      const dto = plainToInstance(VerifyPasswordDTO, req.body);
       const errors = await validate(dto);
       if (!validateDtoError(errors, res)) return;
       const { password } = dto;

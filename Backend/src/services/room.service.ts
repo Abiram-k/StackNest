@@ -5,14 +5,28 @@ import { IRoom } from "../types/IRoom";
 import { Types } from "mongoose";
 import createHttpError from "http-errors";
 import { IRoomService } from "../interfaces/services/room.service.interface";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
+import { IUser } from "../types/IUser";
+import { HttpStatus } from "../constants/enum.statusCode";
 
 export class RoomService implements IRoomService {
-  
-  constructor(private _roomRepo: IRoomRepository<IRoom>) {}
+  constructor(
+    private _roomRepo: IRoomRepository<IRoom>,
+    private _userBaseRepo: IUserBaseRepository<IUser>
+  ) {}
 
   async createRoom(host: Types.ObjectId, data: RoomSchema) {
     try {
       const roomData: any = {};
+      const hostId = String(host);
+      const hostData = await this._userBaseRepo.findById(hostId);
+
+      if (!hostData?.isVerified && data.isPremium == "Yes") {
+        throw createHttpError(
+          HttpStatus.BAD_REQUEST,
+          "Can't create premium rooms"
+        );
+      }
 
       if (data.scheduledAt) {
         const scheduledDate = new Date(data.scheduledAt);
@@ -59,7 +73,7 @@ export class RoomService implements IRoomService {
     try {
       const myRooms = await this._roomRepo.findByHostId(id);
       if (myRooms) return myRooms;
-      else throw createHttpError(404, "My Rooms not founded");
+      else throw createHttpError(HttpStatus.NOT_FOUND, "My Rooms not founded");
     } catch (error) {
       throw error;
     }
@@ -85,7 +99,7 @@ export class RoomService implements IRoomService {
         search
       );
       if (availableRoom) return availableRoom;
-      else throw createHttpError(404, "Rooms not founded");
+      else throw createHttpError(HttpStatus.NOT_FOUND, "Rooms not founded");
     } catch (error) {
       throw error;
     }
@@ -94,7 +108,11 @@ export class RoomService implements IRoomService {
   async fetchSelectedRoom(role: string, id: string) {
     try {
       const room = await this._roomRepo.findSelectedRoom(role == "admin", id);
-      if (!room) throw createHttpError(404, "RoomId is incorrect, not found");
+      if (!room)
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "RoomId is incorrect, not found"
+        );
 
       return room;
     } catch (error) {
@@ -106,7 +124,10 @@ export class RoomService implements IRoomService {
     try {
       const isDeleted = await this._roomRepo.removeById(id);
       if (!isDeleted) {
-        throw createHttpError(404, "RoomId not founded,while removing ");
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "RoomId not founded,while removing "
+        );
       } else {
         return isDeleted;
       }
@@ -118,7 +139,8 @@ export class RoomService implements IRoomService {
   async blockUser(id: string) {
     try {
       const isBlockedRoom = await this._roomRepo.blockRoom(id);
-      if (!isBlockedRoom) throw createHttpError(404, "Failed to block room");
+      if (!isBlockedRoom)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Failed to block room");
       return isBlockedRoom;
     } catch (error) {
       throw error;
@@ -127,9 +149,14 @@ export class RoomService implements IRoomService {
 
   async joinRoom(userId: string, roomId: string) {
     try {
-      if (!userId) throw createHttpError(401, "Not Authenticated to join");
+      if (!userId)
+        throw createHttpError(
+          HttpStatus.UNAUTHORIZED,
+          "Not Authenticated to join"
+        );
       const room = await this._roomRepo.findByRoomId(roomId);
-      if (!room) throw createHttpError(404, "Room not found");
+      const user = await this._userBaseRepo.findById(userId);
+      if (!room) throw createHttpError(HttpStatus.NOT_FOUND, "Room not found");
 
       if (room.host.toString() == userId) {
         console.log("Host joined the room");
@@ -137,19 +164,32 @@ export class RoomService implements IRoomService {
       }
 
       if (room.isBlocked) {
-        throw createHttpError(400, "Room is unavailable");
+        throw createHttpError(HttpStatus.FORBIDDEN, "Room is unavailable");
+      }
+      if (!user?.isVerified && room.isPremium == "Yes") {
+        throw createHttpError(
+          HttpStatus.FORBIDDEN,
+          "Only premium members can join"
+        );
       }
 
       if (room.participants.some((p) => p?.user?.toString() === userId)) {
-        throw createHttpError(400, "Already joined in the room");
+        throw createHttpError(
+          HttpStatus.FORBIDDEN,
+          "Already joined in the room"
+        );
       }
 
       if (room.participants.length >= room.limit) {
-        throw createHttpError(400, "Room is full");
+        throw createHttpError(HttpStatus.FORBIDDEN, "Room is full");
       }
       const isAdded = await this._roomRepo.addParticipant(userId, roomId);
 
-      if (!isAdded) throw createHttpError(402, "Failed to add Participant");
+      if (!isAdded)
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "Failed to add Participant"
+        );
     } catch (error) {
       throw error;
     }
@@ -162,10 +202,10 @@ export class RoomService implements IRoomService {
         return;
       }
       const room = await this._roomRepo.findByRoomId(roomId);
-      if (!room) throw createHttpError(404, "Room not found");
+      if (!room) throw createHttpError(HttpStatus.NOT_FOUND, "Room not found");
 
       if (room.password != password) {
-        throw createHttpError(402, "Invalid Password ");
+        throw createHttpError(HttpStatus.UNAUTHORIZED, "Invalid Password ");
       }
       return true;
     } catch (error) {

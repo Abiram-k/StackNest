@@ -37,7 +37,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
 
   async findByHostId(id: Types.ObjectId): Promise<IRoom[] | null> {
     try {
-      return await Room.find({ host: id });
+      return await Room.find({ host: id }).populate("participants.user");
     } catch (error) {
       throw error;
     }
@@ -101,7 +101,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
 
   async removeById(id: string): Promise<boolean> {
     try {
-      const result = await Room.findOneAndDelete({ roomId: id });
+      const result = await Room.findByIdAndDelete(id);
       return !!result;
     } catch (error) {
       throw error;

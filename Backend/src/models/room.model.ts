@@ -44,6 +44,11 @@ const roomSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    roomType: {
+      type: String,
+      enum: ["normal", "general"],
+      default: "normal",
+    },
   },
   { timestamps: true }
 );

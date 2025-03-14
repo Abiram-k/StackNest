@@ -21,8 +21,9 @@ export interface RoomResTypeDTO {
   isPrivate: string;
   isPremium: string;
   status: "online" | "offline" | "scheduled";
+  roomType?: "normal" | "general";
   scheduledAt?: Date;
   endedAt: Date;
-  limit: number;
+  limit: number; 
   createdAt: Date;
 }

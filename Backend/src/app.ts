@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -18,6 +19,7 @@ import { errorLogger, setupLogRotation } from "./utils/logger.js";
 config();
 
 const app = express();
+
 // const server = http.createServer(app);
 // const io = initSocketIO(server);
 
