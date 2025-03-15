@@ -1,4 +1,12 @@
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  Calendar,
+  DoorOpen,
+  LayoutList,
+  Plus,
+  User,
+  Users,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import sampleImage from "../../assets/roomImage.png";
@@ -60,10 +68,89 @@ const RoomSection = () => {
         />
       )}
       <div className="grid md:grid-cols-2 gap-8">
+        <div className="col-span-1">
+          <h3 className="text-2xl font-bold mb-6">General Room</h3>
+          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-14">
+            {data?.rooms?.length ? (
+              data.rooms
+                .filter((room) => room.roomType === "general")
+                .map((room) => (
+                  <div
+                    key={room.roomId}
+                    className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 ease-in-out overflow-hidden"
+                  >
+                    <div className="p-6 flex flex-col gap-4">
+                      {/* Room Header */}
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          {room.title}
+                        </h3>
+                        <div className="flex items-center gap-1 text-sm bg-blue-100 dark:bg-blue-900 px-3 py-1 rounded-full">
+                          <Users className="w-4 h-4 text-blue-600 dark:text-blue-200" />
+                          <span className="text-blue-600 dark:text-blue-200">
+                            {room.participants?.length || 0}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                          <User className="w-4 h-4" />
+                          <span>Host: {"Community Host"}</span>
+                        </div>
+
+                        {room.scheduledAt && (
+                          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                            <Calendar className="w-4 h-4" />
+                            <span>
+                              {new Date().toLocaleDateString("en-US", {
+                                weekday: "short",
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {room.description && (
+                        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+                          {room.description}
+                        </p>
+                      )}
+
+                      <button
+                        onClick={() =>
+                          handleEnterRoom("", room.isPrivate, room.roomId)
+                        }
+                        className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-500/90 dark:bg-primary-600 dark:hover:bg-primary-600/90 text-white rounded-lg transition-colors"
+                      >
+                        <Plus className="w-5 h-5" />
+                        Join Community
+                      </button>
+                    </div>
+                  </div>
+                ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <div className="flex flex-col items-center gap-4 text-gray-500 dark:text-gray-400">
+                  <LayoutList className="w-12 h-12" />
+                  <p className="text-lg">No general rooms available</p>
+                  <p className="text-sm">
+                    New rooms will appear here when created
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Trending Rooms */}
-        <div>
+        <div className="col-span-1">
           <h3 className="text-2xl font-bold mb-6">Trending Rooms</h3>
-          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-1 md:grid-cols-2  gap-4">
             {data?.rooms?.length ? (
               data.rooms.map((room, i) => (
                 <RoomCard
@@ -80,25 +167,6 @@ const RoomSection = () => {
                 </p>
               </div>
             )}
-
-            {/* {[1, 2].map((item) => (
-              <Card key={item} className="p-4">
-                <div className="relative h-48 mb-4 rounded-lg overflow-hidden">
-                  <img
-                    src={sampleImage}
-                    alt="Event"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <h4 className="font-bold mb-2">Let you go insane</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-500 mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </p>
-                <Button className="bg-primary-500 text-white hover:bg-primary-500/90 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300">
-                  Join Now
-                </Button>
-              </Card>
-            ))} */}
           </div>
           <div className="text-center mt-8">
             <Button
@@ -108,30 +176,6 @@ const RoomSection = () => {
             >
               Explore <ArrowRight className="h-5 w-5" />
             </Button>
-          </div>
-        </div>
-
-        <div>
-          {/* <h3 className="text-2xl font-bold mb-6">General Room</h3> */}
-          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-14">
-            {[1, 2].map((item) => (
-              <Card key={item} className="p-4 bg-yellow-100">
-                <div className="relative h-48 mb-4 rounded-lg overflow-hidden">
-                  <img
-                    src={sampleImage}
-                    alt="General community"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <h4 className="font-bold mb-2">General Community</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-500 mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </p>
-                <Button className="bg-primary-500 text-white hover:bg-primary-500/90 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300">
-                  Join Now
-                </Button>
-              </Card>
-            ))}
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ export class UserAuthService {
 
   async login(data: LoginUser, role: string): Promise<LoginResponse> {
     return this.httpService.post<LoginResponse>(`/auth/login`, {
-      role,
+      role, 
       ...data,
     });
   }

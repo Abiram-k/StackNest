@@ -29,6 +29,7 @@ export interface IRoom extends Document {
   isPremium: string;
   password?: string;
   scheduledAt?: Date;
+  roomType: "normal" | "general";
   status: "online" | "offline" | "scheduled";
   endedAt: Date;
   limit: number;

@@ -21,7 +21,6 @@ const FilterBar = ({
   sortOptions,
 }: filterBarPropsType) => {
   const [search, setSearch] = useState("");
-
   return (
     <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
       <div className="relative w-full md:max-w-lg flex items-center">
@@ -30,7 +29,10 @@ const FilterBar = ({
           placeholder="Search"
           className="w-full pl-4 pr-14 py-3 border -1 dark:border-gray-300 border-gray-300 rounded-full focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all duration-200 shadow-sm"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setSearchQuery(e.target.value);
+          }}
         />
 
         <button

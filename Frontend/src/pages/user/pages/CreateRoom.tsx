@@ -28,6 +28,7 @@ export default function CreateRoom() {
   const navigate = useNavigate();
 
   const { mutate, isPending } = useCreateRoom();
+
   const onSubmit = (data: RoomSchema) => {
     console.log(data);
     mutate(data);
@@ -113,7 +114,7 @@ export default function CreateRoom() {
                   setValue,
                 },
                 {
-                  name: "shedule_at",
+                  name: "scheduledAt",
                   label: "Schedule At",
                   type: "date",
                   placeholder: "Select Date",

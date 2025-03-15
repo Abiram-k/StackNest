@@ -12,6 +12,7 @@ import OtpModal from "@/components/modal/OtpModal";
 import { Spinner } from "@/components/ui/spinner";
 import { useInitiateRegistration } from "@/hooks/auth/useInitiateRegistration";
 import { useVerifyOtp } from "@/hooks/auth/useVerifyOtp";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
   const [userData, setUserData] = useState<RegisterUser>({
@@ -35,15 +36,21 @@ const RegisterPage = () => {
 
   const { verifyOtpMutate, verifyOtpPending } = useVerifyOtp(setIsModalOpen);
 
-
   const onSubmit = (data: RegisterUser) => {
     setUserData(data);
-    initiateRegistrationMutate({email:data.email});
+    initiateRegistrationMutate({ email: data.email });
+    toast.dismiss();
+    toast.success("Otp Sended to your Gmail");
   };
 
   const verifyOtp = (otp: string) => {
-    // setIsModalOpen(false);
     verifyOtpMutate({ otp, ...userData });
+  };
+
+  const handleResendOtp = () => {
+    initiateRegistrationMutate({ email: userData.email });
+    toast.dismiss();
+    toast.success("Otp Resended to your Gmail");
   };
 
   return (
@@ -55,6 +62,7 @@ const RegisterPage = () => {
       )}
       <div className="grid min-h-svh lg:grid-cols-2">
         <OtpModal
+          handleResendOtp={handleResendOtp}
           isOpen={isModalOpen}
           onOpenChange={setIsModalOpen}
           onVerifyOtp={verifyOtp}

@@ -1,4 +1,6 @@
 import axios, { AxiosResponse } from "axios";
+import { data } from "react-router-dom";
+import { HttpService } from "./httpService";
 
 interface ICloudinaryResponse {
   secure_url: string;
@@ -8,21 +10,45 @@ interface ICloudinaryResponse {
   height: number;
   resource_type: string;
 }
+interface ICloudinaryCredentials {
+  signature: string;
+  timestamp: number;
+  apiKey: string;
+  cloudName: string;
+}
 
 export class ImageService {
-  async uploadImage(file: File, folderName: string): Promise<string> {
-    const CLOUDINARY_PRESET = import.meta.env.VITE_CLOUDINARY_PRESET;
-    const CLOUDINARY_NAME = import.meta.env.VITE_CLOUDINARY_NAME;
+  private readonly _httpService: HttpService;
+  constructor(httpService: HttpService) {
+    this._httpService = httpService;
+  }
+  async uploadImage(
+    file: File,
+    folderName: string,
+    cloudName: string,
+    apiKey: string,
+    signature: string,
+    timestamp: number
+  ): Promise<string> {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", CLOUDINARY_PRESET);
+    formData.append("api_key", apiKey);
+    formData.append("signature", signature);
+    formData.append("timestamp", timestamp.toString());
     formData.append("folder", folderName);
 
     const response: AxiosResponse<ICloudinaryResponse> = await axios.post(
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
       formData
     );
     return response.data.secure_url;
   }
+
+  async getCloudinaryCredentials(): Promise<ICloudinaryCredentials> {
+    return await this._httpService.get<ICloudinaryCredentials>(
+      "/auth/cloudinary/sign"
+    );
+  }
+  
 }

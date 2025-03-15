@@ -11,10 +11,12 @@ export const useJoinRoom = () => {
   const mutation = useMutation({
     mutationFn: (roomId: string) => roomService.joinRoom({ roomId }),
     onSuccess: () => {
+      toast.dismiss()
       toast.success("Joined successfully");
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
     onError: (error) => {
+      toast.dismiss()
       toast.error(error.message || "Failed to join Room");
     },
   });

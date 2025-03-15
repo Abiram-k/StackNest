@@ -6,20 +6,27 @@ type ProfileImageUploaderPropsType = {
   avatar: string | undefined;
   onImageChange: (file: File) => void;
   isEditing: boolean;
+  containerClass?: string;
+  avatarClass?: string;
+  inputClass?: string;
+  defaultAvatar: string;
+  fallbackText: string;
 };
 
-const DEFAULT_AVATAR =
-  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
-
-const ProfileImageUploader = ({
+const ImageUploader = ({
+  defaultAvatar,
   avatar,
   onImageChange,
   isEditing,
+  containerClass,
+  avatarClass,
+  inputClass,
+  fallbackText,
 }: ProfileImageUploaderPropsType) => {
   const [imagePreview, setImagePreview] = useState(avatar);
 
   useEffect(() => {
-    setImagePreview(avatar || DEFAULT_AVATAR);
+    setImagePreview(avatar || defaultAvatar);
   }, [avatar]);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,17 +45,17 @@ const ProfileImageUploader = ({
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <Avatar className="w-12 h-12">
+    <div className={` ${containerClass}`}>
+      <Avatar className={`${avatarClass}`}>
         <AvatarImage src={imagePreview} />
-        <AvatarFallback>Profile Image</AvatarFallback>
+        <AvatarFallback>{fallbackText}</AvatarFallback>
       </Avatar>
 
       {isEditing && (
         <input
           type="file"
           accept="image/"
-          className="mt-2 text-xs text-gray-500 w-20  bg-gray-200 p-1 rounded"
+          className={` ${inputClass}`}
           onChange={handleImageChange}
         />
       )}
@@ -56,4 +63,4 @@ const ProfileImageUploader = ({
   );
 };
 
-export default ProfileImageUploader;
+export default ImageUploader;

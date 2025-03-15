@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 export const validateImage = (file: File) => {
+  
   if (!file.type.startsWith("image/")) {
     toast.error("Only image files are allowed (JPEG, PNG, GIF, etc.).");
     return false;

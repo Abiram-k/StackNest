@@ -33,7 +33,7 @@ const navItems = [
   {
     name: "Banners",
     icon: <Flag className="w-5 h-5" />,
-    to: "/admni/banners",
+    to: "/admin/banner-management",
   },
   {
     name: "Rooms",
@@ -66,7 +66,7 @@ const navItems = [
 const AdminLayout = () => {
   return (
     <>
-      <Navbar isAuthintacted={true} isAdmin={true} />
+      <Navbar isAuthenticated={true} isAdmin={true} />
       <SideBar navItems={navItems} role="admin" />
       <div className="bg-white dark:bg-black w-screen px-7 md:px-10 mt-18 md:ps-30 ">
         <Outlet />

@@ -26,4 +26,6 @@ export interface IAuthController {
   ): Promise<void>;
 
   resetPassword(req: Request, res: Response, next: NextFunction): Promise<void>;
+
+  uploadToSignedCloudinary(req:Request, res:Response,next:NextFunction):Promise<void>
 }

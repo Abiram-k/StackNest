@@ -3,6 +3,7 @@ import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 import ProtectHome from "@/protectedRoutes/user/ProtectHome";
 
+const Favourites = lazy(() => import("@/pages/user/pages/Favorites"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
 const EditRoom = lazy(() => import("@/pages/user/pages/EditRoom"));
 const CreateRoom = lazy(() => import("@/pages/user/pages/CreateRoom"));
@@ -26,6 +27,7 @@ export const userRoutes: RouteObject[] = [
       { path: "home", element: <HomePage /> },
       { path: "about", element: <AboutPage /> },
       { path: "contact", element: <ContactPage /> },
+      { path: "favorites", element: <Favourites /> },
       {
         path: "room",
         element: <RoomsListPage />,

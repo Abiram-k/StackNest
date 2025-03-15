@@ -1,4 +1,4 @@
-import { Edit, Lock, Trash2, Trophy } from "lucide-react";
+import { Edit, Heart, Lock, Trash2, Trophy } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface Room {
@@ -19,10 +19,13 @@ interface Room {
 
 interface RoomCardProps {
   room: Room;
-  type: "my-room" | "available";
+  type: "my-room" | "available" | "favorites";
   onEdit?: (value: string) => void;
   onRemove?: (value: string) => void;
   handleEnterRoom?: (type: string, isPrivate: string, roomId: string) => void;
+  favorites?: Room[];
+  handleRemoveFromFavorites?: (roomId: string) => void;
+  handleAddToFavorites?: (roomId: string) => void;
 }
 
 const RoomCard = ({
@@ -31,6 +34,9 @@ const RoomCard = ({
   onEdit,
   onRemove,
   handleEnterRoom,
+  favorites,
+  handleAddToFavorites,
+  handleRemoveFromFavorites,
 }: RoomCardProps) => {
   return (
     <div className="bg-white rounded-lg dark:bg-gray-900 shadow-md p-6 space-y-4 transition-transform duration-300 hover:scale-105 hover:shadow-lg">
@@ -40,23 +46,27 @@ const RoomCard = ({
           <h3 className="text-lg font-semibold">{room.title}</h3>
         </div>
         <div className="flex gap-2">
-          {type === "my-room" && onEdit && onRemove ? (
+          {type !== "available" ? (
             <>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onEdit(room._id)}
-              >
-                <Edit className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-red-500"
-                onClick={() => onRemove(room.roomId)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              {onEdit && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onEdit(room._id)}
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+              )}
+              {onRemove && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-red-500 hover:text-red-500/90"
+                  onClick={() => onRemove(room._id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
             </>
           ) : (
             <div className="flex justify-center align-middle items-center gap-1">
@@ -65,6 +75,36 @@ const RoomCard = ({
               )}
               {room.isPremium == "Yes" && (
                 <Trophy className="h-5 w-5 text-yellow-500" />
+              )}
+
+              {type == "available" && favorites && (
+                <button
+                  // onClick={handleFavoriteToggle}
+                  // disabled={isLoading}
+                  className="p-2 hover:scale-110 transition-all"
+                  aria-label={
+                    favorites?.some((fav) => fav.roomId === room.roomId)
+                      ? "Remove from favorites"
+                      : "Add to favorites"
+                  }
+                >
+                  {!favorites?.some((fav) => fav.roomId === room.roomId) ? (
+                    <Heart
+                      className="w-6 h-6 text-red-500 cursor-pointer fill-transparent"
+                      onClick={() =>
+                        handleAddToFavorites && handleAddToFavorites(room._id)
+                      }
+                    />
+                  ) : (
+                    <Heart
+                      className="w-6 h-6 text-transparent cursor-pointer fill-red-600"
+                      onClick={() =>
+                        handleRemoveFromFavorites &&
+                        handleRemoveFromFavorites(room._id)
+                      }
+                    />
+                  )}
+                </button>
               )}
             </div>
           )}

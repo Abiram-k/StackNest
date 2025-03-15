@@ -18,5 +18,8 @@ router.post('/register',authController.register.bind(authController));
 router.post("/forgot-password",authController.forgotPassword.bind(authController));
 router.post("/reset-password",authController.resetPassword.bind(authController));
 
+// cloudinary-uploads
+
+router.get("/cloudinary/sign",authController.uploadToSignedCloudinary.bind(authController));
 
 export default router;

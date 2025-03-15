@@ -1,6 +1,6 @@
 import { Spinner } from "@/components/ui/spinner";
 import UserCard from "@/components/UserCard";
-import { useBlockUser } from "@/hooks/admin/useBlockUser";
+import { useBlockUser } from "@/hooks/admin/userManagement/useBlockUser";
 import { useBlockRoom } from "@/hooks/room/useBlockRoom";
 import { useFetchSelectedRoom } from "@/hooks/room/userFetchSelectedRoom";
 import { findTimeSpendBetweenDates } from "@/utils/findDurationBetweenDate";

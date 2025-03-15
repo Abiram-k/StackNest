@@ -27,7 +27,13 @@ import {
   ResetPasswordDTO,
   ResResetPasswordDTO,
 } from "../dtos/auth/resetPassword.dto";
+import cloudinary from "../config/cloudinary";
 config();
+
+const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET as string;
+const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY as string;
+
+const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME as string;
 
 export class AuthController implements IAuthController {
   private _authService: IAuthService;
@@ -94,7 +100,6 @@ export class AuthController implements IAuthController {
       const errors = await validate(dto);
       if (!validateDtoError(errors, res)) return;
       const { email, password, captchaToken, role } = dto;
-
 
       if (!email || !password)
         throw new Error("Email and password are required");
@@ -256,6 +261,39 @@ export class AuthController implements IAuthController {
       res
         .status(HttpStatus.OK)
         .json({ success: true, message: "OTP sent successfully" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async uploadToSignedCloudinary(
+    req: Request,
+    res: Response<{
+      signature: string;
+      timestamp: number;
+      apiKey: string;
+      cloudName: string;
+    }>,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const timestamp = Math.round(Date.now() / 1000);
+      const params = {
+        timestamp,
+        folder: "stackNest",
+      };
+
+      const signature = cloudinary.utils.api_sign_request(
+        params,
+        CLOUDINARY_API_SECRET
+      );
+
+      res.status(HttpStatus.OK).json({
+        signature,
+        timestamp,
+        apiKey: CLOUDINARY_API_KEY,
+        cloudName: CLOUDINARY_CLOUD_NAME,
+      });
     } catch (error) {
       next(error);
     }

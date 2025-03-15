@@ -1,3 +1,4 @@
+import { normalizeDate } from "@/utils/normalizeDate";
 import * as yup from "yup";
 
 export const validateRoomSchema = yup.object({
@@ -25,5 +26,12 @@ export const validateRoomSchema = yup.object({
         .min(6, "Password must be at least 6 characters long"),
     otherwise: (schema) => schema.notRequired(),
   }),
-  scheduledAt: yup.date().optional(),
+
+  scheduledAt: yup
+    .date()
+    .transform((value, originalValue) => {
+      return originalValue ? new Date(originalValue) : null;
+    })
+    .min(normalizeDate(new Date()), "Scheduled date must be in the future")
+    .optional(),
 });

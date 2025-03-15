@@ -11,7 +11,7 @@ import RoomSection from "@/components/user/RoomSection";
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white">
-      <Navbar isAuthintacted={false} isAdmin={false} />
+      <Navbar isAuthenticated={false} isAdmin={false} />
       <main className="pt-16">
         <HeroSection />
         <CreateRoomSection />
@@ -19,7 +19,6 @@ const LandingPage = () => {
         <BannerSection />
         <FreindsSection />
         <MyAccordion/>
-
         <PremiumSection />
       </main>
       <Footer />

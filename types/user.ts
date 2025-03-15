@@ -81,3 +81,4 @@ export interface RoomSchema {
   password?: string;
   scheduledAt?: Date;
 }
+

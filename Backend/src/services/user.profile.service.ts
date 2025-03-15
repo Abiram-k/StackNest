@@ -21,9 +21,8 @@ export class UserProfileService implements IUserProfileService {
     };
     return data;
   }
-
+ 
   async updateUserDetails(id: string, data: verifyUserProfileSchemaType) {
-    console.log(data);
     const user = await this._baseRepo.findByUserName(data.userName);
     if (user && user.email != data.email)
       throw new Error("User name already exist");

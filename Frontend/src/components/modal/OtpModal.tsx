@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +16,7 @@ interface OtpModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onVerifyOtp: (otp: string) => void;
+  handleResendOtp: () => void;
   isPending: boolean;
 }
 
@@ -23,25 +24,45 @@ const OtpModal = ({
   isOpen,
   onOpenChange,
   onVerifyOtp,
+  handleResendOtp,
   isPending,
 }: OtpModalProps) => {
   const [otp, setOtp] = useState("");
+  const [timer, setTimer] = useState(60);
+  const [canResend, setCanResend] = useState(false);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    setCanResend(false);
+    if (timer > 0 && isOpen) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else {
+      setCanResend(true);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [timer, isOpen]);
 
   const handleVerifyOtp = () => {
-    onVerifyOtp(otp); // Pass the OTP to the parent component
-    setOtp(""); // Clear the OTP input
+    onVerifyOtp(otp);
+    setOtp("");
+  };
+
+  const handleResend = () => {
+    setTimer(60);
+    setCanResend(false);
+    handleResendOtp();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      {/* <Button onClick={() => setIsOpen(true)}>Open OTP Modal</Button> */}
-
       <DialogContent className="max-w-md flex flex-col items-center justify-center text-center gap-4">
         <DialogHeader>
           <DialogTitle>Enter OTP</DialogTitle>
         </DialogHeader>
-
-        {/* OTP Input */}
         <InputOTP
           maxLength={6}
           value={otp}
@@ -61,6 +82,18 @@ const OtpModal = ({
           </InputOTPGroup>
         </InputOTP>
 
+        {canResend ? (
+          <button
+            onClick={handleResend}
+            className=" text-primary-500 rounded border-black"
+          >
+            Resend OTP
+          </button>
+        ) : (
+          <p className="text-gray-500">
+            Resend OTP in <span className="font-semibold">{timer}</span> seconds
+          </p>
+        )}
         <Button
           type="submit"
           disabled={isPending}

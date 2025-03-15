@@ -7,7 +7,7 @@ import { Outlet } from "react-router-dom";
 const Layout = () => {
   return (
     <>
-      <Navbar isAuthintacted={true} isAdmin={false} />
+      <Navbar isAuthenticated={true} isAdmin={false} />
       <div className="mt-25 h-fit ms-8">
         <Breadcrumbs />
       </div>

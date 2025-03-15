@@ -9,10 +9,12 @@ import {
   useUpdateUserProfile,
   useUserProfile,
 } from "@/hooks/userProfile/useUserProfile";
-import ProfileImageUploader from "@/components/ProfileImageUploader";
+import ProfileImageUploader from "@/components/ImageUploader";
 import { Spinner } from "@/components/ui/spinner";
 import { ImageService } from "@/api/imageService";
 import ChatBot from "./ChatBot";
+import { HttpService } from "@/api/httpService";
+import toast from "react-hot-toast";
 
 const initialValue = {
   avatar: "",
@@ -66,13 +68,34 @@ export default function ProfilePage() {
     try {
       setIsLoading(true);
       if (selectedAvatar.current) {
-        const imageService = new ImageService();
+        const httpService = new HttpService();
+        const imageService = new ImageService(httpService);
+        // Requesting for cloudinary credentials from backend
+        const credentials = await imageService.getCloudinaryCredentials();
+
+        if (
+          !credentials?.signature ||
+          !credentials?.timestamp ||
+          !credentials?.apiKey ||
+          !credentials?.cloudName
+        ) {
+          toast.dismiss();
+          toast.error("Missing Cloudinary credentials");
+          return;
+        }
+
+        // post request to cloudinary signed uploads
         const cloudinaryImgURL = await imageService.uploadImage(
           selectedAvatar.current,
-          "stackNest"
+          "stackNest",
+          credentials.cloudName,
+          credentials.apiKey,
+          credentials.signature,
+          credentials.timestamp
         );
         setValue("avatar", cloudinaryImgURL);
       }
+
       updateMutation(data);
       setIsLoading(false);
     } catch (error) {
@@ -121,9 +144,14 @@ export default function ProfilePage() {
 
               <div className="flex  gap-4 mb-6">
                 <ProfileImageUploader
+                  defaultAvatar="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                  fallbackText="Profile Image"
                   avatar={formData.avatar}
                   isEditing={isEditing}
                   onImageChange={handleImageUpdate}
+                  avatarClass="w-12 h-12"
+                  containerClass="flex flex-col items-center"
+                  inputClass="mt-2 text-xs text-gray-500 w-20  bg-gray-200 p-1 rounded"
                 />
 
                 <div>
@@ -210,8 +238,8 @@ export default function ProfilePage() {
                 onClick={() => setIsChatBotOpen(!isChatBotOpen)}
                 className={`rounded-full p-3 w-12 h-12 fixed bottom-10 right-10 md:bottom-20 md:right-20 ${
                   isChatBotOpen
-                    ? "bg-red-500 hover:bg-red-600"
-                    : "bg-indigo-600 hover:bg-indigo-700"
+                    ? "bg-red-500 hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600"
+                    : "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:text-white "
                 }`}
               >
                 {isChatBotOpen ? <X size={26} /> : <MessageCircle size={27} />}{" "}

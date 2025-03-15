@@ -13,22 +13,22 @@ type openaiResponse = axiosResponse & {
 };
 
 export class UserProfileService {
-  private readonly httpService: HttpService;
+  private readonly _httpService: HttpService;
 
   constructor(httpService: HttpService) {
-    this.httpService = httpService;
+    this._httpService = httpService;
   }
 
   async getOpenAiResponse(prompt: string): Promise<openaiResponse> {
-    return this.httpService.post("/users/chatbot", { prompt });
+    return this._httpService.post("/users/chatbot", { prompt });
   }
   async getUserProfile(): Promise<verifyProfileResponse> {
-    return this.httpService.get<verifyProfileResponse>("/users/details");
+    return this._httpService.get<verifyProfileResponse>("/users/details");
   }
 
   async updateUserProfile(
     data: verifyUserProfileSchemaType
   ): Promise<axiosResponse> {
-    return this.httpService.put<axiosResponse>("/users/details", data);
+    return this._httpService.put<axiosResponse>("/users/details", data);
   }
 }

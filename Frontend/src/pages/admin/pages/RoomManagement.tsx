@@ -6,6 +6,8 @@ import { Spinner } from "@/components/ui/spinner";
 import CustomTable, { Column } from "@/components/CustomTable";
 import { IRoom } from "@/api/roomService";
 import { useNavigate } from "react-router-dom";
+import { useDebounce } from "@/hooks/optimizational/useDebounce";
+const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
 
 const filterOptions = [
   { value: "Live" },
@@ -27,11 +29,14 @@ const RoomManagement = () => {
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const debounceSearchValue = useDebounce(search,delay);
+
   const navigate = useNavigate();
   const { data, isLoading } = useFetchAllRooms("admin", {
     filter,
     sort,
-    search,
+    search:debounceSearchValue,
     currentPage,
     limit: 10,
   });

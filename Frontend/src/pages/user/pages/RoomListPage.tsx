@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Heading1, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RoomCard from "@/components/rooms/RoomCard";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FilterBar from "@/components/FilterBar";
 import Pagination from "@/components/Pagination";
 import { useFetchAllRooms, useFetchMyRooms } from "@/hooks/room/useFetchRooms";
@@ -12,26 +12,34 @@ import toast from "react-hot-toast";
 import PasswordConfirmation from "@/components/modal/PasswordConfirmation";
 import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
 import { Spinner } from "@/components/ui/spinner";
+import { useDebounce } from "@/hooks/optimizational/useDebounce";
+import { useAddToFavorites } from "@/hooks/favorites/useAddToFavorites";
+import { useRemoveFromFavorites } from "@/hooks/favorites/useRemoveFromFavorites";
+import { useFetchFavorites } from "@/hooks/favorites/useFetchFavorites";
+
+const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
 
 const filterOptions = [{ value: "Premium" }, { value: "Private" }];
-const sortOptions = [{ value: "Ascending" }, { value: "Descending" }];
 
 export default function RoomsListPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("");
+  const debounceSearchValue = useDebounce(search, delay);
   const [removeByRoomId, setRemoveByRoomId] = useState("");
   const [isModalPasswordModal, setIsModalPasswordModal] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState("");
+
   const navigate = useNavigate();
 
   // to fetch my rooms
   const { data: myRooms, isPending: fetchMyRoomPending } = useFetchMyRooms();
+
   // to fetch all rooms except ours
   const { data: availableRooms, isPending: fetchAllRoomsPending } =
     useFetchAllRooms("users", {
-      search,
+      search: debounceSearchValue,
       sort,
       filter,
       currentPage,
@@ -72,6 +80,19 @@ export default function RoomsListPage() {
       joinRoomMutate(selectedRoomId);
     });
 
+  // fetch all of favorites
+  const { data: favorites } = useFetchFavorites();
+
+  // add-to-favorites mutate
+  const { mutate: addToFavoritesMutate, isPending: addToFavoritesPending } =
+    useAddToFavorites();
+
+  //remove from favorties mutate
+  const {
+    mutate: removeFromFavoritesMutate,
+    isPending: removeFromFavoritesPending,
+  } = useRemoveFromFavorites();
+
   // onClick for password modal confirm
   const handleVerifyPassword = (password: string) => {
     if (!selectedRoomId) {
@@ -80,6 +101,14 @@ export default function RoomsListPage() {
       return;
     }
     verifyPasswordMutate({ roomId: selectedRoomId, password });
+  };
+
+  const handleAddToFavorites = (roomId: string) => {
+    addToFavoritesMutate(roomId);
+  };
+
+  const handleRemoveFromFavorites = (roomId: string) => {
+    removeFromFavoritesMutate(roomId);
   };
 
   return (
@@ -101,7 +130,10 @@ export default function RoomsListPage() {
         />
       )}
 
-      {(joinIsPending || verifyingIsPending) && <Spinner />}
+      {(joinIsPending ||
+        verifyingIsPending ||
+        addToFavoritesPending ||
+        removeFromFavoritesPending) && <Spinner />}
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-12">
@@ -161,6 +193,9 @@ export default function RoomsListPage() {
                   room={room}
                   type="available"
                   handleEnterRoom={handleEnterRoom}
+                  favorites={favorites?.rooms || []}
+                  handleAddToFavorites={handleAddToFavorites}
+                  handleRemoveFromFavorites={handleRemoveFromFavorites}
                 />
               ))
             ) : (

@@ -35,6 +35,12 @@ import { FavoritesService } from "../services/favorites.service";
 import { IFavoritesService } from "../interfaces/services/favorites.service.interface";
 import { IFavoritesController } from "../interfaces/controllers/favorites.controller.interface";
 import { FavoritesController } from "../controllers/user/user.favorites.controller";
+import { IBannerRepository } from "../interfaces/repositories/banner.repository.interface";
+import { BannerRepository } from "../repositories/banner.repository";
+import { IBannerService } from "../interfaces/services/banner.service.interface";
+import { BannerService } from "../services/banner.service";
+import { IBannerController } from "../interfaces/controllers/banner.controller.interface";
+import { BannerController } from "../controllers/admin/banner.controller";
 
 // Respositories
 const userAuthRepository: IUserAuthRepository<IUser> =
@@ -43,6 +49,7 @@ const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();
 const adminRespository: IAdminRepository<IUser> = new AdminRespository();
 const roomRespository: IRoomRepository<IRoom> = new RoomRespository();
 const favoritesRepository: IFavoritesRepository = new FavoritesRepository();
+const bannerRepository: IBannerRepository = new BannerRepository();
 
 // Services
 const adminService: IAdminService = new AdminService(adminRespository);
@@ -53,10 +60,14 @@ const authService: IAuthService = new AuthService(
 const userProfileService: IUserProfileService = new UserProfileService(
   userBaseRepository
 );
-const roomService: IRoomService = new RoomService(roomRespository,userBaseRepository);
+const roomService: IRoomService = new RoomService(
+  roomRespository,
+  userBaseRepository
+);
 const favoritesService: IFavoritesService = new FavoritesService(
   favoritesRepository
 );
+const bannerServie: IBannerService = new BannerService(bannerRepository);
 
 //  controllers
 const adminController: IAdminController = new AdminController(
@@ -73,11 +84,13 @@ const userRoomController: IUserRoomController = new UserRoomController(
 const favoritesController: IFavoritesController = new FavoritesController(
   favoritesService
 );
+const bannerController: IBannerController = new BannerController(bannerServie);
 
 export {
   authController,
   userProfileController,
   adminController,
   userRoomController,
-  favoritesController
+  favoritesController,
+  bannerController
 };

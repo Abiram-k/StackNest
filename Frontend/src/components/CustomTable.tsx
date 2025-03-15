@@ -10,6 +10,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import ConfirmationDialog from "./modal/confirmationDialog";
 import toast from "react-hot-toast";
+import { Pencil, Trash2 } from "lucide-react";
 
 export type Column<T extends { _id: string }> = {
   render?: (item: T) => React.ReactNode;
@@ -23,6 +24,8 @@ type CustomTableProps<T extends { _id: string }> = {
   onToggleAction?: (item: T) => void;
   toggleKey?: keyof T;
   onViewMore?: (id: string) => void;
+  handleEdit?: (id: string) => void;
+  handleRemove?: (id: string) => void;
 };
 
 const CustomTableComponent = <T extends { _id: string }>({
@@ -31,6 +34,8 @@ const CustomTableComponent = <T extends { _id: string }>({
   onToggleAction,
   toggleKey,
   onViewMore,
+  handleEdit,
+  handleRemove,
 }: CustomTableProps<T>) => {
   const [isCheckedItem, setIsCheckedItem] = useState<T | null>(null);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -121,6 +126,19 @@ const CustomTableComponent = <T extends { _id: string }>({
                   />
                 </TableCell>
               )}
+
+              <TableCell className="flex items-center gap-3">
+                {handleEdit && (
+                  <button onClick={() => handleEdit(item._id)}>
+                    <Pencil className="w-5 h-5 text-blue-500 hover:text-blue-700 cursor-pointer" />
+                  </button>
+                )}
+                {handleRemove && (
+                  <button onClick={() => handleRemove(item._id)}>
+                    <Trash2 className="w-5 h-5 text-red-500 hover:text-red-700 cursor-pointer" />
+                  </button>
+                )}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

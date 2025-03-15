@@ -1,11 +1,13 @@
 import { useState } from "react";
-// import CustomTable from "@/components/CustomTable";
 import FilterBar from "@/components/FilterBar";
 import Pagination from "@/components/Pagination";
-import { useFetchAllUsers } from "@/hooks/admin/useFetchAllUsers";
-import { useBlockUser } from "@/hooks/admin/useBlockUser";
+import { useFetchAllUsers } from "@/hooks/admin/userManagement/useFetchAllUsers";
+import { useBlockUser } from "@/hooks/admin/userManagement/useBlockUser";
 import { IUser } from "../../../../../types/user";
 import CustomTable from "@/components/CustomTable";
+import { useDebounce } from "@/hooks/optimizational/useDebounce";
+import { Spinner } from "@/components/ui/spinner";
+const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
 
 const filterOptions = [
   { value: "Blocked" },
@@ -36,28 +38,29 @@ const columns = [
 ];
 
 const UserManagement = () => {
-  const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
+  
+  const debounceSearchValue = useDebounce(search, delay);
 
-  const { data, isLoading } = useFetchAllUsers({
+  const { data, isLoading: fetchIsLoading } = useFetchAllUsers({
     filter,
     sort,
-    search,
+    search: debounceSearchValue,
     currentPage,
   });
 
-  const { isPending, mutate } = useBlockUser();
+  const { isPending: BlockIsPending, mutate } = useBlockUser();
 
-  // const handleBlockUser = (userName: string) => {
-  //   mutate(userName);
-  // };
   const handleBlockUser = (user: IUser) => {
     mutate(user.userName);
   };
+
   return (
     <div className="flex h-content">
+      {(BlockIsPending || fetchIsLoading) && <Spinner />}
       <div className="flex-1  p-8">
         <h1 className="text-2xl font-bold mb-8 border-b pb-2">
           User Management
@@ -84,6 +87,7 @@ const UserManagement = () => {
               onToggleAction={handleBlockUser}
               toggleKey="isBlocked"
             />
+
           </div>
         </div>
 

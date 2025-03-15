@@ -6,10 +6,10 @@ import Logo from "../ui/Logo";
 import { CustomNavLink } from "../ui/customNavLink";
 
 const Navbar = ({
-  isAuthintacted,
+  isAuthenticated,
   isAdmin,
 }: {
-  isAuthintacted: boolean;
+  isAuthenticated: boolean;
   isAdmin: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,14 +44,14 @@ const Navbar = ({
                 </>
               ) : (
                 <h1 className="text-xl uppercase font-bold text-gray-900 dark:text-white text-center mt-4">
-                  Admin Portal
+                  {/* Admin Portal */}
                 </h1>
               )}
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            {!isAuthintacted ? (
+            {!isAuthenticated ? (
               <>
                 <Link to="/auth/login">
                   <Button
@@ -83,7 +83,7 @@ const Navbar = ({
               </>
             ) : (
               <>
-                {!isAdmin && (
+                {/* {!isAdmin && ( */}
                   <>
                     <Button
                       variant="ghost"
@@ -92,13 +92,15 @@ const Navbar = ({
                     >
                       <Search className="h-7 w-7" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-muted"
-                    >
-                      <Heart className="h-7 w-7" />
-                    </Button>
+                    <Link to={"/user/favorites"}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-muted"
+                      >
+                        <Heart className="h-7 w-7" />
+                      </Button>
+                    </Link>
                     <Link to={"/user/profile"}>
                       <Button
                         variant="ghost"
@@ -109,7 +111,7 @@ const Navbar = ({
                       </Button>
                     </Link>
                   </>
-                )}
+                {/* )} */}
                 {!isAdmin && (
                   <button
                     onClick={() => setIsOpen(!isOpen)}

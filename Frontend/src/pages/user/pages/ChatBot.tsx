@@ -88,8 +88,8 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
   );
 
   return (
-    <div className="absolute bottom-16 right-0 w-[320px] h-[480px] bg-white rounded-lg shadow-xl flex flex-col">
-      <div className="bg-indigo-600 p-4 rounded-t-lg flex items-center justify-between">
+    <div className="absolute bottom-16 right-0 w-[320px] h-[480px] bg-white  rounded-lg shadow-xl flex flex-col">
+      <div className="bg-primary-500  dark:bg-priamary-600 p-4 rounded-t-lg flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Bot className="text-white" size={24} />
           <div>
@@ -107,7 +107,7 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
         <Button
           variant="ghost"
           size="icon"
-          className="text-white hover:bg-indigo-700"
+          className="text-white hover:bg-primary-500 dark:bg-transparent"
           onClick={() => setIsOpen(false)}
         >
           <X size={20} />
@@ -124,7 +124,10 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
             }`}
           >
             {msg.sender === "bot" && (
-              <Avatar className="w-8 h-8 bg-indigo-600 mr-2 flex items-center justify-center">
+              <Avatar
+                className="w-8 h-8 bg-primary-500 
+              dark:bg-primary-600 mr-2 flex items-center justify-center"
+              >
                 <Bot className="text-white" size={16} />
               </Avatar>
             )}
@@ -132,7 +135,7 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
             <div
               className={`max-w-[80%] rounded-lg p-3 ${
                 msg.sender === "user"
-                  ? "bg-indigo-600 text-white"
+                  ? "bg-primary-500  text-white"
                   : "bg-gray-100 text-gray-800"
               }`}
             >
@@ -176,12 +179,12 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your message here..."
-            className="flex-1 rounded-full bg-gray-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            className="flex-1 rounded-full border-1 border-primary-500 bg-gray-100 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:text-black"
           />
           <Button
             type="submit"
             size="icon"
-            className="rounded-full bg-indigo-600 hover:bg-indigo-700"
+            className="rounded-full bg-primary-500 hover:bg-primary-500/90 dark:bg-primary-600 dark:text-white "
           >
             <Send size={18} />
           </Button>

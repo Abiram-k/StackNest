@@ -1,0 +1,2 @@
+GET /users/details 401 26 - 2.475 ms
+GET /admin/users?filter=&sort=&search=&page=1&limit=10 401 26 - 0.266 ms

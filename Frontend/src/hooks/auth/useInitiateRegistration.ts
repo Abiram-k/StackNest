@@ -16,8 +16,6 @@ export const useInitiateRegistration = (
   } = useMutation({
     mutationFn: (data:{ email:string}) => userAuthService.initiateRegistration(data),
     onSuccess: (data) => {
-      toast.dismiss();
-      toast.success("Otp Sended to your Gmail");
       setIsModalOpen(true);
     },
     onError: (error) => {
