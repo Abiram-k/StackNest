@@ -12,7 +12,7 @@ import ConfirmationDialog from "./modal/confirmationDialog";
 import toast from "react-hot-toast";
 import { Pencil, Trash2 } from "lucide-react";
 
-export type Column<T extends { _id: string }> = {
+export type Column<T extends { _id: string | undefined }> = {
   render?: (item: T) => React.ReactNode;
   key: keyof T;
   header: string;
@@ -78,23 +78,26 @@ const CustomTableComponent = <T extends { _id: string }>({
           message={`Are you sure you want to perform this action?`}
         />
       )}
-      <Table>
+      <Table className="w-full shadow-lg border border-gray-200 rounded-lg ">
         <TableHeader>
-          <TableRow>
-            <TableHead className="text-center font-extrabold">Sl.No</TableHead>
+          <TableRow className="bg-primary-500 rounded-full  hover:bg-primary-500/90 dark:hover:bg-primary-600/90 dark:bg-primary-600 p-3">
+            <TableHead className="text-center font-extrabold text-white">
+              Sl.No
+            </TableHead>
             {columns.map((column) => (
               <TableHead
                 key={column.key.toString()}
-                className="text-center font-extrabold"
+                className="text-center font-extrabold text-white"
               >
                 {column.header}
               </TableHead>
             ))}
-            {onToggleAction && toggleKey && (
-              <TableHead className="text-center font-extrabold">
+            {onToggleAction && (
+              <TableHead className="text-center font-extrabold text-white">
                 Action
               </TableHead>
             )}
+            <TableHead className="text-center"></TableHead>
           </TableRow>
         </TableHeader>
 
@@ -102,24 +105,29 @@ const CustomTableComponent = <T extends { _id: string }>({
           {localData?.map((item, index) => (
             <TableRow
               key={index}
-              className="cursor-pointer"
+              className={`cursor-pointer ${
+                item?._id?.startsWith("67d4844c8f2468a") &&
+                "dark:bg-gray-900 bg-gray-200 "
+              } `}
               onClick={() => onViewMore?.(item._id)}
             >
-              <TableCell className="text-center font-medium">
+              <TableCell className="text-center font-medium p-3">
                 {index + 1}
               </TableCell>
               {columns.map((col) => (
-                <TableCell key={col.key.toString()} className="text-center">
+                <TableCell key={col.key.toString()} className="text-center p-3">
                   {col.render
                     ? col.render(item)
                     : String(item[col.key]).length > 32
                     ? String(item[col.key]).slice(0, 32) + "..."
+                    : String(item[col.key]) == "General Community"
+                    ? String(item[col.key]).toUpperCase() + " 🌟"
                     : String(item[col.key])}
                 </TableCell>
               ))}
 
               {onToggleAction && toggleKey && (
-                <TableCell className="text-center">
+                <TableCell className="text-center p-3">
                   <Switch
                     checked={!!item[toggleKey]}
                     onCheckedChange={() => handleToggle(item)}
@@ -127,10 +135,10 @@ const CustomTableComponent = <T extends { _id: string }>({
                 </TableCell>
               )}
 
-              <TableCell className="flex items-center gap-3">
+              <TableCell className=" text-center">
                 {handleEdit && (
                   <button onClick={() => handleEdit(item._id)}>
-                    <Pencil className="w-5 h-5 text-blue-500 hover:text-blue-700 cursor-pointer" />
+                    <Pencil className="w-5 h-5 me-2 md:me-4 text-blue-500 hover:text-blue-700 cursor-pointer" />
                   </button>
                 )}
                 {handleRemove && (

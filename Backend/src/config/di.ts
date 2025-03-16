@@ -40,7 +40,10 @@ import { BannerRepository } from "../repositories/banner.repository";
 import { IBannerService } from "../interfaces/services/banner.service.interface";
 import { BannerService } from "../services/banner.service";
 import { IBannerController } from "../interfaces/controllers/banner.controller.interface";
-import { BannerController } from "../controllers/admin/banner.controller";
+import { BannerController } from "../controllers/admin/admin.banner.controller";
+import { IBanner } from "../types/IBanner";
+import { IUserBannerController } from "../interfaces/controllers/user.banner.controller";
+import { UserBannerController } from "../controllers/user/user.banner.controller";
 
 // Respositories
 const userAuthRepository: IUserAuthRepository<IUser> =
@@ -49,7 +52,7 @@ const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();
 const adminRespository: IAdminRepository<IUser> = new AdminRespository();
 const roomRespository: IRoomRepository<IRoom> = new RoomRespository();
 const favoritesRepository: IFavoritesRepository = new FavoritesRepository();
-const bannerRepository: IBannerRepository = new BannerRepository();
+const bannerRepository: IBannerRepository<IBanner> = new BannerRepository();
 
 // Services
 const adminService: IAdminService = new AdminService(adminRespository);
@@ -86,11 +89,16 @@ const favoritesController: IFavoritesController = new FavoritesController(
 );
 const bannerController: IBannerController = new BannerController(bannerServie);
 
+const userBannerController: IUserBannerController = new UserBannerController(
+  bannerServie
+);
+
 export {
   authController,
   userProfileController,
   adminController,
   userRoomController,
   favoritesController,
-  bannerController
+  bannerController,
+  userBannerController,
 };

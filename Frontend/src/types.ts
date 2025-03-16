@@ -24,8 +24,13 @@ export interface RoomResType {
   createdAt: Date;
 }
 
+export interface BannerReq{
+  title:string;
+  description:string;
+  image?:string;
+}
 export interface BannerRes {
-  _id?: string;
+  _id: string;
   title: string;
   description: string;
   image?: string;
@@ -35,3 +40,10 @@ export type axiosResponse = {
   message: string;
   success: true;
 };
+
+
+export type UserBannerRes = {
+  title: string;
+  description: string;
+  image: string;
+}

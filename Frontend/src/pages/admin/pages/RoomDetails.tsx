@@ -4,21 +4,7 @@ import { useBlockUser } from "@/hooks/admin/userManagement/useBlockUser";
 import { useBlockRoom } from "@/hooks/room/useBlockRoom";
 import { useFetchSelectedRoom } from "@/hooks/room/userFetchSelectedRoom";
 import { findTimeSpendBetweenDates } from "@/utils/findDurationBetweenDate";
-import {
-  Trash2,
-  LogOut,
-  User,
-  ShoppingBag,
-  Flag,
-  LayoutGrid,
-  CreditCard,
-  BarChart2,
-  Bell,
-  FileText,
-  Globe,
-  UnlockIcon,
-  Lock,
-} from "lucide-react";
+import { UnlockIcon, Lock } from "lucide-react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
@@ -48,10 +34,10 @@ export default function RoomDetails() {
   };
 
   return (
-    <div className="flex h-screen bg-white dark:bg-black">
+    <div className="flex h-screen bg-white dark:bg-black ">
       {(userBlockPending || isGetRoomPending) && <Spinner />}
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto ">
         <div className="p-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-2xl font-bold">Rooms Details</h1>
@@ -79,19 +65,20 @@ export default function RoomDetails() {
           </div>
 
           <div className="flex gap-8">
-            <UserCard
-              lastSeen={selectedRoom?.room.host?.lastLogin || ""}
-              isCurrentUser={false}
-              isVerified={selectedRoom?.room.host?.isVerified || false}
-              isProcessing={isGetRoomPending || userBlockPending}
-              userName={selectedRoom?.room.host?.userName || ""}
-              avatar={selectedRoom?.room.host?.avatar || ""}
-              gender={selectedRoom?.room.host?.gender || ""}
-              email={selectedRoom?.room.host?.email || ""}
-              isBlocked={false}
-              onToggleBlock={handleBlockUser}
-            />
-
+            {selectedRoom?.room.roomType !== "general" && (
+              <UserCard
+                lastSeen={selectedRoom?.room.host?.lastLogin || ""}
+                isCurrentUser={false}
+                isVerified={selectedRoom?.room.host?.isVerified || false}
+                isProcessing={isGetRoomPending || userBlockPending}
+                userName={selectedRoom?.room.host?.userName || ""}
+                avatar={selectedRoom?.room.host?.avatar || ""}
+                gender={selectedRoom?.room.host?.gender || ""}
+                email={selectedRoom?.room.host?.email || ""}
+                isBlocked={false}
+                onToggleBlock={handleBlockUser}
+              />
+            )}
             <div className="w-1/3">
               <h2 className="text-2xl font-bold mb-4">
                 {selectedRoom?.room.title}
@@ -162,7 +149,7 @@ export default function RoomDetails() {
               >
                 <h3 className="text-xl font-semibold">Participants</h3>
               </div>
-              <div className="border border-gray-200 border-t-0 rounded-b-lg overflow-hidden">
+              <div className="border border-gray-200 border-t-0 rounded-b-lg overflow-hidden ">
                 <div className="max-h-[500px] overflow-y-auto">
                   {selectedRoom?.room?.participants?.length ? (
                     selectedRoom.room.participants.map((participant, index) => (

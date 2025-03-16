@@ -1,6 +1,7 @@
 import express from "express";
 import {
   favoritesController,
+  userBannerController,
   userProfileController,
   userRoomController,
 } from "../config/di";
@@ -49,7 +50,6 @@ router.post(
   userRoomController.verifyPassword.bind(userRoomController)
 );
 
-
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FAVORITES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.get(
   "/favorites",
@@ -58,11 +58,16 @@ router.get(
 router.post(
   "/favorites",
   favoritesController.addToFavorites.bind(favoritesController)
-);   
+);
 router.delete(
   "/favorites",
   favoritesController.removeFromFavorites.bind(favoritesController)
 );
 
+// <<<<<<<<<<<<<<<<<<<<<<<< Banner >>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+router.get(
+  "/banner",
+  userBannerController.fetchBanners.bind(userBannerController)
+);
 
 export default router;

@@ -10,5 +10,4 @@ export const validateBannerSchema = yup.object({
     .required("Description is required")
     .min(8, "At least 8 characters required"),
   image: yup.string().optional(),
-  _id: yup.string().optional(),
 });

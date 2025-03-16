@@ -3,6 +3,7 @@ import ProtectAdminLogin from "@/protectedRoutes/admin/ProtectAdminLogin";
 import ProtectDashboard from "@/protectedRoutes/admin/ProtectDashboard";
 import { lazy } from "react";
 
+const EditBanner = lazy(() => import("../pages/admin/pages/EditBanner"));
 const AddBanner = lazy(() => import("../pages/admin/pages/AddBanner"));
 const AdminLoginPage = lazy(() => import("../pages/admin/auth/AdminLogin"));
 const Dashboard = lazy(() => import("../pages/admin/pages/Dashboard"));
@@ -48,6 +49,7 @@ export const adminRoutes: RouteObject[] = [
           },
           { path: "banner-management", element: <BannerManagement /> },
           { path: "banner-management/add", element: <AddBanner /> },
+          { path: "banner-management/:bannerId/edit", element: <EditBanner /> },
         ],
       },
     ],

@@ -25,8 +25,12 @@ router.patch("/room/:id", adminController.blockRoom.bind(adminController));
 
 // <<<<<<<<<<<<<<<<Banner Management>>>>>>>>>>>>>>>>>>>
 router.get("/banner", bannerController.fetchBanners.bind(bannerController));
+router.get("/banner/:bannerId", bannerController.fetchSelectedBanner.bind(bannerController));
 router.post("/banner", bannerController.addNewBanner.bind(bannerController));
-router.put("/banner", bannerController.updateBanner.bind(bannerController));
+router.put(
+  "/banner/:bannerId",
+  bannerController.updateBanner.bind(bannerController)
+);
 router.delete("/banner", bannerController.removeBanner.bind(bannerController));
 
 export default router;

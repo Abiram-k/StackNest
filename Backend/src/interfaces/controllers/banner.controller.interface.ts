@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 export interface IBannerController {
   addNewBanner(req: Request, res: Response, next: NextFunction): Promise<void>;
+  fetchSelectedBanner(req: Request, res: Response, next: NextFunction): Promise<void>;
   fetchBanners(
     req: Request,
     res: Response,

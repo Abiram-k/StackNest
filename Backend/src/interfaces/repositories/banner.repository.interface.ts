@@ -1,19 +1,16 @@
-import { RoomResTypeDTO } from "../../dtos/public/roomData.dto";
-import { IBanner } from "../../types/IBanner";
 
-export interface IBannerRepository {
-  fetchFavorites(userId: string): Promise<IBanner[] | null>;
+
+export interface IBannerRepository<T> {
+  findById(bannerId: string): Promise<T | null>;
+  fetchBanners(): Promise<T[] | null>;
   addNewBanner(
     title: string,
     description: string,
     image: string
   ): Promise<boolean>;
-  removeBanner(
-    title: string,
-    description: string,
-    image: string
-  ): Promise<boolean>;
+  removeBanner(bannerId: string): Promise<boolean>;
   updateBanner(
+    bannerId: string,
     title: string,
     description: string,
     image: string

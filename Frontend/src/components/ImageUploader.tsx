@@ -24,10 +24,9 @@ const ImageUploader = ({
   fallbackText,
 }: ProfileImageUploaderPropsType) => {
   const [imagePreview, setImagePreview] = useState(avatar);
-
   useEffect(() => {
     setImagePreview(avatar || defaultAvatar);
-  }, [avatar]);
+  }, [avatar,defaultAvatar]);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

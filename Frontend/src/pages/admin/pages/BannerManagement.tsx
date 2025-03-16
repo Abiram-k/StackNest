@@ -4,6 +4,12 @@ import { useFetchBanners } from "@/hooks/admin/bannerManagement/useFetchBanners"
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { Plus } from "lucide-react";
+import ConfirmationDialog from "@/components/modal/confirmationDialog";
+import toast from "react-hot-toast";
+import { useState } from "react";
+import { useRemoveBanner } from "@/hooks/admin/bannerManagement/useRemoveBanner";
+import { FallBackTable } from "@/components/FallBackTable";
 
 const columns = [
   {
@@ -26,35 +32,71 @@ const columns = [
 ];
 
 export default function BannerManagement() {
-  //   const { data, isPending } = useFetchBanners();
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [bannerId, setBannerId] = useState("");
   const navigate = useNavigate();
+
+  const { data, isPending: fetchBannerPending } = useFetchBanners();
+
+  const { mutate: removeBannerMutate, isPending: RemoveBannerPending } =
+    useRemoveBanner();
+
   const handleEdit = (bannerId: string) => {
-    alert("Edit");
-    alert(bannerId);
+    navigate(`/admin/banner-management/${bannerId}/edit`);
   };
 
   const handleRemoveBanner = (bannerId: string) => {
-    alert("Remove");
-    alert(bannerId);
+    setBannerId(bannerId);
+    setIsConfirmationOpen(true);
+  };
+
+  const handleConfirm = () => {
+    removeBannerMutate(bannerId);
+    setIsConfirmationOpen(false);
+  };
+  const handleCancel = () => {
+    toast.success("Action Cancelled");
+    setIsConfirmationOpen(false);
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-black">
-      {/* {isPending && <Spinner />} */}
-      <main className="flex-1 p-8">
-        <Button
-          variant={"outline"}
-          onClick={() => navigate("/admin/banner-management/add")}
-        >
-          Add new Banner
-        </Button>
-        <h1 className="text-2xl font-bold mb-8">Banner Management</h1>
-        {/* <CustomTable
-          data={data}
-          columns={columns}
-          handleEdit={handleEdit}
-          handleRemove={handleRemoveBanner}
-        /> */}
+    <div className="flex h-screen bg-gray-50 dark:bg-black ">
+      {(RemoveBannerPending || fetchBannerPending) && <Spinner />}
+      {isConfirmationOpen && (
+        <ConfirmationDialog
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          message={`Are you sure to remove this banner?`}
+        />
+      )}
+      <main className="flex-1 p-8 ">
+        <div className=" flex justify-between items-center">
+          <h1 className="text-2xl font-bold mb-8">Banner Management</h1>
+          <Button
+            className="bg-green-500 dark:bg-green-500 dark:hover:bg-green-500/90 text-white hover:bg-green-500/90 hover:text-white"
+            variant={"outline"}
+            onClick={() => navigate("/admin/banner-management/add")}
+          >
+            <Plus />
+            Add new Banner
+          </Button>
+        </div>
+        <div className=" mt-4 md:mt-8 lg:mt-12">
+          {data?.banners?.length ? (
+            <CustomTable
+              onToggleAction={() => {}}
+              data={data.banners}
+              columns={columns}
+              handleEdit={handleEdit}
+              handleRemove={handleRemoveBanner}
+            />
+          ) : (
+            <FallBackTable
+              mainTitle="No Banners founded"
+              subTitle="Add new banner now"
+            />
+          )}
+        </div>
       </main>
     </div>
   );

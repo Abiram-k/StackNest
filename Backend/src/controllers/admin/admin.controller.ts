@@ -132,23 +132,28 @@ export class AdminController implements IAdminController {
         search
       );
 
-      const formattedRooms: RoomResTypeDTO[] = rooms.map((room) => ({
-        _id: room._id,
-        roomId: room.roomId,
-        title: room.title,
-        description: room.description,
-        host: room.host,
-        isBlocked: room.isBlocked,
-        startedAt: room.startedAt,
-        participants: room.participants,
-        isPrivate: room.isPrivate,
-        isPremium: room.isPremium,
-        status: room.status,
-        scheduledAt: room.scheduledAt,
-        endedAt: room.endedAt,
-        limit: room.limit,
-        createdAt: room.createdAt,
-      }));
+      const formattedRooms: RoomResTypeDTO[] = rooms
+        .map((room) => ({
+          _id: room._id,
+          roomId: room.roomId,
+          title: room.title,
+          description: room.description,
+          host: room.host,
+          isBlocked: room.isBlocked,
+          startedAt: room.startedAt,
+          participants: room.participants,
+          isPrivate: room.isPrivate,
+          isPremium: room.isPremium,
+          status: room.status,
+          scheduledAt: room.scheduledAt,
+          endedAt: room.endedAt,
+          limit: room.limit,
+          createdAt: room.createdAt,
+          roomType: room.roomType,
+        }))
+        .sort((a, b) =>
+          a.roomType === "general" ? -1 : b.roomType === "general" ? 1 : 0
+        );
 
       res.status(HttpStatus.OK).json({
         message: "All Avalible Rooms fetched",

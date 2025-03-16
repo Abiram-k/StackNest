@@ -110,6 +110,7 @@ export class UserRoomController implements IUserRoomController {
       limit: room.limit,
       createdAt: room.createdAt,
       password: room.password,
+      roomType: room.roomType,
     }));
 
     res.status(HttpStatus.OK).json({
@@ -196,6 +197,7 @@ export class UserRoomController implements IUserRoomController {
         endedAt: room.endedAt,
         limit: room.limit,
         createdAt: room.createdAt,
+        roomType: room.roomType,
       };
 
       res.status(HttpStatus.OK).json({

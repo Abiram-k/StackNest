@@ -12,12 +12,12 @@ export const useRemoveBanner = () => {
     mutationFn: (bannerId: string) => bannerService.removeBanner(bannerId),
     onSuccess: () => {
       toast.dismiss();
-      toast.success("Success added new banner");
+      toast.success("Success Removed banner");
       queryClient.invalidateQueries({ queryKey: ["banner"] });
     },
     onError: () => {
       toast.dismiss();
-      toast.success("Failed to added new banner");
+      toast.error("Failed to Remove  banner");
     },
   });
 

@@ -1,4 +1,13 @@
-import { Edit, Heart, Lock, Trash2, Trophy } from "lucide-react";
+import {
+  Badge,
+  Crown,
+  Edit,
+  Heart,
+  Lock,
+  Star,
+  Trash2,
+  Trophy,
+} from "lucide-react";
 import { Button } from "../ui/button";
 
 interface Room {
@@ -69,18 +78,16 @@ const RoomCard = ({
               )}
             </>
           ) : (
-            <div className="flex justify-center align-middle items-center gap-1">
+            <div className="flex justify-center align-middle items-center gap-1 md:gap-2">
               {room.isPrivate == "Yes" && (
-                <Lock className=" h-4 w-4 text-gray-600" />
+                <Lock className=" h-5 w-5 text-gray-600" />
               )}
               {room.isPremium == "Yes" && (
-                <Trophy className="h-5 w-5 text-yellow-500" />
+                <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
               )}
 
               {type == "available" && favorites && (
                 <button
-                  // onClick={handleFavoriteToggle}
-                  // disabled={isLoading}
                   className="p-2 hover:scale-110 transition-all"
                   aria-label={
                     favorites?.some((fav) => fav.roomId === room.roomId)
