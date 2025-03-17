@@ -1,6 +1,6 @@
-import { RoomSchema } from "../../../types/user";
-import { HttpService } from "./httpService";
-import { axiosResponse } from "../../../types/user";
+import { RoomSchema } from "../../../../types/user";
+import { HttpService } from "../httpService";
+import { axiosResponse } from "../../../../types/user";
 import { Search } from "lucide-react";
 
 type host = {
@@ -40,7 +40,7 @@ type roomResponse = axiosResponse & {
 };
 type availableRoomResponse = axiosResponse & {
   rooms: IRoom[];
-  totalPage: number;
+  totalPages: number;
 };
 
 type fetchSelectRoomResponse = axiosResponse & {

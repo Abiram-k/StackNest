@@ -18,6 +18,8 @@ export const validateProfileSchema = yup.object({
     email:yup.string().optional(),
     country:yup.string().optional(),
     mobileNumber:yup.string().optional(),
+    streak:yup.number().optional(),
+    streakClaimDate:yup.date().optional(),
     
   });
   

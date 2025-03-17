@@ -1,4 +1,4 @@
-import { useFetchUserBanners } from "@/hooks/banner/useFetchUserBanners";
+import { useFetchUserBanners } from "@/hooks/user/banner/useFetchUserBanners";
 import banner from "../../assets/banner.png";
 import { Spinner } from "../ui/spinner";
 

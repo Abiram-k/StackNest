@@ -1,8 +1,8 @@
 import PasswordConfirmation from "@/components/modal/PasswordConfirmation";
-import RoomCard from "@/components/rooms/RoomCard";
+import RoomCard from "@/components/card/RoomCard";
 import { Spinner } from "@/components/ui/spinner";
-import { useFetchFavorites } from "@/hooks/favorites/useFetchFavorites";
-import { useRemoveFromFavorites } from "@/hooks/favorites/useRemoveFromFavorites";
+import { useFetchFavorites } from "@/hooks/user/favorites/useFetchFavorites";
+import { useRemoveFromFavorites } from "@/hooks/user/favorites/useRemoveFromFavorites";
 import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
 import { useState } from "react";
 import toast from "react-hot-toast";

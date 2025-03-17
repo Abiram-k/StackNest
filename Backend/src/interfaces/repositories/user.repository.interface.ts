@@ -7,10 +7,13 @@ import { IUser } from "../../types/IUser";
 export interface IUserBaseRepository<T> {
   create(userData: Partial<T>): Promise<T>;
   findById(id: string): Promise<T | null>;
-  
+
   findByEmail(email: string): Promise<T | null>;
   findByIdAndUpdate(id: string, data: any): Promise<T | null>;
   findByUserName(userName: string): Promise<T | null>;
+  incrementCheckin(userId: string): Promise<boolean>;
+  getStreakCount(userId: string): Promise<number | undefined>;
+  resetCheckin(userId: string): Promise<boolean>;
 }
 export interface IUserAuthRepository<T> {
   updateUserWithGoogleId(email: string, googleId: string): Promise<boolean>;

@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import { Heart, Search, User, Menu, X } from "lucide-react";
+import { Heart, Search, User, Menu, X, Flame } from "lucide-react";
 import Logo from "../ui/Logo";
 import { CustomNavLink } from "../ui/customNavLink";
+import { useGetStreakCount } from "@/hooks/user/userProfile/useGetStreakCount";
 
 const Navbar = ({
   isAuthenticated,
@@ -13,6 +14,15 @@ const Navbar = ({
   isAdmin: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const { data } = useGetStreakCount();
+
+  useEffect(() => {
+    if (!isAdmin && isAuthenticated && data?.streakCount) {
+      setStreak(data.streakCount);
+    }
+  }, [data?.streakCount]);
+
   return (
     <nav className="fixed top-0 w-full bg-background z-50 border-b shadow-sm">
       <div className="container mx-auto px-2 sm:px-4 lg:px-6">
@@ -83,8 +93,8 @@ const Navbar = ({
               </>
             ) : (
               <>
-                {/* {!isAdmin && ( */}
-                  <>
+                <>
+                  {isAdmin ? (
                     <Button
                       variant="ghost"
                       size="icon"
@@ -92,25 +102,35 @@ const Navbar = ({
                     >
                       <Search className="h-7 w-7" />
                     </Button>
-                    <Link to={"/user/favorites"}>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="hover:bg-muted"
-                      >
-                        <Heart className="h-7 w-7" />
-                      </Button>
-                    </Link>
+                  ) : (
                     <Link to={"/user/profile"}>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="hover:bg-muted"
-                      >
-                        <User className="h-7 w-7" />
-                      </Button>
+                      <button className="gap-1.5 flex justify-center items-center p-2 group hover:bg-transparent">
+                        <Flame className=" h-6 w-6 text-orange-500 transition-all duration-300 group-hover:scale-110 group-hover:text-orange-400 group-hover:animate-pulse" />
+                        <span className="text-orange-500 font-medium text-sm ">
+                          {streak}
+                        </span>
+                      </button>
                     </Link>
-                  </>
+                  )}
+                  <Link to={"/user/favorites"}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="hover:bg-muted"
+                    >
+                      <Heart className="h-7 w-7" />
+                    </Button>
+                  </Link>
+                  <Link to={"/user/profile"}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="hover:bg-muted"
+                    >
+                      <User className="h-7 w-7" />
+                    </Button>
+                  </Link>
+                </>
                 {/* )} */}
                 {!isAdmin && (
                   <button

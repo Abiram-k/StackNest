@@ -1,4 +1,4 @@
-export const findTimeSpendBetweenDates = (from: Date, to: Date) => {
+export const formattedDateDifference = (from: Date, to: Date) => {
   const fromString = new Date(from);
   const toString = new Date(to);
 
@@ -8,5 +8,6 @@ export const findTimeSpendBetweenDates = (from: Date, to: Date) => {
   const minutes = Math.floor((durationMs / (1000 * 60)) % 60);
   const hours = Math.floor((durationMs / (1000 * 60 * 60)) % 24);
 
+  
   return `${hours}:${minutes}:${second}`;
 };

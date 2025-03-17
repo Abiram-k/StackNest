@@ -1,10 +1,36 @@
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useHappyFaceAi } from "@/hooks/userProfile/useHappyFaceAi";
-import { error } from "console";
 import { Bot, Check, Send, X } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+import React, { useEffect, useRef, useState } from "react";
+
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+  systemInstruction:
+    `
+    You are stackNest AI Assistant. stackNest is a vibrant online community for software developers. 
+    It features:
+    - Rooms: Dedicated spaces for collaborating on specific projects discussions and also there is a general room community for all developers, There are premium (only for premium members), private rooms are there. General rooms placed in home page, rest of all rooms in room section
+    - Language Channels: Focused discussions on programming languages like Python, JavaScript, and Java.
+    - Study Groups: Collaborative learning environments for tackling coding challenges and exploring new technologies.
+    - Code Snippet Posts: Sharing and discussing code examples.
+    - Question & Answer Forums: Seeking and providing help with technical issues.
+    - Daily Coding Challenges: Engaging exercises to improve coding skills also you can earn points to redeem some preimum features.
+    - User Profiles: Where users can showcase their work and connect with others, Also they can maintain streak by clicking checkin button daily and ther is a point talble for that.
+    - stackNest website url is not available right now.
+    Respond only to questions related to stackNest. Do not answer questions outside of this context.
+    For example:
+    Acceptable: "How do I create a project room?"
+    Acceptable: "What are today's coding challenges?"
+    Unacceptable: "What is the weather today?"
+    Unacceptable: "Write a poem about flowers."
+    Respond in a friendly, consice and helpful tone.
+  `,
+});
 
 interface IChatBotType {
   setIsOpen: (value: boolean) => void;
@@ -28,18 +54,17 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
 
-  const { mutate, isPending } = useHappyFaceAi();
+  // const { mutate, isPending } = useHappyFaceAi();
 
-  const handleSendMessage = useCallback(
-    (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
+    try {
       e.preventDefault();
-      if (!message.trim()) return;
-
       const userMessage: Message = {
         id: messages.length + 1,
         text: message,
@@ -50,42 +75,79 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
         }),
       };
       setMessages((prev) => [...prev, userMessage]);
-      let botResponse: Message = {
-        id: 0,
-        text: "",
+      setIsPending(true);
+      const result = await model.generateContent(message);
+      console.log(result.response.text());
+      const botReply = result.response.text();
+      const botMessage: Message = {
+        id: messages.length + 1,
+        text: botReply,
         sender: "bot",
-        timestamp: "",
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
       };
-      mutate(message, {
-        onSuccess: (data) => {
-          botResponse = {
-            id: messages.length + 1,
-            text: data.response,
-            sender: "bot",
-            timestamp: new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-          };
-          setMessages((prev) => [...prev, botResponse]);
-        },
-        onError: () => {
-          botResponse = {
-            id: messages.length + 1,
-            text: "Some temperor",
-            sender: "bot",
-            timestamp: new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-          };
-          setMessages((prev) => [...prev, botResponse]);
-        },
-      });
-      setMessage("");
-    },
-    [message]
-  );
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.log(error);
+      alert("Error");
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  // const handleSendMessage = useCallback(
+  //   (e: React.FormEvent) => {
+  //     e.preventDefault();
+  //     if (!message.trim()) return;
+
+  //     const userMessage: Message = {
+  //       id: messages.length + 1,
+  //       text: message,
+  //       sender: "user",
+  //       timestamp: new Date().toLocaleTimeString([], {
+  //         hour: "2-digit",
+  //         minute: "2-digit",
+  //       }),
+  //     };
+  //     setMessages((prev) => [...prev, userMessage]);
+  //     let botResponse: Message = {
+  //       id: 0,
+  //       text: "",
+  //       sender: "bot",
+  //       timestamp: "",
+  //     };
+  //     mutate(message, {
+  //       onSuccess: (data) => {
+  //         botResponse = {
+  //           id: messages.length + 1,
+  //           text: data.response,
+  //           sender: "bot",
+  //           timestamp: new Date().toLocaleTimeString([], {
+  //             hour: "2-digit",
+  //             minute: "2-digit",
+  //           }),
+  //         };
+  //         setMessages((prev) => [...prev, botResponse]);
+  //       },
+  //       onError: () => {
+  //         botResponse = {
+  //           id: messages.length + 1,
+  //           text: "Some temperor",
+  //           sender: "bot",
+  //           timestamp: new Date().toLocaleTimeString([], {
+  //             hour: "2-digit",
+  //             minute: "2-digit",
+  //           }),
+  //         };
+  //         setMessages((prev) => [...prev, botResponse]);
+  //       },
+  //     });
+  //     setMessage("");
+  //   },
+  //   [message]
+  // );
 
   return (
     <div className="absolute bottom-16 right-0 w-[320px] h-[480px] bg-white  rounded-lg shadow-xl flex flex-col">
@@ -99,7 +161,7 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
                 <span className="text-green-400">●</span> Online
               </p>
               {isPending && (
-                <p className="text-orange-400 text-xs">proccessing ... </p>
+                <p className="text-white text-xs">Typing ... </p>
               )}
             </div>
           </div>
@@ -184,7 +246,7 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
           <Button
             type="submit"
             size="icon"
-            className="rounded-full bg-primary-500 hover:bg-primary-500/90 dark:bg-primary-600 dark:text-white "
+            className="rounded-full bg-primary-500 hover:bg-primary-500/90 hover:text-black dark:bg-primary-600 dark:text-white "
           >
             <Send size={18} />
           </Button>

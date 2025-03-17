@@ -1,9 +1,9 @@
 import { Spinner } from "@/components/ui/spinner";
-import UserCard from "@/components/UserCard";
+import UserCard from "@/components/card/UserCard";
 import { useBlockUser } from "@/hooks/admin/userManagement/useBlockUser";
 import { useBlockRoom } from "@/hooks/room/useBlockRoom";
 import { useFetchSelectedRoom } from "@/hooks/room/userFetchSelectedRoom";
-import { findTimeSpendBetweenDates } from "@/utils/findDurationBetweenDate";
+import { formattedDateDifference  } from "@/utils/formattedDateDifference";
 import { UnlockIcon, Lock } from "lucide-react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
@@ -160,7 +160,7 @@ export default function RoomDetails() {
                         duration={
                           !participant.leavedAt
                             ? "Ongoing"
-                            : findTimeSpendBetweenDates(
+                            : formattedDateDifference(
                                 participant.joinedAt,
                                 participant.leavedAt
                               )

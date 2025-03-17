@@ -1,5 +1,5 @@
 import { HttpService } from "@/api/httpService";
-import { RoomService } from "@/api/roomService";
+import { RoomService } from "@/api/public/roomService";
 import {
   QueryClient,
   useMutation,

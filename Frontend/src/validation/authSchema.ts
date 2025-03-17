@@ -23,7 +23,7 @@ export const registerSchema = yup.object({
 
   name: yup
     .string()
-    .min(3, "Name must be at least 3 characters")
+    .min(4, "Name must be at least 4 characters")
     .required("Name is required"),
   confirmPassword: yup
     .string()

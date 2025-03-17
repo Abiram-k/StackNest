@@ -44,15 +44,15 @@ export class UserProfileController implements IUserProfileController {
         gender: user.gender,
         mobileNumber: user.mobileNumber,
         avatar: user.avatar,
+        streak: user.streak as number,
+        streakClaimDate: user.streakClaimDate as Date,
       };
 
-      res
-        .status(HttpStatus.OK)
-        .json({
-          success: true,
-          userDetails: formattedUsers,
-          message: "User details fetched",
-        });
+      res.status(HttpStatus.OK).json({
+        success: true,
+        userDetails: formattedUsers,
+        message: "User details fetched",
+      });
     } catch (error) {
       next(error);
     }
@@ -154,5 +154,41 @@ export class UserProfileController implements IUserProfileController {
       console.error("API Error:", error.response?.data || error.message);
       next("AI Processing failed");
     }
+  }
+
+  async checkinUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      if (!req.user) throw new Error("No User in Req");
+      const { userId } = req.user as { userId: string; role: string };
+      if (!userId) throw new Error("User Id not get");
+
+      await this._userProfileService.checkinUser(userId);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "User checkedin", success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getUserStreakCount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    if (!req.user) throw new Error("No User in Req");
+    const { userId } = req.user as { userId: string; role: string };
+    if (!userId) throw new Error("User Id not get");
+
+    const streakCount = await this._userProfileService.getUserStreakCount(
+      userId
+    );
+    if (!streakCount) return;
+    res
+      .status(HttpStatus.OK)
+      .json({ message: "Fetched streak count", success: true, streakCount });
   }
 }

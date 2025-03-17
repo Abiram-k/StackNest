@@ -9,5 +9,8 @@ export interface IUserProfileController{
 
     chatBotResponse(req: Request, res: Response, next: NextFunction):Promise<void>
 
+    checkinUser(req: Request, res: Response, next: NextFunction):Promise<void>
+    
+    getUserStreakCount(req: Request, res: Response, next: NextFunction):Promise<void>
     
 }

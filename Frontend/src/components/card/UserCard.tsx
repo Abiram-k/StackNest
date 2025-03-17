@@ -1,12 +1,11 @@
 import {
   CheckCircleIcon,
-  FlagIcon,
   Lock,
   ShieldIcon,
   UnlockIcon,
 } from "lucide-react";
 import { useState } from "react";
-import { Spinner } from "./ui/spinner";
+import { Spinner } from "../ui/spinner";
 
 interface UserCardProps {
   lastSeen: string;

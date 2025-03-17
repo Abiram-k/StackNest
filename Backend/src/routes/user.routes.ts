@@ -25,6 +25,8 @@ router.get(
   userProfileController.getUserData.bind(userProfileController)
 );
 
+router.patch("/checkin",userProfileController.checkinUser.bind(userProfileController))
+router.get("/streak",userProfileController.getUserStreakCount.bind(userProfileController))
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ROOMS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.post("/room", userRoomController.createRoom.bind(userRoomController));
 router.put("/room", userRoomController.updateRoom.bind(userRoomController));

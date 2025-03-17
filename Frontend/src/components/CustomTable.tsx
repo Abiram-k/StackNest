@@ -78,7 +78,7 @@ const CustomTableComponent = <T extends { _id: string }>({
           message={`Are you sure you want to perform this action?`}
         />
       )}
-      <Table className="w-full shadow-lg border border-gray-200 rounded-lg ">
+      <Table className="w-full shadow-lg border border-gray-300 dark:border-gray-900 rounded-lg ">
         <TableHeader>
           <TableRow className="bg-primary-500 rounded-full  hover:bg-primary-500/90 dark:hover:bg-primary-600/90 dark:bg-primary-600 p-3">
             <TableHead className="text-center font-extrabold text-white">

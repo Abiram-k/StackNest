@@ -31,4 +31,14 @@ export class UserProfileService {
   ): Promise<axiosResponse> {
     return this._httpService.put<axiosResponse>("/users/details", data);
   }
+
+  async checkin(): Promise<axiosResponse> {
+    return this._httpService.patch<axiosResponse>("/users/checkin");
+  }
+
+  async getStreakCount(): Promise<axiosResponse & { streakCount: number }> {
+    return this._httpService.get<axiosResponse & { streakCount: number }>(
+      "users/streak"
+    );
+  }
 }

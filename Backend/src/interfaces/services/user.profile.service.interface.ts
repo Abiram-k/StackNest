@@ -7,4 +7,6 @@ export interface IUserProfileService {
     id: string,
     data: verifyUserProfileSchemaType
   ): Promise<IUser | null>;
+  checkinUser(userId:string):Promise<void>
+  getUserStreakCount(userId:string):Promise<number | null>
 }

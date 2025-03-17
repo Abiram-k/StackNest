@@ -32,6 +32,8 @@ export type verifyUserProfileSchemaType = {
   country?: string;
   description?: string;
   mobileNumber?: string;
+  streak?:number;
+  streakClaimDate?:Date;
 };
 
 export type axiosResponse = {

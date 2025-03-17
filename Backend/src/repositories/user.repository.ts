@@ -7,6 +7,30 @@ import {
 import { IUser } from "../types/IUser";
 
 export class UserBaseRepository implements IUserBaseRepository<IUser> {
+  async incrementCheckin(userId: string): Promise<boolean> {
+    try {
+      await User.findByIdAndUpdate(userId, {
+        streakClaimDate: new Date(),
+        $inc: { streak: 1 },
+      });
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getStreakCount(userId: string): Promise<number | undefined> {
+    try {
+      const user = await User.findById(userId);
+      return user?.streak;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async resetCheckin(userId: string): Promise<boolean> {
+    await this.findByIdAndUpdate(userId, { streak: 0 });
+    return true;
+  }
+
   async findByEmail(email: string): Promise<IUser | null> {
     try {
       return await User.findOne({

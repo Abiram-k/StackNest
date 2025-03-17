@@ -7,6 +7,8 @@ export interface ResProfileData {
   country?: string;
   description?: string;
   mobileNumber?: string;
+  streak:number;
+  streakClaimDate:Date;
 }
 
 export interface ResGetUserDataDTO {

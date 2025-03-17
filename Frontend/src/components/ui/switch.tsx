@@ -1,7 +1,7 @@
-import * as React from "react"
-import * as SwitchPrimitive from "@radix-ui/react-switch"
+import * as React from "react";
+import * as SwitchPrimitive from "@radix-ui/react-switch";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function Switch({
   className,
@@ -11,7 +11,7 @@ function Switch({
     <SwitchPrimitive.Root
       data-slot="switch"
       className={cn(
-        "peer cursor-pointer data-[state=checked]:bg-red-600 data-[state=unchecked]:bg-zinc-200 focus-visible:border-red-650 focus-visible:ring-red-650/50 inline-flex h-6 w-13 shrink-0 items-center rounded-full border-2 border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 dark:data-[state=checked]:bg-zinc-50 dark:data-[state=unchecked]:bg-red-500 dark:focus-visible:border-zinc-300 dark:focus-visible:ring-zinc-300/50",
+        "peer cursor-pointer data-[state=checked]:bg-red-600 data-[state=unchecked]:bg-zinc-200 focus-visible:border-red-650 focus-visible:ring-red-650/50 inline-flex h-6 w-13 shrink-0 items-center rounded-full border-2 border-transparent shadow-xs transition-all outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 dark:data-[state=checked]:bg-red-500 dark:data-[state=unchecked]:bg-zinc-50 dark:focus-visible:border-zinc-300 dark:focus-visible:ring-zinc-300/50",
         className
       )}
       {...props}
@@ -23,7 +23,7 @@ function Switch({
         )}
       />
     </SwitchPrimitive.Root>
-  )
+  );
 }
 
-export { Switch }
+export { Switch };

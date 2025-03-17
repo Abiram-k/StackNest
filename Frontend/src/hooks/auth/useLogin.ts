@@ -2,13 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useRef, useState } from "react";
-import { UserAuthService } from "@/api/authService";
 import { HttpService } from "@/api/httpService";
 import toast from "react-hot-toast";
 import { setUserCredentials } from "@/redux/slice/userSlice";
 import { LoginUser } from "../../../../types/user";
 import { UseFormSetError } from "react-hook-form";
 import { setAdminCredentials } from "@/redux/slice/adminSlice";
+import { UserAuthService } from "@/api/public/authService";
 
 export const useLogin = (
   setError: UseFormSetError<LoginUser>,

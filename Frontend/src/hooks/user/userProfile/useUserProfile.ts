@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   axiosResponse,
   verifyUserProfileSchemaType,
-} from "../../../../types/user";
+} from "../../../../../types/user";
 import toast from "react-hot-toast";
 
 const userProfileService = new UserProfileService(new HttpService());

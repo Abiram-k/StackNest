@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Edit2, MessageCircle, X } from "lucide-react";
+import {
+  CheckCircle2,
+  Edit2,
+  Flame,
+  MessageCircle,
+  X,
+  Zap,
+} from "lucide-react";
 import DetailsForm from "@/components/forms/DetailsForm";
 import { verifyUserProfile } from "@/hooks/validation/useProfileForm";
 import { validateProfileSchema } from "@/validation/userDetailsSchema";
@@ -8,13 +15,14 @@ import { verifyUserProfileSchemaType } from "../../../../../types/user";
 import {
   useUpdateUserProfile,
   useUserProfile,
-} from "@/hooks/userProfile/useUserProfile";
+} from "@/hooks/user/userProfile/useUserProfile";
 import ProfileImageUploader from "@/components/ImageUploader";
 import { Spinner } from "@/components/ui/spinner";
-import { ImageService } from "@/api/imageService";
+import { ImageService } from "@/api/public/imageService";
 import ChatBot from "./ChatBot";
 import { HttpService } from "@/api/httpService";
 import toast from "react-hot-toast";
+import { useCheckin } from "@/hooks/user/userProfile/useCheckin";
 
 const initialValue = {
   avatar: "",
@@ -25,7 +33,19 @@ const initialValue = {
   description: "",
   mobileNumber: "",
   email: "",
+  streak: 0,
+  streakClaimDate: new Date(),
 };
+const getDaysDifference = (from: Date, to: Date): number => {
+  const startDate = new Date(from);
+  const endDate = new Date(to);
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
+  const timeDifferenceMs = Math.abs(endDate.getTime() - startDate.getTime());
+  const daysDifference = Math.ceil(timeDifferenceMs / (1000 * 60 * 60 * 24));
+  return daysDifference;
+};
+
 export default function ProfilePage() {
   const [formData, setFormData] =
     useState<verifyUserProfileSchemaType>(initialValue);
@@ -33,7 +53,7 @@ export default function ProfilePage() {
   const selectedAvatar = useRef<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChatBotOpen, setIsChatBotOpen] = useState(false);
-
+  const [isRefresh, setIsRefresh] = useState(false);
   const {
     register,
     handleSubmit,
@@ -54,15 +74,20 @@ export default function ProfilePage() {
   });
 
   const { data: user, isPending: fetchIsPending } = useUserProfile();
+  const { mutate: checkinMutate, isPending: isCheckedInPending } = useCheckin();
 
   useEffect(() => {
     if (user?.userDetails) {
       setFormData(user.userDetails);
       reset(user.userDetails);
     }
-  }, [user?.userDetails]);
+  }, [user?.userDetails, isRefresh]);
 
   const { updateMutation, isPending } = useUpdateUserProfile(setIsEditing);
+
+  const handleCheckin = () => {
+    checkinMutate();
+  };
 
   const onsubmit = async (data: verifyUserProfileSchemaType) => {
     try {
@@ -115,20 +140,46 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen w-full bg-white  dark:bg-transparent">
-      {(isLoading || fetchIsPending || isPending) && <Spinner />}
+      {(isLoading || fetchIsPending || isPending || isCheckedInPending) && (
+        <Spinner />
+      )}
       <div className=" ">
         <main className=" p-8">
           <div className="max-full ">
             <div className="mb-8 flex flex-col md:flex-row w-full justify-between md:justify-normal md:gap-5 align-middle h-fit">
-              <Button className="bg-amber-500 cursor-pointer hover:bg-amber-600 text-white mb-4 w-fit dark:hover:bg-amber-500/90 dark:bg-amber-500 dark:text-gray-100 ">
-                Check in
-              </Button>
-              <p className="text-sm text-gray-600 dark:text-gray-500">
-                Check in daily to maintain your streak and stay on the
-                leaderboard!
-                <br />
-                Keep your progress going and secure your top spot.
-              </p>
+              {getDaysDifference(
+                user?.userDetails.streakClaimDate as Date,
+                new Date()
+              ) === 0 ? (
+                <div className="flex items-center gap-3 mb-4">
+                  <CheckCircle2 className="h-6 w-6 text-green-500" />
+                  <div className="flex items-center gap-1.5">
+                    <Flame className="h-5 w-5 text-orange-500" />
+                    <span className="font-medium text-gray-700 dark:text-gray-300">
+                      Current Streak: {user?.userDetails.streak || 0} days
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4 w-3/4">
+                  <Button
+                    onClick={handleCheckin}
+                    className="bg-gradient-to-br from-amber-500  to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white mb-2 w-full group transition-all hover:shadow-lg hover:scale-[1.02] dark:bg-orange-900"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Zap className="h-5 w-5 text-white group-hover:animate-pulse" />
+                      <span>Check In Now</span>
+                    </div>
+                  </Button>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 px-2">
+                    <span className="font-semibold text-amber-600 dark:text-amber-400">
+                      Daily Challenge:
+                    </span>{" "}
+                    Maintain your streak to unlock exclusive rewards and stay
+                    atop the leaderboard!
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="relative mb-8 ">

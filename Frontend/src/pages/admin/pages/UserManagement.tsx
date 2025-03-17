@@ -42,7 +42,7 @@ const UserManagement = () => {
   const [sort, setSort] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
-  
+
   const debounceSearchValue = useDebounce(search, delay);
 
   const { data, isLoading: fetchIsLoading } = useFetchAllUsers({
@@ -87,7 +87,6 @@ const UserManagement = () => {
               onToggleAction={handleBlockUser}
               toggleKey="isBlocked"
             />
-
           </div>
         </div>
 

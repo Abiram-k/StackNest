@@ -4,7 +4,7 @@ import Pagination from "@/components/Pagination";
 import { useFetchAllRooms } from "@/hooks/room/useFetchRooms";
 import { Spinner } from "@/components/ui/spinner";
 import CustomTable, { Column } from "@/components/CustomTable";
-import { IRoom } from "@/api/roomService";
+import { IRoom } from "@/api/public/roomService";
 import { useNavigate } from "react-router-dom";
 import { useDebounce } from "@/hooks/optimizational/useDebounce";
 const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
@@ -78,7 +78,7 @@ const RoomManagement = () => {
 
         <Pagination
           onPageChange={setCurrentPage}
-          totalPages={data?.totalPage || 1}
+          totalPages={data?.totalPages || 1}
         />
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import RoomCard from "@/components/rooms/RoomCard";
+import RoomCard from "@/components/card/RoomCard";
 import { useNavigate } from "react-router-dom";
 import FilterBar from "@/components/FilterBar";
 import Pagination from "@/components/Pagination";
@@ -13,9 +13,9 @@ import PasswordConfirmation from "@/components/modal/PasswordConfirmation";
 import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
 import { Spinner } from "@/components/ui/spinner";
 import { useDebounce } from "@/hooks/optimizational/useDebounce";
-import { useAddToFavorites } from "@/hooks/favorites/useAddToFavorites";
-import { useRemoveFromFavorites } from "@/hooks/favorites/useRemoveFromFavorites";
-import { useFetchFavorites } from "@/hooks/favorites/useFetchFavorites";
+import { useAddToFavorites } from "@/hooks/user/favorites/useAddToFavorites";
+import { useRemoveFromFavorites } from "@/hooks/user/favorites/useRemoveFromFavorites";
+import { useFetchFavorites } from "@/hooks/user/favorites/useFetchFavorites";
 
 const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
 
@@ -45,6 +45,8 @@ export default function RoomsListPage() {
       currentPage,
       limit: 10,
     });
+
+    console.log("AVAILABLE ROOMS: ",availableRooms)
 
   // onClick of edit icon
   const handleEditRoom = (roomId: string) => {
@@ -187,17 +189,19 @@ export default function RoomsListPage() {
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
             {availableRooms?.rooms?.length ? (
-              availableRooms.rooms.map((room, i) => (
-                <RoomCard
-                  key={`${room.roomId}-${i}`}
-                  room={room}
-                  type="available"
-                  handleEnterRoom={handleEnterRoom}
-                  favorites={favorites?.rooms || []}
-                  handleAddToFavorites={handleAddToFavorites}
-                  handleRemoveFromFavorites={handleRemoveFromFavorites}
-                />
-              ))
+              availableRooms.rooms
+                .filter((room) => room.roomType != "general")
+                .map((room, i) => (
+                  <RoomCard
+                    key={`${room.roomId}-${i}`}
+                    room={room}
+                    type="available"
+                    handleEnterRoom={handleEnterRoom}
+                    favorites={favorites?.rooms || []}
+                    handleAddToFavorites={handleAddToFavorites}
+                    handleRemoveFromFavorites={handleRemoveFromFavorites}
+                  />
+                ))
             ) : (
               <div className="col-span-full flex flex-col items-center justify-center py-10">
                 <p className="text-lg font-semibold text-gray-500">
@@ -208,7 +212,7 @@ export default function RoomsListPage() {
           </div>
 
           <Pagination
-            totalPages={availableRooms?.totalPage || 1}
+            totalPages={availableRooms?.totalPages || 1}
             onPageChange={setCurrentPage}
           />
         </div>
