@@ -13,9 +13,10 @@ const Navbar = ({
   isAuthenticated: boolean;
   isAdmin: boolean;
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [streak, setStreak] = useState(0);
-  const { data } = useGetStreakCount();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [streak, setStreak] = useState<number>(0);
+
+  const { data } = useGetStreakCount({isAdmin,isAuthenticated});
 
   useEffect(() => {
     if (!isAdmin && isAuthenticated && data?.streakCount) {

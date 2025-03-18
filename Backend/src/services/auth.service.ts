@@ -36,6 +36,12 @@ export class AuthService implements IAuthService {
     private _authRepo: IUserAuthRepository<IUser>
   ) {}
 
+  // findUserById(userId: string): Promise<any> {
+
+  // }
+  // handleGithubLogin(profile: any): Promise<any> {
+
+  // }
   async authenticateGoogleUser(token: string) {
     try {
       const payload = await googleUserResponse(token);
@@ -50,6 +56,12 @@ export class AuthService implements IAuthService {
         payload.id
       );
 
+      if (isExistUserWithEmail?.isBlocked) {
+        throw createHttpError(
+          HttpStatus.UNAUTHORIZED,
+          "Your account were suspended"
+        );
+      }
       if (isExistUserWithEmail && !isExistUserWithGooglId) {
         await this._authRepo.updateUserWithGoogleId(payload.email, payload.id);
       }
@@ -90,7 +102,10 @@ export class AuthService implements IAuthService {
 
         if (user.isBlocked) {
           if (!user.blockedUntil) {
-            throw createHttpError(HttpStatus.UNAUTHORIZED, "You account has been suspended");
+            throw createHttpError(
+              HttpStatus.UNAUTHORIZED,
+              "You account has been suspended"
+            );
           }
           const now = new Date();
           if (user.blockedUntil && user.blockedUntil > now) {
@@ -222,7 +237,8 @@ export class AuthService implements IAuthService {
   async initiateRegistration(email: string): Promise<void> {
     try {
       const isExist = await this._baseRepo.findByEmail(email);
-      if (isExist) throw createHttpError(HttpStatus.BAD_REQUEST, "User already exisit");
+      if (isExist)
+        throw createHttpError(HttpStatus.BAD_REQUEST, "User already exisit");
 
       const otp = generateOTP();
       await otpRepository.deleteByEmail(email);

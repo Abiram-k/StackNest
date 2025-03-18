@@ -9,7 +9,7 @@ import { Spinner } from "../ui/spinner";
 import { Link } from "react-router-dom";
 import RoomCard from "../card/RoomCard";
 
-const RoomSection = () => {
+const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   const [isModalPasswordModal, setIsModalPasswordModal] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState("");
 
@@ -18,7 +18,7 @@ const RoomSection = () => {
     sort: "",
     filter: "",
     currentPage: 1,
-    limit: 6,
+    limit: 7,
   });
 
   const { mutate: joinRoomMutate, isPending: joinIsPending } = useJoinRoom();
@@ -153,14 +153,17 @@ const RoomSection = () => {
           <h3 className="text-2xl font-bold mb-6">Trending Rooms</h3>
           <div className="grid md:grid-cols-3 gap-4">
             {data?.rooms?.length ? (
-              data.rooms.map((room, i) => (
-                <RoomCard
-                  key={`${room.roomId}-${i}`}
-                  room={room}
-                  type="available"
-                  handleEnterRoom={handleEnterRoom}
-                />
-              ))
+              data.rooms
+                .filter((room) => room.roomType !== "general")
+                .slice(0, 6)
+                .map((room, i) => (
+                  <RoomCard
+                    key={`${room.roomId}-${i}`}
+                    room={room}
+                    type="available"
+                    handleEnterRoom={handleEnterRoom}
+                  />
+                ))
             ) : (
               <div className="col-span-full text-center py-12">
                 <p className="text-lg font-semibold text-gray-500">

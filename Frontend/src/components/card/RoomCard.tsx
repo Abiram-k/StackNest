@@ -142,10 +142,10 @@ const RoomCard = ({
 
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-500">
-              {room.participants.length}/{room.limit}
+              {room.participants?.length}/{room.limit}
             </span>
             <div className="flex -space-x-2">
-              {room.participants.slice(0, 5).map((participant, i) => (
+              {room.participants?.slice(0, 5).map((participant, i) => (
                 <div
                   key={i}
                   className="w-6 h-6 rounded-full overflow-hidden border-2 border-white dark:border-gray-700 shadow-sm"

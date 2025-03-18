@@ -88,6 +88,9 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
 }
 
 export class UserAuthRespository implements IUserAuthRepository<IUser> {
+  // async findByGithubId(githubId) {
+  //   return User.findOne({ githubId });
+  // }
   async findUserByGoogleId(googleId: string): Promise<IUser | null> {
     try {
       return await User.findOne({

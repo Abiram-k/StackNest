@@ -23,6 +23,7 @@ import ChatBot from "./ChatBot";
 import { HttpService } from "@/api/httpService";
 import toast from "react-hot-toast";
 import { useCheckin } from "@/hooks/user/userProfile/useCheckin";
+import { useNavigate } from "react-router-dom";
 
 const initialValue = {
   avatar: "",
@@ -53,7 +54,8 @@ export default function ProfilePage() {
   const selectedAvatar = useRef<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChatBotOpen, setIsChatBotOpen] = useState(false);
-  const [isRefresh, setIsRefresh] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -74,19 +76,24 @@ export default function ProfilePage() {
   });
 
   const { data: user, isPending: fetchIsPending } = useUserProfile();
-  const { mutate: checkinMutate, isPending: isCheckedInPending } = useCheckin();
+  const { mutate: checkinMutate, isPending: isCheckedInPending } = useCheckin(
+    streak,
+    setStreak
+  );
 
   useEffect(() => {
     if (user?.userDetails) {
       setFormData(user.userDetails);
+      if (user.userDetails.streak) setStreak(user.userDetails.streak);
       reset(user.userDetails);
     }
-  }, [user?.userDetails, isRefresh]);
+  }, [user?.userDetails, streak]);
 
   const { updateMutation, isPending } = useUpdateUserProfile(setIsEditing);
 
   const handleCheckin = () => {
     checkinMutate();
+    navigate("/user/home");
   };
 
   const onsubmit = async (data: verifyUserProfileSchemaType) => {
@@ -156,7 +163,7 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-1.5">
                     <Flame className="h-5 w-5 text-orange-500" />
                     <span className="font-medium text-gray-700 dark:text-gray-300">
-                      Current Streak: {user?.userDetails.streak || 0} days
+                      Current Streak: {streak} days
                     </span>
                   </div>
                 </div>

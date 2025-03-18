@@ -2,7 +2,6 @@ import { Types } from "mongoose";
 import { IRoomRepository } from "../interfaces/repositories/room.repository.interface";
 import Room from "../models/room.model";
 import { IRoom } from "../types/IRoom";
-import { title } from "process";
 
 enum FilterTags {
   "Private" = "Private",
@@ -11,10 +10,10 @@ enum FilterTags {
 }
 
 export class RoomRespository implements IRoomRepository<IRoom> {
-  async createRoom(data: Partial<IRoom>): Promise<boolean> {
+  async createRoom(roomData: Partial<IRoom>): Promise<boolean> {
     try {
-      const room = await Room.create(data);
-      if (room) return true;
+      const room = await Room.create(roomData);
+      if (room) return true; 
       else return false;
     } catch (error) {
       throw error;
@@ -35,9 +34,9 @@ export class RoomRespository implements IRoomRepository<IRoom> {
     }
   }
 
-  async findByHostId(id: Types.ObjectId): Promise<IRoom[] | null> {
+  async findByHostId(hostId: Types.ObjectId): Promise<IRoom[] | null> {
     try {
-      return await Room.find({ host: id }).populate("participants.user");
+      return await Room.find({ host: hostId }).populate("participants.user");
     } catch (error) {
       throw error;
     }

@@ -10,12 +10,12 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
-  systemInstruction:
-    `
+  systemInstruction: `
     You are stackNest AI Assistant. stackNest is a vibrant online community for software developers. 
     It features:
     - Rooms: Dedicated spaces for collaborating on specific projects discussions and also there is a general room community for all developers, There are premium (only for premium members), private rooms are there. General rooms placed in home page, rest of all rooms in room section
     - Language Channels: Focused discussions on programming languages like Python, JavaScript, and Java.
+    - Favorites: Users can add upto 5 rooms to favorites at a time, in room listing page there is a heart icon for add to favorites, you can use that icon up 5 rooms
     - Study Groups: Collaborative learning environments for tackling coding challenges and exploring new technologies.
     - Code Snippet Posts: Sharing and discussing code examples.
     - Question & Answer Forums: Seeking and providing help with technical issues.
@@ -94,6 +94,7 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
       alert("Error");
     } finally {
       setIsPending(false);
+      setMessage("");
     }
   };
 
@@ -160,9 +161,7 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
               <p className="text-indigo-200 text-xs">
                 <span className="text-green-400">●</span> Online
               </p>
-              {isPending && (
-                <p className="text-white text-xs">Typing ... </p>
-              )}
+              {isPending && <p className="text-white text-xs">Typing ... </p>}
             </div>
           </div>
         </div>

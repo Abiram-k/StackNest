@@ -3,7 +3,7 @@ import { IFavoritesRepository } from "../interfaces/repositories/favorites.repos
 import { Favorites } from "../models/favorites.model";
 import { IFavorites } from "../types/IFavorites";
 
-export class FavoritesRepository implements IFavoritesRepository {
+export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
   async findFavorites(
     userId: string,
     roomId: string
@@ -15,7 +15,7 @@ export class FavoritesRepository implements IFavoritesRepository {
     }
   }
 
-  async fetchFavorites(userId: string): Promise<RoomResTypeDTO[] | null> {
+  async fetchFavorites(userId: string): Promise<string[] | null> {
     try {
       const favorites = await Favorites.find({ user: userId })
         .select("roomId")
@@ -33,7 +33,7 @@ export class FavoritesRepository implements IFavoritesRepository {
 
       const rooms = favorites
         .filter((favorite) => favorite.roomId)
-        .map((favorite) => favorite.roomId as RoomResTypeDTO);
+        .map((favorite) => favorite.roomId);
 
       return rooms;
     } catch (error) {
@@ -44,6 +44,10 @@ export class FavoritesRepository implements IFavoritesRepository {
 
   async addRoomToFavorites(userId: string, roomId: string): Promise<boolean> {
     try {
+      const favorites = await Favorites.find({ user: userId });
+      if (favorites.length >= 5) {
+        return false;
+      }
       await Favorites.create({ user: userId, roomId });
       return true;
     } catch (error) {

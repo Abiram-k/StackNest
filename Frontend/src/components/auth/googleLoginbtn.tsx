@@ -10,18 +10,25 @@ const GoogleAuth = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleSuccess = async (tokenResponse: any) => {
-    const { access_token } = tokenResponse;
-    const response = await axiosInstancePublic.post(`/auth/google/callback`, {
-      token: access_token,
-    });
-    const data = response.data;
+    try {
+      const { access_token } = tokenResponse;
+      const response = await axiosInstancePublic.post(`/auth/google/callback`, {
+        token: access_token,
+      });
+      const data = response.data;
 
-    if (data.success) {
-      navigate("/user/home");
-      dispatch(setUserCredentials({}));
-      toast.success("Login Successful");
+      if (data.success) {
+        navigate("/user/home");
+        dispatch(setUserCredentials({}));
+        toast.success("Login Successful");
+      }
+    } catch (error: any) {
+      toast.error(
+        error.response.data.message || error.message || "Failed login attempt"
+      );
     }
   };
+
   const login = useGoogleLogin({
     onSuccess: handleSuccess,
     onError: () => alert("Login Failed"),

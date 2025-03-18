@@ -270,3 +270,9 @@ GET /users/room/available-rooms?filter=&search=&sort=&page=1&limit=10 500 12 - 2
 GET /admin/users?filter=&sort=&search=&page=1&limit=10 500 12 - 6.124 ms
 GET /users/streak 500 12 - 5.882 ms
 GET /admin/room/available-rooms?filter=&search=&sort=&page=1&limit=10 401 44 - 5.984 ms
+GET /users/streak 401 26 - 0.192 ms
+GET /admin/users?filter=&sort=&search=&page=1&limit=10 401 44 - 4.360 ms
+GET /users/streak 401 26 - 0.280 ms
+GET /admin/room/available-rooms?filter=&search=&sort=&page=1&limit=10 401 26 - 0.347 ms
+GET /admin/room/available-rooms?filter=&search=&sort=&page=1&limit=10 401 44 - 5.150 ms
+GET /admin/room/available-rooms?filter=&search=&sort=&page=1&limit=10 401 44 - 5.137 ms

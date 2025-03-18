@@ -35,7 +35,7 @@ const HomePage = () => {
       <main className="">
         <HeroSection />
         <CreateRoomSection />
-        <RoomSection />
+        <RoomSection isAuthenticated />
         <BannerSection />
         <FreindsSection />
         <MyAccordion />

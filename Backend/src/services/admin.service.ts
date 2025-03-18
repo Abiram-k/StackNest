@@ -6,7 +6,6 @@ import { IUser } from "./../types/IUser";
 export class AdminService implements IAdminService {
   constructor(private _adminRepo: IAdminRepository<IUser>) {}
 
-
   async fetchAllUsers(
     filter: string,
     sort: string,

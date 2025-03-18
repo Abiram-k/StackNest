@@ -44,6 +44,7 @@ import { BannerController } from "../controllers/admin/admin.banner.controller";
 import { IBanner } from "../types/IBanner";
 import { IUserBannerController } from "../interfaces/controllers/user.banner.controller";
 import { UserBannerController } from "../controllers/user/user.banner.controller";
+import { IFavorites } from "../types/IFavorites";
 
 // Respositories
 const userAuthRepository: IUserAuthRepository<IUser> =
@@ -51,7 +52,7 @@ const userAuthRepository: IUserAuthRepository<IUser> =
 const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();
 const adminRespository: IAdminRepository<IUser> = new AdminRespository();
 const roomRespository: IRoomRepository<IRoom> = new RoomRespository();
-const favoritesRepository: IFavoritesRepository = new FavoritesRepository();
+const favoritesRepository: IFavoritesRepository<IFavorites> = new FavoritesRepository();
 const bannerRepository: IBannerRepository<IBanner> = new BannerRepository();
 
 // Services
