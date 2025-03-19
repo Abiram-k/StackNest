@@ -45,6 +45,15 @@ import { IBanner } from "../types/IBanner";
 import { IUserBannerController } from "../interfaces/controllers/user.banner.controller";
 import { UserBannerController } from "../controllers/user/user.banner.controller";
 import { IFavorites } from "../types/IFavorites";
+import { IChallengeRespository } from "../interfaces/repositories/challenge.repository.interface";
+import { IChallenge } from "../types/IChallenge";
+import { ChallengeRespository } from "../repositories/challenge.repository";
+import { IChallengeService } from "../interfaces/services/challenge.service.interface";
+import { ChallengeService } from "../services/challenge.service";
+import { IUserChallengeController } from "../interfaces/controllers/user.challenge.controller";
+import { UserChallengeController } from "../controllers/user/user.challenge.controller";
+import { IAdminChallengeController } from "../interfaces/controllers/admin.challenge.controller.interface";
+import { AdminChallengeController } from "../controllers/admin/admin.challenge.controller";
 
 // Respositories
 const userAuthRepository: IUserAuthRepository<IUser> =
@@ -52,8 +61,11 @@ const userAuthRepository: IUserAuthRepository<IUser> =
 const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();
 const adminRespository: IAdminRepository<IUser> = new AdminRespository();
 const roomRespository: IRoomRepository<IRoom> = new RoomRespository();
-const favoritesRepository: IFavoritesRepository<IFavorites> = new FavoritesRepository();
+const favoritesRepository: IFavoritesRepository<IFavorites> =
+  new FavoritesRepository();
 const bannerRepository: IBannerRepository<IBanner> = new BannerRepository();
+const challengeRepository: IChallengeRespository<IChallenge> =
+  new ChallengeRespository();
 
 // Services
 const adminService: IAdminService = new AdminService(adminRespository);
@@ -72,6 +84,9 @@ const favoritesService: IFavoritesService = new FavoritesService(
   favoritesRepository
 );
 const bannerServie: IBannerService = new BannerService(bannerRepository);
+const challengeServie: IChallengeService = new ChallengeService(
+  challengeRepository
+);
 
 //  controllers
 const adminController: IAdminController = new AdminController(
@@ -93,6 +108,10 @@ const bannerController: IBannerController = new BannerController(bannerServie);
 const userBannerController: IUserBannerController = new UserBannerController(
   bannerServie
 );
+const userChallengeController: IUserChallengeController =
+  new UserChallengeController(challengeServie);
+const adminChallengeController: IAdminChallengeController =
+  new AdminChallengeController(challengeServie);
 
 export {
   authController,
@@ -102,4 +121,6 @@ export {
   favoritesController,
   bannerController,
   userBannerController,
+  userChallengeController,
+  adminChallengeController,
 };

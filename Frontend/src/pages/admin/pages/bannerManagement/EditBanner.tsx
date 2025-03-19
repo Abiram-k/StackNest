@@ -1,13 +1,12 @@
 import { HttpService } from "@/api/httpService";
-import { ImageService } from "@/api/imageService";
+import { ImageService } from "@/api/public/imageService";
 import DetailsForm from "@/components/forms/DetailsForm";
 import ImageUploader from "@/components/ImageUploader";
 import { Spinner } from "@/components/ui/spinner";
-import { useAddBanner } from "@/hooks/admin/bannerManagement/useAddBanner";
 import { useFetchSelectedBanner } from "@/hooks/admin/bannerManagement/useFetchSelectedBanner";
 import { useUpdateBanner } from "@/hooks/admin/bannerManagement/useUpdateBanner";
 import { useVerifyBannerForm } from "@/hooks/validation/useBannerForm";
-import { BannerReq, BannerRes } from "@/types";
+import { BannerReq } from "@/types";
 import { validateBannerSchema } from "@/validation/bannerSchema";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -33,7 +32,6 @@ const EditBanner = () => {
     },
   });
 
-  const { mutate, isPending: isUpdatePending } = useUpdateBanner();
   const navigate = useNavigate();
   const { bannerId } = useParams<{ bannerId: string }>();
 
@@ -109,9 +107,7 @@ const EditBanner = () => {
 
   return (
     <div className="flex h-screen dark:bg-black">
-      {(fetchPending || isUpdatePending || isLoading || updateIsPending) && (
-        <Spinner />
-      )}
+      {(fetchPending || isLoading || updateIsPending) && <Spinner />}
       <main className="flex-1 p-8  w-full">
         <h1 className="text-2xl font-bold mb-8">Edit Banner </h1>
         <div className="w-full flex flex-col justify-between p-10 shadow-md rounded">

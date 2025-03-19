@@ -48,7 +48,7 @@ const navItems = [
   {
     name: "Daily challenge",
     icon: <Calendar className="w-5 h-5" />,
-    to: "/admin/daily-challenge",
+    to: "/admin/challenge-management",
   },
   {
     name: "Notifications",

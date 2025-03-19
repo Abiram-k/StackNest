@@ -12,8 +12,9 @@ export interface IAuthService {
     refreshToken: string;
   }>;
 
-  // handleGithubLogin(profile:any):Promise<any>
-  // findUserById(userId:string):Promise<any>
+  handleGithubLogin(profile:Partial<IUser>):Promise<IUser>
+
+  findUserById(userId:string):Promise<any>
 
   generateAccessToken(refreshToken: string): Promise<string | undefined>;
   forgotPassword(email: string): Promise<void>;

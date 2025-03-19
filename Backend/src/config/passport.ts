@@ -1,75 +1,82 @@
-// import passport from "passport";
-// import { Strategy as GitHubStrategy } from "passport-github2";
-// import { AuthService } from "../services/auth.service";
-// import { UserBaseRepository } from "../repositories/user.repository";
-// import { UserAuthRespository } from "../repositories/user.repository";
-// import { IUser } from "../types/IUser";
-// import {
-//   IUserAuthRepository,
-//   IUserBaseRepository,
-// } from "../interfaces/repositories/user.repository.interface";
-// import { IAuthService } from "../interfaces/services/auth.service.interface";
-// import { config } from "dotenv";
-// config();
+import passport, { Profile } from "passport";
+import { Strategy as GitHubStrategy } from "passport-github2";
+import { AuthService } from "../services/auth.service";
+import { UserBaseRepository } from "../repositories/user.repository";
+import { UserAuthRespository } from "../repositories/user.repository";
+import { IUser } from "../types/IUser";
+import {
+  IUserAuthRepository,
+  IUserBaseRepository,
+} from "../interfaces/repositories/user.repository.interface";
+import { IAuthService } from "../interfaces/services/auth.service.interface";
+import { config } from "dotenv";
+import axios from "axios";
+import { VerifyCallback } from "jsonwebtoken";
+config();
 
-// // Load environment variables
-// const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID as string;
-// const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET as string;
-// const CALLBACK_URL = process.env.GITHUB_CALLBACK_URL || "/auth/github/callback";
+const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID as string;
+const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET as string;
+const CALLBACK_URL = process.env.GITHUB_CALLBACK_URL || "/auth/github/callback";
 
-// // Ensure required env variables are set
-// if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
-//   throw new Error("Missing GitHub OAuth credentials in environment variables.");
-// }
+if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
+  throw new Error("Missing GitHub OAuth credentials in environment variables.");
+}
 
-// const userAuthRespository: IUserAuthRepository<IUser> =
-//   new UserAuthRespository();
-// const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();
-// const authService: IAuthService = new AuthService(
-//   userBaseRepository,
-//   userAuthRespository
-// );
+const userAuthRespository: IUserAuthRepository<IUser> =
+  new UserAuthRespository();
+const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();
+const authService: IAuthService = new AuthService(
+  userBaseRepository,
+  userAuthRespository
+);
 
-// export default function configurePassport() {
-//   passport.use(
-//     new GitHubStrategy(
-//       {
-//         clientID: GITHUB_CLIENT_ID,
-//         clientSecret: GITHUB_CLIENT_SECRET,
-//         callbackURL: CALLBACK_URL,
-//       },
-//       async (
-//         accessToken: string,
-//         refreshToken: string,
-//         profile: any,
-//         done: any
-//       ) => {
-//         try {
-//           console.log("GitHub profile received:", profile);
+export default function configurePassport() {
+  passport.use(
+    new GitHubStrategy(
+      {
+        clientID: GITHUB_CLIENT_ID,
+        clientSecret: GITHUB_CLIENT_SECRET,
+        callbackURL: CALLBACK_URL,
+      },
+      async (
+        accessToken: string,
+        refreshToken: string,
+        profile: Profile,
+        done: VerifyCallback
+      ) => {
+        try {
+          let email = "";
+          if (profile.emails?.length) {
+            email = profile.emails[0].value;
+          } else {
+            const emailResponse = await axios.get(
+              "https://api.github.com/user/emails",
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  Accept: "application/vnd.github.v3+json",
+                },
+              }
+            );
 
-//           // Handle GitHub login
-//           const user = await authService.handleGithubLogin(profile);
-//           done(null, user);
-//         } catch (error) {
-//           console.error("Error during GitHub authentication:", error);
-//           done(error);
-//         }
-//       }
-//     )
-//   );
+            const primaryEmail = emailResponse.data.find(
+              (emailObj: any) => emailObj.primary && emailObj.verified
+            );
+            email = primaryEmail?.email || emailResponse.data[0]?.email || "";
+          }
+          const user: IUser = await authService.handleGithubLogin({
+            githubId: profile.id,
+            firstName: profile.username,
+            email: email || "",
+            avatar: profile.photos?.[0]?.value || "",
+          });
 
-//   passport.serializeUser((user: any, done) => {
-//     console.log(`Serializing user: ${user?.id}`);
-//     done(null, user?.id as string); 
-//   });
-  
-//   passport.deserializeUser(async (id: string, done) => {
-//     console.log(`Deserializing user with ID: ${id}`);
-//     try {
-//       const user = await authService.findUserById(id);
-//       done(null, user);
-//     } catch (error) {
-//       done(error);
-//     }
-//   });
-// }
+          done(null, user);
+        } catch (error: any) {
+          console.error("Error during GitHub authentication:", error);
+          done(error);
+        }
+      }
+    )
+  );
+}

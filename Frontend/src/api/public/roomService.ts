@@ -1,7 +1,6 @@
 import { RoomSchema } from "../../../../types/user";
 import { HttpService } from "../httpService";
 import { axiosResponse } from "../../../../types/user";
-import { Search } from "lucide-react";
 
 type host = {
   userName: string;

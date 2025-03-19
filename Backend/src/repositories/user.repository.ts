@@ -88,9 +88,15 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
 }
 
 export class UserAuthRespository implements IUserAuthRepository<IUser> {
-  // async findByGithubId(githubId) {
-  //   return User.findOne({ githubId });
-  // }
+  async findByGithubId(githubId: string) {
+    return User.findOne({ githubId });
+  }
+  async createOrUpdateFromGithub(profile: Partial<IUser>) {
+    return User.findOneAndUpdate({ email: profile.email }, profile, {
+      upsert: true,
+      new: true,
+    });
+  }
   async findUserByGoogleId(googleId: string): Promise<IUser | null> {
     try {
       return await User.findOne({

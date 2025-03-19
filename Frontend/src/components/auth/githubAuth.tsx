@@ -1,13 +1,9 @@
 import { Button } from "../ui/button";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const GithubAuth = () => {
-  
+const GithubAuth = ({isLogin}:{isLogin:boolean}) => {
   const loginWithGitHub = () => {
-    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${
-      import.meta.env.VITE_GITHUB_CLIENT_ID
-    }&redirect_uri=${BASE_URL}/users/auth/github/callback&scope=user`;
-    window.location.href = githubAuthUrl;
+    window.location.href = `${BASE_URL}/auth/github`;
   };
 
   return (
@@ -15,7 +11,7 @@ const GithubAuth = () => {
       variant="outline"
       className="w-full cursor-pointer"
       onClick={loginWithGitHub}
-      disabled={true}
+      type="button"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path
@@ -23,7 +19,7 @@ const GithubAuth = () => {
           fill="currentColor"
         />
       </svg>
-      Login with GitHub
+      {isLogin ? "Login" :"Signup"} with GitHub
     </Button>
   );
 };

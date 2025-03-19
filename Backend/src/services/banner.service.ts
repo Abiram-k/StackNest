@@ -41,11 +41,13 @@ export class BannerService implements IBannerService {
         console.log("Title | description | image is missing");
         return false;
       }
+
       const isCreated = await this._bannerRepo.addNewBanner(
         title,
         description,
         image
       );
+
       if (!isCreated)
         throw createHttpError(HttpStatus.FORBIDDEN, "Failed to add banner");
       return true;

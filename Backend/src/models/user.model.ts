@@ -7,7 +7,12 @@ const userSchema = new mongoose.Schema<IUser>(
   {
     googleId: {
       type: String,
-      unique:true,
+      unique: true,
+      default: "",
+    },
+    githubId: {
+      type: String,
+      unique: true,
       default: "",
     },
     firstName: {

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserCredentials } from "@/redux/slice/userSlice";
 
-const GoogleAuth = () => {
+const GoogleAuth = ({ isLogin }: { isLogin: boolean }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleSuccess = async (tokenResponse: any) => {
@@ -64,7 +64,7 @@ const GoogleAuth = () => {
             fill="#EA4335"
           />
         </svg>
-        Login with Google
+        {isLogin ? "Login" : "Signup"} with Google
       </Button>
     </div>
   );

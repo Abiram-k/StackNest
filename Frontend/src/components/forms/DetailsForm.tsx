@@ -1,12 +1,12 @@
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { errorText } from "../ui/errorText";
-import { Calendar } from "lucide-react";
 
 interface FormField {
   name: any;
   label: string;
   type:
+    | "number"
     | "text"
     | "select"
     | "multi-select"

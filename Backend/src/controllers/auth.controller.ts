@@ -29,17 +29,47 @@ import {
 } from "../dtos/auth/resetPassword.dto";
 import cloudinary from "../config/cloudinary";
 config();
+import jwt from "jsonwebtoken";
+import { Types } from "mongoose";
+import { generateAccessToken } from "../utils/generateJWT";
 
 const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET as string;
 const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY as string;
-
 const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME as string;
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export class AuthController implements IAuthController {
   private _authService: IAuthService;
 
   constructor(authService: IAuthService) {
     this._authService = authService;
+  }
+
+  async githubCallback(req: Request, res: Response): Promise<void> {
+    try {
+      const user = await this._authService.handleGithubLogin(req.user);
+
+      const data = {
+        userId: user._id as Types.ObjectId,
+        role: user.role,
+      };
+      const token = generateAccessToken(data);
+      res.redirect(`${process.env.CLIENT_URL}/auth/login?token=${token}`);
+    } catch (error) {
+      res.redirect(`${process.env.CLIENT_URL}/auth/login?error=github_failed`);
+    }
+  }
+
+  async validateGithubToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      res.json({ message: "Login successfull", success: true });
+    } catch (error) {
+      next(error);
+    }
   }
 
   async googleAuth(

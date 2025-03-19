@@ -26,7 +26,7 @@ type FormProps = React.ComponentPropsWithoutRef<"form"> & {
   isRegister?: boolean;
   buttonText: string;
   linkText?: string;
-  linkTitle:string;
+  linkTitle: string;
   linkRedirect?: string;
   inputs: Array<inputTypes>;
   isOAuth?: boolean;
@@ -43,10 +43,11 @@ export const Form = ({
   isOAuth = true,
   inputs,
   linkText,
-  linkTitle,  linkRedirect,
+  linkTitle,
+  linkRedirect,
   buttonText,
   isPending,
-  
+
   ...props
 }: FormProps) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -60,7 +61,7 @@ export const Form = ({
         <h1 className="text-2xl font-bold">{primaryTitle}</h1>
         <p className="text-balance text-sm text-muted-foreground">
           {secondaryTitle}
-        </p> 
+        </p>
       </div>
       <div className="grid gap-6">
         {inputs?.map((input, index) => (
@@ -80,13 +81,6 @@ export const Form = ({
                 {input.label}
               </Label>
             )}
-
-            {/* <Input
-              id={input.name}
-              type={input.type}
-              placeholder={input.placeholder}
-              {...register(input.name)}
-            /> */}
             <div className="relative">
               <Input
                 id={input.name}
@@ -121,9 +115,6 @@ export const Form = ({
         {errors.root && (
           <p className="text-red-500 text-sm">{errors.root.message}</p>
         )}
-        {/* {isRegister ? (
-          <OtpModal onSubmit={onSubmit} />
-        ) : ( */}
         <Button
           type="submit"
           className={`${
@@ -132,7 +123,6 @@ export const Form = ({
         >
           {isPending ? `${buttonText} ... ` : buttonText}
         </Button>
-        {/* )} */}
 
         {isOAuth && (
           <>
@@ -141,8 +131,8 @@ export const Form = ({
                 Or continue with
               </span>
             </div>
-            <GoogleAuth />
-            <GithubAuth />
+            <GoogleAuth isLogin={!isRegister} />
+            <GithubAuth isLogin={!isRegister} />
           </>
         )}
       </div>
@@ -154,7 +144,7 @@ export const Form = ({
             to={linkRedirect ? linkRedirect : "#"}
             className="underline underline-offset-4"
           >
-      {linkText}
+            {linkText}
           </Link>
         </div>
       )}

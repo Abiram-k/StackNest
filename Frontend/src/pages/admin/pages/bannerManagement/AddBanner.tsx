@@ -1,11 +1,11 @@
 import { HttpService } from "@/api/httpService";
-import { ImageService } from "@/api/imageService";
+import { ImageService } from "@/api/public/imageService";
 import DetailsForm from "@/components/forms/DetailsForm";
 import ImageUploader from "@/components/ImageUploader";
 import { Spinner } from "@/components/ui/spinner";
 import { useAddBanner } from "@/hooks/admin/bannerManagement/useAddBanner";
 import { useVerifyBannerForm } from "@/hooks/validation/useBannerForm";
-import { BannerReq, BannerRes } from "@/types";
+import { BannerReq } from "@/types";
 import { validateBannerSchema } from "@/validation/bannerSchema";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -82,6 +82,7 @@ const AddBanner = () => {
     selectedBanner.current = file;
   };
 
+  
   return (
     <div className="flex h-screen dark:bg-black">
       {(isPending || isLoading) && <Spinner />}

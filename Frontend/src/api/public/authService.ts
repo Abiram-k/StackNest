@@ -1,6 +1,6 @@
-import { LoginResponse } from "../../../types/index";
-import { LoginUser, typeRegisterUserWithOtp } from "../../../types/user";
-import { HttpService } from "./httpService";
+import { LoginResponse } from "../../../../types/index";
+import { LoginUser, typeRegisterUserWithOtp } from "../../../../types/user";
+import { HttpService } from "../httpService";
 
 export class UserAuthService {
   private httpService: HttpService;

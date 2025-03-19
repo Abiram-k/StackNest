@@ -20,6 +20,9 @@ export interface IUserAuthRepository<T> {
   findUserByGoogleId(googleId: string): Promise<T | null>;
   findUserByRestToken(data: typeUserResetToken): Promise<T | null>;
 
+  findByGithubId(githubId: string): Promise<T | null>;
+  createOrUpdateFromGithub(profile: Partial<IUser>): Promise<T>;
+
   getFailedAttempts(email: string): Promise<number | undefined>;
 
   updateFailedAttempts(email: string): Promise<T | null>;

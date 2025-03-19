@@ -1,5 +1,9 @@
 import express from "express";
-import { adminController, bannerController } from "../config/di";
+import {
+  adminChallengeController,
+  adminController,
+  bannerController,
+} from "../config/di";
 import { verifyUser } from "../middlewares/verifyUser";
 
 const router = express.Router();
@@ -25,12 +29,29 @@ router.patch("/room/:id", adminController.blockRoom.bind(adminController));
 
 // <<<<<<<<<<<<<<<<Banner Management>>>>>>>>>>>>>>>>>>>
 router.get("/banner", bannerController.fetchBanners.bind(bannerController));
-router.get("/banner/:bannerId", bannerController.fetchSelectedBanner.bind(bannerController));
+router.get(
+  "/banner/:bannerId",
+  bannerController.fetchSelectedBanner.bind(bannerController)
+);
 router.post("/banner", bannerController.addNewBanner.bind(bannerController));
 router.put(
   "/banner/:bannerId",
   bannerController.updateBanner.bind(bannerController)
 );
 router.delete("/banner", bannerController.removeBanner.bind(bannerController));
+
+// <<<<<<<<<<<<<<<<<Challenge Management>>>>>>>>>>>>>>>>>
+router.get(
+  "/challenge",
+  adminChallengeController.getChallenges.bind(adminChallengeController)
+);
+router.post(
+  "/challenge",
+  adminChallengeController.addNewChallenge.bind(adminChallengeController)
+);
+router.put(
+  "/challenge",
+  adminChallengeController.updateChallenge.bind(adminChallengeController)
+);
 
 export default router;

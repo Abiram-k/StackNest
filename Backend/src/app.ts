@@ -13,7 +13,8 @@ import { verifyUser } from "./middlewares/verifyUser";
 import { verifyAdmin } from "./middlewares/verifyAdmin";
 import http from "http";
 import { errorLogger, setupLogRotation } from "./utils/logger.js";
- 
+import configurePassport from "./config/passport";
+
 // import { initSocketIO } from "./socket";
 config();
 
@@ -44,7 +45,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(helmet());
-app.use(morgan("dev"))
+configurePassport();
+app.use(morgan("dev"));
 app.use(errorLogger);
 setupLogRotation();
 
@@ -53,7 +55,7 @@ app.get("/", (req: Request, res: Response) => {
     success: true,
     message: "Welcome to the Stack Nest API",
   });
-}); 
+});
 
 app.use("/auth", AuthRoutes);
 app.use("/users", verifyUser, userRoutes);

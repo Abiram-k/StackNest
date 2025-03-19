@@ -24,10 +24,10 @@ export interface RoomResType {
   createdAt: Date;
 }
 
-export interface BannerReq{
-  title:string;
-  description:string;
-  image?:string;
+export interface BannerReq {
+  title: string;
+  description: string;
+  image?: string;
 }
 export interface BannerRes {
   _id: string;
@@ -41,9 +41,29 @@ export type axiosResponse = {
   success: true;
 };
 
-
 export type UserBannerRes = {
   title: string;
   description: string;
   image: string;
-}
+};
+
+export type challegeType = {
+  questionNo: number;
+  question: string;
+  // options: string[];
+  option1: string;
+  option2: string;
+  option3: string;
+  option4: string;
+  answer: string;
+  // isListed: boolean;
+};
+
+export type resChallengeType = {
+  _id: string;
+  questionNo: number;
+  question: string;
+  options: string[];
+  answer: string;
+  isListed: boolean;
+};

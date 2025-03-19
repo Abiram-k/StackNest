@@ -27,6 +27,7 @@ import {
 import { IUser } from "../types/IUser";
 import { IAuthService } from "../interfaces/services/auth.service.interface";
 import { HttpStatus } from "../constants/enum.statusCode";
+import { Profile } from "passport";
 
 config();
 
@@ -36,12 +37,20 @@ export class AuthService implements IAuthService {
     private _authRepo: IUserAuthRepository<IUser>
   ) {}
 
-  // findUserById(userId: string): Promise<any> {
+  findUserById(userId: string): Promise<any> {
+    return this._baseRepo.findById(userId);
+  }
 
-  // }
-  // handleGithubLogin(profile: any): Promise<any> {
+  async handleGithubLogin(profile: Partial<IUser>) {
+    try {
+      const user = await this._authRepo.createOrUpdateFromGithub(profile);
+      return user;
+    } catch (error) {
+      console.log(error);
+      throw new Error("GitHub authentication failed");
+    } 
+  }
 
-  // }
   async authenticateGoogleUser(token: string) {
     try {
       const payload = await googleUserResponse(token);

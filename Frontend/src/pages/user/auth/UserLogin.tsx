@@ -6,30 +6,34 @@ import images from "../../../assets/login-img.jpg";
 import toast from "react-hot-toast";
 import { Captcha } from "@/components/auth/Captcha";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import Logo from "@/components/ui/Logo"; 
+import Logo from "@/components/ui/Logo";
 import { useLogin } from "@/hooks/auth/useLogin";
+import useGitHubTokenValidation from "@/hooks/auth/useGitHubTokenValidation";
 
 const sitekey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const LoginPage = () => {
-
   const {
     register,
-    handleSubmit, 
+    handleSubmit,
     setError,
     formState: { errors },
-  } = useLoginForm({ 
+  } = useLoginForm({
     schema: loginSchema,
     defaultValues: { email: "", password: "" },
   });
 
-  const { mutate, isPending, enableCaptcha, captchaRef,captchaTokenRef } = useLogin(setError,"user");
+  const { mutate, isPending, enableCaptcha, captchaRef, captchaTokenRef } =
+    useLogin(setError, "user");
+
+  useGitHubTokenValidation();
 
   const onSubmit = (data: LoginUser) => {
     if (!captchaTokenRef.current && enableCaptcha) {
       toast.error("Please verify the captcha");
       return;
     }
+    
     mutate({ captchaToken: captchaTokenRef.current, ...data });
   };
 
