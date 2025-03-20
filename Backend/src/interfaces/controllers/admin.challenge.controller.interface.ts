@@ -8,7 +8,18 @@ export interface IAdminChallengeController {
     res: Response<ResAddNewChallengeDTO>,
     next: NextFunction
   ): Promise<void>;
+  toggleListingChallenge(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
   
+  removeChallenge(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+
   updateChallenge(
     req: Request,
     res: Response,

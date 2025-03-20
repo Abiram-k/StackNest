@@ -85,6 +85,13 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
       throw error;
     }
   }
+  async incrementChallengePoint(userId: string): Promise<void> {
+    try {
+      await User.findByIdAndUpdate(userId, { $inc: { challengePoints: 1 } });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export class UserAuthRespository implements IUserAuthRepository<IUser> {

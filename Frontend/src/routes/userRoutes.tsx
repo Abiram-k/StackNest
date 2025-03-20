@@ -3,6 +3,9 @@ import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 import ProtectHome from "@/protectedRoutes/user/ProtectHome";
 
+const DailyChallengePage = lazy(
+  () => import("@/pages/user/pages/DailyChallengePage")
+);
 const Favourites = lazy(() => import("@/pages/user/pages/Favorites"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
 const EditRoom = lazy(() => import("@/pages/user/pages/EditRoom"));
@@ -18,7 +21,7 @@ export const userRoutes: RouteObject[] = [
   {
     path: "user",
     element: (
-      <ProtectHome>        
+      <ProtectHome>
         <Layout />
       </ProtectHome>
     ),
@@ -34,6 +37,7 @@ export const userRoutes: RouteObject[] = [
       },
       { path: "room/create", element: <CreateRoom /> },
       { path: "room/:roomId/edit", element: <EditRoom /> },
+      { path: "challenge", element: <DailyChallengePage /> },
       {
         path: "profile",
         element: <ProfileLayout />,

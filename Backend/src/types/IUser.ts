@@ -17,6 +17,7 @@ export interface IUser extends Document {
   streak: number;
   streakClaimDate: Date;
   failedLoginAttempts:number;
+  challengePoints:number,
   lastLogin: Date;
   friends: string[];
   isBlocked: boolean;

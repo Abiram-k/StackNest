@@ -50,8 +50,16 @@ router.post(
   adminChallengeController.addNewChallenge.bind(adminChallengeController)
 );
 router.put(
-  "/challenge",
+  "/challenge/:id",
   adminChallengeController.updateChallenge.bind(adminChallengeController)
+);
+router.patch(
+  "/challenge/:id",
+  adminChallengeController.toggleListingChallenge.bind(adminChallengeController)
+);
+router.delete(
+  "/challenge/:id",
+  adminChallengeController.removeChallenge.bind(adminChallengeController)
 );
 
 export default router;

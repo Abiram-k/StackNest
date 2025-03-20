@@ -1,4 +1,6 @@
+import { UpdateChallengeDTO } from "../../dtos/admin/challengeManagement/updateChallenge.dto";
 import { challengeResDTO } from "../../dtos/public/challenges.dto";
+import { IChallengeSubmission } from "../../types/IChallengeSubmissionSchema";
 
 export interface IChallengeService {
   addNewChallenge(data: {
@@ -10,6 +12,10 @@ export interface IChallengeService {
     question: string;
     questionNo: number;
   }): Promise<boolean>;
-
-  getAllChallenges():Promise<challengeResDTO[] | null>
+  submitChallenge(userId:string,challengeId: string, answer: string): Promise<boolean>;
+  getAllChallenges(): Promise<challengeResDTO[] | null>;
+  updateChallenge(challengeId: string, data: UpdateChallengeDTO): Promise<void>;
+  toggleListing(challengeId: string): Promise<void>;
+  removeChallenge(challengeId: string): Promise<void>;
+  getUserSubmittedChallenges(userId:string):Promise<Partial<IChallengeSubmission>[] | null >;
 }

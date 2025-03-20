@@ -7,4 +7,9 @@ export interface IUserChallengeController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getUserSubmittedChallenge(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> ;
 }

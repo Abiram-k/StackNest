@@ -71,9 +71,20 @@ export class UserProfileService implements IUserProfileService {
       if (daysDifference > 1) {
         await this._baseRepo.resetCheckin(userId);
         return null;
-      } 
+      }
       return user.streak;
+    } catch (error) {
+      throw error;
+    }
+  }
 
+  async getUserChallengePoints(userId: string): Promise<number | null> {
+    try {
+      if (!userId)
+        throw createHttpError(HttpStatus.NOT_FOUND, "User id not founded");
+      const user = await this._baseRepo.findById(userId);
+      if (!user) throw createHttpError(HttpStatus.FORBIDDEN, "User not found");
+      return user.challengePoints || 0;
     } catch (error) {
       throw error;
     }

@@ -1,10 +1,15 @@
 import CustomTable from "@/components/CustomTable";
 import { FallBackTable } from "@/components/FallBackTable";
+import ConfirmationDialog from "@/components/modal/confirmationDialog";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useGetAllChallenges } from "@/hooks/admin/challengeManagement/useGetAllChallenges";
+import { useRemoveChallenge } from "@/hooks/admin/challengeManagement/useRemoveChallenge";
+import { useToggleListingChallenge } from "@/hooks/admin/challengeManagement/useToggleListChallenge";
 import { resChallengeType } from "@/types";
 import { Plus } from "lucide-react";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const columns = [
@@ -28,24 +33,52 @@ const columns = [
   { key: "answer" as keyof resChallengeType, header: "Answer" },
 ];
 
-
 const ChallengeManagment = () => {
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [selectedChallenge, setSelectedChallenge] = useState("");
   const navigate = useNavigate();
+
   const { data, isPending } = useGetAllChallenges();
 
+  const { mutate: removeMutate, isPending: removePending } =
+    useRemoveChallenge();
+
+  const { mutate: toggleListingMutate, isPending: toggleIsPending } =
+    useToggleListingChallenge();
+
   const handleEdit = (challenge_id: string) => {
-    alert(challenge_id);
+    navigate(`/admin/challenge-management/${challenge_id}/edit`);
   };
 
   const handleRemoveChallenge = (challenge_id: string) => {
-    alert(challenge_id);
+    setIsConfirmationOpen(true);
+    setSelectedChallenge(challenge_id);
   };
 
-  const handleBlockChallenge = (challenge: resChallengeType) => {};
+  const handleBlockChallenge = (challenge: resChallengeType) => {
+    toggleListingMutate(challenge._id);
+  };
+
+  const handleConfirm = () => {
+    removeMutate(selectedChallenge);
+    setIsConfirmationOpen(false);
+  };
+  
+  const handleCancel = () => {
+    toast.success("Action Cancelled");
+    setIsConfirmationOpen(false);
+  };
 
   return (
     <main className="flex-1 p-8 ">
-      {isPending && <Spinner />}
+      {(isPending || removePending || toggleIsPending) && <Spinner />}
+      {isConfirmationOpen && (
+        <ConfirmationDialog
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          message={`Are you sure to remove this challenge?`}
+        />
+      )}
       <div className="flex-1 flex  p-8  w-full justify-between items-center align-middle">
         <h1 className="text-2xl font-bold border-b pb-2 ">
           Challenge Management

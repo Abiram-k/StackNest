@@ -9,4 +9,5 @@ export interface IUserProfileService {
   ): Promise<IUser | null>;
   checkinUser(userId:string):Promise<void>
   getUserStreakCount(userId:string):Promise<number | null>
+  getUserChallengePoints(userId:string):Promise<number | null>
 }

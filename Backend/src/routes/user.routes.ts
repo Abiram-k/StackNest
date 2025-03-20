@@ -32,6 +32,10 @@ router.get(
   "/streak",
   userProfileController.getUserStreakCount.bind(userProfileController)
 );
+router.get(
+  "/challenge-points",
+  userProfileController.getChallengePoints.bind(userProfileController)
+);
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ROOMS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.post("/room", userRoomController.createRoom.bind(userRoomController));
@@ -84,8 +88,14 @@ router.get(
   userChallengeController.getChallenges.bind(userChallengeController)
 );
 router.post(
-  "/challenge",
+  "/challenge/:challengeId",
   userChallengeController.submitChallenge.bind(userChallengeController)
+);
+router.get(
+  "/submitted-challenges",
+  userChallengeController.getUserSubmittedChallenge.bind(
+    userChallengeController
+  )
 );
 
 export default router;

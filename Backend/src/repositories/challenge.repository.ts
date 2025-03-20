@@ -3,7 +3,13 @@ import { Challenge } from "../models/challenge.model";
 import { IChallenge } from "../types/IChallenge";
 
 export class ChallengeRespository implements IChallengeRespository<IChallenge> {
-
+  async findById(challengeId: string): Promise<IChallenge | null> {
+    try {
+      return await Challenge.findById(challengeId);
+    } catch (error) {
+      throw error;
+    }
+  }
   async addNewChallenge(data: Partial<IChallenge>): Promise<boolean> {
     try {
       await Challenge.create(data);
@@ -27,6 +33,25 @@ export class ChallengeRespository implements IChallengeRespository<IChallenge> {
     try {
       await Challenge.findByIdAndUpdate(challengeId, data);
       return true;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async removeChallenge(challengeId: string): Promise<void> {
+    try {
+      await Challenge.findByIdAndDelete(challengeId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async toggleListing(challengeId: string): Promise<void> {
+    try {
+      const challenge = await Challenge.findById(challengeId);
+      await Challenge.findByIdAndUpdate(challengeId, {
+        $set: { isListed: !challenge?.isListed },
+      });
     } catch (error) {
       throw error;
     }

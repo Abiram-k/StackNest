@@ -12,5 +12,6 @@ export interface IUserProfileController{
     checkinUser(req: Request, res: Response, next: NextFunction):Promise<void>
     
     getUserStreakCount(req: Request, res: Response, next: NextFunction):Promise<void>
+    getChallengePoints(req: Request, res: Response, next: NextFunction):Promise<void>
     
 }

@@ -14,13 +14,13 @@ const AddChallenge = () => {
   } = useChallengeForm({
     schema: validateChallengeSchema,
     defaultValues: {
-      questionNo: 1,
-      question: "what is js?",
-      option1: "Javascript",
-      option2: "Java science",
-      option3: "Java simple",
-      option4: "Java super",
-      answer: "Javascript",
+      questionNo: 0,
+      question: "",
+      option1: "",
+      option2: "",
+      option3: "",
+      option4: "",
+      answer: "",
     },
   });
   const { mutate, isPending } = useAddChallenge();

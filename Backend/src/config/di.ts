@@ -54,6 +54,9 @@ import { IUserChallengeController } from "../interfaces/controllers/user.challen
 import { UserChallengeController } from "../controllers/user/user.challenge.controller";
 import { IAdminChallengeController } from "../interfaces/controllers/admin.challenge.controller.interface";
 import { AdminChallengeController } from "../controllers/admin/admin.challenge.controller";
+import { IChallengeSubmissionRepository } from "../interfaces/repositories/challengeSubmission.repository.interface";
+import { ChallengeSubmissionRepository } from "../repositories/challengeSubmission.repository";
+import { IChallengeSubmission } from "../types/IChallengeSubmissionSchema";
 
 // Respositories
 const userAuthRepository: IUserAuthRepository<IUser> =
@@ -66,6 +69,7 @@ const favoritesRepository: IFavoritesRepository<IFavorites> =
 const bannerRepository: IBannerRepository<IBanner> = new BannerRepository();
 const challengeRepository: IChallengeRespository<IChallenge> =
   new ChallengeRespository();
+const challengeSubmissionRespository:IChallengeSubmissionRepository<IChallengeSubmission> = new ChallengeSubmissionRepository();
 
 // Services
 const adminService: IAdminService = new AdminService(adminRespository);
@@ -85,7 +89,9 @@ const favoritesService: IFavoritesService = new FavoritesService(
 );
 const bannerServie: IBannerService = new BannerService(bannerRepository);
 const challengeServie: IChallengeService = new ChallengeService(
-  challengeRepository
+  challengeRepository,
+  userBaseRepository,
+  challengeSubmissionRespository
 );
 
 //  controllers

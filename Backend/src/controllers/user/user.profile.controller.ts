@@ -191,4 +191,27 @@ export class UserProfileController implements IUserProfileController {
       .status(HttpStatus.OK)
       .json({ message: "Fetched streak count", success: true, streakCount });
   }
+  async getChallengePoints(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      if (!req.user) throw new Error("No User in Req");
+      const { userId } = req.user as { userId: string; role: string };
+      if (!userId) throw new Error("User Id not get");
+
+      const pointsCount = await this._userProfileService.getUserChallengePoints(
+        userId
+      );
+
+      res.status(HttpStatus.OK).json({
+        message: "Fetched challenge points count",
+        success: true,
+        pointsCount,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

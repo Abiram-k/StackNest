@@ -66,6 +66,10 @@ const userSchema = new mongoose.Schema<IUser>(
       default: 0,
       min: 0,
     },
+    challengePoints: {
+      type: Number,
+      default: 0,
+    },
     streakClaimDate: {
       type: Date,
       defualt: Date.now,

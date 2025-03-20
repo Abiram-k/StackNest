@@ -41,4 +41,11 @@ export class UserProfileService {
       "users/streak"
     );
   }
+  async fetchChallengePoints(): Promise<
+    axiosResponse & { pointsCount: number }
+  > {
+    return this._httpService.get<axiosResponse & { pointsCount: number }>(
+      "users/challenge-points"
+    );
+  }
 }
