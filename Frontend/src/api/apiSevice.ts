@@ -1,3 +1,4 @@
+import { tokenManager } from "@/lib/tokenManager";
 import { adminLogout } from "@/redux/slice/adminSlice";
 import { userLogout } from "@/redux/slice/userSlice";
 import { store } from "@/redux/store";
@@ -25,7 +26,7 @@ const updateToken = (newToken: string) => {
 };
 
 const refreshAccessToken = async (
-  role: string
+  role: "user" | "admin"
 ): Promise<string | undefined> => {
   if (isRefreshing) {
     return new Promise((resolve) => {
@@ -33,7 +34,6 @@ const refreshAccessToken = async (
     });
   }
   isRefreshing = true;
-
   try {
     const { data } = await axios.get(
       `${BASE_URL}/auth/refresh-token?role=${role}`,
@@ -42,6 +42,7 @@ const refreshAccessToken = async (
       }
     );
     updateToken(data.accessToken);
+    tokenManager.updateToken(data.accessToken, role);
     refreshSubscribers.forEach((cb) => cb(data.accessToken));
     refreshSubscribers = [];
     return data.accessToken;
@@ -80,6 +81,7 @@ axiosInstance.interceptors.response.use(
         const role = originalRequest.url.includes("admin") ? "admin" : "user";
         currentRole = role;
         const newToken = await refreshAccessToken(role);
+        tokenManager.updateToken(newToken, role);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {

@@ -237,7 +237,6 @@ export class UserRoomController implements IUserRoomController {
     next: NextFunction
   ): Promise<void> {
     try {
-      // const { roomId } = req.body;
       console.log("Request got to join the room");
       const dto = plainToInstance(JoinRoomDTO, req.body);
       const errors = await validate(dto);
@@ -248,7 +247,7 @@ export class UserRoomController implements IUserRoomController {
       await this._roomService.joinRoom(user.userId, roomId);
       res
         .status(HttpStatus.OK)
-        .json({ message: "Successfully joined in room", success: true });
+        .json({ message: "Successfully joined in room", success: true, roomId:dto.roomId });
     } catch (error) {
       next(error);
     }

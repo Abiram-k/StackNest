@@ -3,11 +3,12 @@ import { RoomResTypeDTO } from "../dtos/public/roomData.dto";
 import { IFavoritesRepository } from "../interfaces/repositories/favorites.repository.interface";
 import { IFavoritesService } from "../interfaces/services/favorites.service.interface";
 import { HttpStatus } from "../constants/enum.statusCode";
+import { IFavorites } from "../types/IFavorites";
 
 export class FavoritesService implements IFavoritesService {
-  private _favoritesRepository: IFavoritesRepository;
+  private _favoritesRepository: IFavoritesRepository<IFavorites>;
 
-  constructor(favoritesRepository: IFavoritesRepository) {
+  constructor(favoritesRepository: IFavoritesRepository<IFavorites>) {
     this._favoritesRepository = favoritesRepository;
   }
 
@@ -16,7 +17,8 @@ export class FavoritesService implements IFavoritesService {
       const rooms = await this._favoritesRepository.fetchFavorites(userId);
 
       if (!rooms) {
-        throw createHttpError(HttpStatus.NO_CONTENT, "Rooms not found");
+        // throw createHttpError(HttpStatus.NO_CONTENT, "Rooms not found");
+        return null;
       }
 
       const formattedRooms: RoomResTypeDTO[] = rooms.map((room) => ({
@@ -24,6 +26,7 @@ export class FavoritesService implements IFavoritesService {
         roomId: room.roomId,
         title: room.title,
         description: room.description,
+        roomType: room.roomType,
         password: room.password,
         host: room.host,
         isBlocked: room.isBlocked,

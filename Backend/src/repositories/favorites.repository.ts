@@ -2,6 +2,7 @@ import { RoomResTypeDTO } from "../dtos/public/roomData.dto";
 import { IFavoritesRepository } from "../interfaces/repositories/favorites.repository.interface";
 import { Favorites } from "../models/favorites.model";
 import { IFavorites } from "../types/IFavorites";
+import { IRoom } from "../types/IRoom";
 
 export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
   async findFavorites(
@@ -15,12 +16,13 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
     }
   }
 
-  async fetchFavorites(userId: string): Promise<string[] | null> {
+  async fetchFavorites(userId: string): Promise<IRoom[] | null> {
     try {
-      const favorites = await Favorites.find({ user: userId })
+      const favorites:IFavorites[] = await Favorites.find({ user: userId })
         .select("roomId")
         .populate({
           path: "roomId",
+          model:"Room",
           populate: {
             path: "participants.user",
           },
@@ -31,9 +33,9 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
         return null;
       }
 
-      const rooms = favorites
-        .filter((favorite) => favorite.roomId)
-        .map((favorite) => favorite.roomId);
+      const rooms: IRoom[] = favorites
+      .filter((favorite) => favorite.roomId && typeof favorite.roomId === "object")
+      .map((favorite) => favorite.roomId as IRoom);
 
       return rooms;
     } catch (error) {

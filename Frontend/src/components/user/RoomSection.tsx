@@ -1,18 +1,18 @@
 import { ArrowRight, Cpu, DoorOpen, LayoutList } from "lucide-react";
 import { useFetchAllRooms } from "@/hooks/room/useFetchRooms";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PasswordConfirmation from "../modal/PasswordConfirmation";
 import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
 import toast from "react-hot-toast";
 import { Spinner } from "../ui/spinner";
 import { Link } from "react-router-dom";
 import RoomCard from "../card/RoomCard";
+import { useSocket } from "@/lib/socket";
 
 const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   const [isModalPasswordModal, setIsModalPasswordModal] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState("");
-
   const { data, isPending } = useFetchAllRooms("users", {
     search: "",
     sort: "",
@@ -20,8 +20,8 @@ const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
     currentPage: 1,
     limit: 7,
   });
-
   const { mutate: joinRoomMutate, isPending: joinIsPending } = useJoinRoom();
+  
 
   // callback after clicking Enter <button>
   const handleEnterRoom = (type: string, isPrivate: string, roomId: string) => {

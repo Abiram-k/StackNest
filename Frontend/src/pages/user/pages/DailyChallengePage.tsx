@@ -1,12 +1,10 @@
-"use client";
-
 import { FallBackTable } from "@/components/FallBackTable";
 import { Spinner } from "@/components/ui/spinner";
 import { useFetchAllSubmittedChallenges } from "@/hooks/user/challenge/useFetchAllSubmittedChallenges";
 import { useFetchChallenges } from "@/hooks/user/challenge/useFetchChallenge";
 import { useSubmitChallenge } from "@/hooks/user/challenge/useSubmitChallenge";
 import { useFetchChallengePoints } from "@/hooks/user/userProfile/useFetchChallengePoints";
-import { Check, CheckCircle, Code, XCircle } from "lucide-react";
+import { CheckCircle, Code, XCircle } from "lucide-react";
 import { useState } from "react";
 
 export default function DailyChallengePage() {

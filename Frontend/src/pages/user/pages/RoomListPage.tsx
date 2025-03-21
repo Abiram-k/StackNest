@@ -46,7 +46,6 @@ export default function RoomsListPage() {
       limit: 10,
     });
 
-    console.log("AVAILABLE ROOMS: ",availableRooms)
 
   // onClick of edit icon
   const handleEditRoom = (roomId: string) => {

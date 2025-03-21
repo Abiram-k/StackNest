@@ -3,6 +3,9 @@ import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 import ProtectHome from "@/protectedRoutes/user/ProtectHome";
 
+const VideoConference = lazy(
+  () => import("@/pages/user/pages/VideoConference")
+);
 const DailyChallengePage = lazy(
   () => import("@/pages/user/pages/DailyChallengePage")
 );
@@ -37,6 +40,7 @@ export const userRoutes: RouteObject[] = [
       },
       { path: "room/create", element: <CreateRoom /> },
       { path: "room/:roomId/edit", element: <EditRoom /> },
+      { path: "room/:roomId/conference", element: <VideoConference /> },
       { path: "challenge", element: <DailyChallengePage /> },
       {
         path: "profile",

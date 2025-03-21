@@ -11,7 +11,7 @@ import { PersistGate } from "redux-persist/integration/react";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+  // <StrictMode>
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
@@ -21,5 +21,5 @@ createRoot(document.getElementById("root")!).render(
         </Provider>
       </QueryClientProvider>
     </ThemeProvider>
-  </StrictMode>
+  // </StrictMode>
 );

@@ -3,9 +3,8 @@ import { useVerifyRoomForm } from "@/hooks/validation/useRoomForm";
 import { validateRoomSchema } from "@/validation/roomSchema";
 import { ArrowLeft } from "lucide-react";
 import { RoomSchema } from "../../../../../types/user";
-import { useCreateRoom } from "@/hooks/room/useCreateRoom";
 import { useUpdateRoom } from "@/hooks/room/useUpdateRoom";
-import { data, useNavigate, useParams, useRouteError } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Spinner } from "@/components/ui/spinner";
 import { useFetchSelectedRoom } from "@/hooks/room/userFetchSelectedRoom";
@@ -40,7 +39,7 @@ export default function EditRoom() {
   }
 
   const { data: selectedRoom, isPending: isGetRoomPeding } =
-    useFetchSelectedRoom("users",roomId);
+    useFetchSelectedRoom("users", roomId);
 
   useEffect(() => {
     reset(selectedRoom?.room);
@@ -49,7 +48,7 @@ export default function EditRoom() {
   const { mutate, isPending: isUpdateRoomPending } = useUpdateRoom();
 
   const onSubmit = (data: RoomSchema) => {
-    console.log(data,"Edit room")
+    console.log(data, "Edit room");
     mutate({ id: roomId, data });
   };
 

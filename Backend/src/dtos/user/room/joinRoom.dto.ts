@@ -8,4 +8,5 @@ export class JoinRoomDTO {
 export interface ResJoinRoomDTO {
   message: string;
   success: boolean;
+  roomId:string;
 }

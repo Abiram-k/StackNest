@@ -31,7 +31,11 @@ import cloudinary from "../config/cloudinary";
 config();
 import jwt from "jsonwebtoken";
 import { Types } from "mongoose";
-import { generateAccessToken } from "../utils/generateJWT";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../utils/generateJWT";
+import { IUser } from "../types/IUser";
 
 const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET as string;
 const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY as string;
@@ -47,13 +51,22 @@ export class AuthController implements IAuthController {
 
   async githubCallback(req: Request, res: Response): Promise<void> {
     try {
-      const user = await this._authService.handleGithubLogin(req.user);
-
+      const user = req.user as IUser;
       const data = {
-        userId: user._id as Types.ObjectId,
-        role: user.role,
+        userId: user?._id as Types.ObjectId,
+        role: user?.role as string,
       };
+      console.log(data);
       const token = generateAccessToken(data);
+      const refreshToken = generateRefreshToken(data);
+      res.cookie("userRefreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        domain: "localhost",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: "/",
+      });
       res.redirect(`${process.env.CLIENT_URL}/auth/login?token=${token}`);
     } catch (error) {
       res.redirect(`${process.env.CLIENT_URL}/auth/login?error=github_failed`);
