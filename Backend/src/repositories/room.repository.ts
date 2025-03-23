@@ -142,4 +142,5 @@ export class RoomRespository implements IRoomRepository<IRoom> {
       throw error;
     }
   }
+  
 }

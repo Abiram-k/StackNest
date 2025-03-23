@@ -147,7 +147,7 @@ export class RoomService implements IRoomService {
     }
   }
 
-  async joinRoom(userId: string, roomId: string):Promise<boolean | undefined> {
+  async joinRoom(userId: string, roomId: string): Promise<boolean | undefined> {
     try {
       if (!userId)
         throw createHttpError(
@@ -174,10 +174,6 @@ export class RoomService implements IRoomService {
       }
 
       if (room.participants.some((p) => p?.user?.toString() === userId)) {
-        // throw createHttpError(
-        //   HttpStatus.FORBIDDEN,
-        //   "Already joined in the room"
-        // );
         return;
       }
 
@@ -185,12 +181,13 @@ export class RoomService implements IRoomService {
         throw createHttpError(HttpStatus.FORBIDDEN, "Room is full");
       }
       const isAdded = await this._roomRepo.addParticipant(userId, roomId);
-
+ 
       if (!isAdded)
         throw createHttpError(
           HttpStatus.NOT_FOUND,
           "Failed to add Participant"
         );
+        
     } catch (error) {
       throw error;
     }

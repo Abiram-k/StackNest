@@ -31,11 +31,12 @@ export const socketAuth = async (socket: Socket, next: any) => {
     }
 
     socket.data.user = {
-      userName:user.userName,
-      avatar:user.avatar,
+      userName: user.userName,
+      avatar: user.avatar,
       userId: decoded.userId as string,
       role: decoded.role,
     };
+
     next();
   } catch (error: any) {
     console.log(error);

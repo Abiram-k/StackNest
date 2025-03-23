@@ -23,19 +23,13 @@ const navItems = [
     icon: <FileText className="h-5 w-5" />,
     to: "/user/profileposts",
   },
-  // {
-  //   name: "Rooms",
-  //   icon: <Layout className="h-5 w-5" />,
-  //   to: "/user/profile/rooms",
-  // },
-  // { name: "Rooms", icon: <Home className="w-5 h-5" />, to: "/admin/rooms" },
   {
     name: "Friends",
     icon: <Users className="h-5 w-5" />,
     to: "/user/profile/friends",
   },
   {
-    name: "Daily challenge",
+    name: "Premium plans",
     icon: <Crown className="h-5 w-5" />,
     to: "/user/profile/premium",
   },

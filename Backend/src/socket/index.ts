@@ -30,9 +30,9 @@ const initializeSocket = (io: Server) => {
  
     registerRoomEvents(io, socket);
   
-    socket.on("disconnect", (reason) => {
-      console.log("User Disconnected",reason);
-    });
+    // socket.on("disconnect", (reason) => {
+    //   console.log("User Disconnected",reason);
+    // });
   });
 };
 

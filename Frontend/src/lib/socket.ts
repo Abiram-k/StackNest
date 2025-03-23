@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { tokenManager } from "./tokenManager";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const SERVER_URL = import.meta.env.VITE_BASE_URL;
 
@@ -19,25 +20,32 @@ export const useSocket = () => {
   );
 
   useEffect(() => {
-    const token = tokenManager.getCurrentToken();
-    toast.success(token || "No token");
-    socket.auth = { token };
-    if (!socket.connected) socket.connect();
+    const initSocketConnection = async () => {
+      let token = tokenManager.getCurrentToken();
+      if (!token) {
+        token = await tokenManager.refreshAccessToken();
+      }
+      toast.success(token || "No token");
+      socket.auth = { token };
+      if (!socket.connected) socket.connect();
 
-    socket.on("connect_error", (error) => {
-      toast.error(error.message);
-      console.log(error);
-      console.log(`Socket Connection Error: ${error.message}`);
-    });
+      socket.on("connect_error", (error) => {
+        toast.error(error.message);
+        console.log(error);
+        console.log(`Socket Connection Error: ${error.message}`);
+      });
 
-    socket.on("error", (error) => {
-      toast.error(error.message);
-      console.log(`Error: ${error.message}`);
-    });
+      socket.on("error", (error) => {
+        toast.error(error.message);
+        console.log(`Error: ${error.message}`);
+      });
 
-    socket.on("disconnect", (reason) => {
-      console.log(`Socket disconnected: ${reason}`);
-    });
+      socket.on("disconnect", (reason) => {
+        console.log(`Socket disconnected: ${reason}`);
+      });
+    };
+
+    initSocketConnection();
 
     return () => {
       socket.off("connect_error");
@@ -45,6 +53,7 @@ export const useSocket = () => {
       socket.off("connect");
       socket.off("disconnect");
     };
+    
   }, [tokenManager.getCurrentToken()]);
 
   return socket;

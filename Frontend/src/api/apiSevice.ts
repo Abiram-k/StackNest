@@ -25,7 +25,7 @@ const updateToken = (newToken: string) => {
   accessToken = newToken;
 };
 
-const refreshAccessToken = async (
+export const refreshAccessToken = async (
   role: "user" | "admin"
 ): Promise<string | undefined> => {
   if (isRefreshing) {

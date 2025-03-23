@@ -6,7 +6,8 @@ interface Participant {
   name: string
   avatar: string
   isMuted: boolean
-  isVideoOn: boolean
+  isVideoOn: boolean,
+  isHandRised: boolean;
 }
 
 interface ParticipantsListProps {

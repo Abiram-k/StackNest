@@ -8,6 +8,7 @@ interface Participant {
   avatar: string
   isMuted: boolean
   isVideoOn: boolean
+  isHandRised: boolean
 }
 
 interface ParticipantCardProps {

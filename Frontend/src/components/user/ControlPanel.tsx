@@ -64,7 +64,7 @@ export default function ControlPanel({
           }`}
         >
           {!isVideoOn ? (
-            <VideoOff className="h-5 w-5" />
+            <VideoOff className="h-5 w-5" /> 
           ) : (
             <Video className="h-5 w-5" />
           )}
@@ -106,10 +106,12 @@ export default function ControlPanel({
 
         <Button
           onClick={onEndCall}
+
           className="rounded-full px-6 py-2 bg-red-500 text-white hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600 dark:text-white"
         >
           End Call
         </Button>
+
       </div>
     </Card>
   );
