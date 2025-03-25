@@ -324,6 +324,7 @@ export class AuthController implements IAuthController {
       const params = {
         timestamp,
         folder: "stackNest",
+        type: "authenticated",
       };
 
       const signature = cloudinary.utils.api_sign_request(

@@ -67,3 +67,16 @@ export type resChallengeType = {
   answer: string;
   isListed: boolean;
 };
+
+export type RoomSessionType = {
+  _id:string;
+    userId: {
+      userName:string,
+      avatar:string
+    };
+    roomId: string;
+    startTime: Date;
+    endTime?: Date;
+    duration?: number;
+  
+}

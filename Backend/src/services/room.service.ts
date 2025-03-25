@@ -8,11 +8,15 @@ import { IRoomService } from "../interfaces/services/room.service.interface";
 import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
 import { IUser } from "../types/IUser";
 import { HttpStatus } from "../constants/enum.statusCode";
+import { io } from "../app";
+import { IRoomSessionRepository } from "../interfaces/repositories/room.session.repository.interface";
+import { IRoomSession } from "../types/IRoomSession";
 
 export class RoomService implements IRoomService {
   constructor(
     private _roomRepo: IRoomRepository<IRoom>,
-    private _userBaseRepo: IUserBaseRepository<IUser>
+    private _userBaseRepo: IUserBaseRepository<IUser>,
+    private _roomSession: IRoomSessionRepository<IRoomSession>
   ) {}
 
   async createRoom(host: Types.ObjectId, data: RoomSchema) {
@@ -79,6 +83,27 @@ export class RoomService implements IRoomService {
     }
   }
 
+  async fetchRoomSession(
+    roomId: string,
+    data: { sort: string; search: string; page: number; limit: number }
+  ): Promise<{ totalPages: number; session: IRoomSession[] | null }> {
+    try {
+      if (!roomId) {
+        throw createHttpError(HttpStatus.NOT_FOUND, "Room id not founded");
+      }
+      const sessionData = await this._roomSession.getSelectedSession(
+        roomId,
+        data
+      );
+
+      if (!sessionData) return { totalPages: 1, session: null };
+
+      return sessionData;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async fetchAvailableRooms(
     role: string,
     page: number,
@@ -120,28 +145,39 @@ export class RoomService implements IRoomService {
     }
   }
 
-  async removeRoom(id: string) {
+  async removeRoom(id: string): Promise<boolean> {
     try {
-      const isDeleted = await this._roomRepo.removeById(id);
-      if (!isDeleted) {
+      const roomId = await this._roomRepo.removeById(id);
+      if (!roomId) {
         throw createHttpError(
           HttpStatus.NOT_FOUND,
           "RoomId not founded,while removing "
         );
       } else {
-        return isDeleted;
+        io.to(roomId).emit("terminate-user", {
+          message: "This room has been deleted by the admin.",
+        });
+        return true;
       }
     } catch (error) {
       throw error;
     }
   }
 
-  async blockUser(id: string) {
+  async blockUser(roomDocId: string): Promise<boolean> {
     try {
-      const isBlockedRoom = await this._roomRepo.blockRoom(id);
-      if (!isBlockedRoom)
-        throw createHttpError(HttpStatus.NOT_FOUND, "Failed to block room");
-      return isBlockedRoom;
+      const { currentStatus, roomId } = await this._roomRepo.blockRoom(
+        roomDocId
+      );
+      if (!roomId) {
+        console.log("Not room id found to emit block event by blocking room");
+      }
+      if (!currentStatus) {
+        io.to(roomId).emit("terminate-user", {
+          message: "This room has been blocked by the admin.",
+        });
+      }
+      return true;
     } catch (error) {
       throw error;
     }
@@ -163,6 +199,10 @@ export class RoomService implements IRoomService {
         return true;
       }
 
+      // if (room.participants.some((p) => p?.user?.toString() === userId)) {
+      //   return; // already in room
+      // }
+
       if (room.isBlocked) {
         throw createHttpError(HttpStatus.FORBIDDEN, "Room is unavailable");
       }
@@ -173,21 +213,113 @@ export class RoomService implements IRoomService {
         );
       }
 
-      if (room.participants.some((p) => p?.user?.toString() === userId)) {
-        return;
-      }
-
       if (room.participants.length >= room.limit) {
         throw createHttpError(HttpStatus.FORBIDDEN, "Room is full");
       }
-      const isAdded = await this._roomRepo.addParticipant(userId, roomId);
- 
+
+      const userLastJoined = await this._roomRepo.getLastJoinedTime(
+        roomId,
+        userId
+      );
+
+      const joinedAt = new Date();
+
+      const userSessionData = {
+        userId,
+        roomId,
+        startTime: joinedAt,
+      };
+      await this._roomSession.createSession(userSessionData);
+
+      const isAdded = await this._roomRepo.addOrUpdateParticipant(
+        userId,
+        roomId,
+        joinedAt
+      );
+
       if (!isAdded)
         throw createHttpError(
           HttpStatus.NOT_FOUND,
           "Failed to add Participant"
         );
-        
+
+      if (userLastJoined) {
+        let currentDate = new Date();
+        const startDate = await this._roomSession.getLatestSession(
+          userId,
+          userLastJoined
+        );
+        if (!startDate) {
+          console.log("Start Date is not get", startDate);
+          return;
+        }
+        const timeSpend = Number(
+          Math.floor(
+            (currentDate.getTime() - startDate?.startTime.getTime()) / 1000
+          )
+        );
+        await this._roomRepo.updateParticipantDuration(
+          roomId,
+          userId,
+          timeSpend
+        );
+
+        await this._roomSession.updateRoomSessionDuration(
+          roomId,
+          userId,
+          timeSpend,
+          userLastJoined
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateOnleaveRoom(roomId: string, userId: string): Promise<boolean> {
+    try {
+
+      if (!userId || !roomId) {
+        console.log(
+          "updateOnleaveRoom, userId or roomId is missing",
+          userId,
+          roomId
+        );
+        return false;
+      }
+      console.log(roomId,userId)
+      const userLastJoined = await this._roomRepo.getLastJoinedTime(
+        roomId,
+        userId
+      );
+
+      if (!userLastJoined) {
+        console.log("updateOnleaveRoom, userLastJoined is :", userLastJoined);
+        return false;
+      }
+      let currentDate = new Date();
+      const startDate = await this._roomSession.getLatestSession(
+        userId,
+        userLastJoined
+      );
+      if (!startDate) {
+        console.log("Start Date is not get", startDate);
+        return false;
+      }
+      const timeSpend = Number(
+        Math.floor(
+          (currentDate.getTime() - startDate?.startTime.getTime()) / 1000
+        )
+      );
+      await this._roomRepo.updateParticipantDuration(roomId, userId, timeSpend);
+
+      await this._roomSession.updateRoomSessionDuration(
+        roomId,
+        userId,
+        timeSpend,
+        userLastJoined
+      );
+      return true;
     } catch (error) {
       throw error;
     }

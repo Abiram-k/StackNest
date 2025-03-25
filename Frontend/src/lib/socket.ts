@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { tokenManager } from "./tokenManager";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 const SERVER_URL = import.meta.env.VITE_BASE_URL;
 
@@ -25,7 +24,6 @@ export const useSocket = () => {
       if (!token) {
         token = await tokenManager.refreshAccessToken();
       }
-      toast.success(token || "No token");
       socket.auth = { token };
       if (!socket.connected) socket.connect();
 

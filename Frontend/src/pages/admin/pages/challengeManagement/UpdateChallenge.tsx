@@ -1,9 +1,11 @@
 import DetailsForm from "@/components/forms/DetailsForm";
 import { Spinner } from "@/components/ui/spinner";
+import { useGetAllChallenges } from "@/hooks/admin/challengeManagement/useGetAllChallenges";
 import { useUpdateChallenge } from "@/hooks/admin/challengeManagement/useUpdateChallenge";
 import { useChallengeForm } from "@/hooks/validation/useChallengeForm";
-import { challegeType } from "@/types";
+import { challegeType, resChallengeType } from "@/types";
 import { validateChallengeSchema } from "@/validation/challengeSchema";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -34,13 +36,34 @@ const UpdateChallenge = () => {
   const { mutate: updateMutate, isPending: updatePending } =
     useUpdateChallenge();
 
+  const { data: allChallenges, isPending: fetchingChallengePending } =
+    useGetAllChallenges();
+
+  useEffect(() => {
+    if (allChallenges && challengeId) {
+      const selectedChallenge = allChallenges?.challenges?.find(
+        (challenge: resChallengeType) => challenge._id === challengeId
+      );
+
+      if (selectedChallenge) {
+        setValue("questionNo", selectedChallenge.questionNo);
+        setValue("question", selectedChallenge.question);
+        setValue("option1", selectedChallenge.options[0] || "");
+        setValue("option2", selectedChallenge.options[1] || "");
+        setValue("option3", selectedChallenge.options[2] || "");
+        setValue("option4", selectedChallenge.options[3] || "");
+        setValue("answer", selectedChallenge.answer);
+      }
+    }
+  }, [allChallenges, challengeId, setValue]);
+
   const handleUpdateChallenge = (data: challegeType) => {
     updateMutate({ challengeId, data });
   };
 
   return (
     <div className="flex h-screen dark:bg-black">
-      {updatePending && <Spinner />}
+      {(updatePending || fetchingChallengePending) && <Spinner />}
       <main className="flex-1 p-8  w-full">
         <h1 className="text-2xl font-bold mb-8 border-b pb-2">
           Edit Challenge

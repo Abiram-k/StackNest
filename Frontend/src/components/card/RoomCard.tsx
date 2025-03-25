@@ -151,7 +151,7 @@ const RoomCard = ({
                   className="w-6 h-6 rounded-full overflow-hidden border-2 border-white dark:border-gray-700 shadow-sm"
                 >
                   <img
-                    src={participant.user.avatar}
+                    src={participant.user?.avatar}
                     alt={participant.user.userName}
                     className="w-full h-full object-cover"
                   />

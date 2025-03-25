@@ -3,10 +3,11 @@ import UserCard from "@/components/card/UserCard";
 import { useBlockUser } from "@/hooks/admin/userManagement/useBlockUser";
 import { useBlockRoom } from "@/hooks/room/useBlockRoom";
 import { useFetchSelectedRoom } from "@/hooks/room/userFetchSelectedRoom";
-import { formattedDateDifference  } from "@/utils/formattedDateDifference";
-import { UnlockIcon, Lock } from "lucide-react";
+import { UnlockIcon, Lock, Clock } from "lucide-react";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { formatSecondToTime } from "@/utils/formatSecondToTime";
+import { Button } from "@/components/ui/button";
 
 export default function RoomDetails() {
   const { roomId } = useParams<{ roomId: string }>();
@@ -21,6 +22,7 @@ export default function RoomDetails() {
     useFetchSelectedRoom("admin", roomId);
 
   const { mutate: roomBlockMutate } = useBlockRoom();
+  const navigate = useNavigate();
 
   const handleBlockRoom = () => {
     roomBlockMutate(roomId);
@@ -34,13 +36,13 @@ export default function RoomDetails() {
   };
 
   return (
-    <div className="flex h-screen bg-white dark:bg-black ">
+    <div className="flex  h-screen bg-white dark:bg-black ">
       {(userBlockPending || isGetRoomPending) && <Spinner />}
 
       <div className="flex-1 overflow-y-auto ">
         <div className="p-8">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-2xl font-bold">Rooms Details</h1>
+            <h1 className="text-2xl font-bold">Room Session History</h1>
 
             {selectedRoom?.room?.isBlocked ? (
               <div className="flex gap-2 items-center">
@@ -62,6 +64,7 @@ export default function RoomDetails() {
                 <Lock size={20} />
               </button>
             )}
+           
           </div>
 
           <div className="flex gap-8">
@@ -121,16 +124,9 @@ export default function RoomDetails() {
                   value={String(selectedRoom?.room.createdAt) || "00:00:00"}
                 />
                 <InfoItem
-                  label="Ended at"
-                  value={
-                    String(
-                      selectedRoom?.room.endedAt
-                        ? selectedRoom?.room.endedAt
-                        : "Not specified"
-                    ) || "00:00:00"
-                  }
+                  label="Total Participants"
+                  value={String(selectedRoom?.room.participants.length) || "0"}
                 />
-                <InfoItem label="Duration" value="__:__:__ hr" />
                 <InfoItem
                   label="Is private"
                   value={String(selectedRoom?.room.isPrivate) || ""}
@@ -147,7 +143,21 @@ export default function RoomDetails() {
                 className="bg-primary-500 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300 
                text-white p-4 rounded-t-lg"
               >
+                <div className="w-full flex justify-between items-center">
+
                 <h3 className="text-xl font-semibold">Participants</h3>
+                <Button
+              className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-md transition-colors"
+              onClick={() =>
+                navigate(
+                  `/admin/room-management/${selectedRoom?.room.roomId}/details/history`
+                )
+              }
+              >
+                <Clock/>
+              History
+            </Button>
+              </div>
               </div>
               <div className="border border-gray-200 border-t-0 rounded-b-lg overflow-hidden ">
                 <div className="max-h-[500px] overflow-y-auto">
@@ -157,14 +167,7 @@ export default function RoomDetails() {
                         key={index}
                         avatar={participant.user.avatar}
                         userName={participant.user.userName}
-                        duration={
-                          !participant.leavedAt
-                            ? "Ongoing"
-                            : formattedDateDifference(
-                                participant.joinedAt,
-                                participant.leavedAt
-                              )
-                        }
+                        duration={formatSecondToTime(participant.totalDuration)}
                       />
                     ))
                   ) : (
@@ -213,11 +216,7 @@ function ParticipantItem({
         <span className="font-medium">{userName}</span>
       </div>
       <div className="flex items-center">
-        <span
-          className={`${
-            duration != "Ongoing" ? "bg-red-500" : "bg-green-500"
-          } h-2 w-2 rounded-full mr-2`}
-        ></span>
+        <span className={`${"bg-green-500"} h-2 w-2 rounded-full mr-2`}></span>
         <span className="text-gray-500 text-sm">{duration || "00:00:00"}</span>
       </div>
     </div>

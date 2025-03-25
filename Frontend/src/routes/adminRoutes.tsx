@@ -14,6 +14,10 @@ const UserManagement = lazy(
 const RoomDetails = lazy(
   () => import("@/pages/admin/pages/roomManagement/RoomDetails")
 );
+const RoomSessionHistory = lazy(
+  () => import("@/pages/admin/pages/roomManagement/RoomSessionHistory")
+);
+
 const BannerManagement = lazy(
   () => import("@/pages/admin/pages/bannerManagement/BannerManagement")
 );
@@ -68,16 +72,23 @@ export const adminRoutes: RouteObject[] = [
             path: "room-management/:roomId/details",
             element: <RoomDetails />,
           },
+          {
+            path: "room-management/:roomId/details/history",
+            element: <RoomSessionHistory />,
+          },
 
           // Banner management
           { path: "banner-management", element: <BannerManagement /> },
           { path: "banner-management/add", element: <AddBanner /> },
           { path: "banner-management/:bannerId/edit", element: <EditBanner /> },
-          
+
           // Challenge management
           { path: "challenge-management", element: <ChallengeManagment /> },
           { path: "challenge-management/add", element: <AddChallenge /> },
-          { path: "challenge-management/:challengeId/edit", element: <UpdateChallenge /> },
+          {
+            path: "challenge-management/:challengeId/edit",
+            element: <UpdateChallenge />,
+          },
         ],
       },
     ],

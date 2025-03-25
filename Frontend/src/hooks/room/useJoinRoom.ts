@@ -17,7 +17,7 @@ export const useJoinRoom = () => {
     onSuccess: (data) => {
       toast.dismiss();
       // socket.emit("join-room", data.roomId);
-      toast.success("Joined successfully");
+      // toast.success("Joined successfully");
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
       navigate(`/user/room/${data.roomId}/conference`);
     },

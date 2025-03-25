@@ -16,7 +16,7 @@ export interface RoomResTypeDTO {
   isBlocked: boolean;
   startedAt: Date;
   participants: [
-    { user: Types.ObjectId | UserDTO; joinedAt: Date; leavedAt: Date }
+    { user: Types.ObjectId | UserDTO; totalDuration: number; lastJoined: Date }
   ];
   isPrivate: string;
   isPremium: string;

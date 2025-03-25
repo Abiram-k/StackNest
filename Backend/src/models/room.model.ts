@@ -23,8 +23,8 @@ const roomSchema = new mongoose.Schema(
     participants: [
       {
         user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-        joinedAt: { type: Date, default: Date.now },
-        leavedAt: { type: Date, default: null },
+        totalDuration: { type: Number, default: 0 },
+        lastJoined: { type: Date, default: new Date() },
       },
     ],
     startedAt: { type: Date, default: null },

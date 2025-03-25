@@ -37,6 +37,7 @@ export class ImageService {
     formData.append("signature", signature);
     formData.append("timestamp", timestamp.toString());
     formData.append("folder", folderName);
+    formData.append("type", "authenticated");
 
     const response: AxiosResponse<ICloudinaryResponse> = await axios.post(
       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,

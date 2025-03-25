@@ -1,22 +1,22 @@
-import { useState } from "react"
-import { Mic, MicOff, Video, VideoOff, Plus, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { useState } from "react";
+import { Mic, MicOff, Video, VideoOff, Plus, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface Participant {
-  name: string
-  avatar: string
-  isMuted: boolean
-  isVideoOn: boolean
-  isHandRised: boolean
+  name: string;
+  avatar: string;
+  isMuted: boolean;
+  isVideoOn: boolean;
+  isHandRised: boolean;
 }
 
 interface ParticipantCardProps {
-  participant: Participant
+  participant: Participant;
 }
 
 export default function ParticipantCard({ participant }: ParticipantCardProps) {
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <Card
@@ -30,7 +30,6 @@ export default function ParticipantCard({ participant }: ParticipantCardProps) {
             <img
               src={participant.avatar || "/placeholder.svg"}
               alt={participant.name}
-              
               className="object-cover w-full h-full transition-transform duration-300 ease-in-out"
               style={{ transform: isHovered ? "scale(1.1)" : "scale(1)" }}
             />
@@ -41,32 +40,23 @@ export default function ParticipantCard({ participant }: ParticipantCardProps) {
         </div>
 
         <div className="flex items-center space-x-1">
-          <Button variant="ghost" size="icon" className="w-7 h-7 rounded-full hover:bg-gray-100">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-7 h-7 rounded-full hover:bg-gray-100"
+          >
             <Plus className="h-4 w-4" />
           </Button>
 
           <Button
             variant="ghost"
             size="icon"
-            className={`w-7 h-7 rounded-full ${participant.isMuted ? "text-red-500" : "text-blue-500"}`}
+            className="w-7 h-7 rounded-full text-red-500 hover:bg-red-50"
           >
-            {participant.isMuted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`w-7 h-7 rounded-full ${!participant.isVideoOn ? "text-red-500" : "text-blue-500"}`}
-          >
-            {!participant.isVideoOn ? <VideoOff className="h-4 w-4" /> : <Video className="h-4 w-4" />}
-          </Button>
-
-          <Button variant="ghost" size="icon" className="w-7 h-7 rounded-full text-red-500 hover:bg-red-50">
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-

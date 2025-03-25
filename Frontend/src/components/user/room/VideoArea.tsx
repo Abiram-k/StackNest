@@ -1,37 +1,72 @@
 import { Pin } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { MutableRefObject, useEffect, useRef } from "react";
 
-interface Participant {
-  id: string;
+type ParticipantType = {
   name: string;
+  avatar: string;
+  isMuted: boolean;
+  socketId: string;
   isVideoOn: boolean;
-}
+  isHandRised: boolean;
+};
 
 interface VideoAreaProps {
-  peers: Participant[];
-  localUser: Participant;
+  remoteStreams: {
+    [key: string]: MediaStream;
+  };
+  localVideoRef: MutableRefObject<HTMLVideoElement | null>;
+
+  participants: Map<string, ParticipantType>;
 }
 
-
-
-export default function VideoArea({ peers, localUser }: VideoAreaProps) {
+export default function VideoArea({
+  remoteStreams,
+  localVideoRef,
+  participants,
+}: VideoAreaProps) {
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-3/4">
       <div
-        className={`grid gap-2 w-full h-full ${getGridColumns(peers.length)}`}
+        className={`grid gap-2 w-full h-full ${getGridColumns(
+          Object.entries(remoteStreams).length
+        )}`}
       >
-        {peers.map((peer) => (
-          <PeerVideo key={peer.id} participant={peer} />
-        ))}
+        {Object.keys(remoteStreams).length === 0 ? (
+          <div className="w-full h-full flex items-center justify-center bg-gray-800">
+            <div className="text-white text-center">
+              <div className="text-4xl mb-2">📡</div>
+              <p>No participants connected</p>
+              <p className="text-sm text-gray-400">
+                Waiting for others to join the room...
+              </p>
+            </div>
+          </div>
+        ) : (
+          Object.entries(remoteStreams).map(([peerId, stream]) => (
+            <PeerVideo
+              key={`${peerId}`}
+              stream={stream}
+              userName={participants.get(peerId)?.name || "No Name"}
+              avatar={
+                participants.get(peerId)?.avatar ||
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+              }
+            />
+          ))
+        )}
       </div>
 
       <div className="absolute bottom-4 right-4 w-1/4 max-w-[200px] z-10">
-        <Card className="overflow-hidden shadow-lg rounded-lg border-2 border-primary">
+        <Card className="overflow-hidden shadow-lg rounded-lg border-2 border-primary-500/60 bg-gray-400 dark:bg-gray-600 h-fit">
           <CardContent className="p-0">
-            {localUser.isVideoOn ? (
+            {localVideoRef ? (
               <div className="relative">
                 <video
+                  ref={localVideoRef}
                   className="w-full aspect-video object-cover"
+                  muted
+                  autoPlay
                 />
                 <div className="absolute bottom-2 left-2 flex items-center">
                   <span className="text-xs font-medium bg-black/50 text-white px-2 py-0.5 rounded">
@@ -54,28 +89,48 @@ export default function VideoArea({ peers, localUser }: VideoAreaProps) {
   );
 }
 
-function PeerVideo({ participant }: { participant: Participant }) {
+function PeerVideo({
+  userName,
+  stream,
+  avatar,
+}: {
+  userName: string;
+  stream: MediaStream;
+  avatar: string;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream]);
+
   return (
     <Card className="w-full h-full overflow-hidden shadow-md rounded-lg dark:bg-black">
       <CardContent className="p-0 h-full relative">
-        {participant.isVideoOn ? (
+        {stream ? (
           <div className="w-full h-full bg-gray-400 relative dark:bg-gray-600">
             <video
+              ref={videoRef}
+              autoPlay
               src="/placeholder.svg?height=400&width=600"
               className="w-full h-full object-cover"
             />
             <div className="absolute bottom-4 left-4 flex items-center">
               <Pin className="w-4 h-4 text-red-500 mr-1" />
               <span className="text-sm font-medium bg-black/50 text-white px-2 py-1 rounded">
-                {participant.name}
+                {userName}
               </span>
             </div>
           </div>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-800">
             <div className="text-white text-center">
-              <div className="text-4xl mb-2">👤</div>
-              <p>{participant.name}</p>
+              <div className="text-4xl mb-2 w-full h-full flex justify-center items-center">
+                <img src={avatar} alt="user" className="rounded w-10 h-10" />
+              </div>
+              <p>{userName}</p>
               <p className="text-sm text-gray-400">Camera is off</p>
             </div>
           </div>

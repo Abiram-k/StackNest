@@ -213,4 +213,37 @@ export class AdminController implements IAdminController {
       next(error);
     }
   }
+
+  async getRoomSessionHistory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { roomId } = req.params;
+      const sort = String(req.query.sort || "");
+      const search = String(req.query.search || "");
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
+
+      const data: {
+        sort: string;
+        search: string;
+        page: number;
+        limit: number;
+      } = { sort, search, page, limit };
+      const { session, totalPages } = await this._roomService.fetchRoomSession(
+        roomId,
+        data
+      );
+      res.status(HttpStatus.OK).json({
+        message: "Room session fetched",
+        success: true,
+        session,
+        totalPages: totalPages,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

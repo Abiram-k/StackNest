@@ -8,13 +8,13 @@ export interface IRoom extends Document {
   host: Types.ObjectId;
   isBlocked: boolean;
   startedAt: Date;
-  participants: [{ user: Types.ObjectId; joinedAt: Date; leavedAt: Date }];
+  participants: [{ user: Types.ObjectId; totalDuration: number,lastJoined:Date }];
   isPrivate: string;
   isPremium: string;
   password?: string;
   scheduledAt?: Date;
   status: "online" | "offline" | "scheduled";
-  roomType:"normal" | "general"
+  roomType: "normal" | "general";
   endedAt: Date;
   limit: number;
   createdAt: Date;

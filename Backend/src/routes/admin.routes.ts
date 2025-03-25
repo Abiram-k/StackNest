@@ -26,6 +26,7 @@ router.get(
   adminController.fetchSelectedRoom.bind(adminController)
 );
 router.patch("/room/:id", adminController.blockRoom.bind(adminController));
+router.get("/room/:roomId/session",adminController.getRoomSessionHistory.bind(adminController));
 
 // <<<<<<<<<<<<<<<<Banner Management>>>>>>>>>>>>>>>>>>>
 router.get("/banner", bannerController.fetchBanners.bind(bannerController));

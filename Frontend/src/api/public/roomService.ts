@@ -1,6 +1,7 @@
 import { RoomSchema } from "../../../../types/user";
 import { HttpService } from "../httpService";
 import { axiosResponse } from "../../../../types/user";
+import { RoomSessionType } from "@/types";
 
 type host = {
   userName: string;
@@ -21,8 +22,9 @@ export interface IRoom extends Document {
   startedAt: Date;
   participants: {
     user: { userName: string; avatar: string };
-    joinedAt: Date;
-    leavedAt: Date;
+    totalDuration:number,
+   lastJoined:Date,
+
   }[];
   isPrivate: string;
   isPremium: string;
@@ -45,6 +47,11 @@ type availableRoomResponse = axiosResponse & {
 type fetchSelectRoomResponse = axiosResponse & {
   room: IRoom;
 };
+
+type fetchRoomSessoinRespons = axiosResponse & {
+  session:RoomSessionType[]
+  totalPages: number,
+}
 
 export class RoomService {
   private httpService: HttpService;
@@ -96,4 +103,9 @@ export class RoomService {
       password,
     });
   }
+
+  async fetchRoomSession( roomId:string, role: string,
+    filters: string):Promise<fetchRoomSessoinRespons>{
+      return await this.httpService.get(`${role}/room/${roomId}/session${filters}`);
+    }
 }

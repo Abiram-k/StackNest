@@ -14,8 +14,18 @@ export interface IRoomRepository<T> {
     search?: string
   ): Promise<{ rooms: T[]; totalPages: number }>;
   findSelectedRoom(populateHost: boolean, id: string): Promise<T | null>;
-  removeById(id: string): Promise<boolean>;
-  blockRoom(id: string): Promise<boolean>;
+  removeById(id: string): Promise<string>;
+  blockRoom(id: string): Promise<{ currentStatus: boolean; roomId: string }>;
   findByRoomId(roomId: string): Promise<T | null>;
-  addParticipant(userId:string,roomId: string): Promise<boolean>;
+  addOrUpdateParticipant(
+    userId: string,
+    roomId: string,
+    joinedAt: Date
+  ): Promise<boolean>;
+  getLastJoinedTime(roomId: string, userId: string): Promise<Date | null>;
+  updateParticipantDuration(
+    roomId: string,
+    userId: string,
+    duration: number
+  ): Promise<boolean>;
 }

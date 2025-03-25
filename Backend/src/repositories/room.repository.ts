@@ -2,6 +2,8 @@ import { Types } from "mongoose";
 import { IRoomRepository } from "../interfaces/repositories/room.repository.interface";
 import Room from "../models/room.model";
 import { IRoom } from "../types/IRoom";
+import { HttpStatus } from "../constants/enum.statusCode";
+import createHttpError from "http-errors";
 
 enum FilterTags {
   "Private" = "Private",
@@ -13,7 +15,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
   async createRoom(roomData: Partial<IRoom>): Promise<boolean> {
     try {
       const room = await Room.create(roomData);
-      if (room) return true; 
+      if (room) return true;
       else return false;
     } catch (error) {
       throw error;
@@ -98,16 +100,18 @@ export class RoomRespository implements IRoomRepository<IRoom> {
     }
   }
 
-  async removeById(id: string): Promise<boolean> {
+  async removeById(id: string): Promise<string> {
     try {
       const result = await Room.findByIdAndDelete(id);
-      return !!result;
+      return result?.roomId || "";
     } catch (error) {
       throw error;
     }
   }
 
-  async blockRoom(id: string): Promise<boolean> {
+  async blockRoom(
+    id: string
+  ): Promise<{ currentStatus: boolean; roomId: string }> {
     try {
       const room = await Room.findById(id);
       const currentStatus = room?.isBlocked;
@@ -116,7 +120,10 @@ export class RoomRespository implements IRoomRepository<IRoom> {
         { $set: { isBlocked: !currentStatus } },
         { new: true }
       );
-      return !!updatedRoom;
+      return {
+        currentStatus: currentStatus || false,
+        roomId: room?.roomId || "",
+      };
     } catch (error) {
       throw error;
     }
@@ -130,17 +137,114 @@ export class RoomRespository implements IRoomRepository<IRoom> {
     }
   }
 
-  async addParticipant(userId: string, roomId: string): Promise<boolean> {
+  // async addParticipant(
+  //   userId: string,
+  //   roomId: string,
+  //   joinedAt: Date
+  // ): Promise<boolean> {
+  //   try {
+  //     const isparticipantAdded = await Room.findOneAndUpdate(
+  //       { roomId },
+  //       {
+  //         $addToSet: {
+  //           participants: {
+  //             user: userId,
+  //             totalDuration: 0,
+  //             lastJoined: joinedAt,
+  //           },
+  //         },
+  //       },
+  //       { new: true }
+  //     );
+  //     return !!isparticipantAdded;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
+  async addOrUpdateParticipant(
+    userId: string,
+    roomId: string,
+    joinedAt: Date
+  ): Promise<boolean> {
     try {
-      const isparticipantAdded = await Room.findOneAndUpdate(
-        { roomId },
-        { $addToSet: { participants: { user: userId, joinedAt: new Date() } } },
+      const result = await Room.findOneAndUpdate(
+        {
+          roomId,
+          "participants.user": userId,
+        },
+        {
+          $set: {
+            "participants.$.lastJoined": joinedAt,
+          },
+        },
         { new: true }
       );
-      return !!isparticipantAdded;
+
+      if (!result) {
+        const addParticipantResult = await Room.findOneAndUpdate(
+          { roomId },
+          {
+            $addToSet: {
+              participants: {
+                user: userId,
+                totalDuration: 0,
+                lastJoined: joinedAt,
+              },
+            },
+          },
+          { new: true }
+        );
+
+        return !!addParticipantResult;
+      }
+
+      return !!result;
+    } catch (error) {
+      console.error("Error adding/updating participant:", error);
+      throw error;
+    }
+  }
+
+  async getLastJoinedTime(
+    roomId: string,
+    userId: string
+  ): Promise<Date | null> {
+    try {
+      const result = await Room.findOne(
+        { roomId, "participants.user": userId },
+        {
+          "participants.$": 1,
+        }
+      );
+      
+      if (result && result.participants.length > 0) {
+        return result.participants[0].lastJoined || null;
+      }
+      return null;
     } catch (error) {
       throw error;
     }
   }
-  
+
+  async updateParticipantDuration(
+    roomId: string,
+    userId: string,
+    duration: number
+  ): Promise<boolean> {
+    const result = await Room.findOneAndUpdate(
+      {
+        roomId,
+        "participants.user": userId, 
+      },
+      {
+        $inc: {
+          "participants.$.totalDuration": duration,
+        },
+      },
+      { new: true }
+    );
+
+    return !!result;
+  }
 }

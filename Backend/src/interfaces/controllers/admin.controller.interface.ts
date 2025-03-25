@@ -18,4 +18,6 @@ export interface IAdminController {
   ): Promise<void>;
 
   blockRoom(req: Request, res: Response, next: NextFunction): Promise<void>;
+
+  getRoomSessionHistory(req:Request,res:Response,next:NextFunction):Promise<void>;
 }

@@ -16,7 +16,7 @@ const Navbar = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [streak, setStreak] = useState<number>(0);
 
-  const { data } = useGetStreakCount({isAdmin,isAuthenticated});
+  const { data } = useGetStreakCount({ isAdmin, isAuthenticated });
 
   useEffect(() => {
     if (!isAdmin && isAuthenticated && data?.streakCount) {
@@ -104,33 +104,36 @@ const Navbar = ({
                       <Search className="h-7 w-7" />
                     </Button>
                   ) : (
-                    <Link to={"/user/profile"}>
-                      <button className="gap-1.5 flex justify-center items-center p-2 group hover:bg-transparent">
-                        <Flame className=" h-6 w-6 text-orange-500 transition-all duration-300 group-hover:scale-110 group-hover:text-orange-400 group-hover:animate-pulse" />
-                        <span className="text-orange-500 font-medium text-sm ">
-                          {streak}
-                        </span>
-                      </button>
-                    </Link>
+                    <>
+                      <Link to={"/user/profile"}>
+                        <button className="gap-1.5 flex justify-center items-center p-2 group hover:bg-transparent">
+                          <Flame className=" h-6 w-6 text-orange-500 transition-all duration-300 group-hover:scale-110 group-hover:text-orange-400 group-hover:animate-pulse" />
+                          <span className="text-orange-500 font-medium text-sm ">
+                            {streak}
+                          </span>
+                        </button>
+                      </Link>
+
+                      <Link to={"/user/favorites"}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="hover:bg-muted"
+                        >
+                          <Heart className="h-7 w-7" />
+                        </Button>
+                      </Link>
+                      <Link to={"/user/profile"}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="hover:bg-muted"
+                        >
+                          <User className="h-7 w-7" />
+                        </Button>
+                      </Link>
+                    </>
                   )}
-                  <Link to={"/user/favorites"}>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-muted"
-                    >
-                      <Heart className="h-7 w-7" />
-                    </Button>
-                  </Link>
-                  <Link to={"/user/profile"}>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="hover:bg-muted"
-                    >
-                      <User className="h-7 w-7" />
-                    </Button>
-                  </Link>
                 </>
                 {/* )} */}
                 {!isAdmin && (

@@ -36,14 +36,14 @@ export default function ControlPanel({
   onEndCall,
 }: ControlPanelProps) {
   return (
-    <Card className="mt-4 p-4 shadow-lg rounded-lg dark:bg-gray-800 ">
+    <Card className="p-4 shadow-lg rounded-lg dark:bg-gray-800 md:-mt-32 -mt-14">
       <div className="flex  justify-center items-center space-x-4  w-full p-5">
         <Button
           onClick={onToggleMute}
           variant="outline"
           size="icon"
           className={`rounded-full w-12 h-12 ${
-            isMuted ? "bg-gray-200" : "bg-blue-500 text-white hover:bg-blue-600"
+            isMuted ? "bg-gray-200" : "bg-red-500 text-white hover:bg-red-600"
           }`}
         >
           {isMuted ? (
@@ -58,12 +58,12 @@ export default function ControlPanel({
           variant="outline"
           size="icon"
           className={`rounded-full w-12 h-12 ${
-            !isVideoOn
+            isVideoOn
               ? "bg-gray-200"
-              : "bg-blue-500 text-white hover:bg-blue-600"
+              : "bg-red-500 text-white hover:bg-red-600"
           }`}
         >
-          {!isVideoOn ? (
+          {isVideoOn ? (
             <VideoOff className="h-5 w-5" /> 
           ) : (
             <Video className="h-5 w-5" />
@@ -89,7 +89,7 @@ export default function ControlPanel({
           size="icon"
           className={`rounded-full w-12 h-12 ${
             isChatOpen
-              ? "bg-blue-500 text-white hover:bg-blue-600"
+              ? "bg-red-500 text-white hover:bg-red-600"
               : "bg-gray-200"
           }`}
         >

@@ -4,11 +4,13 @@ export class WebRTCManager {
   private peers = new Map<string, RTCPeerConnection>();
   private localStream?: MediaStream;
   private socket: Socket;
-  private onStreamUpdate?: (peerId: string, stream: MediaStream) => void;
+  private onStreamUpdate?: (peerId: string, stream: MediaStream | null) => void;
+
+  private remoteStreams: { [key: string]: MediaStream } = {};
 
   constructor(
     socket: Socket,
-    onStreamUpdate?: (peerId: string, stream: MediaStream) => void
+    onStreamUpdate?: (peerId: string, stream: MediaStream | null) => void
   ) {
     this.socket = socket;
     this.onStreamUpdate = onStreamUpdate;
@@ -21,6 +23,7 @@ export class WebRTCManager {
         video: true,
         audio: true,
       });
+      console.log("Local Id from initializeLocalStream(): ", this.socket.id);
       return this.localStream;
     } catch (error) {
       console.log(error);
@@ -31,7 +34,11 @@ export class WebRTCManager {
     try {
       // retreiving all the userId except current me and creating peer connection
       this.socket.on("existing-peers", (peerIds: string[]) => {
-        peerIds.forEach((peerId) => this.createPeerConnection(peerId));
+        peerIds.forEach((peerId) => {
+          if (!this.peers.has(peerId))
+            // new addedd 🧾
+            this.createPeerConnection(peerId);
+        });
       });
 
       // creating peer connection for new joinee
@@ -58,6 +65,10 @@ export class WebRTCManager {
 
           switch (type) {
             case "offer":
+              if (pc.signalingState !== "stable") {
+                console.warn("Ignoring offer; not in stable state");
+                return;
+              }
               await pc.setRemoteDescription(new RTCSessionDescription(signal));
               const answer = await pc.createAnswer();
               await pc.setLocalDescription(answer);
@@ -65,11 +76,22 @@ export class WebRTCManager {
               break;
 
             case "answer":
+              if (pc.signalingState !== "have-local-offer") {
+                console.warn("Ignoring answer; not in have-local-offer state");
+                return;
+              }
               await pc.setRemoteDescription(new RTCSessionDescription(signal));
               break;
 
             case "candidate":
-              pc.addIceCandidate(new RTCIceCandidate(signal));
+              if (pc.remoteDescription) {
+                pc.addIceCandidate(new RTCIceCandidate(signal));
+              } else {
+                console.warn(
+                  "Remote description not set. Queueing candidate..."
+                );
+              }
+              // pc.addIceCandidate(new RTCIceCandidate(signal));
               break;
           }
         }
@@ -78,6 +100,10 @@ export class WebRTCManager {
       this.socket.on("peer-disconnected", (peerId: string) => {
         this.peers.get(peerId)?.close();
         this.peers.delete(peerId);
+        delete this.remoteStreams[peerId];
+        if (this.onStreamUpdate) {
+          this.onStreamUpdate(peerId, null);
+        }
       });
     } catch (error) {
       console.log(error);
@@ -96,24 +122,48 @@ export class WebRTCManager {
 
       pc.ontrack = (event) => {
         const stream = event.streams[0];
+        this.remoteStreams[peerId] = stream;
         if (this.onStreamUpdate) {
           this.onStreamUpdate(peerId, stream);
         }
       };
+
       pc.onicecandidate = (event) => {
         if (event.candidate) {
           this.sendSignal(peerId, "candidate", event.candidate);
         }
       };
+
       this.peers.set(peerId, pc);
 
-      if (peerId > this.socket.id!) {
+      // if (peerId > this.socket.id!) {
+      if (this.socket.id! < peerId) {
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
         this.sendSignal(peerId, "offer", offer);
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  public getRemoteStreams() {
+    return this.remoteStreams;
+  }
+
+  toggleAudio(isMuted: boolean) {
+    if (this.localStream) {
+      this.localStream.getAudioTracks().forEach((track) => {
+        track.enabled = isMuted;
+      });
+    }
+  }
+
+  toggleVideo(isVideoOn: boolean) {
+    if (this.localStream) {
+      this.localStream.getVideoTracks().forEach((track) => {
+        track.enabled = isVideoOn;
+      });
     }
   }
 
@@ -127,7 +177,22 @@ export class WebRTCManager {
   }
 
   cleanup() {
-    this.peers.forEach((pc) => pc.close());
+    // this.peers.forEach((pc) => pc.close());
+    // this.localStream?.getTracks().forEach((track) => track.stop());
+    this.peers.forEach((pc) => {
+      pc.ontrack = null;
+      pc.onicecandidate = null;
+      pc.close();
+    });
+
     this.localStream?.getTracks().forEach((track) => track.stop());
+    this.peers.clear();
+
+    this.socket.off("existing-peers");
+    this.socket.off("new-peer");
+    this.socket.off("signal");
+    this.socket.off("peer-disconnected");
+
+    this.remoteStreams = {};
   }
 }

@@ -57,6 +57,9 @@ import { AdminChallengeController } from "../controllers/admin/admin.challenge.c
 import { IChallengeSubmissionRepository } from "../interfaces/repositories/challengeSubmission.repository.interface";
 import { ChallengeSubmissionRepository } from "../repositories/challengeSubmission.repository";
 import { IChallengeSubmission } from "../types/IChallengeSubmissionSchema";
+import { IRoomSessionRepository } from "../interfaces/repositories/room.session.repository.interface";
+import { IRoomSession } from "../types/IRoomSession";
+import { RoomSessionRespository } from "../repositories/room.session.repository";
 
 // Respositories
 const userAuthRepository: IUserAuthRepository<IUser> =
@@ -64,12 +67,15 @@ const userAuthRepository: IUserAuthRepository<IUser> =
 const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();
 const adminRespository: IAdminRepository<IUser> = new AdminRespository();
 const roomRespository: IRoomRepository<IRoom> = new RoomRespository();
+const roomSessionRespository: IRoomSessionRepository<IRoomSession> =
+  new RoomSessionRespository();
 const favoritesRepository: IFavoritesRepository<IFavorites> =
   new FavoritesRepository();
 const bannerRepository: IBannerRepository<IBanner> = new BannerRepository();
 const challengeRepository: IChallengeRespository<IChallenge> =
   new ChallengeRespository();
-const challengeSubmissionRespository:IChallengeSubmissionRepository<IChallengeSubmission> = new ChallengeSubmissionRepository();
+const challengeSubmissionRespository: IChallengeSubmissionRepository<IChallengeSubmission> =
+  new ChallengeSubmissionRepository();
 
 // Services
 const adminService: IAdminService = new AdminService(adminRespository);
@@ -82,7 +88,8 @@ const userProfileService: IUserProfileService = new UserProfileService(
 );
 const roomService: IRoomService = new RoomService(
   roomRespository,
-  userBaseRepository
+  userBaseRepository,
+  roomSessionRespository
 );
 const favoritesService: IFavoritesService = new FavoritesService(
   favoritesRepository

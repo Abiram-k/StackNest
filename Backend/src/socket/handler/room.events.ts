@@ -3,14 +3,16 @@ import { RoomService } from "../../services/room.service";
 import { RoomRespository } from "../../repositories/room.repository";
 import { UserBaseRepository } from "../../repositories/user.repository";
 import { Console } from "console";
+import { RoomSessionRespository } from "../../repositories/room.session.repository";
 
 const roomRepo = new RoomRespository();
 const userBaseRepo = new UserBaseRepository();
-const roomService = new RoomService(roomRepo, userBaseRepo);
+const roomSessionRepo = new RoomSessionRespository();
+const roomService = new RoomService(roomRepo, userBaseRepo, roomSessionRepo);
 
 interface IRoomData {
   [roomId: string]: {
-    userId: string;
+    socketId: string;
     name: string;
     avatar: string;
     isMuted: boolean;
@@ -21,20 +23,8 @@ interface IRoomData {
 
 let roomData: IRoomData = {};
 
-// interface Peer {
-//   socketId: string;
-//   userId: string;
-// }
-
-// const rooms = new Map<string, Peer[]>();
-
-// interface SignalData {
-//   to: string;
-//   signal: RTCSessionDescriptionInit | RTCIceCandidateInit;
-//   from: string;
-// }
-
 const rooms = new Map<string, Set<string>>();
+
 export const registerRoomEvents = (io: Server, socket: Socket) => {
   let currentRoomId: string;
 
@@ -42,137 +32,45 @@ export const registerRoomEvents = (io: Server, socket: Socket) => {
 
   socket.on("join-room", (roomId: string) => {
     currentRoomId = roomId;
-    console.log("BOFORE JOIN: ", rooms);
     const userId = socket.data.user?.userId;
     const userName = socket.data.user?.userName;
     const avatar = socket.data.user?.avatar;
+
+    if (!roomData[roomId]) {
+      roomData[roomId] = [
+        {
+          socketId: socket.id,
+          name: userName,
+          avatar,
+          isMuted: false,
+          isVideoOn: false,
+          isHandRised: false,
+        },
+      ];
+    } else {
+      if (!roomData[roomId].some((user) => user.socketId == socket.id))
+        roomData[roomId].push({
+          socketId: socket.id,
+          name: userName,
+          avatar,
+          isMuted: false,
+          isVideoOn: false,
+          isHandRised: false,
+        });
+    }
+
     socket.join(roomId);
-    console.log(roomId);
+
+    io.to(roomId).emit("participants", roomData[roomId]);
+    socket.to(roomId).emit("room-message", `${userName} joined room`);
     const peers = rooms.get(roomId) || new Set<string>();
-    // peers.add(userId);
     peers.add(socket.id);
     rooms.set(roomId, peers);
     socket.emit(
       "existing-peers",
-      // Array.from(peers).filter((id) => id !== userId)
       Array.from(peers).filter((id) => id !== socket.id)
     );
-    // socket.to(roomId).emit("new-peer", userId); 
     socket.to(roomId).emit("new-peer", socket.id);
-    console.log(rooms);
-  });
-
-  // initialized one
-  // socket.on("join-room", (roomId: string) => {
-
-  //   const userId = socket.data.user?.userId;
-  //   const userName = socket.data.user?.userName;
-  //   const avatar = socket.data.user?.avatar;
-  //   if (!userId) {
-  //     socket.emit("error", "User is not Authorized");
-  //     console.log("User is not Authorized");
-  //     return;
-  //   }
-  //   if (!roomId) {
-  //     socket.emit("error", "Room ID is invalid");
-  //     return;
-  //   }
-  //   socket.join(roomId);
-
-  //   if (!roomData[roomId]) {
-  //     roomData[roomId] = [
-  //       {
-  //         userId,
-  //         name: userName,
-  //         avatar,
-  //         isMuted: false,
-  //         isVideoOn: false,
-  //         isHandRised: false,
-  //       },
-  //     ];
-  //   } else {
-  //     if (!roomData[roomId].some((user) => user.userId == userId))
-  //       roomData[roomId].push({
-  //         userId,
-  //         name: userName,
-  //         avatar,
-  //         isMuted: false,
-  //         isVideoOn: false,
-  //         isHandRised: false,
-  //       });
-  //   }
-  //   io.to(roomId).emit("participants", roomData[roomId]);
-  //   socket.to(roomId).emit("room-message", `${userName} joined room`);
-  // });
-
-  // siimple peer
-  // socket.on("join-room", (roomId: string) => {
-
-  //   currentRoomId = roomId;
-  //   console.log("JOIN REQUEST GOT🌟");
-  //   const userId = socket.data.user?.userId;
-  //   const userName = socket.data.user?.userName;
-  //   const avatar = socket.data.user?.avatar;
-  //   if (!userId) {
-  //     socket.emit("error", "User is not Authorized");
-  //     console.log("User is not Authorized");
-  //     return;
-  //   }
-  //   if (!roomId) {
-  //     socket.emit("error", "Room ID is invalid");
-  //     return;
-  //   }
-  //   socket.join(roomId);
-
-  //   if (!roomData[roomId]) {
-  //     roomData[roomId] = [
-  //       {
-  //         userId,
-  //         name: userName,
-  //         avatar,
-  //         isMuted: false,
-  //         isVideoOn: false,
-  //         isHandRised: false,
-  //       },
-  //     ];
-  //   } else {
-  //     if (!roomData[roomId].some((user) => user.userId == userId))
-  //       roomData[roomId].push({
-  //         userId,
-  //         name: userName,
-  //         avatar,
-  //         isMuted: false,
-  //         isVideoOn: false,
-  //         isHandRised: false,
-  //       });
-  //   }
-  //   const peers = rooms.get(roomId) || [];
-  //   const newPeer = {
-  //     socketId: socket.id,
-  //     userId,
-  //   };
-
-  //   rooms.set(roomId, [...peers, newPeer]);
-  //   socket.to(roomId).emit("new-peer", newPeer);
-  //   socket.emit("existing-peers", peers);
-  //   console.log(rooms);
-  //   io.to(roomId).emit("participants", roomData[roomId]);
-  //   socket.to(roomId).emit("room-message", `${userName} joined room`);
-  // });
-
-  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DISCONNECT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-  socket.on("disconnect", () => {
-    console.log("From Disconnect: ", currentRoomId);
-    if (currentRoomId) {
-      const peers = rooms.get(currentRoomId);
-      console.log(peers, "Socket Id: ", socket.id);
-      if (peers) {
-        peers.delete(socket.id);
-        if (peers.size == 0) rooms.delete(currentRoomId);
-        socket.to(currentRoomId).emit("peer-disconnected", socket.id);
-      }
-    }
   });
 
   // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  SIGNALING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -184,23 +82,26 @@ export const registerRoomEvents = (io: Server, socket: Socket) => {
       signal: any;
       type: "offer" | "answer" | "candidate";
     }) => {
-      console.log("GOT SIGNAL EVENT 🌟", data);
-
       io.to(data.targetId).emit("signal", {
         senderId: socket.id,
         type: data.type,
         signal: data.signal,
       });
-
     }
   );
-
+  
   // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<  LEAVE ROOM EVENT  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  socket.on("leave-room", (roomId: string) => {
+  socket.on("leave-room", async (roomId: string) => {
     console.log("LEAVE REQUEST GOT🌟");
     const userName = socket.data.user?.userName;
+    const userId = socket.data.user?.userId;
 
+    const isUpdated = await roomService.updateOnleaveRoom(roomId, userId);
+    if (!isUpdated) {
+      console.log("On leave event, duration is not updated");
+      return;
+    } 
     roomData[roomId] = roomData[roomId]?.filter(
       (user) => user.name !== userName
     );
@@ -209,10 +110,16 @@ export const registerRoomEvents = (io: Server, socket: Socket) => {
     socket.leave(roomId);
     socket.to(roomId).emit("room-message", `${userName} left the room`);
     console.log(`User ${userName} left room: ${roomId}`);
+
+    const peers = rooms.get(roomId);
+    if (peers) {
+      peers.delete(socket.id);
+      if (peers.size == 0) rooms.delete(roomId);
+      socket.to(roomId).emit("peer-disconnected", socket.id);
+    }
   });
 
   // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<  HAND RISE EVENT  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
   socket.on(
     "hand-rise",
     ({ roomId, isHandRised }: { roomId: string; isHandRised: boolean }) => {
@@ -222,7 +129,9 @@ export const registerRoomEvents = (io: Server, socket: Socket) => {
         socket.emit("error", "Room does not exist.");
         return;
       }
-      const userData = roomData[roomId].find((user) => user.userId === userId);
+      const userData = roomData[roomId].find(
+        (user) => user.socketId === socket.id
+      );
       if (!userData) {
         socket.emit("error", "User not found in the room.");
         return;
@@ -238,15 +147,30 @@ export const registerRoomEvents = (io: Server, socket: Socket) => {
     }
   );
 
-  // <<<<<<<<<<<<<<<<<<<<<<< DISCONNECT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DISCONNECT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  // socket.on("disconnect", (reason) => {
-  //   console.log("User Disconnected", reason);
-  //   if (!currentRoomId) return;
-  //   const peers =
-  //     rooms.get(currentRoomId)?.filter((p) => p.socketId !== socket.id) || [];
+  // By default on page reload the socket wil disconnect, so we need to  handle peer at that time.
+  socket.on("disconnect", () => {
+    if (currentRoomId) {
+      // updating userData from roomData
+      let userDatas = roomData[currentRoomId];
+      if (userDatas && userDatas.length) {
+        userDatas = userDatas.filter((data) => data.socketId != socket.id);
+        if (userDatas.length > 0) {
+          roomData[currentRoomId] = userDatas;
+        } else {
+          delete roomData[currentRoomId];
+        }
+      } else {
+        delete roomData[currentRoomId];
+      }
 
-  //   rooms.set(currentRoomId, peers);
-  //   socket.to(currentRoomId).emit("peer-disconnected", socket.id);
-  // });
+      const peers = rooms.get(currentRoomId);
+      if (peers) {
+        peers.delete(socket.id);
+        if (peers.size == 0) rooms.delete(currentRoomId);
+        socket.to(currentRoomId).emit("peer-disconnected", socket.id);
+      }
+    }
+  });
 };
