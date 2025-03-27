@@ -244,10 +244,19 @@ export class UserRoomController implements IUserRoomController {
       const { roomId } = dto;
 
       const user = req.user as { userId: string; role: string };
-      await this._roomService.joinRoom(user.userId, roomId);
+      const role = await this._roomService.joinRoom(user.userId, roomId);
+      if (!role) {
+        console.log("Failed to get role", role);
+        return;
+      }
       res
         .status(HttpStatus.OK)
-        .json({ message: "Successfully joined in room", success: true, roomId:dto.roomId });
+        .json({
+          message: "Successfully joined in room",
+          success: true,
+          roomId: dto.roomId,
+          role,
+        });
     } catch (error) {
       next(error);
     }

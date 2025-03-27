@@ -27,11 +27,11 @@ export const validateRoomSchema = yup.object({
     otherwise: (schema) => schema.notRequired(),
   }),
 
-  scheduledAt: yup
-    .date()
-    .transform((value, originalValue) => {
-      return originalValue ? new Date(originalValue) : null;
-    })
-    .min(normalizeDate(new Date()), "Scheduled date must be in the future")
-    .optional(),
+  // scheduledAt: yup
+  //   .date()
+  //   .transform((value, originalValue) => {
+  //     return originalValue ? new Date(originalValue) : null;
+  //   })
+  //   .min(normalizeDate(new Date()), "Scheduled date must be in the future")
+  //   .optional(),
 });

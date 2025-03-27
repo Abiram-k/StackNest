@@ -16,9 +16,9 @@ export const useRemoveChallenge = () => {
       toast.success("Success Removed challenge");
       queryClient.invalidateQueries({ queryKey: ["challenge"] });
     },
-    onError: () => {
+    onError: (error) => {
       toast.dismiss();
-      toast.error("Failed to Remove  challenge");
+      toast.error(error.message || "Failed to Remove  challenge");
     },
   });
 

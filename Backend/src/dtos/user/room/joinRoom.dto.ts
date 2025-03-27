@@ -9,4 +9,5 @@ export interface ResJoinRoomDTO {
   message: string;
   success: boolean;
   roomId:string;
+  role:"common" | "host"
 }

@@ -26,13 +26,13 @@ const Pagination = ({ totalPages, onPageChange }: paginationType) => {
         pageCount={totalPages}
         marginPagesDisplayed={2}
         containerClassName="flex flex-wrap  justify-center gap-2"
-        pageClassName="flex items-center dark:bg-primary-600 bg-primary-500 rounded text-gray-400"
+        pageClassName="flex items-center border rounded dark:text-white"
         pageLinkClassName="px-4 py-2  rounded-md cursor-pointer text-sm transition duration-200"
         previousClassName="flex items-center"
         previousLinkClassName="px-4 py-2 border cursor-pointer rounded-md text-sm  transition duration-200"
         nextClassName="flex items-center"
         nextLinkClassName="px-4 py-2 border rounded-md cursor-pointer text-sm  transition  duration-200"
-        activeClassName="bg-blue-500 text-white"
+        activeClassName="bg-primary-500 dark:bg-primary-600  text-white"
       />
     </div>
   );

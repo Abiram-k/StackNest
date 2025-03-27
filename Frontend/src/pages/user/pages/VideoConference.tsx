@@ -23,6 +23,7 @@ export default function VideoConference() {
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [isHandRaised, setIsHandRaised] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isHost, setIsHost] = useState<boolean>(false);
   const [participants, setParticipants] = useState<
     Map<string, ParticipantType>
   >(new Map());
@@ -53,7 +54,8 @@ export default function VideoConference() {
       }));
     });
     setWebRTCManager(manager);
-
+    const role = localStorage.getItem("room-isHost");
+    setIsHost(role == "host");
     manager.initializeLocalStream().then((stream) => {
       if (localVideoRef.current && stream) {
         localVideoRef.current.srcObject = stream;
@@ -86,6 +88,7 @@ export default function VideoConference() {
       socket.off("room-message");
       socket.off("terminate-user");
       socket.off("participants");
+      localStorage.removeItem("room-isHost");
       manager.cleanup();
       socket.disconnect(); // Also disconnecting while ending the call.
     };
@@ -120,7 +123,7 @@ export default function VideoConference() {
   };
 
   return (
-    <main className="flex-1 flex flex-col p-4 mb-50bg-orange-300  relative mb-20 md:mb-50 dark:bg-black h-fit">
+    <main className="flex-1 flex flex-col p-4 mb-50bg-orange-300  relative mb-20 md:mb-50 dark:bg-black h-screen">
       <div className="text-sm text-gray-600 mb-2 dark:text-white">
         ROOM ID: {roomId}
       </div>
@@ -132,7 +135,13 @@ export default function VideoConference() {
             participants={participants}
           />
         </div>
-        <ParticipantsList participants={Array.from(participants.values())} />
+        <ParticipantsList
+          participants={Array.from(participants.values())}
+          isChatOpen={isChatOpen}
+          setIsChatOpen={setIsChatOpen}
+          roomId={roomId || ""}
+          isHost={isHost}
+        />
       </div>
       <ControlPanel
         isMuted={isMuted}
@@ -148,4 +157,3 @@ export default function VideoConference() {
     </main>
   );
 }
-

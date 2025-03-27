@@ -36,7 +36,7 @@ export default function ControlPanel({
   onEndCall,
 }: ControlPanelProps) {
   return (
-    <Card className="p-4 shadow-lg rounded-lg dark:bg-gray-800 md:-mt-32 -mt-14">
+    <Card className="p-4 shadow-lg  rounded-lg dark:bg-gray-800 md:-mt-32 -mt-14">
       <div className="flex  justify-center items-center space-x-4  w-full p-5">
         <Button
           onClick={onToggleMute}
@@ -87,9 +87,9 @@ export default function ControlPanel({
           onClick={onToggleChat}
           variant="outline"
           size="icon"
-          className={`rounded-full w-12 h-12 ${
+          className={`rounded-full lg:hidden w-12 h-12 ${
             isChatOpen
-              ? "bg-red-500 text-white hover:bg-red-600"
+              ? "bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
               : "bg-gray-200"
           }`}
         >

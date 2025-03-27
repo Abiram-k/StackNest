@@ -98,57 +98,6 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
     }
   };
 
-  // const handleSendMessage = useCallback(
-  //   (e: React.FormEvent) => {
-  //     e.preventDefault();
-  //     if (!message.trim()) return;
-
-  //     const userMessage: Message = {
-  //       id: messages.length + 1,
-  //       text: message,
-  //       sender: "user",
-  //       timestamp: new Date().toLocaleTimeString([], {
-  //         hour: "2-digit",
-  //         minute: "2-digit",
-  //       }),
-  //     };
-  //     setMessages((prev) => [...prev, userMessage]);
-  //     let botResponse: Message = {
-  //       id: 0,
-  //       text: "",
-  //       sender: "bot",
-  //       timestamp: "",
-  //     };
-  //     mutate(message, {
-  //       onSuccess: (data) => {
-  //         botResponse = {
-  //           id: messages.length + 1,
-  //           text: data.response,
-  //           sender: "bot",
-  //           timestamp: new Date().toLocaleTimeString([], {
-  //             hour: "2-digit",
-  //             minute: "2-digit",
-  //           }),
-  //         };
-  //         setMessages((prev) => [...prev, botResponse]);
-  //       },
-  //       onError: () => {
-  //         botResponse = {
-  //           id: messages.length + 1,
-  //           text: "Some temperor",
-  //           sender: "bot",
-  //           timestamp: new Date().toLocaleTimeString([], {
-  //             hour: "2-digit",
-  //             minute: "2-digit",
-  //           }),
-  //         };
-  //         setMessages((prev) => [...prev, botResponse]);
-  //       },
-  //     });
-  //     setMessage("");
-  //   },
-  //   [message]
-  // );
 
   return (
     <div className="absolute bottom-16 right-0 w-[320px] h-[480px] bg-white  rounded-lg shadow-xl flex flex-col">

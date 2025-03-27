@@ -81,6 +81,6 @@ export interface RoomSchema {
   isPremium: string;
   isPrivate: string;
   password?: string;
-  scheduledAt?: Date;
+  // scheduledAt?: Date;
 }
 

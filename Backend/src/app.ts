@@ -53,5 +53,5 @@ app.use("/users", verifyUser, userRoutes);
 app.use("/admin", verifyUser, verifyAdmin, adminRoutes);
 
 app.use(errorHandler);
-
+  
 export default server;

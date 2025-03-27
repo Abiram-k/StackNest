@@ -32,22 +32,24 @@ export class RoomService implements IRoomService {
         );
       }
 
-      if (data.scheduledAt) {
-        const scheduledDate = new Date(data.scheduledAt);
-        const currentDate = new Date();
-        if (scheduledDate < currentDate) {
-          roomData.startedAt = new Date();
-          roomData.status = "online";
-        } else {
-          const localDate = new Date(data.scheduledAt);
-          const utcDate = new Date(
-            localDate.getTime() - localDate.getTimezoneOffset() * 60000
-          );
-          data.scheduledAt = utcDate;
-          roomData.status = "scheduled";
-          roomData.startedAt = null;
-        }
-      }
+      // if (data.scheduledAt) {
+      //   const scheduledDate = new Date(data.scheduledAt);
+      //   const currentDate = new Date();
+      //   if (scheduledDate < currentDate) {
+      //     roomData.startedAt = new Date();
+      //     roomData.status = "online";
+      //   } else {
+      //     const localDate = new Date(data.scheduledAt);
+      //     const utcDate = new Date(
+      //       localDate.getTime() - localDate.getTimezoneOffset() * 60000
+      //     );
+      //     // data.scheduledAt = utcDate;
+      //     roomData.status = "scheduled";
+      //     roomData.startedAt = null;
+      //   }
+      // }
+      roomData.startedAt = new Date();
+      roomData.status = "online";
       roomData.roomId = nanoid(8);
       roomData.host = host;
       return this._roomRepo.createRoom({ ...roomData, ...data });
@@ -183,7 +185,10 @@ export class RoomService implements IRoomService {
     }
   }
 
-  async joinRoom(userId: string, roomId: string): Promise<boolean | undefined> {
+  async joinRoom(
+    userId: string,
+    roomId: string
+  ): Promise<"host" | "common" | undefined> {
     try {
       if (!userId)
         throw createHttpError(
@@ -196,7 +201,7 @@ export class RoomService implements IRoomService {
 
       if (room.host.toString() == userId) {
         console.log("Host joined the room");
-        return true;
+        return "host";
       }
 
       // if (room.participants.some((p) => p?.user?.toString() === userId)) {
@@ -271,6 +276,7 @@ export class RoomService implements IRoomService {
           userLastJoined
         );
       }
+      return "common";
     } catch (error) {
       throw error;
     }
@@ -278,7 +284,6 @@ export class RoomService implements IRoomService {
 
   async updateOnleaveRoom(roomId: string, userId: string): Promise<boolean> {
     try {
-
       if (!userId || !roomId) {
         console.log(
           "updateOnleaveRoom, userId or roomId is missing",
@@ -287,7 +292,7 @@ export class RoomService implements IRoomService {
         );
         return false;
       }
-      console.log(roomId,userId)
+      console.log(roomId, userId);
       const userLastJoined = await this._roomRepo.getLastJoinedTime(
         roomId,
         userId

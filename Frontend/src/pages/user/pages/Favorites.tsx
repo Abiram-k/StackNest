@@ -61,7 +61,7 @@ export default function Favourites() {
         verifyingIsPending) && <Spinner />}
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6 ">
-          <h1 className="text-3xl font-bold text-gray-800">Favourite Rooms</h1>
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Favourite Rooms</h1>
 
           {favorites?.rooms && favorites?.rooms?.length >= 5 && (
             <div className="flex items-center gap-2 bg-yellow-50 border border-yellow-400 text-yellow-700 px-4 py-2 rounded-lg shadow-md animate-fade-in">

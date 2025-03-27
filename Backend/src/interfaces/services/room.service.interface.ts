@@ -18,15 +18,20 @@ export interface IRoomService {
   ): Promise<{ rooms: IRoom[]; totalPages: number }>;
   fetchSelectedRoom(role: string, id: string): Promise<IRoom>;
   removeRoom(id: string): Promise<boolean>;
-  blockUser(id: string): Promise<boolean>; 
-  joinRoom(userId: string, roomId: string): Promise<boolean | undefined>;
+  blockUser(id: string): Promise<boolean>;
+  joinRoom(
+    userId: string,
+    roomId: string
+  ): Promise<"host" | "common" | undefined>;
 
-  
-  fetchRoomSession(roomId:string,data:{sort: string; search: string; page: number; limit: number}):Promise<{totalPages:number,session:IRoomSession[] | null}>;
-  
+  fetchRoomSession(
+    roomId: string,
+    data: { sort: string; search: string; page: number; limit: number }
+  ): Promise<{ totalPages: number; session: IRoomSession[] | null }>;
+
   verifyPassword(
     roomId: string,
     password: string
   ): Promise<boolean | undefined>;
-  updateOnleaveRoom(roomId: string, userId: string): Promise<boolean>
+  updateOnleaveRoom(roomId: string, userId: string): Promise<boolean>;
 }

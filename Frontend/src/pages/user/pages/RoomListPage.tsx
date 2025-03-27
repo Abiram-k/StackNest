@@ -190,7 +190,7 @@ export default function RoomsListPage() {
             {availableRooms?.rooms?.length ? (
               availableRooms.rooms
                 .filter((room) => room.roomType != "general")
-                .map((room, i) => (
+                .map((room, i) => (               
                   <RoomCard
                     key={`${room.roomId}-${i}`}
                     room={room}

@@ -16,8 +16,7 @@ export const useJoinRoom = () => {
     mutationFn: (roomId: string) => roomService.joinRoom({ roomId }),
     onSuccess: (data) => {
       toast.dismiss();
-      // socket.emit("join-room", data.roomId);
-      // toast.success("Joined successfully");
+      localStorage.setItem("room-isHost",data.role);
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
       navigate(`/user/room/${data.roomId}/conference`);
     },

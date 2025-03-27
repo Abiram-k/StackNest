@@ -16,8 +16,8 @@ interface Room {
   description: string;
   participants: {
     user: { userName: string; avatar: string };
-    joinedAt: Date;
-    leavedAt: Date;
+    totalDuration: number;
+    lastJoined: Date;
   }[];
   isPremium?: string;
   limit: number;

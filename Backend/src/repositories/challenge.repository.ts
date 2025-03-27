@@ -56,4 +56,23 @@ export class ChallengeRespository implements IChallengeRespository<IChallenge> {
       throw error;
     }
   }
+
+  async sheduleChallenge(challengeIds: string[]): Promise<void> {
+    try {
+      await Challenge.updateMany(
+        { _id: { $in: challengeIds } }, 
+        { $set: { isListed: true } }
+      );
+
+      await Challenge.updateMany(
+        { _id: { $nin: challengeIds } }, 
+        { $set: { isListed: false } }
+      );
+
+      console.log("Challenges scheduled successfully:");
+    } catch (error) {
+      console.error("Error scheduling challenges:", error);
+      throw error;
+    }
+  }
 }

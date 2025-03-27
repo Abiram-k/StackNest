@@ -13,7 +13,7 @@ export interface RoomResType {
   host: User | string;
   isBlocked: boolean;
   startedAt: Date;
-  participants: [{ user: User; joinedAt: Date; leavedAt: Date }];
+  participants: [{ user: User; totalDuration: number; lastJoined: Date;}];
   isPrivate: string;
   isPremium: string;
   status: "online" | "offline" | "scheduled";

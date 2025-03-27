@@ -76,10 +76,6 @@ const UserManagement = () => {
 
         <div className=" w-full flex justify-center items-center py-4">
           <div className="w-full max-w-5xl">
-            {/* <CustomTable
-              data={data?.users}
-              isToggleblockUser={handleBlockUser}
-            /> */}
 
             <CustomTable<IUser>
               data={data?.users}

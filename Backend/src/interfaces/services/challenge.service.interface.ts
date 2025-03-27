@@ -12,10 +12,17 @@ export interface IChallengeService {
     question: string;
     questionNo: number;
   }): Promise<boolean>;
-  submitChallenge(userId:string,challengeId: string, answer: string): Promise<boolean>;
+  submitChallenge(
+    userId: string,
+    challengeId: string,
+    answer: string
+  ): Promise<boolean>;
   getAllChallenges(): Promise<challengeResDTO[] | null>;
   updateChallenge(challengeId: string, data: UpdateChallengeDTO): Promise<void>;
   toggleListing(challengeId: string): Promise<void>;
   removeChallenge(challengeId: string): Promise<void>;
-  getUserSubmittedChallenges(userId:string):Promise<Partial<IChallengeSubmission>[] | null >;
+  getUserSubmittedChallenges(
+    userId: string
+  ): Promise<Partial<IChallengeSubmission>[] | null>;
+  sheduleChallenge(challengeIds: string[]): Promise<void>;
 }

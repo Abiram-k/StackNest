@@ -9,6 +9,16 @@
 button{
   cursor: pointer;
 }
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #e5e7eb #f3f4f6;
+  }
+  
+  .dark .scrollbar-thin {
+    scrollbar-color: #374151 #1f2937;
+  }
+}
 
 
 :root {

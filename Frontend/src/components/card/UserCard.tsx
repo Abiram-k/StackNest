@@ -1,9 +1,4 @@
-import {
-  CheckCircleIcon,
-  Lock,
-  ShieldIcon,
-  UnlockIcon,
-} from "lucide-react";
+import { CheckCircleIcon, Lock, ShieldIcon, UnlockIcon } from "lucide-react";
 import { useState } from "react";
 import { Spinner } from "../ui/spinner";
 
@@ -69,7 +64,9 @@ const UserCard = ({
             <h2 className="text-xl font-bold text-gray-800 dark:text-gray-300 truncate">
               {userName}
             </h2>
-            <span className="text-sm text-gray-500 capitalize">({gender})</span>
+            <span className="text-xs text-gray-500 capitalize">
+              ({gender ? gender : "Not specified"})
+            </span>
           </div>
           <div className="mt-1">
             <p

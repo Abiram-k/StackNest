@@ -20,7 +20,7 @@ export default function EditRoom() {
   } = useVerifyRoomForm({
     schema: validateRoomSchema,
     defaultValues: {
-      scheduledAt: undefined,
+      // scheduledAt: undefined,
       description: "",
       isPremium: "No",
       isPrivate: "No",
@@ -48,7 +48,7 @@ export default function EditRoom() {
   const { mutate, isPending: isUpdateRoomPending } = useUpdateRoom();
 
   const onSubmit = (data: RoomSchema) => {
-    console.log(data, "Edit room");
+    alert("Clicked")
     mutate({ id: roomId, data });
   };
 

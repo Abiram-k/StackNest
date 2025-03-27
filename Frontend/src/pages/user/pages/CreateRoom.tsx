@@ -16,7 +16,7 @@ export default function CreateRoom() {
   } = useVerifyRoomForm({
     schema: validateRoomSchema,
     defaultValues: {
-      scheduledAt: new Date(),
+      // scheduledAt: new Date(),
       description: "",
       isPremium: "No",
       isPrivate: "No",
@@ -113,13 +113,13 @@ export default function CreateRoom() {
                   placeholder: "Mobile  Descriptoin",
                   setValue,
                 },
-                {
-                  name: "scheduledAt",
-                  label: "Schedule At",
-                  type: "date",
-                  placeholder: "Select Date",
-                  setValue,
-                },
+                // {
+                //   name: "scheduledAt",
+                //   label: "Schedule At",
+                //   type: "date",
+                //   placeholder: "Select Date",
+                //   setValue,
+                // },
               ],
             ]}
           />

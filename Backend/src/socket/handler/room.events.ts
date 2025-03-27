@@ -89,7 +89,7 @@ export const registerRoomEvents = (io: Server, socket: Socket) => {
       });
     }
   );
-  
+
   // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<  LEAVE ROOM EVENT  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   socket.on("leave-room", async (roomId: string) => {
@@ -101,7 +101,7 @@ export const registerRoomEvents = (io: Server, socket: Socket) => {
     if (!isUpdated) {
       console.log("On leave event, duration is not updated");
       return;
-    } 
+    }
     roomData[roomId] = roomData[roomId]?.filter(
       (user) => user.name !== userName
     );
@@ -144,6 +144,43 @@ export const registerRoomEvents = (io: Server, socket: Socket) => {
           .to(roomId)
           .emit("room-message", `${userName} raised their hand ✋`);
       }
+    }
+  );
+
+  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  REMOVE USER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  socket.on("room-removeUser", (socketId: string,roomId:string) => {
+    const userName = socket.data.user?.userName;
+    if (socket.id == socketId) {
+      console.log("Bro your trying to kik yourself from the room !?");
+      return;
+    } else {
+      console.log(`Removing user with ID: ${socketId}`);
+      io.to(socketId).emit("terminate-user", {
+        message: ` You were remove by host`,
+      });
+    }
+  });
+  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CHAT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  socket.on(
+    "send-message",
+    (data: { message: string; timestamp: Date; roomId: string }) => {
+      const { roomId } = data;
+      const userName = socket.data.user?.userName;
+      const avatar = socket.data.user?.avatar;
+
+      const recieveMessageData: {
+        avatar: any;
+        sender: string;
+        message: string;
+        timestamp: Date;
+      } = {
+        ...data,
+        sender: userName,
+        avatar,
+      };
+      socket.to(roomId).emit("message-recieved", recieveMessageData);
     }
   );
 

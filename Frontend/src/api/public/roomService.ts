@@ -91,7 +91,7 @@ export class RoomService {
     return await this.httpService.patch(`admin/room/${id}`);
   }
 
-  async joinRoom(data: { roomId: string }): Promise<axiosResponse & {roomId:string}> {
+  async joinRoom(data: { roomId: string }): Promise<axiosResponse & {roomId:string,role:string}> {
     return await this.httpService.post("/users/room/join", data);
   }
 

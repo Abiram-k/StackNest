@@ -123,6 +123,13 @@ export class ChallengeService implements IChallengeService {
     try {
       if (!challengeId)
         throw createHttpError(HttpStatus.NOT_FOUND, "Challenge Id not founded");
+      const challenge = await this._challengeRepo.fetchAllChallenge();
+      if (challenge && challenge?.length <= 4) {
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "Atleast 4 Challenge Needed"
+        );
+      }
       await this._challengeRepo.removeChallenge(challengeId);
       await this._challengeSubmissionRepo.removeChallengeFromSubmission(
         challengeId
@@ -131,6 +138,15 @@ export class ChallengeService implements IChallengeService {
       throw error;
     }
   }
+
+  async sheduleChallenge(challengeIds: string[]): Promise<void> {
+    try {
+      await this._challengeRepo.sheduleChallenge(challengeIds);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async toggleListing(challengeId: string): Promise<void> {
     try {
       if (!challengeId)

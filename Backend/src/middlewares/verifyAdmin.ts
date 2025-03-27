@@ -12,7 +12,7 @@ export const verifyAdmin = (
   next: NextFunction
 ): void => {
   const authReq = req as AuthRequest;
-  if (!authReq.user || authReq.user.role !== "admin") {
+  if (authReq.user && authReq.user.role !== "admin") {
     console.log("Access Denied: No Authrization ");
     res
       .status(HttpStatus.UNAUTHORIZED)

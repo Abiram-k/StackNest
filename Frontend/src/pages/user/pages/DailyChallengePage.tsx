@@ -46,7 +46,7 @@ export default function DailyChallengePage() {
               <span className="text-xs">$</span>
             </div>
             <div>
-              <p className="font-bold">
+              <p className="font-bold dark:text-black">
                 {challengePoints?.pointsCount ?? 9999} Points
               </p>
               <p className="text-xs text-gray-600 max-w-xs">
@@ -75,7 +75,7 @@ export default function DailyChallengePage() {
                         <div className="bg-purple-200 rounded-full w-24 h-24 absolute"></div>
                       </div>
                       <div className="z-10 bg-white rounded-full p-3">
-                        <Code />
+                        <Code className="text-blue-500" />
                       </div>
                       {submittedChallenge?.isSubmitted ? (
                         <CheckCircle className="absolute text-green-600 right-10 top-5" />
@@ -85,8 +85,8 @@ export default function DailyChallengePage() {
                       )}
                     </div>
 
-                    <div className="bg-white rounded-lg p-4 shadow-sm border mt-4 mb-4">
-                      <h3 className="text-purple-600 text-center">
+                    <div className="bg-white rounded-lg p-4 shadow-sm border mt-4 mb-4 dark:bg-gray-900">
+                      <h3 className="dark:text-white text-center  ">
                         {challenge.question}
                       </h3>
                     </div>
@@ -99,18 +99,17 @@ export default function DailyChallengePage() {
                             submittedChallenge
                               ? (submittedChallenge?.answer == option &&
                                   submittedChallenge.isSubmitted &&
-                                  "border-green-500 bg-purple-50") ||
+                                  "border-green-500 bg-purple-50 dark:bg-gray-900") ||
                                 (submittedChallenge.answer == option &&
                                   !submittedChallenge.isSubmitted &&
-                                  "border-red-500 bg-purple-50")
+                                  "border-red-500 bg-purple-50 dark:bg-gray-900")
                               : option === selectedOption
                               ? "border-purple-500 bg-purple-50"
                               : "border-gray-200"
                           }`}
                           onClick={() => setSelectedOption(option)}
                         >
-                          <span>
-                            {" "}
+                          <span className="">
                             {index + 1}. {option}{" "}
                           </span>
                         </button>

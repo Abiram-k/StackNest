@@ -54,7 +54,7 @@ export const refreshAccessToken = async (
   }
 };
 
-axiosInstance.interceptors.request.use(async (config) => {
+axiosInstance.interceptors.request.use( (config) => {
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
@@ -95,20 +95,4 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// export const useAxiosWithAuth = () => {
-//   const navigate = useNavigate();
 
-//   useEffect(() => {
-//     const initializeAuth = async () => {
-//       try {
-//         const token = await refreshAccessToken();
-//         updateToken(token);
-//       } catch (error) {
-//         navigate("/auth/login");
-//       }
-//     };
-//     initializeAuth();
-//   }, [navigate]);
-
-//   return { axiosInstance };
-// };
