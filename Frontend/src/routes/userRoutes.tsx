@@ -11,6 +11,8 @@ const DailyChallengePage = lazy(
 );
 const Favourites = lazy(() => import("@/pages/user/pages/Favorites"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
+const MyFeeds = lazy(() => import("@/pages/user/pages/MyFeeds"));
+const CreateFeed = lazy(() => import("@/pages/user/pages/CreateFeed"));
 const EditRoom = lazy(() => import("@/pages/user/pages/EditRoom"));
 const CreateRoom = lazy(() => import("@/pages/user/pages/CreateRoom"));
 const RoomsListPage = lazy(() => import("../pages/user/pages/RoomListPage"));
@@ -48,6 +50,8 @@ export const userRoutes: RouteObject[] = [
         children: [
           { index: true, element: <ProfilePage /> },
           { path: "settings", element: <SettingsPage /> },
+          { path: "my-feeds", element: <MyFeeds/> },
+          { path: "feed/upload", element: <CreateFeed /> },
         ],
       },
     ],

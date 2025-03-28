@@ -13,7 +13,7 @@ export interface RoomResType {
   host: User | string;
   isBlocked: boolean;
   startedAt: Date;
-  participants: [{ user: User; totalDuration: number; lastJoined: Date;}];
+  participants: [{ user: User; totalDuration: number; lastJoined: Date }];
   isPrivate: string;
   isPremium: string;
   status: "online" | "offline" | "scheduled";
@@ -69,14 +69,33 @@ export type resChallengeType = {
 };
 
 export type RoomSessionType = {
-  _id:string;
-    userId: {
-      userName:string,
-      avatar:string
-    };
-    roomId: string;
-    startTime: Date;
-    endTime?: Date;
-    duration?: number;
-  
-}
+  _id: string;
+  userId: {
+    userName: string;
+    avatar: string;
+  };
+  roomId: string;
+  startTime: Date;
+  endTime?: Date;
+  duration?: number;
+};
+
+export type FeedReqType = {
+  title: string;
+  content: string;
+  scheduledAt?: Date | null;
+  media?: string;
+};
+export type FeedResType = {
+  userId: {
+    userName: string;
+    avatar: string;
+  };
+  title: string;
+  content: string;
+  // scheduledAt: Date;
+  media: string;
+  isBlocked: boolean;
+  likes: number;
+  comments: string[];
+};

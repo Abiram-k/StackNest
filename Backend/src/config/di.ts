@@ -60,6 +60,13 @@ import { IChallengeSubmission } from "../types/IChallengeSubmissionSchema";
 import { IRoomSessionRepository } from "../interfaces/repositories/room.session.repository.interface";
 import { IRoomSession } from "../types/IRoomSession";
 import { RoomSessionRespository } from "../repositories/room.session.repository";
+import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface";
+import { IFeed } from "../types/IFeed";
+import { FeedRepository } from "../repositories/feed.repository";
+import { IFeedService } from "../interfaces/services/feed.service.interface";
+import { FeedService } from "../services/feed.service";
+import { IFeedController } from "../interfaces/controllers/feed.controller.interface";
+import { FeedController } from "../controllers/user/user.feed.controller";
 
 // Respositories
 const userAuthRepository: IUserAuthRepository<IUser> =
@@ -76,6 +83,7 @@ const challengeRepository: IChallengeRespository<IChallenge> =
   new ChallengeRespository();
 const challengeSubmissionRespository: IChallengeSubmissionRepository<IChallengeSubmission> =
   new ChallengeSubmissionRepository();
+const feedRepository:IFeedRepository<IFeed> = new FeedRepository();
 
 // Services
 const adminService: IAdminService = new AdminService(adminRespository);
@@ -100,6 +108,7 @@ const challengeServie: IChallengeService = new ChallengeService(
   userBaseRepository,
   challengeSubmissionRespository
 );
+const feedService:IFeedService = new FeedService(feedRepository);
 
 
 //  controllers
@@ -126,6 +135,8 @@ const userChallengeController: IUserChallengeController =
   new UserChallengeController(challengeServie);
 const adminChallengeController: IAdminChallengeController =
   new AdminChallengeController(challengeServie);
+const feedController:IFeedController = new FeedController(feedService);
+
 
 export {
   authController,
@@ -137,4 +148,5 @@ export {
   userBannerController,
   userChallengeController,
   adminChallengeController,
+  feedController
 };

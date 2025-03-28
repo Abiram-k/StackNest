@@ -1,29 +1,30 @@
 import { NextFunction, Request, Response } from "express";
-import { AuthRequest } from "../../types/IAuth";
 
-export interface IUserProfileController {
-  getUserData(
-    req: AuthRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>;
-
-  updateUserProfile(
-    req: AuthRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void>;
-
-  checkinUser(req: Request, res: Response, next: NextFunction): Promise<void>;
-
-  getUserStreakCount(
+export interface IFeedController {
+  getAllAvailableFeed(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void>;
-  getChallengePoints(
+  uploadFeed(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  updateFeed(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  deleteFeed(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getMyFeeds(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+
 }

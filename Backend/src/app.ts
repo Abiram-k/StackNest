@@ -8,6 +8,7 @@ import userRoutes from "../src/routes/user.routes";
 import AuthRoutes from "../src/routes/auth.routes";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandling";
+import "../src/shedule/shedule.challenges"
 import { config } from "dotenv";
 import { verifyUser } from "./middlewares/verifyUser";
 import { verifyAdmin } from "./middlewares/verifyAdmin";

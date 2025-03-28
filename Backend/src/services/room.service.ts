@@ -36,7 +36,7 @@ export class RoomService implements IRoomService {
       //   const scheduledDate = new Date(data.scheduledAt);
       //   const currentDate = new Date();
       //   if (scheduledDate < currentDate) {
-      //     roomData.startedAt = new Date();
+      //     roomData.startedAt = new Date();  
       //     roomData.status = "online";
       //   } else {
       //     const localDate = new Date(data.scheduledAt);

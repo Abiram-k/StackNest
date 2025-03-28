@@ -1,6 +1,7 @@
 import express from "express";
 import {
   favoritesController,
+  feedController,
   userBannerController,
   userChallengeController,
   userProfileController,
@@ -10,10 +11,10 @@ import {
 const router = express.Router();
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CHATBOT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-router.post(
-  "/chatbot",
-  userProfileController.chatBotResponse.bind(userProfileController)
-);
+// router.post(
+//   "/chatbot",
+//   userProfileController.chatBotResponse.bind(userProfileController)
+// );
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PROFILE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.put(
@@ -97,5 +98,12 @@ router.get(
     userChallengeController
   )
 );
+
+// <<<<<<<<<<<<<<<<<<<<<<<<<< FEEDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+router.get("/feeds",feedController.getAllAvailableFeed.bind(feedController));
+router.get("/my-feed",feedController.getMyFeeds.bind(feedController));
+router.post("/feed",feedController.uploadFeed.bind(feedController));
+router.put("/feed/:id",feedController.updateFeed.bind(feedController));
+router.delete("/feed/:id",feedController.deleteFeed.bind(feedController));
 
 export default router;

@@ -21,7 +21,7 @@ const navItems = [
   {
     name: "Posts",
     icon: <FileText className="h-5 w-5" />,
-    to: "/user/profileposts",
+    to: "/user/profile/my-feeds",
   },
   {
     name: "Friends",
@@ -48,7 +48,7 @@ const navItems = [
 const ProfileLayout = () => {
   return (
     <div className="flex md:gap-90">
-      <SideBar navItems={navItems} role="user"/>
+      <SideBar navItems={navItems} role="user" />
       <Outlet />
     </div>
   );
