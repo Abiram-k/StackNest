@@ -67,6 +67,8 @@ import { IFeedService } from "../interfaces/services/feed.service.interface";
 import { FeedService } from "../services/feed.service";
 import { IFeedController } from "../interfaces/controllers/feed.controller.interface";
 import { FeedController } from "../controllers/user/user.feed.controller";
+import { IAdminFeedController } from "../interfaces/controllers/admin.feed.controller.interface";
+import { AdminFeedController } from "../controllers/admin/admin.feeds.controller";
 
 // Respositories
 const userAuthRepository: IUserAuthRepository<IUser> =
@@ -83,7 +85,7 @@ const challengeRepository: IChallengeRespository<IChallenge> =
   new ChallengeRespository();
 const challengeSubmissionRespository: IChallengeSubmissionRepository<IChallengeSubmission> =
   new ChallengeSubmissionRepository();
-const feedRepository:IFeedRepository<IFeed> = new FeedRepository();
+const feedRepository: IFeedRepository<IFeed> = new FeedRepository();
 
 // Services
 const adminService: IAdminService = new AdminService(adminRespository);
@@ -108,8 +110,7 @@ const challengeServie: IChallengeService = new ChallengeService(
   userBaseRepository,
   challengeSubmissionRespository
 );
-const feedService:IFeedService = new FeedService(feedRepository);
-
+const feedService: IFeedService = new FeedService(feedRepository);
 
 //  controllers
 const adminController: IAdminController = new AdminController(
@@ -126,6 +127,9 @@ const userRoomController: IUserRoomController = new UserRoomController(
 const favoritesController: IFavoritesController = new FavoritesController(
   favoritesService
 );
+const adminFeedController: IAdminFeedController = new AdminFeedController(
+  feedService
+);
 const bannerController: IBannerController = new BannerController(bannerServie);
 
 const userBannerController: IUserBannerController = new UserBannerController(
@@ -135,8 +139,7 @@ const userChallengeController: IUserChallengeController =
   new UserChallengeController(challengeServie);
 const adminChallengeController: IAdminChallengeController =
   new AdminChallengeController(challengeServie);
-const feedController:IFeedController = new FeedController(feedService);
-
+const feedController: IFeedController = new FeedController(feedService);
 
 export {
   authController,
@@ -144,9 +147,10 @@ export {
   adminController,
   userRoomController,
   favoritesController,
+  adminFeedController,
   bannerController,
   userBannerController,
   userChallengeController,
   adminChallengeController,
-  feedController
+  feedController,
 };

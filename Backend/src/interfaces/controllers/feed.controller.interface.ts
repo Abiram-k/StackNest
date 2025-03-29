@@ -26,5 +26,20 @@ export interface IFeedController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getLikedFeeds(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getSelectedFeed(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  toggleLikeFeed(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 
 }

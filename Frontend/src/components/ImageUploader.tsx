@@ -1,6 +1,7 @@
 import { validateImage } from "@/utils/validateImage";
 import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import toast from "react-hot-toast";
 
 type ProfileImageUploaderPropsType = {
   avatar: string | undefined;
@@ -11,6 +12,7 @@ type ProfileImageUploaderPropsType = {
   inputClass?: string;
   defaultAvatar: string;
   fallbackText: string;
+  isVideoAllowed?: boolean;
 };
 
 const ImageUploader = ({
@@ -22,18 +24,25 @@ const ImageUploader = ({
   avatarClass,
   inputClass,
   fallbackText,
+  isVideoAllowed,
 }: ProfileImageUploaderPropsType) => {
   const [imagePreview, setImagePreview] = useState(avatar);
   useEffect(() => {
     setImagePreview(avatar || defaultAvatar);
-  }, [avatar,defaultAvatar]);
+  }, [avatar, defaultAvatar]);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
 
-    if (!validateImage(file)) return;
+    if (!isVideoAllowed && !validateImage(file)) return;
+    if (isVideoAllowed) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("video my be under 5MB.");
+        return false;
+      }
+    }
 
     const reader = new FileReader();
     reader.onloadend = () => {

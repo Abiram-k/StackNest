@@ -7,6 +7,7 @@ import {
   ResFeedType,
   ResGetMyFeedsDTO,
 } from "../dtos/user/feeds/getMyFeeds.dto";
+import { ResGetSelectedFeedDTO } from "../dtos/user/feeds/getSelectedFeed.dto";
 
 export class FeedService implements IFeedService {
   private _feedRepo: IFeedRepository<IFeed>;
@@ -15,7 +16,6 @@ export class FeedService implements IFeedService {
   }
 
   async getMyFeeds(userId: Types.ObjectId): Promise<ResFeedType[] | null> {
-    // :Promise<void>{
     try {
       const myFeeds = await this._feedRepo.getFeedsByUserId(userId);
 
@@ -23,125 +23,129 @@ export class FeedService implements IFeedService {
         console.log("No My feeds: ", myFeeds);
         return myFeeds;
       }
-      console.log(myFeeds);
       let feeds: ResFeedType[] | [];
-      // if (!myFeeds.length) {
-      //   feeds = [];
-      // } else {
-        feeds = myFeeds.map((feed) => {
-          const feedUser = feed.userId as { userName: string; avatar: string };
-          return {
-            userId: {
-              userName: feedUser.userName,
-              avatar: feedUser.avatar,
-            },
-            title: feed.title,
-            content: feed.content,
-            media: feed.media,
-            isBlocked: feed.isBlocked,
-            likes: feed.likes.length,
-            comments: feed.comments.length,
-          };
-        });
-      // }
+
+      feeds = myFeeds.map((feed) => {
+        const feedUser = feed.userId as { userName: string; avatar: string };
+        return {
+          userId: {
+            userName: feedUser.userName,
+            avatar: feedUser.avatar,
+          },
+          uploadedAt: new Date(feed.createdAt).toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }),
+          feedId: feed._id,
+          title: feed.title,
+          content: feed.content,
+          media: feed.media,
+          isBlocked: feed.isBlocked,
+          likes: feed.likes.length,
+          comments: feed.comments.length,
+        };
+      });
       return feeds;
-
-      // const feeds: ResFeedType[] = myFeeds.map((feed) => {
-      //   if (feed.userId instanceof Types.ObjectId) {
-      //     console.log("User id is not populated", userId);
-      //     return;
-      //   }
-      //   let formattedComments: ResCommentType[] | [];
-
-      //   if (!feed.comments.length) {
-      //     formattedComments = [];
-      //   } else if (feed.comments[0] instanceof Types.ObjectId) {
-      //     console.log("Comment  is not populated", feed.comments);
-      //     return;
-      //   } else {
-
-      //     formattedComments = feed.comments
-      //       .map((comment) => {
-      //         if (comment instanceof Types.ObjectId) {
-      //           return null;
-      //         }
-      //         if (comment.userId instanceof Types.ObjectId) {
-      //           console.log(
-      //             "userId inside Comment is not popupalted ",
-      //             comment.userId
-      //           );
-      //           return null;
-      //         }
-      //         let formattedReplies:ResCommentType[] | [];
-      //         if(!comment.replies || !comment.replies?.length){
-      //           formattedReplies = [];
-      //         }else if(comment.replies[0] instanceof Types.ObjectId){
-      //           console.log("Reply is not populated",comment.replies);
-      //           return;
-      //         }else{
-      //           formattedReplies = comment.replies.map(reply=>{
-      //             if(reply instanceof Types.ObjectId){
-      //               console.log("Replay is not populated again",reply);
-      //               return;
-      //             }
-      //             if(reply.userId instanceof Types.ObjectId){
-      //               console.log("User id inside the reply is not populated");
-      //               return;
-      //             }
-      //             return {
-      //               userId:{
-      //                 userName:reply.userId.userName,
-      //                 avatar:reply.userId.avatar,
-      //               },
-      //               comment:reply.comment,
-      //               likes:reply.likes.length,
-      //             }
-      //           })
-      //         }
-      //         return {
-      //           userId: {
-      //             avatar: comment.userId.userName,
-      //             userName: comment.userId.avatar,
-      //           },
-      //           comment: comment.comment,
-      //           likes: comment.likes.length,
-      //           replies:formattedReplies
-      //         };
-      //       })
-      //       .filter((comment) => comment !== null && comment !== undefined);
-      //   }
-
-      //   return {
-      //     userId: {
-      //       userName: feed.userId.userName,
-      //       avatar: feed.userId.avatar,
-      //       title: feed.title,
-      //       content: feed.content,
-      //       media: feed.media,
-      //       isBlocked: feed.isBlocked,
-      //       likes: feed.likes.length,
-      //       comments: formattedComments,
-      //     },
-      //   };
-      // });
     } catch (error) {
       throw error;
     }
   }
 
-  async getAllAvailableFeed(): Promise<IFeed[] | null> {
+  async getAllAvailableFeed(): Promise<ResFeedType[] | []> {
     try {
-      console.log("From get all feed Service");
-      return await this._feedRepo.getAllAvailableFeed();
+      const feeds = await this._feedRepo.getAllAvailableFeed();
+      if (!feeds) return [];
+
+      const formattedFeeds: ResFeedType[] = feeds.map((feed) => {
+        const feedUser = feed.userId as { userName: string; avatar: string };
+        return {
+          userId: {
+            userName: feedUser.userName,
+            avatar: feedUser.avatar,
+          },
+          uploadedAt: new Date(feed.createdAt).toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }),
+          feedId: feed._id,
+          title: feed.title,
+          content: feed.content,
+          media: feed.media,
+          isBlocked: feed.isBlocked,
+          likes: feed.likes.length,
+          comments: feed.comments.length,
+        };
+      });
+      return formattedFeeds;
     } catch (error) {
       throw error;
     }
   }
-  async updateFeed(feedId: string, data: Partial<IFeed>): Promise<boolean> {
+  async updateFeed(
+    userId: Types.ObjectId,
+    feedId: string,
+    data: {
+      title: string;
+      content: string;
+      media: string;
+      scheduledAt: string;
+    }
+  ): Promise<boolean> {
     try {
-      console.log("From update feed Service");
-      const isUpdated = await this._feedRepo.findByIdAndUpdate(feedId, data);
+      const formattedData = {
+        title: data.title,
+        content: data.content,
+        media: data.media,
+        scheduleAt: data.scheduledAt ? data.scheduledAt : null,
+      };
+      const isUpdated = await this._feedRepo.findByIdAndUpdate(
+        userId,
+        feedId,
+        formattedData
+      );
       return isUpdated;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async toggleLikeFeed(feedId: string, userId: Types.ObjectId): Promise<void> {
+    try {
+      await this._feedRepo.toggleLikeFeed(feedId, userId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getLikedFeeds(userId: Types.ObjectId): Promise<string[] | []> {
+    try {
+      const feeds = await this._feedRepo.getLikedFeeds(userId);
+      return feeds;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getSelectedFeed(feedId: string): Promise<ResGetSelectedFeedDTO | []> {
+    try {
+      const selectedFeed = await this._feedRepo.getFeedById(feedId);
+      if (!selectedFeed) {
+        return [];
+      } else {
+        return {
+          content: selectedFeed.content,
+          title: selectedFeed.title,
+          media: selectedFeed.media,
+        };
+      }
     } catch (error) {
       throw error;
     }
@@ -172,9 +176,54 @@ export class FeedService implements IFeedService {
   }
   async deleteFeed(feedId: string): Promise<boolean> {
     try {
-      console.log("From Delete feed Service");
       const isDeleted = await this._feedRepo.deleteFeed(feedId);
       return isDeleted;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Admin
+
+  async getAllFeeds(): Promise<ResFeedType[] | []> {
+    try {
+      const feeds = await this._feedRepo.getAllFeed();
+      if (!feeds) return [];
+
+      const formattedFeeds = feeds.map((feed) => {
+        const feedUser = feed.userId as { userName: string; avatar: string };
+        return {
+          userId: {
+            userName: feedUser.userName,
+            avatar: feedUser.avatar,
+          },
+          uploadedAt: new Date(feed.createdAt).toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }),
+          _id: feed._id,
+          feedId:"",
+          title: feed.title,
+          content: feed.content,
+          media: feed.media,
+          isBlocked: feed.isBlocked,
+          likes: feed.likes.length,
+          comments: feed.comments.length,
+        };
+      });
+      return formattedFeeds ;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async blockOrUnblockFeed(feedId: string): Promise<void> {
+    try {
+      await this._feedRepo.blockOrUnblockFeed(feedId);
     } catch (error) {
       throw error;
     }

@@ -11,8 +11,10 @@ const DailyChallengePage = lazy(
 );
 const Favourites = lazy(() => import("@/pages/user/pages/Favorites"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
+const Highlights = lazy(() => import("@/pages/user/pages/Highlights"));
 const MyFeeds = lazy(() => import("@/pages/user/pages/MyFeeds"));
 const CreateFeed = lazy(() => import("@/pages/user/pages/CreateFeed"));
+const UpdateFeed = lazy(() => import("@/pages/user/pages/UpdateFeed"));
 const EditRoom = lazy(() => import("@/pages/user/pages/EditRoom"));
 const CreateRoom = lazy(() => import("@/pages/user/pages/CreateRoom"));
 const RoomsListPage = lazy(() => import("../pages/user/pages/RoomListPage"));
@@ -44,13 +46,15 @@ export const userRoutes: RouteObject[] = [
       { path: "room/:roomId/edit", element: <EditRoom /> },
       { path: "room/:roomId/conference", element: <VideoConference /> },
       { path: "challenge", element: <DailyChallengePage /> },
+      { path: "highlights", element: <Highlights /> },
       {
         path: "profile",
         element: <ProfileLayout />,
         children: [
           { index: true, element: <ProfilePage /> },
           { path: "settings", element: <SettingsPage /> },
-          { path: "my-feeds", element: <MyFeeds/> },
+          { path: "my-feeds", element: <MyFeeds /> },
+          { path: "my-feed/:feedId/edit", element: <UpdateFeed /> },
           { path: "feed/upload", element: <CreateFeed /> },
         ],
       },

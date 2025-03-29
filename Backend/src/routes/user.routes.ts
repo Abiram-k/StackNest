@@ -100,10 +100,13 @@ router.get(
 );
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<< FEEDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
-router.get("/feeds",feedController.getAllAvailableFeed.bind(feedController));
+router.get("/available-feeds",feedController.getAllAvailableFeed.bind(feedController));
 router.get("/my-feed",feedController.getMyFeeds.bind(feedController));
+router.get("/feeds/my-likes",feedController.getLikedFeeds.bind(feedController));
+router.get("/feed/:feedId",feedController.getSelectedFeed.bind(feedController));
 router.post("/feed",feedController.uploadFeed.bind(feedController));
-router.put("/feed/:id",feedController.updateFeed.bind(feedController));
-router.delete("/feed/:id",feedController.deleteFeed.bind(feedController));
+router.post("/feed/like",feedController.toggleLikeFeed.bind(feedController));
+router.put("/feed/:feedId",feedController.updateFeed.bind(feedController));
+router.delete("/feed/:feedId",feedController.deleteFeed.bind(feedController));
 
 export default router;

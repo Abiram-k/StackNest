@@ -87,15 +87,16 @@ export type FeedReqType = {
   media?: string;
 };
 export type FeedResType = {
+  feedId:string,
   userId: {
     userName: string;
     avatar: string;
   };
+  uploadedAt: string;
   title: string;
   content: string;
-  // scheduledAt: Date;
-  media: string;
+  media?: string;
   isBlocked: boolean;
   likes: number;
-  comments: string[];
+  comments: number;
 };

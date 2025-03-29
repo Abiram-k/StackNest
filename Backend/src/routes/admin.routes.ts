@@ -2,6 +2,7 @@ import express from "express";
 import {
   adminChallengeController,
   adminController,
+  adminFeedController,
   bannerController,
 } from "../config/di";
 import { verifyUser } from "../middlewares/verifyUser";
@@ -62,5 +63,10 @@ router.delete(
   "/challenge/:id",
   adminChallengeController.removeChallenge.bind(adminChallengeController)
 );
+
+// <<<<<<<<<<<<<<<<<<<<<<<<< FEED MANAGEMENT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+router.get("/feeds",adminFeedController.getAllFeeds.bind(adminFeedController))
+router.put("/feed",adminFeedController.blockOrUnblockFeed.bind(adminFeedController))
+router.delete("/feed/:feedId",adminFeedController.deleteFeed.bind(adminFeedController))
 
 export default router;

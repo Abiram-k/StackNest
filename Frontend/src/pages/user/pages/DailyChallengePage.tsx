@@ -1,4 +1,5 @@
 import { FallBackTable } from "@/components/FallBackTable";
+import SuccessModal from "@/components/modal/SuccessModal";
 import { Spinner } from "@/components/ui/spinner";
 import { useFetchAllSubmittedChallenges } from "@/hooks/user/challenge/useFetchAllSubmittedChallenges";
 import { useFetchChallenges } from "@/hooks/user/challenge/useFetchChallenge";
@@ -9,7 +10,7 @@ import { useState } from "react";
 
 export default function DailyChallengePage() {
   const [selectedOption, setSelectedOption] = useState("");
-
+  const [isSelectedOptionCorrect, setIsSelectedOptionCorrect] = useState(false);
   const { data, isPending } = useFetchChallenges();
 
   const { mutate: submitMutate, isPending: submitPending } =
@@ -24,7 +25,14 @@ export default function DailyChallengePage() {
   console.log("Submitted Challenge: ", submittedChallenges);
 
   const handleSubmit = (challengeId: string) => {
-    submitMutate({ challengeId, answer: selectedOption });
+    submitMutate(
+      { challengeId, answer: selectedOption },
+      {
+        onSuccess: (data) => {
+          if (data.success) setIsSelectedOptionCorrect(true);
+        },
+      }
+    );
   };
 
   return (
@@ -33,6 +41,16 @@ export default function DailyChallengePage() {
         isPending ||
         ischallengePointPending ||
         submittedChallengePending) && <Spinner />}
+      {isSelectedOptionCorrect && (
+        <SuccessModal
+          title="You choose correct one!"
+          message="You got one more point, use this point to unlock exciting features"
+          onClose={() => {
+            setIsSelectedOptionCorrect(false);
+          }}
+          isOpen={isSelectedOptionCorrect}
+        />
+      )}
       <main className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div className="flex items-center mb-4 md:mb-0">
@@ -104,7 +122,7 @@ export default function DailyChallengePage() {
                                   !submittedChallenge.isSubmitted &&
                                   "border-red-500 bg-purple-50 dark:bg-gray-900")
                               : option === selectedOption
-                              ? "border-purple-500 bg-purple-50"
+                              ? "border-purple-500 bg-purple-50 dark:bg-gray-900"
                               : "border-gray-200"
                           }`}
                           onClick={() => setSelectedOption(option)}

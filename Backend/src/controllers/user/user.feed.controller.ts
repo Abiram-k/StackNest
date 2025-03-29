@@ -24,10 +24,13 @@ export class FeedController implements IFeedController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("Request got to got my feeds");
       const user = req.user as { userId: Types.ObjectId; role: string };
       const myFeeds = await this._feedService.getMyFeeds(user.userId);
-      res.status(HttpStatus.OK).json({message:"Successfully fetched my feeds",success:true,myFeeds})
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched my feeds",
+        success: true,
+        myFeeds,
+      });
     } catch (error) {
       next(error);
     }
@@ -39,7 +42,12 @@ export class FeedController implements IFeedController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("From Get all feed controller");
+      const availableFeeds = await this._feedService.getAllAvailableFeed();
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched available feeds",
+        success: true,
+        availableFeeds,
+      });
     } catch (error) {
       next(error);
     }
@@ -62,13 +70,60 @@ export class FeedController implements IFeedController {
       next(error);
     }
   }
+
+  async getLikedFeeds(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.user as { userId: Types.ObjectId; role: string };
+      const likedFeeds = await this._feedService.getLikedFeeds(user.userId);
+      res
+        .status(HttpStatus.OK)
+        .json({
+          message: "Successfully fetched liked feeds",
+          success: true,
+          likedFeeds,
+        });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getSelectedFeed(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { feedId } = req.params;
+      const selectedFeed = await this._feedService.getSelectedFeed(feedId);
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched selected feed",
+        success: true,
+        selectedFeed,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async updateFeed(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("From Update feed controller");
+      const user = req.user as { userId: Types.ObjectId; role: string };
+      const { feedId } = req.params;
+      const dto = plainToInstance(uploadFeedDTO, req.body);
+      const errors = await validate(dto);
+      if (!validateDtoError(errors, res)) return;
+      await this._feedService.updateFeed(user.userId, feedId, dto);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "Successfully updated feed", success: true });
     } catch (error) {
       next(error);
     }
@@ -79,7 +134,31 @@ export class FeedController implements IFeedController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("From Delete feed controller");
+      const { feedId } = req.params;
+      await this._feedService.deleteFeed(feedId);
+      res
+        .status(HttpStatus.OK)
+        .json({ mesage: "Successfully deleted feed", success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async toggleLikeFeed(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.user as { userId: Types.ObjectId; role: string };
+      const { feedId } = req.body;
+      if (!feedId) {
+        console.log("FeedId is not availble in controller");
+        return;
+      }
+      await this._feedService.toggleLikeFeed(feedId, user.userId);
+      res
+        .status(HttpStatus.OK)
+        .json({ mesage: "Successfully liked post", success: true });
     } catch (error) {
       next(error);
     }

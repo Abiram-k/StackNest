@@ -10,7 +10,8 @@ import {
 import { Switch } from "@/components/ui/switch";
 import ConfirmationDialog from "./modal/confirmationDialog";
 import toast from "react-hot-toast";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Search, Trash2 } from "lucide-react";
+import { Button } from "./ui/button";
 
 export type Column<T extends { _id: string | undefined }> = {
   render?: (item: T) => React.ReactNode;
@@ -191,10 +192,10 @@ const CustomTableComponent = <T extends { _id: string }>({
                 key={index}
                 className={`cursor-pointer ${
                   item?._id?.startsWith("67d4844c8f2468a") &&
-                  "dark:bg-gray-900 bg-gray-200"
+                  "dark:bg-gray-900 bg-gray-200 "
                 }`}
                 // onClick={() => handleRowClick(item._id)}
-                onClick={() => onViewMore?.(item._id)}
+                onClick={() => !toggleKey && onViewMore?.(item._id)}
               >
                 <TableCell className="text-center font-medium p-2 sm:p-3">
                   {index + 1}
@@ -242,6 +243,14 @@ const CustomTableComponent = <T extends { _id: string }>({
                       >
                         <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 hover:text-red-700" />
                       </button>
+                    )}
+                    {onViewMore && toggleKey && (
+                      <Button
+                        variant="outline"
+                        onClick={() => onViewMore?.(item._id)}
+                      >
+                        <Search /> View More
+                      </Button>
                     )}
                   </div>
                 </TableCell>

@@ -60,7 +60,11 @@ const navItems = [
     icon: <FileText className="w-5 h-5" />,
     to: "/admin/reports",
   },
-  { name: "Feeds", icon: <Globe className="w-5 h-5" />, to: "/admin/feeds" },
+  {
+    name: "Feeds",
+    icon: <Globe className="w-5 h-5" />,
+    to: "/admin/feed-management",
+  },
 ];
 
 const AdminLayout = () => {

@@ -3,16 +3,17 @@ import { ImageService } from "@/api/public/imageService";
 import DetailsForm from "@/components/forms/DetailsForm";
 import ImageUploader from "@/components/ImageUploader";
 import { Spinner } from "@/components/ui/spinner";
-import { usePostNewFeed } from "@/hooks/feeds/usePostNewFeed";
+import { useGetSelectedFeed } from "@/hooks/feeds/useGetSelectedFeed";
+import { useUpdateFeed } from "@/hooks/feeds/useUpdateFeed";
 import { useVerifyFeedForm } from "@/hooks/validation/useFeedForm";
 import { FeedReqType } from "@/types";
 import { validateFeedSchema } from "@/validation/feedSchema";
 import { ArrowLeft } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const CreateFeed = () => {
+const UpdateFeed = () => {
   const {
     register,
     reset,
@@ -31,9 +32,23 @@ const CreateFeed = () => {
   const selectedImage = useRef<File | null>(null);
   const uploadedImgUrl = useRef<string | "">("");
   const [isLoading, setIsLoading] = useState(false);
+  const [defaultMedia, setDefaultMedia] = useState("");
+  const { feedId } = useParams<{ feedId: string }>();
+  if (!feedId) {
+    toast.error(`Feed id is missing: ${feedId}`);
+    return;
+  }
 
   const navigate = useNavigate();
-  const { mutate, isPending } = usePostNewFeed();
+  const { mutate: postUpdateMutate, isPending: updatePending } =
+    useUpdateFeed();
+
+  const { data: selectedFeedData, isPending } = useGetSelectedFeed(feedId);
+
+  useEffect(() => {
+    reset(selectedFeedData?.selectedFeed);
+    setDefaultMedia(selectedFeedData?.selectedFeed.media || "");
+  }, [selectedFeedData?.selectedFeed]);
 
   const handleAddPost = async (data: FeedReqType) => {
     try {
@@ -67,12 +82,12 @@ const CreateFeed = () => {
         uploadedImgUrl.current = cloudinaryImgURL;
       }
       const formattedData = {
-        media: uploadedImgUrl.current,
+        media: uploadedImgUrl.current || defaultMedia,
         title: data.title,
         content: data.content,
         scheduledAt: data.scheduledAt,
       };
-      mutate(formattedData);
+      postUpdateMutate({ feedId, data: formattedData });
       reset();
       selectedImage.current = null;
       navigate(-1);
@@ -89,7 +104,7 @@ const CreateFeed = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black w-full md:-ms-72 mb-20">
-      {(isLoading || isPending) && <Spinner />}
+      {(isLoading || isPending || updatePending) && <Spinner />}
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-gray-50 dark:bg-black rounded-3xl p-8">
           <button
@@ -100,7 +115,7 @@ const CreateFeed = () => {
             Back
           </button>
 
-          <h1 className="text-2xl font-semibold mb-2">Upload New Feed</h1>
+          <h1 className="text-2xl font-semibold mb-2">Update Feed</h1>
           <p className="text-gray-600 mb-8">
             Share your quality thoughts with other developers, collaborate with
             them for your bright future.
@@ -114,49 +129,43 @@ const CreateFeed = () => {
               <ImageUploader
                 isVideoAllowed={true}
                 avatar=""
-                defaultAvatar="https://placehold.co/1600x450"
+                defaultAvatar={defaultMedia || `https://placehold.co/1600x450`}
                 isEditing={true}
                 onImageChange={handleImageChange}
                 containerClass="border-2 md:-ms-10 border-dashed border-gray-300 hover:border-blue-500 relative w-full md:w-full h-46 rounded-lg overflow-hidden group transition duration-300 ease-in-out"
                 avatarClass="w-full h-full object-cover rounded-none"
                 inputClass="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                fallbackText="Media Added"
+                fallbackText="Video Preview Unavailable !"
               />
             </div>
-            <DetailsForm
-              isEditing={true}
-              errors={errors}
-              submitButtonText="Post Now"
-              onSubmit={handleSubmit(handleAddPost)}
-              register={register}
-              fields={[
-                [
-                  {
-                    name: "title",
-                    label: "Title",
-                    type: "text",
-                    placeholder: "Enter Title",
-                    setValue,
-                  },
-                  {
-                    name: "scheduledAt",
-                    label: "Schedule At",
-                    type: "date",
-                    placeholder: "Select Date",
-                    setValue,
-                  },
-                ],
-                [
-                  {
-                    name: "content",
-                    label: "Content",
-                    type: "textarea",
-                    placeholder: "Enter Content",
-                    setValue,
-                  },
-                ],
-              ]}
-            />
+            <div className="w-full md:ms-50 mt-5">
+              <DetailsForm
+                isEditing={true}
+                errors={errors}
+                submitButtonText="Post Now"
+                onSubmit={handleSubmit(handleAddPost)}
+                register={register}
+                fields={[
+                  [
+                    {
+                      name: "title",
+                      label: "Title",
+                      type: "text",
+                      placeholder: "Enter Title",
+                      setValue,
+                    },
+                    {
+                      name: "content",
+                      label: "Content",
+                      type: "textarea",
+                      placeholder: "Enter Content",
+                      setValue,
+                    },
+                  ],
+                  [],
+                ]}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -164,4 +173,4 @@ const CreateFeed = () => {
   );
 };
 
-export default CreateFeed;
+export default UpdateFeed;

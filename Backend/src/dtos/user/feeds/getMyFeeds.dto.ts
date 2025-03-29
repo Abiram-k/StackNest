@@ -9,17 +9,19 @@ export interface ResCommentType {
 }
 
 export interface ResFeedType {
+  feedId:string,
   userId: {
     userName: string;
     avatar: string;
   };
   title: string;
+  uploadedAt: string;
   content: string;
   media?: string;
   isBlocked: boolean;
   likes: number;
   // comments: ResCommentType[] | null;
-  comments:number;
+  comments: number;
 }
 
 export interface ResGetMyFeedsDTO {

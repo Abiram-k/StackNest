@@ -38,9 +38,10 @@ export class ImageService {
     formData.append("timestamp", timestamp.toString());
     formData.append("folder", folderName);
     formData.append("type", "authenticated");
+    const fileType = file.type.startsWith("video/") ? "video" : "image";
 
     const response: AxiosResponse<ICloudinaryResponse> = await axios.post(
-      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/${fileType}/upload`,
       formData
     );
     return response.data.secure_url;

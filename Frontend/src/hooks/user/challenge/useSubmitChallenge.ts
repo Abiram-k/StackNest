@@ -21,7 +21,7 @@ export const useSubmitChallenge = () => {
     onSuccess: (data) => {
       toast.dismiss();
       if (data.success) {
-        toast.success("Answer is correct");
+        // toast.success("Answer is correct");
       } else {
         toast.error("Answer is incorrect");
       }
