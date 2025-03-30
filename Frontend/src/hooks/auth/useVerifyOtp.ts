@@ -1,9 +1,9 @@
 import { HttpService } from "@/api/httpService";
 import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { typeRegisterUserWithOtp } from "../../../../types/user";
 import { UserAuthService } from "@/api/public/authService";
+import { toast } from "sonner";
 
 export const useVerifyOtp = (setIsModalOpen: (value: boolean) => void) => {
   const navigate = useNavigate();

@@ -5,7 +5,7 @@ import {
   axiosResponse,
   verifyUserProfileSchemaType,
 } from "../../../../../types/user";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 const userProfileService = new UserProfileService(new HttpService());
 

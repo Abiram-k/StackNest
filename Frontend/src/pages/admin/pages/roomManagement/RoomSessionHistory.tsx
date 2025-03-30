@@ -1,5 +1,4 @@
 import { useState } from "react";
-import FilterBar from "@/components/FilterBar";
 import Pagination from "@/components/Pagination";
 import { Spinner } from "@/components/ui/spinner";
 import CustomTable, { Column } from "@/components/CustomTable";
@@ -7,9 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDebounce } from "@/hooks/optimizational/useDebounce";
 import { RoomSessionType } from "@/types";
 import { useFetchRoomSessionHistory } from "@/hooks/room/useFetchRoomSessionHistory";
-import toast from "react-hot-toast";
 import { formatSecondToTime } from "@/utils/formatSecondToTime";
-import { normalizeDate } from "@/utils/normalizeDate";
+import { toast } from "sonner";
 
 const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
 

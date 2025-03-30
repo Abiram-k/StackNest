@@ -5,10 +5,10 @@ import { ArrowLeft } from "lucide-react";
 import { RoomSchema } from "../../../../../types/user";
 import { useUpdateRoom } from "@/hooks/room/useUpdateRoom";
 import { useNavigate, useParams } from "react-router-dom";
-import toast from "react-hot-toast";
 import { Spinner } from "@/components/ui/spinner";
 import { useFetchSelectedRoom } from "@/hooks/room/userFetchSelectedRoom";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function EditRoom() {
   const {

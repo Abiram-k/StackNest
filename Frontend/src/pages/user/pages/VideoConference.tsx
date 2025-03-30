@@ -4,8 +4,8 @@ import { useSocket } from "@/lib/socket";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { WebRTCManager } from "@/lib/webRTCManager";
-import toast from "react-hot-toast";
 import VideoArea from "@/components/user/room/VideoArea";
+import { toast } from "sonner";
 export interface PeerData {
   peerId: string;
   peer: RTCPeerConnection;

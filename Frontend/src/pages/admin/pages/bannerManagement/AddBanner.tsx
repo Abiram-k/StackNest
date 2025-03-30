@@ -8,8 +8,8 @@ import { useVerifyBannerForm } from "@/hooks/validation/useBannerForm";
 import { BannerReq } from "@/types";
 import { validateBannerSchema } from "@/validation/bannerSchema";
 import { useRef, useState } from "react";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const AddBanner = () => {
   const selectedBanner = useRef<File | null>(null);

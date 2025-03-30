@@ -11,6 +11,11 @@ export interface IFeedController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getUserSearchSuggestion(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
   updateFeed(
     req: Request,
     res: Response,

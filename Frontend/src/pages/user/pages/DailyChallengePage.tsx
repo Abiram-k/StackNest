@@ -5,7 +5,7 @@ import { useFetchAllSubmittedChallenges } from "@/hooks/user/challenge/useFetchA
 import { useFetchChallenges } from "@/hooks/user/challenge/useFetchChallenge";
 import { useSubmitChallenge } from "@/hooks/user/challenge/useSubmitChallenge";
 import { useFetchChallengePoints } from "@/hooks/user/userProfile/useFetchChallengePoints";
-import { CheckCircle, Code, XCircle } from "lucide-react";
+import { CheckCircle, Code } from "lucide-react";
 import { useState } from "react";
 
 export default function DailyChallengePage() {

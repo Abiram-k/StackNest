@@ -21,9 +21,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { ImageService } from "@/api/public/imageService";
 import ChatBot from "./ChatBot";
 import { HttpService } from "@/api/httpService";
-import toast from "react-hot-toast";
 import { useCheckin } from "@/hooks/user/userProfile/useCheckin";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const initialValue = {
   avatar: "",

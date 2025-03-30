@@ -2,8 +2,8 @@ import { HttpService } from "@/api/httpService";
 import { RoomService } from "@/api/public/roomService";
 import {  useMutation, useQueryClient } from "@tanstack/react-query";
 import { RoomSchema } from "../../../../types/user";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const useUpdateRoom = () => {
   const queryClient = useQueryClient();

@@ -10,8 +10,8 @@ import { FeedReqType } from "@/types";
 import { validateFeedSchema } from "@/validation/feedSchema";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const UpdateFeed = () => {
   const {

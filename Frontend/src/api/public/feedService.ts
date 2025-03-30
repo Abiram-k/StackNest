@@ -27,7 +27,7 @@ type GetAvailableFeedsType = axiosResponse & {
     likes: number;
     comments: number;
   }[];
-}
+};
 
 type GetAllFeedsType = axiosResponse & {
   availableFeeds: {
@@ -78,6 +78,9 @@ export class FeedService {
   }
   async useToggleLikeFeed(feedId: string): Promise<axiosResponse> {
     return await this._httpService.post("users/feed/like", { feedId });
+  }
+  async getUserSuggestionFromPrefix(search: string):Promise<string[]> {
+    return await this._httpService.get(`/users/suggestion?&search=${search}`);
   }
   // Admin Calls
   async getAllFeeds(): Promise<GetAllFeedsType> {

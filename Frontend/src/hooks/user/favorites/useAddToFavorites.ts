@@ -1,7 +1,7 @@
 import { HttpService } from "@/api/httpService";
 import { FavoritesService } from "@/api/user/favoritesService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export const useAddToFavorites = () => {
   const httpService = new HttpService();

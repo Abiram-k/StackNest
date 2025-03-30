@@ -1,7 +1,7 @@
 import { validateImage } from "@/utils/validateImage";
 import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 type ProfileImageUploaderPropsType = {
   avatar: string | undefined;

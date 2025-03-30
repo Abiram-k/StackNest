@@ -10,11 +10,6 @@ import {
 
 const router = express.Router();
 
-// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CHATBOT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// router.post(
-//   "/chatbot",
-//   userProfileController.chatBotResponse.bind(userProfileController)
-// );
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PROFILE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.put(
@@ -100,6 +95,7 @@ router.get(
 );
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<< FEEDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+router.get("/suggestion",feedController.getUserSearchSuggestion.bind(feedController));
 router.get("/available-feeds",feedController.getAllAvailableFeed.bind(feedController));
 router.get("/my-feed",feedController.getMyFeeds.bind(feedController));
 router.get("/feeds/my-likes",feedController.getLikedFeeds.bind(feedController));

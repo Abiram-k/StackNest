@@ -9,22 +9,22 @@ export class FeedRepository implements IFeedRepository<IFeed> {
     try {
       return await Feed.find({ userId })
         .populate("userId", "userName avatar")
-        .populate({
-          path: "comments",
-          populate: [
-            {
-              path: "userId",
-              select: "userName avatar",
-            },
-            {
-              path: "replies",
-              populate: {
-                path: "userId",
-                select: "userName avatar",
-              },
-            },
-          ],
-        });
+        // .populate({
+        //   path: "comments",
+        //   populate: [
+        //     {
+        //       path: "userId",
+        //       select: "userName avatar",
+        //     },
+        //     {
+        //       path: "replies",
+        //       populate: {
+        //         path: "userId",
+        //         select: "userName avatar",
+        //       },
+        //     },
+        //   ],
+        // });
     } catch (error) {
       throw error;
     }

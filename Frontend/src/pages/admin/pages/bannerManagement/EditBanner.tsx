@@ -9,8 +9,8 @@ import { useVerifyBannerForm } from "@/hooks/validation/useBannerForm";
 import { BannerReq } from "@/types";
 import { validateBannerSchema } from "@/validation/bannerSchema";
 import { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const EditBanner = () => {
   const selectedBanner = useRef<File | null>(null);

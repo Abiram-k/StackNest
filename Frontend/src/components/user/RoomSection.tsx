@@ -1,14 +1,12 @@
 import { ArrowRight, Cpu, DoorOpen, LayoutList } from "lucide-react";
 import { useFetchAllRooms } from "@/hooks/room/useFetchRooms";
-
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import PasswordConfirmation from "../modal/PasswordConfirmation";
 import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
-import toast from "react-hot-toast";
 import { Spinner } from "../ui/spinner";
 import { Link } from "react-router-dom";
 import RoomCard from "../card/RoomCard";
-import { useSocket } from "@/lib/socket";
+import { toast } from "sonner";
 
 const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   const [isModalPasswordModal, setIsModalPasswordModal] = useState(false);

@@ -8,11 +8,20 @@ import {
   ResGetMyFeedsDTO,
 } from "../dtos/user/feeds/getMyFeeds.dto";
 import { ResGetSelectedFeedDTO } from "../dtos/user/feeds/getSelectedFeed.dto";
+import { TrieService } from "./trie.service";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
+import { IUser } from "../types/IUser";
+const trieService = new TrieService();
 
 export class FeedService implements IFeedService {
   private _feedRepo: IFeedRepository<IFeed>;
-  constructor(feedRepo: IFeedRepository<IFeed>) {
+  private _userBaseRepo: IUserBaseRepository<IUser>;
+  constructor(
+    feedRepo: IFeedRepository<IFeed>,
+    userBaseRepo: IUserBaseRepository<IUser>
+  ) {
     this._feedRepo = feedRepo;
+    this._userBaseRepo = userBaseRepo;
   }
 
   async getMyFeeds(userId: Types.ObjectId): Promise<ResFeedType[] | null> {
@@ -50,6 +59,32 @@ export class FeedService implements IFeedService {
         };
       });
       return feeds;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAllUserNames(
+    userId: Types.ObjectId,
+    // filter: string,
+    search: string,
+    // sort: string
+  ): Promise<string[] | []> {
+    try {
+      const users = await this._userBaseRepo.fetchAllUserNameExceptUser(
+        String(userId),
+        // filter,
+        // search,
+        // sort
+      );
+      const allUserNames = users
+        ?.filter(
+          (user) =>
+            user && Object.keys(user).length > 0 && user.userName !== undefined
+        )
+        .map((user) => user.userName);
+      return allUserNames ? allUserNames : [];
+      
     } catch (error) {
       throw error;
     }
@@ -206,7 +241,7 @@ export class FeedService implements IFeedService {
             hour12: true,
           }),
           _id: feed._id,
-          feedId:"",
+          feedId: "",
           title: feed.title,
           content: feed.content,
           media: feed.media,
@@ -215,7 +250,7 @@ export class FeedService implements IFeedService {
           comments: feed.comments.length,
         };
       });
-      return formattedFeeds ;
+      return formattedFeeds;
     } catch (error) {
       throw error;
     }

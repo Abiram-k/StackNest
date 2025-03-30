@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FeedResType } from "@/types";
 import { useNavigate } from "react-router-dom";
+import WarningMessage from "../ui/WarningMessage";
 
 type FeedItemProp = FeedResType & {
   handleEdit?: () => void;
@@ -26,6 +27,7 @@ export default function FeedItem({
   likes,
   media,
   comments,
+  isBlocked,
 }: FeedItemProp) {
   const [liked, setLiked] = useState(isLikedFeed);
   const [likeCount, setLikeCount] = useState(likes);
@@ -70,12 +72,14 @@ export default function FeedItem({
             <AvatarImage src={userId.avatar} alt={userId.userName} />
             <AvatarFallback>{userId.userName.charAt(0)}</AvatarFallback>
           </Avatar>
+
           <div>
             <h3 className="font-medium">{userId.userName}</h3>
             <p className="text-sm text-gray-500">{uploadedAt}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {isBlocked && <WarningMessage message="This post is restricted" />}
           {handleEdit && (
             <Button
               variant="ghost"
@@ -143,9 +147,7 @@ export default function FeedItem({
         )}
       </div>
 
-      <div className="flex items-center mt-4 gap-6">
-      
-      </div>
+      <div className="flex items-center mt-4 gap-6"></div>
       <div className="flex -space-x-2">
         <Button
           variant="ghost"
@@ -155,7 +157,7 @@ export default function FeedItem({
           disabled={!handleLikeFeed}
         >
           <Heart
-            className={`h-5 w-5 ${!liked ? "fill-red-500 text-red-500" : ""}`}
+            className={`h-5 w-5 ${liked ? "fill-red-500 text-red-500" : ""}`}
           />
           <span>Like {likeCount}</span>
         </Button>

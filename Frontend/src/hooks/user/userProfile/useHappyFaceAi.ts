@@ -1,7 +1,6 @@
 import { HttpService } from "@/api/httpService";
 import { UserProfileService } from "@/api/user/userProfileService";
 import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 
 export const useHappyFaceAi = () => {
   const userProfileService = new UserProfileService(new HttpService());

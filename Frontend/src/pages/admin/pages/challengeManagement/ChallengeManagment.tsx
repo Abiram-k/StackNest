@@ -9,8 +9,8 @@ import { useToggleListingChallenge } from "@/hooks/admin/challengeManagement/use
 import { resChallengeType } from "@/types";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const columns = [
   {

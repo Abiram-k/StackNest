@@ -8,6 +8,12 @@ import { ResGetSelectedFeedDTO } from "../../dtos/user/feeds/getSelectedFeed.dto
 
 export interface IFeedService {
   getAllAvailableFeed(): Promise<ResFeedType[] | []>;
+  getAllUserNames(
+    userId: Types.ObjectId,
+    // filter: string ,
+    search: string,
+    // sort: string
+  ): Promise<string[]>;
   uploadFeed(
     userId: Types.ObjectId,
     data: {
@@ -20,7 +26,7 @@ export interface IFeedService {
   getMyFeeds(userId: Types.ObjectId): Promise<ResFeedType[] | null>;
   getLikedFeeds(userId: Types.ObjectId): Promise<string[] | []>;
   updateFeed(
-    userId:Types.ObjectId,
+    userId: Types.ObjectId,
     feedId: string,
     data: {
       title: string;
@@ -30,12 +36,12 @@ export interface IFeedService {
     }
   ): Promise<boolean>;
 
-  getSelectedFeed(feedId:string):Promise<ResGetSelectedFeedDTO|[]>
-  deleteFeed(feedId:string):Promise<boolean>
-  toggleLikeFeed(feedId:string,userId:Types.ObjectId):Promise<void>
+  getSelectedFeed(feedId: string): Promise<ResGetSelectedFeedDTO | []>;
+  deleteFeed(feedId: string): Promise<boolean>;
+  toggleLikeFeed(feedId: string, userId: Types.ObjectId): Promise<void>;
 
-  // Admin 
+  // Admin
 
-  getAllFeeds():Promise<ResFeedType[] | []>;
-  blockOrUnblockFeed(feedId:string):Promise<void>;
+  getAllFeeds(): Promise<ResFeedType[] | []>;
+  blockOrUnblockFeed(feedId: string): Promise<void>;
 }

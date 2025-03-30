@@ -4,10 +4,10 @@ import { useBlockUser } from "@/hooks/admin/userManagement/useBlockUser";
 import { useBlockRoom } from "@/hooks/room/useBlockRoom";
 import { useFetchSelectedRoom } from "@/hooks/room/userFetchSelectedRoom";
 import { UnlockIcon, Lock, Clock } from "lucide-react";
-import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatSecondToTime } from "@/utils/formatSecondToTime";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function RoomDetails() {
   const { roomId } = useParams<{ roomId: string }>();

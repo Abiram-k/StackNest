@@ -1,10 +1,10 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { Button } from "../ui/button";
-import toast from "react-hot-toast";
 import { axiosInstancePublic } from "@/api/apiSevice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserCredentials } from "@/redux/slice/userSlice";
+import { toast } from "sonner";
 
 const GoogleAuth = ({ isLogin }: { isLogin: boolean }) => {
   const navigate = useNavigate();

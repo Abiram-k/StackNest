@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import ConfirmationDialog from "@/components/modal/confirmationDialog";
-import toast from "react-hot-toast";
 import { useState } from "react";
 import { useRemoveBanner } from "@/hooks/admin/bannerManagement/useRemoveBanner";
 import { FallBackTable } from "@/components/FallBackTable";
+import { toast } from "sonner";
 
 const columns = [
   {

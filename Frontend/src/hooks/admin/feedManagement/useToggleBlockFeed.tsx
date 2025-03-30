@@ -1,7 +1,7 @@
 import { HttpService } from "@/api/httpService";
 import { FeedService } from "@/api/public/feedService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export const useToggleBlockFeed = () => {
   const httpService = new HttpService();
@@ -10,6 +10,7 @@ export const useToggleBlockFeed = () => {
   const mutate = useMutation({
     mutationFn: (feedId: string) => feedService.blockOrUnblockFeed(feedId),
     onSuccess: () => {
+
       toast.dismiss();
       toast.success("Action done");
       queryClient.invalidateQueries({ queryKey: ["allFeeds"] });

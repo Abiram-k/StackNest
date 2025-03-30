@@ -5,8 +5,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { RoomSchema } from "../../../../types/user";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const useCreateRoom = () => {
   const queryClient = useQueryClient();

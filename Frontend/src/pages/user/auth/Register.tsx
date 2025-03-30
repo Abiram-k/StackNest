@@ -12,7 +12,7 @@ import OtpModal from "@/components/modal/OtpModal";
 import { Spinner } from "@/components/ui/spinner";
 import { useInitiateRegistration } from "@/hooks/auth/useInitiateRegistration";
 import { useVerifyOtp } from "@/hooks/auth/useVerifyOtp";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 const RegisterPage = () => {
   const [userData, setUserData] = useState<RegisterUser>({

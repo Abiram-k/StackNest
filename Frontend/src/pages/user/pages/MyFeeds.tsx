@@ -1,3 +1,4 @@
+import { FallBackTable } from "@/components/FallBackTable";
 import ConfirmationDialog from "@/components/modal/confirmationDialog";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -26,7 +27,7 @@ const MyFeeds = () => {
   };
 
   return (
-    <main className="flex-1 p-6 max-w-4xl mx-auto w-full  md:-ms-1">
+    <main className="flex-1 p-6 max-w-4xl mx-auto w-full h-screen scrollbar-thin overflow-y-scroll md:-ms-1">
       {(isPending || deletePending) && <Spinner />}
       {isConfirmatioOpen && (
         <ConfirmationDialog
@@ -49,14 +50,18 @@ const MyFeeds = () => {
       </div>
 
       <div className="space-y-8">
-        {data?.myFeeds?.map((feed, index) => (
-          <FeedItem
-            key={index}
-            {...feed}
-            handleDelete={handleDeleteFeed}
-            handleEdit={() => {}}
-          />
-        ))}
+        {data?.myFeeds?.length ? (
+          data?.myFeeds?.map((feed, index) => (
+            <FeedItem
+              key={index}
+              {...feed}
+              handleDelete={handleDeleteFeed}
+              handleEdit={() => {}}
+            />
+          ))
+        ) : (
+          <FallBackTable mainTitle="No post were uploaded yet" subTitle="Get started by uploading a new post" />
+        )}
       </div>
     </main>
   );

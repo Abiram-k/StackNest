@@ -1,9 +1,8 @@
 import { HttpService } from "@/api/httpService";
 import { RoomService } from "@/api/public/roomService";
-import { useSocket } from "@/lib/socket";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const httpService = new HttpService();
 const roomService = new RoomService(httpService);

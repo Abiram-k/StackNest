@@ -3,7 +3,7 @@ import { adminLogout } from "@/redux/slice/adminSlice";
 import { userLogout } from "@/redux/slice/userSlice";
 import { store } from "@/redux/store";
 import axios from "axios";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 

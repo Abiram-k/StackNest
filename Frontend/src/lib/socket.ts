@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { tokenManager } from "./tokenManager";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 const SERVER_URL = import.meta.env.VITE_BASE_URL;
 

@@ -65,7 +65,7 @@ import { IFeed } from "../types/IFeed";
 import { FeedRepository } from "../repositories/feed.repository";
 import { IFeedService } from "../interfaces/services/feed.service.interface";
 import { FeedService } from "../services/feed.service";
-import { IFeedController } from "../interfaces/controllers/feed.controller.interface";
+import { IFeedController } from "../interfaces/controllers/user.feed.controller.interface";
 import { FeedController } from "../controllers/user/user.feed.controller";
 import { IAdminFeedController } from "../interfaces/controllers/admin.feed.controller.interface";
 import { AdminFeedController } from "../controllers/admin/admin.feeds.controller";
@@ -110,7 +110,7 @@ const challengeServie: IChallengeService = new ChallengeService(
   userBaseRepository,
   challengeSubmissionRespository
 );
-const feedService: IFeedService = new FeedService(feedRepository);
+const feedService: IFeedService = new FeedService(feedRepository,userBaseRepository);
 
 //  controllers
 const adminController: IAdminController = new AdminController(

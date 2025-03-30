@@ -11,9 +11,11 @@ type filterBarPropsType = {
   setSortedOrder: (value: string) => void;
   filterOptions?: optionType[];
   sortOptions?: optionType[];
+  placeHolder?: string;
 };
 
 const FilterBar = ({
+  placeHolder,
   setSearchQuery,
   setFilterQuery,
   filterOptions,
@@ -26,7 +28,7 @@ const FilterBar = ({
       <div className="relative w-full md:max-w-lg flex items-center">
         <input
           type="text"
-          placeholder="Search"
+          placeholder={placeHolder ? placeHolder : "Search"}
           className="w-full pl-4 pr-14 py-3 border -1 dark:border-gray-300 border-gray-300 rounded-full focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all duration-200 shadow-sm"
           value={search}
           onChange={(e) => {

@@ -1,7 +1,7 @@
 import { HttpService } from "@/api/httpService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { FeedService } from "@/api/public/feedService";
+import { toast } from "sonner";
 
 export const useToggleLikeFeed = () => {
   const queryClient = useQueryClient();

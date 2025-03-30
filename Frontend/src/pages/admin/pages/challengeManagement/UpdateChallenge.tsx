@@ -6,8 +6,8 @@ import { useChallengeForm } from "@/hooks/validation/useChallengeForm";
 import { challegeType, resChallengeType } from "@/types";
 import { validateChallengeSchema } from "@/validation/challengeSchema";
 import { useEffect } from "react";
-import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const UpdateChallenge = () => {
   const {

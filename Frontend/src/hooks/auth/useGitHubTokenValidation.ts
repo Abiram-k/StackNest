@@ -1,9 +1,9 @@
 import { axiosInstancePublic } from "@/api/apiSevice";
 import { setUserCredentials } from "@/redux/slice/userSlice";
 import { useEffect } from "react";
-import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 

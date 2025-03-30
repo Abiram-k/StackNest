@@ -2,14 +2,11 @@ import { useNavigate } from "react-router-dom";
 import roomImage from "../../assets/roomImage.png";
 import { Button } from "../ui/button";
 
-// interface ICreateRoomProp {
-//   isAuth: boolean;
-// }
+
 const CreateRoomSection = () => {
   const navigate = useNavigate();
 
   const handleNavigateToCreateRoom = () => {
-    // alert(isAuth);
     navigate("/user/room/create");
   };
 

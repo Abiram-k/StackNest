@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IFeedController } from "../../interfaces/controllers/feed.controller.interface";
+import { IFeedController } from "../../interfaces/controllers/user.feed.controller.interface";
 import { IFeedService } from "../../interfaces/services/feed.service.interface";
 import { plainToInstance } from "class-transformer";
 import {
@@ -11,6 +11,7 @@ import { validateDtoError } from "../../utils/ValidateDtoError";
 import { HttpStatus } from "../../constants/enum.statusCode";
 import { Types } from "mongoose";
 import { ResGetMyFeedsDTO } from "../../dtos/user/feeds/getMyFeeds.dto";
+import { TrieService } from "../../services/trie.service";
 
 export class FeedController implements IFeedController {
   private _feedService: IFeedService;
@@ -31,6 +32,29 @@ export class FeedController implements IFeedController {
         success: true,
         myFeeds,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getUserSearchSuggestion(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const search = String(req.query.search || "");
+      const user = req.user as { userId: Types.ObjectId; role: string };
+      const userNames: string[] | [] = await this._feedService.getAllUserNames(
+        user.userId,
+        search
+      );
+      const trieInstance = new TrieService();
+      userNames.forEach((userName) => {
+        trieInstance.insert(userName);
+      });
+      const suggestions = trieInstance.autoSuggestion(search).slice(0, 5);
+      res.status(HttpStatus.OK).json(suggestions);
     } catch (error) {
       next(error);
     }
@@ -79,13 +103,11 @@ export class FeedController implements IFeedController {
     try {
       const user = req.user as { userId: Types.ObjectId; role: string };
       const likedFeeds = await this._feedService.getLikedFeeds(user.userId);
-      res
-        .status(HttpStatus.OK)
-        .json({
-          message: "Successfully fetched liked feeds",
-          success: true,
-          likedFeeds,
-        });
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched liked feeds",
+        success: true,
+        likedFeeds,
+      });
     } catch (error) {
       next(error);
     }

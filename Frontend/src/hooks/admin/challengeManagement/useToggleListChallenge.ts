@@ -1,8 +1,7 @@
-import { BannerService } from "@/api/admin/bannerServices";
 import { ChallengeService } from "@/api/admin/challengeService";
 import { HttpService } from "@/api/httpService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export const useToggleListingChallenge = () => {
   const httpService = new HttpService();

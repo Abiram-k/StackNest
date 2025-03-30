@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-// import Image from "next/image"
 import { Bell, Heart, User, Mic, Video, Hand, MessageSquare, MoreHorizontal, Plus, UserPlus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"

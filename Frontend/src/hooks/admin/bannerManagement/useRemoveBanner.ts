@@ -1,7 +1,7 @@
 import { BannerService } from "@/api/admin/bannerServices";
 import { HttpService } from "@/api/httpService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export const useRemoveBanner = () => {
   const httpService = new HttpService();

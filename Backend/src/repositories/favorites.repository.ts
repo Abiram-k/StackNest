@@ -18,11 +18,11 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
 
   async fetchFavorites(userId: string): Promise<IRoom[] | null> {
     try {
-      const favorites:IFavorites[] = await Favorites.find({ user: userId })
+      const favorites: IFavorites[] = await Favorites.find({ user: userId })
         .select("roomId")
         .populate({
           path: "roomId",
-          model:"Room",
+          model: "Room",
           populate: {
             path: "participants.user",
           },
@@ -34,8 +34,10 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
       }
 
       const rooms: IRoom[] = favorites
-      .filter((favorite) => favorite.roomId && typeof favorite.roomId === "object")
-      .map((favorite) => favorite.roomId as IRoom);
+        .filter(
+          (favorite) => favorite.roomId && typeof favorite.roomId === "object"
+        )
+        .map((favorite) => favorite.roomId as IRoom);
 
       return rooms;
     } catch (error) {
@@ -48,7 +50,7 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
     try {
       const favorites = await Favorites.find({ user: userId });
       if (favorites.length >= 5) {
-        return false;
+        throw new Error("Already added 5 rooms");
       }
       await Favorites.create({ user: userId, roomId });
       return true;

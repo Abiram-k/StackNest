@@ -1,14 +1,12 @@
 import { HttpService } from "@/api/httpService";
 import { UserChallengeService } from "@/api/user/userChallengeService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const useSubmitChallenge = () => {
   const httpService = new HttpService();
   const userChallengeService = new UserChallengeService(httpService);
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: ({

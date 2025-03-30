@@ -8,7 +8,6 @@ import Pagination from "@/components/Pagination";
 import { useFetchAllRooms, useFetchMyRooms } from "@/hooks/room/useFetchRooms";
 import { useRemoveRoom } from "@/hooks/room/useRemoveRoom";
 import ConfirmationDialog from "../../../components/modal/confirmationDialog";
-import toast from "react-hot-toast";
 import PasswordConfirmation from "@/components/modal/PasswordConfirmation";
 import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
 import { Spinner } from "@/components/ui/spinner";
@@ -16,6 +15,7 @@ import { useDebounce } from "@/hooks/optimizational/useDebounce";
 import { useAddToFavorites } from "@/hooks/user/favorites/useAddToFavorites";
 import { useRemoveFromFavorites } from "@/hooks/user/favorites/useRemoveFromFavorites";
 import { useFetchFavorites } from "@/hooks/user/favorites/useFetchFavorites";
+import { toast } from "sonner";
 
 const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
 

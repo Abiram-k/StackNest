@@ -1,7 +1,7 @@
 import { HttpService } from "@/api/httpService";
 import { UserAuthService } from "@/api/public/authService";
 import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export const useForgotPassword = (setIsSuccess:(value:boolean)=>void) => {
   const httpService = new HttpService();

@@ -5,8 +5,8 @@ import { useFetchFavorites } from "@/hooks/user/favorites/useFetchFavorites";
 import { useRemoveFromFavorites } from "@/hooks/user/favorites/useRemoveFromFavorites";
 import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { AlertTriangle } from "lucide-react";
+import {toast} from "sonner";
+import WarningMessage from "@/components/ui/WarningMessage";
 
 export default function Favourites() {
   const { data: favorites, isPending } = useFetchFavorites();
@@ -61,15 +61,12 @@ export default function Favourites() {
         verifyingIsPending) && <Spinner />}
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6 ">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Favourite Rooms</h1>
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+            Favourite Rooms
+          </h1>
 
           {favorites?.rooms && favorites?.rooms?.length >= 5 && (
-            <div className="flex items-center gap-2 bg-yellow-50 border border-yellow-400 text-yellow-700 px-4 py-2 rounded-lg shadow-md animate-fade-in">
-              <AlertTriangle className="w-5 h-5 text-yellow-500" />
-              <p className="text-sm font-medium">
-                You’ve already added the maximum number of rooms to favorites!
-              </p>
-            </div>
+            <WarningMessage message="You’ve already added the maximum number of rooms to favorites!" />
           )}
         </div>
 

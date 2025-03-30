@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import ConfirmationDialog from "./modal/confirmationDialog";
-import toast from "react-hot-toast";
 import { Pencil, Search, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
+import { toast } from "sonner";
 
 export type Column<T extends { _id: string | undefined }> = {
   render?: (item: T) => React.ReactNode;

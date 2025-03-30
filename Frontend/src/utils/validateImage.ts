@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
