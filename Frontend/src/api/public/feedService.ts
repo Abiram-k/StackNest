@@ -26,7 +26,10 @@ type GetAvailableFeedsType = axiosResponse & {
     isBlocked: boolean;
     likes: number;
     comments: number;
+    viewsCount:number;
   }[];
+  nextPage: number | null;
+  // totalFeeds:number;
 };
 
 type GetAllFeedsType = axiosResponse & {
@@ -43,11 +46,26 @@ type GetAllFeedsType = axiosResponse & {
     isBlocked: boolean;
     likes: number;
     comments: number;
+    viewsCount:number;
   }[];
 };
 
 type GetLikedFeedsType = axiosResponse & {
   likedFeeds: string[];
+};
+
+type ResCommentType = axiosResponse & {
+  comments: {
+    id: string;
+    userId: {
+      userName: string;
+      avatar: string;
+    };
+    text: string;
+    replyCount: number;
+    replies: ResCommentType["comments"];
+    createdAt: string;
+  }[];
 };
 
 export class FeedService {
@@ -70,8 +88,15 @@ export class FeedService {
   async deleteFeed(feedId: string): Promise<axiosResponse> {
     return await this._httpService.delete(`/users/feed/${feedId}`);
   }
-  async getAvailableFeeds(): Promise<GetAvailableFeedsType> {
-    return await this._httpService.get(`users/available-feeds`);
+  async getAvailableFeeds(
+    filter: string,
+    sort: string,
+    limit: number,
+    pageParam: number
+  ): Promise<GetAvailableFeedsType> {
+    return await this._httpService.get(
+      `users/available-feeds?filter=${filter}&sort=${sort}&limit=${limit}&page=${pageParam}`
+    );
   }
   async getLikedFeeds(): Promise<GetLikedFeedsType> {
     return await this._httpService.get(`users/feeds/my-likes`);
@@ -79,9 +104,38 @@ export class FeedService {
   async useToggleLikeFeed(feedId: string): Promise<axiosResponse> {
     return await this._httpService.post("users/feed/like", { feedId });
   }
-  async getUserSuggestionFromPrefix(search: string):Promise<string[]> {
+  async getUserSuggestionFromPrefix(search: string): Promise<string[]> {
     return await this._httpService.get(`/users/suggestion?&search=${search}`);
   }
+  async postComment(
+    feedId: string,
+    parentId: string | null,
+    comment: string
+  ): Promise<axiosResponse> {
+    return await this._httpService.post(
+      `/users/feed/comment?feedId=${feedId}`,
+      {
+        parentId,
+        comment,
+      }
+    );
+  }
+  async getComments(feedId: string): Promise<ResCommentType> {
+    return await this._httpService.get(`/users/feed/comment/${feedId}`);
+  }
+  async getReplies(
+    feedId: string,
+    parentCommentId: string
+  ): Promise<ResCommentType & { parentId: string }> {
+    return await this._httpService.get(
+      `/users/feed-comment/replies?feedId=${feedId}&parentCommentId=${parentCommentId}`
+    );
+  }
+
+  async incrementViewsCount(feedId:string):Promise<axiosResponse> {
+    return await this._httpService.patch(`/users/feed/${feedId}/views`);
+  }
+
   // Admin Calls
   async getAllFeeds(): Promise<GetAllFeedsType> {
     return await this._httpService.get("/admin/feeds");

@@ -99,4 +99,5 @@ export type FeedResType = {
   isBlocked: boolean;
   likes: number;
   comments: number;
+  viewsCount:number;
 };

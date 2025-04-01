@@ -12,6 +12,7 @@ import { HttpStatus } from "../../constants/enum.statusCode";
 import { Types } from "mongoose";
 import { ResGetMyFeedsDTO } from "../../dtos/user/feeds/getMyFeeds.dto";
 import { TrieService } from "../../services/trie.service";
+import { ResCommentDTO } from "../../dtos/user/feeds/getComments.dto";
 
 export class FeedController implements IFeedController {
   private _feedService: IFeedService;
@@ -66,16 +67,102 @@ export class FeedController implements IFeedController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const availableFeeds = await this._feedService.getAllAvailableFeed();
+      const filter = String(req.query.filter) || "";
+      const sort = String(req.query.sort) || "";
+      const limit = parseInt(req.query.limit as string) || 10;
+      const page = parseInt(req.query.page as string) || 1;
+
+      const { feeds: availableFeeds, hasMore } =
+        await this._feedService.getAllAvailableFeed(filter, sort, limit, page);
+
       res.status(HttpStatus.OK).json({
         message: "Successfully fetched available feeds",
         success: true,
         availableFeeds,
+        nextPage: hasMore ? page + 1 : null,
       });
     } catch (error) {
       next(error);
     }
   }
+
+  async incrementViewsCount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.user as { userId: Types.ObjectId; role: string };
+      const { feedId } = req.params;
+      await this._feedService.incrementViewsCount(feedId, user.userId);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "Incremented views", success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getComments(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { feedId } = req.params;
+      const comments = await this._feedService.getComments(feedId);
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched all comments",
+        success: true,
+        comments,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getCommentReplies(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const feedId = String(req.query.feedId) || "";
+      const parentCommentId = String(req.query.parentCommentId) || "";
+      const { replies, parentCommentId: parentId } =
+        await this._feedService.getReplies(feedId, parentCommentId);
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched all replies",
+        success: true,
+        comments: replies,
+        parentId,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async postComment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.user as { userId: Types.ObjectId; role: string };
+      const feedId = String(req.query.feedId) || "";
+      const { parentId, comment } = req.body;
+      await this._feedService.postComment(
+        user.userId,
+        feedId,
+        parentId,
+        comment
+      );
+      res.status(HttpStatus.OK);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async uploadFeed(
     req: Request,
     res: Response<ResAddFeedDTO>,

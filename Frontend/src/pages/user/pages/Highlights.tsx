@@ -8,9 +8,12 @@ import { useGetLikedFeeds } from "@/hooks/feeds/useGetLikedFeeds";
 import { useGetUserSuggestion } from "@/hooks/feeds/useGetUserSuggestion";
 import { useToggleLikeFeed } from "@/hooks/feeds/useToggleLikeFeed";
 import { useDebounce } from "@/hooks/optimizational/useDebounce";
-import { Plus, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+const filterOptions = [{ value: "Oldest" }, { value: "Latest" }];
+const sortOptions = [{ value: "MostLiked", label: "Most Liked" }];
 
 const Highlights = () => {
   const navigate = useNavigate();
@@ -18,13 +21,44 @@ const Highlights = () => {
   const [filterQuery, setFilterQuery] = useState<string>("");
   const [sortQuery, setSortQuery] = useState<string>("");
 
-  const [suggestedUserName, setSuggestedUserName] = useState<string[]>();
-
   const [search, setSearch] = useState("");
-  const debounceValue = useDebounce(search, 500);
+  const debounceValue = useDebounce(search, 250);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  const { data: availableFeedsData, isPending: fetchingIsPending } =
-    useGetAvailableFeeds();
+  const LIMIT = 2;
+
+  const {
+    data: availableFeedsData,
+    isLoading: fetchingIsPending,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetAvailableFeeds({
+    filter: filterQuery,
+    sort: sortQuery,
+    limit: LIMIT,
+  });
+
+  useEffect(() => {
+    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          console.log(entries);
+          fetchNextPage();
+        }
+      },
+      { threshold: 1.0 }
+    );
+    observer.observe(loadMoreRef.current);
+    return () => {
+      if (loadMoreRef.current) observer.unobserve(loadMoreRef.current);
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const feedData =
+    availableFeedsData?.pages.flatMap((page) => page.availableFeeds) ?? [];
 
   const { mutate: mutateLikeFeed, isPending: pendingLikeFeed } =
     useToggleLikeFeed();
@@ -39,15 +73,14 @@ const Highlights = () => {
   };
 
   return (
-    <main className="flex-1 p-6 max-w-4xl mx-auto w-full  border border-y-0 rounded dark:border-gray-800 h-screen overflow-y-scroll overflow-x-hidden mb-20 md:mb-40 scrollbar-thin">
+    <main className="flex-1 p-6 max-w-4xl mx-auto w-full  border border-y-0 rounded dark:border-gray-800 h-screen overflow-y-scroll overflow-x-hidden mb-5 md:mb-40 scrollbar-thin">
       {(fetchingIsPending || pendingLikeFeed || fetchingLikedFeedsPending) && (
         <Spinner />
       )}
       <div className="mb-12 w-full relative">
         <FilterBar
           placeHolder="Search Users"
-          filterOptions={[{ value: "Oldest" }, { value: "Latest" }]}
-          sortOptions={[{ value: "MostLiked",label:"Most Liked" }]}
+          filterOptions={filterOptions}
           setFilterQuery={setFilterQuery}
           setSortedOrder={setSortQuery}
           setSearchQuery={setSearch}
@@ -93,8 +126,8 @@ const Highlights = () => {
       </div>
 
       <div className="space-y-8">
-        {availableFeedsData?.availableFeeds?.length ? (
-          availableFeedsData.availableFeeds?.map((feed, index) => (
+        {feedData?.length ? (
+          feedData.map((feed, index) => (
             <FeedItem
               key={index}
               {...feed}
@@ -111,6 +144,16 @@ const Highlights = () => {
           />
         )}
       </div>
+
+      {hasNextPage && !isFetchingNextPage && (
+        <div ref={loadMoreRef} className="h-10" />
+      )}
+      {isFetchingNextPage && <p className="text-center">Loading more...</p>}
+      {!hasNextPage && feedData.length > 0 && (
+        <p className="text-center text-muted-foreground">
+          No more feeds were Available.
+        </p>
+      )}
     </main>
   );
 };

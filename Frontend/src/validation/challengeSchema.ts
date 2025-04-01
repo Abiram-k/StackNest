@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import * as yup from "yup";
 
 const validateUniqueOptions = (options: any, context: any) => {

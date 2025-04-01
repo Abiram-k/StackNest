@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import FeedItem from "@/components/user/FeedItem";
 import { useDeleteFeed } from "@/hooks/feeds/useDeleteFeed";
+import { useGetLikedFeeds } from "@/hooks/feeds/useGetLikedFeeds";
 import { useGetMyFeeds } from "@/hooks/feeds/useGetMyFeeds";
+import { useToggleLikeFeed } from "@/hooks/feeds/useToggleLikeFeed";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,8 +16,16 @@ const MyFeeds = () => {
   const { data, isPending } = useGetMyFeeds();
   const [selectedFeedId, setSelectedFeedId] = useState<string>("");
   const [isConfirmatioOpen, setConfirmationOpen] = useState<boolean>(false);
+
   const { mutate: deleteFeedMutate, isPending: deletePending } =
     useDeleteFeed();
+  const { mutate: mutateLikeFeed } = useToggleLikeFeed();
+  const { data: likedFeedsData } = useGetLikedFeeds();
+
+  const handleLikeFeed = (feedId: string) => {
+    mutateLikeFeed(feedId);
+  };
+
   const handleDeleteFeed = (feedId: string) => {
     setSelectedFeedId(feedId);
     setConfirmationOpen(true);
@@ -57,10 +67,17 @@ const MyFeeds = () => {
               {...feed}
               handleDelete={handleDeleteFeed}
               handleEdit={() => {}}
+              handleLikeFeed={handleLikeFeed}
+              isLikedFeed={likedFeedsData?.likedFeeds.some(
+                (id) => id == feed.feedId
+              )}
             />
           ))
         ) : (
-          <FallBackTable mainTitle="No post were uploaded yet" subTitle="Get started by uploading a new post" />
+          <FallBackTable
+            mainTitle="No post were uploaded yet"
+            subTitle="Get started by uploading a new post"
+          />
         )}
       </div>
     </main>

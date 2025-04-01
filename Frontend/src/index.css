@@ -2,25 +2,21 @@
 
 @plugin "tailwindcss-animate";
 
-
-
 @custom-variant dark (&:is(.dark *));
 
-button{
+button {
   cursor: pointer;
 }
+
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
     scrollbar-color: #e5e7eb #f3f4f6;
   }
-  
   .dark .scrollbar-thin {
     scrollbar-color: #374151 #1f2937;
   }
 }
-
-
 
 :root {
   --background: oklch(1 0 0);
@@ -56,22 +52,17 @@ button{
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.871 0.006 286.286);
-
-  --stack-primary: #5B52E5
-  --border-color: #E0E0E0;
-  --card-bg: #FAFAFA
 }
-@theme {
 
+@theme inline {
   --color-primary-500: #7848F4;
   --color-border-500:#E0E0E0;
   --color-card-bg-500: #FAFAFA;
-
   --color-primary-600: #5A32B8;
   --color-border-600: #333333;
   --color-card-bg-600: #1A1A1A;
-
 }
+
 
 .dark {
   --background: oklch(0.141 0.005 285.823);
@@ -108,7 +99,7 @@ button{
   --sidebar-ring: oklch(0.442 0.017 285.786);
 }
 
-@theme inline {
+@theme  {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -157,19 +148,21 @@ button{
 
   }
 }
+
 html, body {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 ::selection {
-  background-color: #7f77ed; /* Green background */
-  color: white; /* White text */
+  background-color: #7f77ed; 
+  color: white;
 }
 
 html::-webkit-scrollbar, 
 body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none; 
 }
+
 @keyframes caret-blink {
   0%, 70%, 100% {
     opacity: 1;

@@ -10,7 +10,6 @@ import {
 
 const router = express.Router();
 
-
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PROFILE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.put(
   "/details",
@@ -95,14 +94,40 @@ router.get(
 );
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<< FEEDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
-router.get("/suggestion",feedController.getUserSearchSuggestion.bind(feedController));
-router.get("/available-feeds",feedController.getAllAvailableFeed.bind(feedController));
-router.get("/my-feed",feedController.getMyFeeds.bind(feedController));
-router.get("/feeds/my-likes",feedController.getLikedFeeds.bind(feedController));
-router.get("/feed/:feedId",feedController.getSelectedFeed.bind(feedController));
-router.post("/feed",feedController.uploadFeed.bind(feedController));
-router.post("/feed/like",feedController.toggleLikeFeed.bind(feedController));
-router.put("/feed/:feedId",feedController.updateFeed.bind(feedController));
-router.delete("/feed/:feedId",feedController.deleteFeed.bind(feedController));
+router.get(
+  "/suggestion",
+  feedController.getUserSearchSuggestion.bind(feedController)
+);
+router.get(
+  "/available-feeds",
+  feedController.getAllAvailableFeed.bind(feedController)
+);
+router.get("/my-feed", feedController.getMyFeeds.bind(feedController));
+router.get(
+  "/feeds/my-likes",
+  feedController.getLikedFeeds.bind(feedController)
+);
+router.get(
+  "/feed/:feedId",
+  feedController.getSelectedFeed.bind(feedController)
+);
+router.post("/feed", feedController.uploadFeed.bind(feedController));
+router.post("/feed/comment", feedController.postComment.bind(feedController)); // Post comment
+router.get(
+  "/feed/comment/:feedId",
+  feedController.getComments.bind(feedController)
+); // Get comments
+router.get(
+  "/feed-comment/replies",
+  feedController.getCommentReplies.bind(feedController)
+); // Get comment replies
+router.patch(
+  "/feed/:feedId/views",
+  feedController.incrementViewsCount.bind(feedController)
+); // Get comment replies
+
+router.post("/feed/like", feedController.toggleLikeFeed.bind(feedController));
+router.put("/feed/:feedId", feedController.updateFeed.bind(feedController));
+router.delete("/feed/:feedId", feedController.deleteFeed.bind(feedController));
 
 export default router;

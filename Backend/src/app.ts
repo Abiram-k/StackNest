@@ -2,13 +2,13 @@ import "reflect-metadata";
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
-import morgan from "morgan";
 import adminRoutes from "./routes/admin.routes";
 import userRoutes from "../src/routes/user.routes";
 import AuthRoutes from "../src/routes/auth.routes";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandling";
-import "../src/shedule/shedule.challenges"
+import "./shedule/schedule.challenges"
+import "./shedule/schedule.feed"
 import { config } from "dotenv";
 import { verifyUser } from "./middlewares/verifyUser";
 import { verifyAdmin } from "./middlewares/verifyAdmin";

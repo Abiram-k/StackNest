@@ -4,27 +4,18 @@ import Feed from "../models/feed.model";
 import "../models/comments.model";
 import { IFeed } from "../types/IFeed";
 
+enum FilterTags {
+  "Oldest" = "Oldest",
+  "Latest" = "Latest",
+}
+enum SortTags {
+  "Mostliked" = "MostLiked",
+}
+
 export class FeedRepository implements IFeedRepository<IFeed> {
   async getFeedsByUserId(userId: Types.ObjectId): Promise<IFeed[] | null> {
     try {
-      return await Feed.find({ userId })
-        .populate("userId", "userName avatar")
-        // .populate({
-        //   path: "comments",
-        //   populate: [
-        //     {
-        //       path: "userId",
-        //       select: "userName avatar",
-        //     },
-        //     {
-        //       path: "replies",
-        //       populate: {
-        //         path: "userId",
-        //         select: "userName avatar",
-        //       },
-        //     },
-        //   ],
-        // });
+      return await Feed.find({ userId }).populate("userId", "userName avatar");
     } catch (error) {
       throw error;
     }
@@ -46,6 +37,24 @@ export class FeedRepository implements IFeedRepository<IFeed> {
     }
   }
 
+  async getFeedsToPublish(now: Date): Promise<IFeed[]> {
+    try {
+      return await Feed.find({
+        scheduledAt: { $lte: now },
+        isPublished: false,
+      }).populate("userId");
+    } catch (error) {
+      throw error;
+    }
+  }
+  async publishFeed(feedId: string): Promise<void> {
+    try {
+      await Feed.findByIdAndUpdate(feedId, { isPublished: true });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async deleteFeed(feedId: string): Promise<boolean> {
     try {
       await Feed.findByIdAndDelete(feedId);
@@ -55,13 +64,60 @@ export class FeedRepository implements IFeedRepository<IFeed> {
     }
   }
 
-  async getAllAvailableFeed(): Promise<IFeed[] | null> {
+  async getAllAvailableFeed(
+    filter: string,
+    sort: string,
+    limit: number,
+    page: number
+  ): Promise<{ feeds: IFeed[]; hasMore: boolean } | null> {
     try {
-      return await Feed.find({ isBlocked: false }).populate("userId");
+      let sortQuery: any = {};
+      if (filter === FilterTags.Oldest) {
+        sortQuery.createdAt = 1;
+      } else if (filter === FilterTags.Latest) {
+        sortQuery.createdAt = -1;
+      }
+
+      if (sort === SortTags.Mostliked) {
+        sortQuery = {
+          $expr: { $size: "$like" },
+        };
+      }
+      const skip = (page - 1) * limit;
+      const feeds = await Feed.find({ isBlocked: false, isPublished: true })
+        .sort(sortQuery)
+        .populate("userId")
+        .skip(skip)
+        .limit(limit);
+
+      const totalFeeds = await Feed.countDocuments();
+
+      const hasMore = skip + feeds.length < totalFeeds;
+
+      return { feeds, hasMore };
     } catch (error) {
       throw error;
     }
   }
+
+  async incrementViewsCount(
+    feedId: string,
+    userId: Types.ObjectId
+  ): Promise<void> {
+    try {
+      const feed = await Feed.findOne({ _id: feedId, views: userId });
+
+      if (!feed) {
+        await Feed.findByIdAndUpdate(feedId, {
+          $addToSet: { views: userId },
+          $inc: { viewsCount: 1 },
+        });
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async toggleLikeFeed(feedId: string, userId: Types.ObjectId): Promise<void> {
     try {
       const feed = await Feed.findById(feedId);
@@ -86,6 +142,27 @@ export class FeedRepository implements IFeedRepository<IFeed> {
         });
         // console.log("Like added");
       }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async postComment(feedId: string, commentId: string): Promise<void> {
+    try {
+      await Feed.findByIdAndUpdate(feedId, { $push: { comments: commentId } });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getComments(feedId: string): Promise<IFeed | null> {
+    try {
+      return await Feed.findById(feedId)
+        .select(" comments -_id ")
+        .populate({
+          path: "comments",
+          populate: { path: "userId", select: "userName avatar" },
+        });
     } catch (error) {
       throw error;
     }
@@ -121,7 +198,7 @@ export class FeedRepository implements IFeedRepository<IFeed> {
       throw error;
     }
   }
- 
+
   async blockOrUnblockFeed(feedId: string): Promise<void> {
     try {
       const feed = await Feed.findById(feedId);

@@ -11,6 +11,26 @@ export interface IFeedController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  postComment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getComments(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getCommentReplies(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  incrementViewsCount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
   getUserSearchSuggestion(
     req: Request,
     res: Response,

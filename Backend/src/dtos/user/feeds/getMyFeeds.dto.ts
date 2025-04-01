@@ -19,6 +19,7 @@ export interface ResFeedType {
   content: string;
   media?: string;
   isBlocked: boolean;
+  viewsCount:number;
   likes: number;
   // comments: ResCommentType[] | null;
   comments: number;

@@ -61,7 +61,7 @@ import { IRoomSessionRepository } from "../interfaces/repositories/room.session.
 import { IRoomSession } from "../types/IRoomSession";
 import { RoomSessionRespository } from "../repositories/room.session.repository";
 import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface";
-import { IFeed } from "../types/IFeed";
+import { IComment, IFeed } from "../types/IFeed";
 import { FeedRepository } from "../repositories/feed.repository";
 import { IFeedService } from "../interfaces/services/feed.service.interface";
 import { FeedService } from "../services/feed.service";
@@ -69,8 +69,11 @@ import { IFeedController } from "../interfaces/controllers/user.feed.controller.
 import { FeedController } from "../controllers/user/user.feed.controller";
 import { IAdminFeedController } from "../interfaces/controllers/admin.feed.controller.interface";
 import { AdminFeedController } from "../controllers/admin/admin.feeds.controller";
+import { ICommentRepository } from "../interfaces/repositories/comment.repository.interface";
+import { CommentRepository } from "../repositories/comment.repository";
 
-// Respositories
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REPOSITORY >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 const userAuthRepository: IUserAuthRepository<IUser> =
   new UserAuthRespository();
 const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();
@@ -86,8 +89,10 @@ const challengeRepository: IChallengeRespository<IChallenge> =
 const challengeSubmissionRespository: IChallengeSubmissionRepository<IChallengeSubmission> =
   new ChallengeSubmissionRepository();
 const feedRepository: IFeedRepository<IFeed> = new FeedRepository();
+const commentRepository: ICommentRepository<IComment> = new CommentRepository();
 
-// Services
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SERVICES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 const adminService: IAdminService = new AdminService(adminRespository);
 const authService: IAuthService = new AuthService(
   userBaseRepository,
@@ -110,9 +115,14 @@ const challengeServie: IChallengeService = new ChallengeService(
   userBaseRepository,
   challengeSubmissionRespository
 );
-const feedService: IFeedService = new FeedService(feedRepository,userBaseRepository);
+const feedService: IFeedService = new FeedService(
+  feedRepository,
+  userBaseRepository,
+  commentRepository
+);
 
-//  controllers
+//  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CONTROLLERS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 const adminController: IAdminController = new AdminController(
   adminService,
   roomService

@@ -100,7 +100,6 @@ Stack Nest Team`,
   await transporter.sendMail(mailOptions);
 };
 
-
 export const sendWelcomeMail = async (name: string, email: string) => {
   const mailOptions = {
     from: "Stack Nest Team <no-reply@stacknest.com>",
@@ -120,7 +119,7 @@ export const sendWelcomeMail = async (name: string, email: string) => {
   
   If you have any questions, feel free to reach out to our support team.  
   
-  Happy coding! 🚀  
+  Happy coding! 💻 
   
   Best Regards,  
   StackNest Team`,
@@ -144,13 +143,13 @@ export const sendWelcomeMail = async (name: string, email: string) => {
         <div style="text-align: center; margin: 20px 0;">
           <a href=${CLIENT_URL} 
             style="background-color: #7848F4; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 16px; font-weight: bold;">
-            Explore StackNest 🚀
+            Explore StackNest ⌛
           </a>
         </div>
         <p style="font-size: 14px; color: #555;">If you have any questions, feel free to reach out to our support team.</p>
         <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />
         <p style="text-align: center; font-size: 12px; color: #777;">
-          🚀 <strong>StackNest</strong> - Connecting developers, sharing knowledge, and growing together.
+          😎 <strong>StackNest</strong> - Connecting developers, sharing knowledge, and growing together.
         </p>
       </div>
     `,
@@ -190,6 +189,165 @@ Stack Nest Team`,
         <p style="font-size: 14px; color: #555; text-align: center;">
           If you did not request this code, you can safely ignore this email.
         </p>
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />
+        <p style="text-align: center; font-size: 12px; color: #777;">
+          🚀 <strong>StackNest</strong> - Secure. Reliable. Developer-friendly.
+        </p>
+      </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+export const sendFeedPublishedMail = async (
+  userName: string,
+  email: string,
+  title: string
+) => {
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleString("en-US", {
+    weekday: "short",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+  const mailOptions = {
+    from: "StackNest Team <no-reply@stacknest.com>",
+    to: email,
+    subject: `🚀 Your "${title}" is Live! Explore Insights Now`,
+    text: `Hi ${userName},
+  
+  🌟 Great news! Your scheduled post "${title}" is now live on StackNest.
+  
+  📅 Publication Date: ${formattedDate} (UTC)
+  🔗 Post URL: ${`${CLIENT_URL}/user/profile/my-feeds`} 
+  
+  We're excited to see your content reach our developer community! Here's what's next:
+  👉 Track engagement metrics in your dashboard
+  👉 Respond to comments and questions
+  👉 Share your post across networks
+  
+  Need to make edits? You can still update your post anytime from your dashboard.
+  
+  Thank you for contributing to the StackNest ecosystem! 🚀
+  
+  Best regards,
+  The StackNest Team
+  
+  P.S. Loved creating this post? Schedule your next one directly from your dashboard!
+  
+  ---------------------------------
+  💻 StackNest - Code. Share. Grow.
+  📧 Contact: support@stacknest.com
+  `,
+
+    html: `
+    <div style="font-family: 'Segoe UI', system-ui, sans-serif; max-width: 640px; margin: auto; padding: 0; background: #f8fafc;">
+      <div style="background: linear-gradient(135deg, #7848F4 0%, #5C3AA9 100%); padding: 2rem; text-align: center;">
+        <h1 style="margin: 0; color: white; font-size: 1.75rem; font-weight: 600;">
+          🚀 Published Successfully!
+        </h1>
+      </div>
+  
+      <div style="padding: 2rem; color: #1e293b;">
+        <p style="font-size: 1.125rem; margin-bottom: 1.5rem;">
+          Hi ${userName}, your post is now live in the StackNest community!
+        </p>
+  
+        <div style="background: white; border-radius: 0.5rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+          <h2 style="font-size: 1.25rem; color: #7848F4; margin: 0 0 1rem 0;">${title}</h2>
+          
+          <div style="display: grid; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <svg style="width: 1.25rem; height: 1.25rem; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <span>Published: ${formattedDate} UTC</span>
+            </div>
+            
+            <!-- Add dynamic link placeholder -->
+            <a href="${`${CLIENT_URL}/user/profile/my-feeds`} }" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #7848F4; text-decoration: none;">
+              <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+              </svg>
+              View Post
+            </a>
+          </div>
+  
+          <div style="background: #f1f5f9; padding: 1rem; border-radius: 0.375rem; margin: 1.5rem 0;">
+            <h3 style="margin: 0 0 0.5rem 0; font-size: 1rem; color: #64748b;">Next Steps:</h3>
+            <ul style="margin: 0; padding-left: 1.25rem;">
+              <li>Monitor engagement in your dashboard</li>
+              <li>Respond to community comments</li>
+              <li>Share across your networks</li>
+            </ul>
+          </div>
+  
+          <a href="${`${CLIENT_URL}/`} }" style="display: inline-block; background: #7848F4; color: white; padding: 0.75rem 1.5rem; border-radius: 0.375rem; text-decoration: none; font-weight: 500; margin-top: 1rem;">
+            Go to Dashboard →
+          </a>
+        </div>
+  
+        <footer style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b;">
+          <p style="margin: 0.5rem 0; font-size: 0.875rem;">
+            💻 StackNest - Empowering Developers Worldwide<br>
+            <a href="${"#"}" style="color: #7848F4; text-decoration: none;">Unsubscribe</a> | 
+            <a href="${"#"}" style="color: #7848F4; text-decoration: none;">Contact Support</a>
+          </p>
+          <p style="margin: 0; font-size: 0.75rem;">
+            123 Code Lane, Tech City • © 2024 StackNest
+          </p>
+        </footer>
+      </div>
+    </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+export const sendStreakMissedMail = async (email: string, username: string) => {
+  const currentDate = new Date();
+  const missedDate = currentDate.toLocaleString("en-US", {
+    weekday: "short",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const mailOptions = {
+    from: "Stack Nest Team <no-reply@stacknest.com>",
+    to: email,
+    subject: "🚨 You've Missed Your Streak! Let's Get Back on Track",
+    text: `Hello ${username},  
+
+It looks like you missed a day in your streak on ${missedDate}.  
+
+We understand that things get busy, but don't worry—there's still time to get back on track and continue your journey with StackNest.  
+
+Stay motivated, and let's pick up where you left off!
+
+Best Regards,  
+Stack Nest Team`,
+
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+        <h2 style="color: #7848F4; text-align: center;">🚨 You've Missed Your Streak!</h2>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          Hi <strong>${username}</strong>, <br><br>
+          It looks like you missed a day on your streak! Your last streak day was <strong>${missedDate}</strong>.
+        </p>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          Don't worry—it's never too late to get back on track and continue your progress!
+        </p>
+        <div style="text-align: center; margin: 20px 0;">
+          <a href="https://www.stacknest.com" style="text-decoration: none; padding: 12px 24px; background-color: #7848F4; color: #fff; border-radius: 6px; font-size: 16px;">
+            Get Back on Track
+          </a>
+        </div>
         <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />
         <p style="text-align: center; font-size: 12px; color: #777;">
           🚀 <strong>StackNest</strong> - Secure. Reliable. Developer-friendly.

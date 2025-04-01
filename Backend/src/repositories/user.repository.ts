@@ -6,13 +6,7 @@ import {
 } from "../interfaces/repositories/user.repository.interface";
 import { IUser } from "../types/IUser";
 
-enum FilterTags {
-  "Oldest" = "Oldest",
-  "Latest" = "latest",
-}
-enum SortTags {
-  "Mostliked" = "Most liked",
-}
+ 
 export class UserBaseRepository implements IUserBaseRepository<IUser> {
   async incrementCheckin(userId: string): Promise<boolean> {
     try {
@@ -35,27 +29,12 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
   }
   async fetchAllUserNameExceptUser(
     userId: string,
-    // filter: string,
-    // search: string,
-    // sort: string
   ): Promise<IUser[] | null> {
     try {
       const query: any = {
         _id: { $ne: userId },
       };
-      // let sortQuery: any = {};
-      // if (filter === FilterTags.Oldest) {
-      //   sortQuery.createdAt = 1;
-      // } else if (filter === FilterTags.Latest) {
-      //   sortQuery.createdAt = -1;
-      // }
-
-      // if (sort === SortTags.Mostliked) {
-      //   sortQuery.likesCount = -1;
-      // }
-      // if (search) {
-      //   query.userName = { $regex: search, $options: "i" };
-      // }
+   
       return await User.find(query).select("userName -_id");
     } catch (error) {
       throw error;

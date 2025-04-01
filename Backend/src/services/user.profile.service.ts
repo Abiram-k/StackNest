@@ -5,6 +5,7 @@ import { IUserProfileService } from "../interfaces/services/user.profile.service
 import { IUser } from "../types/IUser";
 import { isSameDay } from "date-fns";
 import createHttpError from "http-errors";
+import { sendStreakMissedMail } from "../utils/email";
 
 export class UserProfileService implements IUserProfileService {
   constructor(private _baseRepo: IUserBaseRepository<IUser>) {}
@@ -69,6 +70,7 @@ export class UserProfileService implements IUserProfileService {
       );
 
       if (daysDifference > 1) {
+        sendStreakMissedMail(user.email,user.userName)
         await this._baseRepo.resetCheckin(userId);
         return null;
       }

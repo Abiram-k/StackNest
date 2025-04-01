@@ -20,6 +20,10 @@ const FeedSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    isPublished:{
+      type:Boolean,
+      default:true
+    },
     media: {
       type: String,
       default: null,
@@ -28,6 +32,16 @@ const FeedSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    viewsCount:{
+      type:Number,
+      default:0
+    },
+    views: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     likes: [
       {
         type: Schema.Types.ObjectId,

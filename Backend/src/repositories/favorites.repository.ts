@@ -8,7 +8,7 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
   async findFavorites(
     userId: string,
     roomId: string
-  ): Promise<IFavorites | null> {
+  ): Promise<IFavorites | null> { 
     try {
       return await Favorites.findOne({ user: userId, roomId });
     } catch (error) {
@@ -67,4 +67,6 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
       throw error;
     }
   }
+
+
 }

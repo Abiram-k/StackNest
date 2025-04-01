@@ -5,13 +5,20 @@ import {
   ResGetMyFeedsDTO,
 } from "../../dtos/user/feeds/getMyFeeds.dto";
 import { ResGetSelectedFeedDTO } from "../../dtos/user/feeds/getSelectedFeed.dto";
+import { ResCommentDTO } from "../../dtos/user/feeds/getComments.dto";
 
 export interface IFeedService {
-  getAllAvailableFeed(): Promise<ResFeedType[] | []>;
+  getAllAvailableFeed(
+    filter: string,
+    sort: string,
+    limit: number,
+    page: number
+  ): Promise<{ feeds: ResFeedType[]; hasMore: boolean }>;
+  incrementViewsCount(feedId: string, userId: Types.ObjectId): Promise<void>;
   getAllUserNames(
     userId: Types.ObjectId,
     // filter: string ,
-    search: string,
+    search: string
     // sort: string
   ): Promise<string[]>;
   uploadFeed(
@@ -23,6 +30,19 @@ export interface IFeedService {
       scheduledAt?: string | null;
     }
   ): Promise<boolean>;
+  postComment(
+    userId: Types.ObjectId,
+    feedId: string,
+    parentId: string | null,
+    comment: string
+  ): Promise<void>;
+
+  getComments(feedId: string): Promise<ResCommentDTO[]>;
+  getReplies(
+    feedId: string,
+    parentCommentId: string
+  ): Promise<{ replies: ResCommentDTO[]; parentCommentId: string }>;
+
   getMyFeeds(userId: Types.ObjectId): Promise<ResFeedType[] | null>;
   getLikedFeeds(userId: Types.ObjectId): Promise<string[] | []>;
   updateFeed(

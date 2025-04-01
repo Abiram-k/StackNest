@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface";
 import { IFeedService } from "../interfaces/services/feed.service.interface";
-import { IFeed } from "../types/IFeed";
+import { IComment, IFeed } from "../types/IFeed";
 import {
   ResCommentType,
   ResFeedType,
@@ -11,17 +11,24 @@ import { ResGetSelectedFeedDTO } from "../dtos/user/feeds/getSelectedFeed.dto";
 import { TrieService } from "./trie.service";
 import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
 import { IUser } from "../types/IUser";
+import { ICommentRepository } from "../interfaces/repositories/comment.repository.interface";
+import { ResCommentDTO } from "../dtos/user/feeds/getComments.dto";
+import createHttpError from "http-errors";
+import { HttpStatus } from "../constants/enum.statusCode";
 const trieService = new TrieService();
 
 export class FeedService implements IFeedService {
   private _feedRepo: IFeedRepository<IFeed>;
   private _userBaseRepo: IUserBaseRepository<IUser>;
+  private _commentRepo: ICommentRepository<IComment>;
   constructor(
     feedRepo: IFeedRepository<IFeed>,
-    userBaseRepo: IUserBaseRepository<IUser>
+    userBaseRepo: IUserBaseRepository<IUser>,
+    commentRepo: ICommentRepository<IComment>
   ) {
     this._feedRepo = feedRepo;
     this._userBaseRepo = userBaseRepo;
+    this._commentRepo = commentRepo;
   }
 
   async getMyFeeds(userId: Types.ObjectId): Promise<ResFeedType[] | null> {
@@ -56,6 +63,7 @@ export class FeedService implements IFeedService {
           isBlocked: feed.isBlocked,
           likes: feed.likes.length,
           comments: feed.comments.length,
+          viewsCount: feed.viewsCount,
         };
       });
       return feeds;
@@ -66,16 +74,11 @@ export class FeedService implements IFeedService {
 
   async getAllUserNames(
     userId: Types.ObjectId,
-    // filter: string,
-    search: string,
-    // sort: string
+    search: string
   ): Promise<string[] | []> {
     try {
       const users = await this._userBaseRepo.fetchAllUserNameExceptUser(
-        String(userId),
-        // filter,
-        // search,
-        // sort
+        String(userId)
       );
       const allUserNames = users
         ?.filter(
@@ -84,16 +87,135 @@ export class FeedService implements IFeedService {
         )
         .map((user) => user.userName);
       return allUserNames ? allUserNames : [];
-      
     } catch (error) {
       throw error;
     }
   }
 
-  async getAllAvailableFeed(): Promise<ResFeedType[] | []> {
+  async postComment(
+    userId: Types.ObjectId,
+    feedId: string,
+    parentId: string | null,
+    comment: string
+  ): Promise<void> {
     try {
-      const feeds = await this._feedRepo.getAllAvailableFeed();
-      if (!feeds) return [];
+      const newComment = await this._commentRepo.createNewComment(
+        userId,
+        feedId,
+        parentId,
+        comment
+      );
+      if (parentId) {
+        const isParentIdExist = await this._commentRepo.findParent(parentId);
+        if (isParentIdExist) {
+          await this._commentRepo.addReplyToParent(parentId, newComment._id);
+        }
+      }
+      if (!parentId) await this._feedRepo.postComment(feedId, newComment._id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getComments(feedId: string): Promise<ResCommentDTO[]> {
+    try {
+      const feedComments: IFeed | null = await this._feedRepo.getComments(
+        feedId
+      );
+
+      if (!feedComments)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Feed not founded");
+
+      const formattedData: ResCommentDTO[] = feedComments.comments
+        .map((comment) => {
+          if (comment instanceof Types.ObjectId) {
+            console.log("Comment not populated:", comment);
+            return null;
+          }
+          const userInfo =
+            comment.userId instanceof Types.ObjectId
+              ? { userName: "", avatar: "" }
+              : {
+                  userName: comment.userId.userName,
+                  avatar: comment.userId.avatar,
+                };
+
+          return {
+            id: comment._id.toString(),
+            userId: userInfo,
+            text: comment.comment,
+            replyCount: comment.replies?.length || 0,
+            replies: [],
+            createdAt: comment.createdAt?.toISOString(),
+          };
+        })
+        .filter(Boolean) as ResCommentDTO[];
+
+      return formattedData;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getReplies(
+    feedId: string,
+    parentCommentId: string
+  ): Promise<{ replies: ResCommentDTO[]; parentCommentId: string }> {
+    try {
+      const comments: IComment | null = await this._commentRepo.getComments(
+        feedId,
+        parentCommentId
+      );
+      if (!comments) return { replies: [], parentCommentId };
+      if (!comments.replies) return { replies: [], parentCommentId };
+
+      const formattedData: ResCommentDTO[] = comments.replies
+        ?.map((comment) => {
+          if (comment instanceof Types.ObjectId) {
+            console.log("Comment not populated:", comment);
+            return null;
+          }
+          const userInfo =
+            comment.userId instanceof Types.ObjectId
+              ? { userName: "", avatar: "" }
+              : {
+                  userName: comment.userId.userName,
+                  avatar: comment.userId.avatar,
+                };
+
+          return {
+            id: comment._id.toString(),
+            userId: userInfo,
+            text: comment.comment,
+            replyCount: comment.replies?.length || 0,
+            replies: [],
+            createdAt: comment.createdAt?.toISOString(),
+          };
+        })
+        .filter(Boolean) as ResCommentDTO[];
+
+      return { replies: formattedData, parentCommentId };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAllAvailableFeed(
+    filter: string,
+    sort: string,
+    limit: number,
+    page: number
+  ): Promise<{ feeds: ResFeedType[]; hasMore: boolean }> {
+    try {
+      const isFeedsThere = await this._feedRepo.getAllAvailableFeed(
+        filter,
+        sort,
+        limit,
+        page
+      );
+
+      if (!isFeedsThere) return { feeds: [], hasMore: false };
+      const { feeds, hasMore } = isFeedsThere;
 
       const formattedFeeds: ResFeedType[] = feeds.map((feed) => {
         const feedUser = feed.userId as { userName: string; avatar: string };
@@ -117,13 +239,28 @@ export class FeedService implements IFeedService {
           isBlocked: feed.isBlocked,
           likes: feed.likes.length,
           comments: feed.comments.length,
+          viewsCount: feed.viewsCount,
         };
       });
-      return formattedFeeds;
+      return { feeds: formattedFeeds, hasMore };
     } catch (error) {
       throw error;
     }
   }
+
+  async incrementViewsCount(
+    feedId: string,
+    userId: Types.ObjectId
+  ): Promise<void> {
+    try {
+      if (!feedId)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Feed Id not founded");
+      await this._feedRepo.incrementViewsCount(feedId, userId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async updateFeed(
     userId: Types.ObjectId,
     feedId: string,
@@ -196,13 +333,27 @@ export class FeedService implements IFeedService {
     }
   ): Promise<boolean> {
     try {
+      let scheduledDate: Date | null = null;
+      // if (data.scheduledAt) {
+      //   const localDate = new Date(data.scheduledAt);
+      //   const utcDate = new Date(
+      //     localDate.getTime() - localDate.getTimezoneOffset() * 60000
+      //   );
+      //   scheduledDate = utcDate.toISOString();
+      // }
+      if (data.scheduledAt) {
+        scheduledDate = new Date(data.scheduledAt); 
+      }
+
       const uploadingData = {
         title: data.title,
         content: data.content,
         media: data.media,
-        scheduledAt: new Date(data.scheduledAt),
+        scheduledAt: scheduledDate,
         userId,
+        isPublished: data.scheduledAt ? false : true,
       };
+
       const isUploaded = await this._feedRepo.createFeed(uploadingData);
       return isUploaded;
     } catch (error) {
@@ -248,6 +399,7 @@ export class FeedService implements IFeedService {
           isBlocked: feed.isBlocked,
           likes: feed.likes.length,
           comments: feed.comments.length,
+          viewsCount: feed.viewsCount,
         };
       });
       return formattedFeeds;
