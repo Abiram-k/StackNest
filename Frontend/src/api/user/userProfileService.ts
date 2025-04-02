@@ -11,6 +11,15 @@ type verifyProfileResponse = axiosResponse & {
 type openaiResponse = axiosResponse & {
   response: string;
 };
+type GetUserCardDataReponse = axiosResponse & {
+  data: {
+    userName: string;
+    description: string;
+    avatarUrl: string;
+    friendsCount: number;
+    feedsCount: number;
+  };
+};
 
 export class UserProfileService {
   private readonly _httpService: HttpService;
@@ -38,9 +47,14 @@ export class UserProfileService {
 
   async getStreakCount(): Promise<axiosResponse & { streakCount: number }> {
     return this._httpService.get<axiosResponse & { streakCount: number }>(
-      "users/streak"
+      "/users/streak"
     );
   }
+
+  async getUserCardDetails(): Promise<GetUserCardDataReponse> {
+    return this._httpService.get("/users/card/data");
+  }
+
   async fetchChallengePoints(): Promise<
     axiosResponse & { pointsCount: number }
   > {

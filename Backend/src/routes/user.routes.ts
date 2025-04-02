@@ -28,6 +28,10 @@ router.get(
   userProfileController.getUserStreakCount.bind(userProfileController)
 );
 router.get(
+  "/card/data",
+  userProfileController.getCardData.bind(userProfileController)
+);
+router.get(
   "/challenge-points",
   userProfileController.getChallengePoints.bind(userProfileController)
 );
@@ -108,6 +112,10 @@ router.get(
   feedController.getLikedFeeds.bind(feedController)
 );
 router.get(
+  "/feeds/my-comments",
+  feedController.getUserComments.bind(feedController)
+);
+router.get(
   "/feed/:feedId",
   feedController.getSelectedFeed.bind(feedController)
 );
@@ -125,6 +133,11 @@ router.patch(
   "/feed/:feedId/views",
   feedController.incrementViewsCount.bind(feedController)
 ); // Get comment replies
+
+router.delete(
+  "/feed/comment",
+  feedController.deleteComment.bind(feedController)
+);
 
 router.post("/feed/like", feedController.toggleLikeFeed.bind(feedController));
 router.put("/feed/:feedId", feedController.updateFeed.bind(feedController));

@@ -6,7 +6,7 @@ export const useGetComments = (feedId: string, showComments: boolean) => {
   const httpService = new HttpService();
   const feedService = new FeedService(httpService);
   const mutation = useQuery({
-    queryKey: [`comments-${feedId}`, showComments],
+    queryKey: ["comments", showComments],
     queryFn: () => feedService.getComments(feedId),
     enabled: showComments == true,
   });

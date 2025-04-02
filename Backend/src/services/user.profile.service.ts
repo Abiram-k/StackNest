@@ -6,9 +6,16 @@ import { IUser } from "../types/IUser";
 import { isSameDay } from "date-fns";
 import createHttpError from "http-errors";
 import { sendStreakMissedMail } from "../utils/email";
+import { Types } from "mongoose";
+import { GetUserCardData } from "../dtos/user/profile/getUserCardData.dto";
+import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface";
+import { IFeed } from "../types/IFeed";
 
 export class UserProfileService implements IUserProfileService {
-  constructor(private _baseRepo: IUserBaseRepository<IUser>) {}
+  constructor(
+    private _baseRepo: IUserBaseRepository<IUser>,
+    private _feedRepo: IFeedRepository<IFeed>
+  ) {}
 
   async getUserDetails(id: string): Promise<verifyUserProfileSchemaType> {
     const user = await this._baseRepo.findById(id);
@@ -61,7 +68,6 @@ export class UserProfileService implements IUserProfileService {
       const LastStreamClaimDate = new Date(user.streakClaimDate);
       currentDate.setHours(0, 0, 0, 0);
       LastStreamClaimDate.setHours(0, 0, 0, 0);
-
       const timeDifferenceMs = Math.abs(
         LastStreamClaimDate.getTime() - currentDate.getTime()
       );
@@ -70,11 +76,33 @@ export class UserProfileService implements IUserProfileService {
       );
 
       if (daysDifference > 1) {
-        sendStreakMissedMail(user.email,user.userName)
+        sendStreakMissedMail(user.email, user.userName);
         await this._baseRepo.resetCheckin(userId);
         return null;
       }
+
       return user.streak;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getCardData(userId: Types.ObjectId): Promise<GetUserCardData> {
+    try {
+      const userData = await this._baseRepo.findById(String(userId));
+      if (!userData) {
+        throw createHttpError(HttpStatus.NOT_FOUND, "User not founded");
+      }
+      let userFeeds = await this._feedRepo.getFeedsByUserId(userId);
+      if (!userFeeds) userFeeds = [];
+      const data: GetUserCardData = {
+        avatarUrl: userData?.avatar,
+        description: userData.description,
+        feedsCount: userFeeds?.length ? userFeeds.length : 0,
+        friendsCount: userData.friends.length,
+        userName: userData.userName,
+      };
+      return data;
     } catch (error) {
       throw error;
     }

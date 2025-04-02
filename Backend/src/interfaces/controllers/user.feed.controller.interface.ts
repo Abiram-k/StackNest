@@ -21,6 +21,11 @@ export interface IFeedController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  deleteComment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
   getCommentReplies(
     req: Request,
     res: Response,
@@ -52,6 +57,11 @@ export interface IFeedController {
     next: NextFunction
   ): Promise<void>;
   getLikedFeeds(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getUserComments(
     req: Request,
     res: Response,
     next: NextFunction

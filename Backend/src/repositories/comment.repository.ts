@@ -23,6 +23,39 @@ export class CommentRepository implements ICommentRepository<IComment> {
     }
   }
 
+  async getById(commentId: string): Promise<IComment | null> {
+    try {
+      return await CommentsModel.findById(commentId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteCommentById(commentId: string): Promise<void> {
+    try {
+      await CommentsModel.findByIdAndDelete(commentId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findChildComments(parentCommentId: string): Promise<IComment[] | null> {
+    try {
+      return await CommentsModel.find({ parentCommentId });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getUserComments(userId: Types.ObjectId): Promise<string[] | []> {
+    try {
+      const comments = await CommentsModel.find({ userId });
+      return comments.map((comment) => comment._id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async createNewComment(
     userId: Types.ObjectId,
     feedId: string,

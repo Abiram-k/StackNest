@@ -15,6 +15,7 @@ export interface IFeedService {
     page: number
   ): Promise<{ feeds: ResFeedType[]; hasMore: boolean }>;
   incrementViewsCount(feedId: string, userId: Types.ObjectId): Promise<void>;
+  // deleteComment(feedId:string,)
   getAllUserNames(
     userId: Types.ObjectId,
     // filter: string ,
@@ -45,6 +46,8 @@ export interface IFeedService {
 
   getMyFeeds(userId: Types.ObjectId): Promise<ResFeedType[] | null>;
   getLikedFeeds(userId: Types.ObjectId): Promise<string[] | []>;
+  deleteComment(feedId: string,commentId:string, userId: Types.ObjectId): Promise<void>;
+  getUserComments(userId: Types.ObjectId): Promise<string[] | []>;
   updateFeed(
     userId: Types.ObjectId,
     feedId: string,

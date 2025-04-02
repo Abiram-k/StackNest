@@ -141,7 +141,10 @@ export class ChallengeService implements IChallengeService {
 
   async sheduleChallenge(challengeIds: string[]): Promise<void> {
     try {
-      await this._challengeRepo.sheduleChallenge(challengeIds);
+      await this._challengeRepo.unListAllChallenge();
+      for (const challengeId of challengeIds) {
+        await this._challengeRepo.scheduleChallenge(challengeId);
+      }
     } catch (error) {
       throw error;
     }

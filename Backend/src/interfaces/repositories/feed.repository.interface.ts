@@ -7,6 +7,7 @@ export interface IFeedRepository<T> {
   deleteFeed(feedId: string): Promise<boolean>;
   deleteFeed(feedId: string): Promise<boolean>;
   getFeedsToPublish(now: Date): Promise<T[] >;
+  deleteComment(feedId:string,commentId:string):Promise<void>;
   publishFeed(feedId:string):Promise<void>
   getLikedFeeds(userId: Types.ObjectId): Promise<string[] | []>;
   toggleLikeFeed(feedId: string, userId: Types.ObjectId): Promise<void>;

@@ -2,6 +2,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useGetReplies } from "@/hooks/feeds/useGetReplies";
+import { Trash2 } from "lucide-react";
+import { useRemoveComment } from "@/hooks/feeds/useRemoveComment";
+import { useGetUserComments } from "@/hooks/feeds/useGetUserComments";
 
 type CommentType = {
   id: string;
@@ -40,6 +43,12 @@ export function CommentItem({
     comment.id,
     showReplyInput
   );
+  const { mutate: removeCommentMutate } = useRemoveComment();
+  const { data: userCommentedFeedsData } = useGetUserComments();
+
+  const hasCommented = userCommentedFeedsData?.commentedFeeds.some(
+    (id) => comment.id == id
+  );
 
   useEffect(() => {
     if (!repliesData?.comments) return;
@@ -71,21 +80,42 @@ export function CommentItem({
     }
   };
 
+  const handleRemoveComment = () => {
+    removeCommentMutate({ feedId, commentId: comment.id });
+  };
+
   return (
     <div className={`mt-3 ml-[${indent}px]`}>
       <div className="flex gap-3">
-        <Avatar className="h-8 w-8 border">
-          <AvatarImage src={comment.userId.avatar} />
+        <Avatar className="h-8 w-8  mt-5 bg-transparent ">
+          <AvatarImage
+            src={comment.userId.avatar}
+            className="rounded object-cover"
+          />
           <AvatarFallback>{comment.userId.userName}</AvatarFallback>
         </Avatar>
 
         <div className="flex-1">
-          <div className="bg-gray-100 rounded-lg p-3 dark:bg-black ">
+          <div className=" bg-gray-100 rounded-lg p-3 dark:bg-black ">
+            {/* <div> */}
+
             <div className="flex items-center gap-2">
               <span className="font-medium">{comment.userId.userName}</span>
               <span className="text-xs text-gray-500">
                 {new Date(comment.createdAt).toLocaleDateString()}
               </span>
+              {/* </div> */}
+              {hasCommented && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 px-3 rounded-full gap-2  justify-end text-gray-600 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                  onClick={handleRemoveComment}
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span className="hidden sm:inline">Delete</span>
+                </Button>
+              )}
             </div>
             <p className="mt-1 text-gray-700 dark:text-gray-400">
               {comment.text}

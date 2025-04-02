@@ -99,7 +99,8 @@ const authService: IAuthService = new AuthService(
   userAuthRepository
 );
 const userProfileService: IUserProfileService = new UserProfileService(
-  userBaseRepository
+  userBaseRepository,
+  feedRepository
 );
 const roomService: IRoomService = new RoomService(
   roomRespository,

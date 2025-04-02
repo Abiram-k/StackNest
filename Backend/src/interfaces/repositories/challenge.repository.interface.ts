@@ -5,5 +5,6 @@ export interface IChallengeRespository<T> {
   updateChallenge(challengeId: string, data: Partial<T>): Promise<boolean>;
   removeChallenge(challengeId: string): Promise<void>;
   toggleListing(challengeId: string): Promise<void>;
-  sheduleChallenge(challengeIds: string[]): Promise<void>
+  unListAllChallenge(): Promise<void>;
+  scheduleChallenge(challengeId: string): Promise<void>;
 }

@@ -305,6 +305,45 @@ export class FeedService implements IFeedService {
       throw error;
     }
   }
+  async getUserComments(userId: Types.ObjectId): Promise<string[] | []> {
+    try {
+      const comments = await this._commentRepo.getUserComments(userId);
+      return comments;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteComment(
+    feedId: string,
+    commentId: string,
+    userId: Types.ObjectId
+  ): Promise<void> {
+    try {
+      const comment = await this._commentRepo.getById(commentId);
+      if (!comment)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Comment not founded");
+      if (comment.userId != userId) {
+        throw createHttpError(
+          HttpStatus.UNAUTHORIZED,
+          "You can't delete others comment!"
+        );
+      }
+      const childComments = await this._commentRepo.findChildComments(
+        commentId
+      );
+      if (childComments) {
+        for (const childComment of childComments) {
+          await this._commentRepo.deleteCommentById(childComment._id);
+        }
+      }
+      await this._commentRepo.deleteCommentById(commentId);
+      if (!comment.parentCommentId)
+        await this._feedRepo.deleteComment(feedId, commentId);
+    } catch (error) {
+      throw error;
+    }
+  }
 
   async getSelectedFeed(feedId: string): Promise<ResGetSelectedFeedDTO | []> {
     try {
@@ -342,7 +381,7 @@ export class FeedService implements IFeedService {
       //   scheduledDate = utcDate.toISOString();
       // }
       if (data.scheduledAt) {
-        scheduledDate = new Date(data.scheduledAt); 
+        scheduledDate = new Date(data.scheduledAt);
       }
 
       const uploadingData = {

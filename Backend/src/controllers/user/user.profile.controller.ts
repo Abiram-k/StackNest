@@ -13,6 +13,8 @@ import {
 } from "../../dtos/user/profile/getUserData.dto";
 import { UserResTypeDTO } from "../../dtos/public/userData.dto";
 import { ResUpdateUserProfileDTO } from "../../dtos/user/profile/updateUserProfile.dto";
+import { ResGetUserCardData } from "../../dtos/user/profile/getUserCardData.dto";
+import { Types } from "mongoose";
 config();
 
 const HUG_FACE_API_KEY = process.env.HUG_FACE_API_KEY;
@@ -55,6 +57,16 @@ export class UserProfileController implements IUserProfileController {
     } catch (error) {
       next(error);
     }
+  }
+
+  async getCardData(req: Request, res: Response<ResGetUserCardData>, next: NextFunction): Promise<void> {
+      try{
+      const user = req.user as { userId: Types.ObjectId; role: string };
+      const data = await this._userProfileService.getCardData(user.userId)
+      res.status(HttpStatus.OK).json({message:"Card data fetched",success:true,data})
+      }catch(error){
+        next(error);
+      }
   }
 
   async updateUserProfile(

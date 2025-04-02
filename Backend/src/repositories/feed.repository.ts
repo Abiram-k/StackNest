@@ -178,6 +178,14 @@ export class FeedRepository implements IFeedRepository<IFeed> {
     }
   }
 
+  async deleteComment(feedId: string, commentId: string): Promise<void> {
+    try {
+      await Feed.findByIdAndUpdate(feedId,{$pull:{comments:commentId}})
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findByIdAndUpdate(
     userId: Types.ObjectId,
     feedId: string,

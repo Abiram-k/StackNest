@@ -21,6 +21,11 @@ export interface IUserProfileController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getCardData(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
   getChallengePoints(
     req: Request,
     res: Response,

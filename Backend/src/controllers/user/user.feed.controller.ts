@@ -182,6 +182,25 @@ export class FeedController implements IFeedController {
     }
   }
 
+  async deleteComment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const feedId = String(req.query.feedId) || "";
+      const commentId = String(req.query.commentId) || "";
+      const user = req.user as { userId: Types.ObjectId; role: string };
+
+      await this._feedService.deleteComment(feedId, commentId, user.userId);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "Successfully deleted comment", success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getLikedFeeds(
     req: Request,
     res: Response,
@@ -194,6 +213,26 @@ export class FeedController implements IFeedController {
         message: "Successfully fetched liked feeds",
         success: true,
         likedFeeds,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getUserComments(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const user = req.user as { userId: Types.ObjectId; role: string };
+      const commentedFeeds = await this._feedService.getUserComments(
+        user.userId
+      );
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched commented feeds",
+        success: true,
+        commentedFeeds,
       });
     } catch (error) {
       next(error);

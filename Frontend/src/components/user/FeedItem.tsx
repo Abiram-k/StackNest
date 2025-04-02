@@ -63,6 +63,7 @@ export default function FeedItem({
   const [feedComments, setFeedComments] = useState<CommentType[]>();
   const [showComments, setShowComments] = useState<boolean>(false);
   const postRef = useRef<HTMLDivElement | null>(null);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 
   const navigate = useNavigate();
 
@@ -135,7 +136,7 @@ export default function FeedItem({
         replies: [],
         createdAt: new Date().toISOString(),
       };
-      setFeedComments((prev) => (prev ? [...prev, newCommentObj] : prev));
+      // setFeedComments((prev) => (prev ? [...prev, newCommentObj] : prev));
       postCommentMutate({ feedId, parentId: null, comment: newComment });
       setNewComment("");
     }
@@ -165,7 +166,7 @@ export default function FeedItem({
         };
       });
     };
-    setFeedComments((prev) => prev && updateComments(prev));
+    // setFeedComments((prev) => prev && updateComments(prev));
     postCommentMutate({ feedId, parentId, comment: text }); // Adding reply to DB
   };
 
@@ -407,9 +408,19 @@ export default function FeedItem({
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
           {title}
         </h2>
-        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-          {content}
-        </p>
+        <div>
+          <p className="mt-1 text-gray-700 inline dark:text-gray-100">
+            {descriptionExpanded ? content : content.slice(0, 120)}
+          </p>
+          {!descriptionExpanded && (
+            <button
+              onClick={() => setDescriptionExpanded(true)}
+              className="text-gray-400 bg-transparent dark:text-gray-600 text-sm font-medium hover:underline ms-2 inline"
+            >
+              Read more ...
+            </button>
+          )}
+        </div>
 
         {media && (
           <div className="mt-4 space-y-2 w-full">
@@ -559,7 +570,6 @@ export function CommentList({
           setFeedComments={setFeedComments}
           feedComments={feedComments}
           key={comment.id}
-          // parentId={comment.id}
           feedId={feedId}
           comment={comment}
           onReply={onReply}
