@@ -59,14 +59,20 @@ export class UserProfileController implements IUserProfileController {
     }
   }
 
-  async getCardData(req: Request, res: Response<ResGetUserCardData>, next: NextFunction): Promise<void> {
-      try{
+  async getCardData(
+    req: Request,
+    res: Response<ResGetUserCardData>,
+    next: NextFunction
+  ): Promise<void> {
+    try {
       const user = req.user as { userId: Types.ObjectId; role: string };
-      const data = await this._userProfileService.getCardData(user.userId)
-      res.status(HttpStatus.OK).json({message:"Card data fetched",success:true,data})
-      }catch(error){
-        next(error);
-      }
+      const data = await this._userProfileService.getCardData(user.userId);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "Card data fetched", success: true, data });
+    } catch (error) {
+      next(error);
+    }
   }
 
   async updateUserProfile(
@@ -86,8 +92,6 @@ export class UserProfileController implements IUserProfileController {
       next(error);
     }
   }
-
-
 
   async checkinUser(
     req: Request,
@@ -142,6 +146,27 @@ export class UserProfileController implements IUserProfileController {
         message: "Fetched challenge points count",
         success: true,
         pointsCount,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async subscribeUserForPushNotification(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { userId } = req.user as { userId: string; role: string };
+      const { subscription } = req.body;
+      await this._userProfileService.subscribeUserForPushNotification(
+        subscription,
+        userId
+      );
+      res.status(HttpStatus.OK).json({
+        message: "User subscribed for notification!",
+        success: true,
       });
     } catch (error) {
       next(error);

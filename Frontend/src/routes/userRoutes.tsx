@@ -11,6 +11,7 @@ const DailyChallengePage = lazy(
 );
 const Favourites = lazy(() => import("@/pages/user/pages/Favorites"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
+const SingleFeed = lazy(() => import("@/pages/user/pages/SingleFeed"));
 const Highlights = lazy(() => import("@/pages/user/pages/Highlights"));
 const MyFeeds = lazy(() => import("@/pages/user/pages/MyFeeds"));
 const CreateFeed = lazy(() => import("@/pages/user/pages/CreateFeed"));
@@ -47,6 +48,7 @@ export const userRoutes: RouteObject[] = [
       { path: "room/:roomId/conference", element: <VideoConference /> },
       { path: "challenge", element: <DailyChallengePage /> },
       { path: "highlights", element: <Highlights /> },
+      { path: "highlights/:feedId", element: <SingleFeed /> },
       {
         path: "profile",
         element: <ProfileLayout />,

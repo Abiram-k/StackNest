@@ -1,5 +1,12 @@
 import { Document, Types } from "mongoose";
 
+interface PushSubscription {
+  endpoint: string;
+  keys: {
+    p256dh: string;
+    auth: string;
+  };
+}
 export interface IUser extends Document {
   _id:Types.ObjectId;
   googleId: string;
@@ -14,6 +21,7 @@ export interface IUser extends Document {
   role: "user" | "admin"; 
   userName: string;
   avatar: string;
+  pushSubscriptions: PushSubscription[];
   streak: number;
   streakClaimDate: Date;
   failedLoginAttempts:number;

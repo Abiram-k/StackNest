@@ -97,7 +97,7 @@ router.get(
   )
 );
 
-// <<<<<<<<<<<<<<<<<<<<<<<<<< FEEDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+// <<<<<<<<<<<<<<<<<<<<<<<<<< FEEDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.get(
   "/suggestion",
   feedController.getUserSearchSuggestion.bind(feedController)
@@ -105,6 +105,10 @@ router.get(
 router.get(
   "/available-feeds",
   feedController.getAllAvailableFeed.bind(feedController)
+);
+router.get(
+  "/feed/:feedId",
+  feedController.getSingleFeedData.bind(feedController)
 );
 router.get("/my-feed", feedController.getMyFeeds.bind(feedController));
 router.get(
@@ -142,5 +146,14 @@ router.delete(
 router.post("/feed/like", feedController.toggleLikeFeed.bind(feedController));
 router.put("/feed/:feedId", feedController.updateFeed.bind(feedController));
 router.delete("/feed/:feedId", feedController.deleteFeed.bind(feedController));
+
+// <<<<<<<<<<<<<<<<<<<<<<<<<<< PUSH NOTIFICATION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+router.post(
+  "/subscribe",
+  userProfileController.subscribeUserForPushNotification.bind(
+    userProfileController
+  )
+);
 
 export default router;

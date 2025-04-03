@@ -23,7 +23,7 @@ export class FeedRepository implements IFeedRepository<IFeed> {
 
   async getFeedById(feedId: string): Promise<IFeed | null> {
     try {
-      return await Feed.findById(feedId);
+      return await Feed.findById(feedId).populate("userId");
     } catch (error) {
       throw error;
     }
@@ -180,7 +180,7 @@ export class FeedRepository implements IFeedRepository<IFeed> {
 
   async deleteComment(feedId: string, commentId: string): Promise<void> {
     try {
-      await Feed.findByIdAndUpdate(feedId,{$pull:{comments:commentId}})
+      await Feed.findByIdAndUpdate(feedId, { $pull: { comments: commentId } });
     } catch (error) {
       throw error;
     }

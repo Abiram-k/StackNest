@@ -31,4 +31,9 @@ export interface IUserProfileController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  subscribeUserForPushNotification(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 }

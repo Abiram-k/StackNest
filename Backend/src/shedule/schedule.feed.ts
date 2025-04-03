@@ -1,10 +1,10 @@
 import cron from "node-cron";
-import feedModel from "../models/feed.model";
 import { Types } from "mongoose";
 import { FeedRepository } from "../repositories/feed.repository";
 import { sendFeedPublishedMail } from "../utils/email";
 
 cron.schedule("* * * * *", async () => {
+
   const now = new Date();
 
   const feedRepository = new FeedRepository();

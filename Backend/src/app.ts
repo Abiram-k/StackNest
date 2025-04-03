@@ -8,7 +8,7 @@ import AuthRoutes from "../src/routes/auth.routes";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandling";
 import "./shedule/schedule.challenges"
-import "./shedule/schedule.feed"
+import "./shedule/schedule.feed" 
 import { config } from "dotenv";
 import { verifyUser } from "./middlewares/verifyUser";
 import { verifyAdmin } from "./middlewares/verifyAdmin";

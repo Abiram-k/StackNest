@@ -1,3 +1,4 @@
+import { PushSubscription } from "web-push";
 import {
   typeUserResetToken,
   verifyUserProfileSchemaType,
@@ -7,8 +8,12 @@ import { IUser } from "../../types/IUser";
 export interface IUserBaseRepository<T> {
   create(userData: Partial<T>): Promise<T>;
   findById(id: string): Promise<T | null>;
+  pushNewSubscription(
+    subscription: PushSubscription,
+    userId: string
+  ): Promise<void>;
   fetchAllUserNameExceptUser(
-    userId: string,
+    userId: string
     // filter: string,
     // search: string,
     // sort: string

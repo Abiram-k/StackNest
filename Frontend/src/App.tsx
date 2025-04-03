@@ -21,8 +21,8 @@ function App() {
             display: "flex",
             justifyContent: "center",
             fontSize: "15px",
-            paddingTop:"12px",
-            paddingBottom:"12px"
+            paddingTop: "12px",
+            paddingBottom: "12px",
           },
         }}
       />

@@ -61,6 +61,22 @@ export class FeedController implements IFeedController {
     }
   }
 
+  async getSingleFeedData(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { feedId } = req.params;
+      const feed = await this._feedService.getSingleFeedData(feedId);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "fetched feed data", success: true, feed });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getAllAvailableFeed(
     req: Request,
     res: Response,
@@ -239,7 +255,7 @@ export class FeedController implements IFeedController {
     }
   }
 
-  async getSelectedFeed(
+  async getSelectedFeed( // for update
     req: Request,
     res: Response,
     next: NextFunction

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 const PremiumAddCard: FC = () => {
   return (
-    <div className="hidden lg:block rounded-xl overflow-hidden h-fit shadow-md w-64 bg-white dark:bg-gray-800">
+    <div className="hidden lg:block rounded-xl overflow-hidden h-fit shadow-md hover:shadow-xl hover:scale-105 duration-250  w-full  bg-white dark:bg-gray-800">
       <div className="bg-[#7848F4] dark:bg-[#5A32B8] p-4 flex items-center justify-between">
         <h3 className="text-white font-bold">Premium</h3>
         <Crown className="h-5 w-5 text-yellow-300" />

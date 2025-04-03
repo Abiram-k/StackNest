@@ -5,7 +5,7 @@ import { useFetchFavorites } from "@/hooks/user/favorites/useFetchFavorites";
 import { useRemoveFromFavorites } from "@/hooks/user/favorites/useRemoveFromFavorites";
 import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
 import { useState } from "react";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import WarningMessage from "@/components/ui/WarningMessage";
 
 export default function Favourites() {
@@ -60,8 +60,8 @@ export default function Favourites() {
         joinIsPending ||
         verifyingIsPending) && <Spinner />}
       <main className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6 ">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+        <div className="flex-col md:flex md:flex-row  justify-between items-center mb-6 ">
+          <h1 className="text-3xl font-bold mb-5 md:mb-0 text-gray-800 dark:text-white">
             Favourite Rooms
           </h1>
 

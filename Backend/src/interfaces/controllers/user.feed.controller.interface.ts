@@ -6,6 +6,11 @@ export interface IFeedController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getSingleFeedData(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
   uploadFeed(
     req: Request,
     res: Response,

@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const filterOptions = [{ value: "Oldest" }, { value: "Latest" }];
-const sortOptions = [{ value: "MostLiked", label: "Most Liked" }];
+// const sortOptions = [{ value: "MostLiked", label: "Most Liked" }];
 
 const Highlights = () => {
   const navigate = useNavigate();
@@ -86,7 +86,7 @@ const Highlights = () => {
           fetchingLikedFeedsPending) && <Spinner />}
         <div className="mb-12 w-full relative">
           <FilterBar
-            placeHolder="Search Users"
+            placeHolder="Search Users . . . "
             filterOptions={filterOptions}
             setFilterQuery={setFilterQuery}
             setSortedOrder={setSortQuery}
@@ -138,6 +138,7 @@ const Highlights = () => {
               <FeedItem
                 key={index}
                 {...feed}
+                isSingleFeed={false}
                 handleLikeFeed={handleLikeFeed}
                 isLikedFeed={likedFeedsData?.likedFeeds.some(
                   (id) => id == feed.feedId
@@ -158,7 +159,7 @@ const Highlights = () => {
         {isFetchingNextPage && <p className="text-center">Loading more...</p>}
         {!hasNextPage && feedData.length > 0 && (
           <p className="text-center text-muted-foreground mt-5">
-            No more feeds were Available.
+            No more feeds are Available.
           </p>
         )}
       </main>

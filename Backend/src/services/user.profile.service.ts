@@ -10,12 +10,45 @@ import { Types } from "mongoose";
 import { GetUserCardData } from "../dtos/user/profile/getUserCardData.dto";
 import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface";
 import { IFeed } from "../types/IFeed";
+import { PushSubscription } from "web-push";
 
 export class UserProfileService implements IUserProfileService {
   constructor(
     private _baseRepo: IUserBaseRepository<IUser>,
     private _feedRepo: IFeedRepository<IFeed>
   ) {}
+
+  async subscribeUserForPushNotification(
+    subscription: PushSubscription,
+    userId: string
+  ): Promise<void> {
+    try {
+      if (!userId) {
+        throw createHttpError(
+          HttpStatus.UNAUTHORIZED,
+          "User not authenticated"
+        );
+      }
+
+      const user = await this._baseRepo.findById(userId);
+      if (!user) {
+        throw createHttpError(HttpStatus.NOT_FOUND, "User not found");
+      }
+
+      const isSubscriptionExist = user.pushSubscriptions.some(
+        (sub) => sub.endpoint === subscription.endpoint
+      );
+
+      if (!isSubscriptionExist)
+        await this._baseRepo.pushNewSubscription(subscription, userId);
+      
+    } catch (error) {
+      throw createHttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        "Failed to subscribe user for push notifications"
+      );
+    }
+  }
 
   async getUserDetails(id: string): Promise<verifyUserProfileSchemaType> {
     const user = await this._baseRepo.findById(id);

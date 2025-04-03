@@ -68,7 +68,6 @@ export class ChallengeRespository implements IChallengeRespository<IChallenge> {
   async scheduleChallenge(challengeId: string): Promise<void> {
     try {
       await Challenge.findByIdAndUpdate(challengeId, { isListed: true });
-      console.log("Challenges scheduled successfully:");
     } catch (error) {
       console.error("Error scheduling challenges:", error);
       throw error;

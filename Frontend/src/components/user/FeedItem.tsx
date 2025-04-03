@@ -6,6 +6,7 @@ import {
   Pause,
   Pencil,
   Play,
+  Share2,
   Trash2,
   Volume2,
   VolumeX,
@@ -19,6 +20,7 @@ import { useCommentFeed } from "@/hooks/feeds/useCommentFeed";
 import { useGetComments } from "@/hooks/feeds/useGetComments";
 import { CommentItem } from "./CommentItem";
 import { useIncrementViewsCount } from "@/hooks/feeds/useIncrementViews";
+import { toast } from "sonner";
 
 type CommentType = {
   id: string;
@@ -35,10 +37,12 @@ type CommentType = {
 type FeedItemProp = FeedResType & {
   handleEdit?: () => void;
   isLikedFeed?: boolean;
+  isSingleFeed: boolean;
   handleDelete?: (feedId: string) => void;
   handleLikeFeed?: (feedId: string) => void;
 };
 export default function FeedItem({
+  isSingleFeed,
   isLikedFeed,
   handleLikeFeed,
   handleDelete,
@@ -170,178 +174,34 @@ export default function FeedItem({
     postCommentMutate({ feedId, parentId, comment: text }); // Adding reply to DB
   };
 
+  const handleShare = async (feedId: string) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          text: content,
+          url: `${window.location.origin}/user/highlights/${feedId}`,
+        });
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      toast.warning("Your browser does not support sharing feature");
+    }
+  };
+
   return (
-    // <div className="border-b pb-6" ref={postRef}>
-    //   <div className="flex items-center justify-between mb-4">
-    //     <div className="flex items-center gap-3">
-    //       <Avatar className="h-12 w-12 border">
-    //         <AvatarImage src={userId.avatar} alt={userId.userName} />
-    //         <AvatarFallback>{userId.userName.charAt(0)}</AvatarFallback>
-    //       </Avatar>
-
-    //       <div>
-    //         <h3 className="font-medium">{userId.userName}</h3>
-    //         <p className="text-sm text-gray-500">{uploadedAt}</p>
-    //       </div>
-    //     </div>
-
-    //     <div className="flex justify-center items-center  gap-4">
-    //       <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-    //         <span className="font-medium text-foreground">
-    //           {viewsCount} views
-    //         </span>
-
-    //       </div>
-
-    //       <div className="flex items-center gap-1">
-    //         {isBlocked && (
-    //           <WarningMessage
-    //             message="This post is restricted"
-    //           />
-    //         )}
-
-    //         <div className="flex items-center border rounded-full p-1 bg-muted/50">
-    //           {handleEdit && (
-    //             <Button
-    //               variant="ghost"
-    //               size="sm"
-    //               className="h-9 px-3 rounded-full gap-2 text-muted-foreground hover:text-foreground"
-    //               onClick={() =>
-    //                 navigate(`/user/profile/my-feed/${feedId}/edit`)
-    //               }
-    //             >
-    //               <Pencil className="h-4 w-4" />
-    //               <span>Edit</span>
-    //             </Button>
-    //           )}
-
-    //           {handleDelete && (
-    //             <Button
-    //               variant="ghost"
-    //               size="sm"
-    //               className="h-9 px-3 rounded-full gap-2 text-muted-foreground hover:text-destructive"
-    //               onClick={() => handleDelete?.(feedId)}
-    //             >
-    //               <Trash2 className="h-4 w-4" />
-    //               <span>Delete</span>
-    //             </Button>
-    //           )}
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-
-    //   <div className="space-y-3">
-    //     <h2 className="text-lg font-medium">{title}</h2>
-    //     <p className="text-gray-700">{content}</p>
-
-    //     {media && (
-    //       <div className="mt-4 space-y-2 w-full">
-    //         <div className="relative h-64 w-full flex justify-center items-center overflow-hidden rounded-lg bg-gray-100">
-    //           {isVideo ? (
-    //             <div className="relative w-full h-full">
-    //               <video
-    //                 ref={videoRef}
-    //                 src={media}
-    //                 autoPlay
-    //                 loop
-    //                 muted={isMuted}
-    //                 className="w-full h-full object-cover rounded-lg"
-    //               />
-    //               <div className="absolute bottom-2 right-2 flex space-x-2">
-    //                 <button
-    //                   onClick={togglePlayPause}
-    //                   className="bg-black bg-opacity-60 text-white text-xs px-3 py-1 rounded-md focus:outline-none"
-    //                 >
-    //                   {isPlaying ? "Pause ⏸️" : "Play ▶️"}
-    //                 </button>
-    //                 <button
-    //                   onClick={toggleMute}
-    //                   className="bg-black bg-opacity-60 text-white text-xs px-3 py-1 rounded-md focus:outline-none"
-    //                 >
-    //                   {isMuted ? "Unmute 🔊" : "Mute 🔇"}
-    //                 </button>
-    //               </div>
-    //             </div>
-    //           ) : (
-    //             <img
-    //               src={media || "/placeholder.svg"}
-    //               alt={"Post media"}
-    //               className="object-cover w-full h-full rounded-lg"
-    //             />
-    //           )}
-    //         </div>
-    //       </div>
-    //     )}
-    //   </div>
-
-    //   <div className="flex items-center mt-4 gap-6"></div>
-    //   <div className="flex -space-x-2">
-    //     <Button
-    //       variant="ghost"
-    //       size="sm"
-    //       className="flex items-center gap-2 text-gray-500 hover:text-gray-700"
-    //       onClick={handleLike}
-    //       disabled={!handleLikeFeed}
-    //     >
-    //       <Heart
-    //         className={`h-5 w-5 ${liked ? "fill-red-500 text-red-500" : ""}`}
-    //       />
-    //       <span>Like {likeCount}</span>
-    //     </Button>
-    //     <Button
-    //       variant="ghost"
-    //       size="sm"
-    //       className="flex items-center gap-2 text-gray-500 hover:text-gray-700"
-    //       onClick={() => setShowComments(!showComments)}
-    //     >
-    //       <MessageSquare className="h-5 w-5" />
-    //       <span>Comment </span>
-    //     </Button>
-    //     <Button
-    //       variant="ghost"
-    //       size="sm"
-    //       className="ml-auto text-gray-500 hover:text-gray-700"
-    //       onClick={() => setShowComments(!showComments)}
-    //     >
-    //       {comments} Reply
-    //     </Button>
-    //   </div>
-
-    //   {showComments && (
-    //     <div className="mt-6 space-y-4">
-    //       <div className="flex gap-2">
-    //         <input
-    //           type="text"
-    //           value={newComment}
-    //           onChange={(e) => setNewComment(e.target.value)}
-    //           placeholder="Add a comment..."
-    //           className="flex-1 border rounded-lg px-4 py-2"
-    //           onKeyPress={(e) => e.key === "Enter" && handleAddComment()}
-    //         />
-    //         <Button onClick={handleAddComment}>Post</Button>
-    //       </div>
-
-    //       <CommentList
-    //         setFeedComments={setFeedComments}
-    //         feedComments={feedComments}
-    //         setComments={setFeedComments}
-    //         comments={feedComments}
-    //         feedId={feedId}
-    //         onReply={handleReply}
-    //       />
-    //     </div>
-    //   )}
-    // </div>
-
     <div
       className="border-b border-gray-200 dark:border-gray-800 pb-6"
       ref={postRef}
     >
       {/* User Info Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
-        <div className="flex items-center gap-3 flex-1">
-          <Avatar className="h-12 w-12 border-2 border-white ring-2 ring-primary/10">
+        <div
+          className="flex items-center gap-3 flex-1 cursor-pointer"
+          onClick={() => navigate(`/user/${userId.userName}/profile`)}
+        >
+          <Avatar className="h-12 w-12 border-2 border-white ring-2 ring-primary/10 ">
             <AvatarImage src={userId.avatar} alt={userId.userName} />
             <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
               {userId.userName.charAt(0)}
@@ -501,6 +361,18 @@ export default function FeedItem({
             <MessageSquare className="h-5 w-5 " />
             <span className="font-medium">{comments}</span>
           </Button>
+          {!isSingleFeed && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1.5 rounded-full hover:text-green-600 dark:hover:text-green-400 transition-colors"
+              onClick={() => handleShare(feedId)}
+              aria-label="Share post"
+            >
+              <Share2 className="h-5 w-5" />
+              <span className="font-medium">Share</span>
+            </Button>
+          )}
         </div>
 
         <Button

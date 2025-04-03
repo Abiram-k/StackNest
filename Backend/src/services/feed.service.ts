@@ -15,6 +15,7 @@ import { ICommentRepository } from "../interfaces/repositories/comment.repositor
 import { ResCommentDTO } from "../dtos/user/feeds/getComments.dto";
 import createHttpError from "http-errors";
 import { HttpStatus } from "../constants/enum.statusCode";
+import { sendNotification } from "../utils/webPush";
 const trieService = new TrieService();
 
 export class FeedService implements IFeedService {
@@ -99,6 +100,7 @@ export class FeedService implements IFeedService {
     comment: string
   ): Promise<void> {
     try {
+      const user = await this._userBaseRepo.findById(String(userId));
       const newComment = await this._commentRepo.createNewComment(
         userId,
         feedId,
@@ -111,7 +113,26 @@ export class FeedService implements IFeedService {
           await this._commentRepo.addReplyToParent(parentId, newComment._id);
         }
       }
-      if (!parentId) await this._feedRepo.postComment(feedId, newComment._id);
+      if (!parentId) {
+        await this._feedRepo.postComment(feedId, newComment._id);
+        const payload = {
+          title: "New Comment!",
+          body: `${user?.userName} commented: ${
+            comment.length > 30 ? comment.slice(0, 30) + "..." : comment
+          }`,
+          url: `/user/highlights`,
+        };
+        if (user && user?.pushSubscriptions.length > 0) {
+          await Promise.all(
+            user.pushSubscriptions.map((subscription) =>
+              sendNotification(
+                { endpoint: subscription.endpoint, keys: subscription.keys },
+                payload
+              )
+            )
+          );
+        }
+      }
     } catch (error) {
       throw error;
     }
@@ -196,6 +217,39 @@ export class FeedService implements IFeedService {
 
       return { replies: formattedData, parentCommentId };
     } catch (error) {
+      throw error;
+    }
+  }
+
+  async getSingleFeedData(feedId: string): Promise<ResFeedType | null> {
+    try {
+      const feedData = await this._feedRepo.getFeedById(feedId);
+      if (!feedData) return null;
+      const feedUser = feedData.userId as { userName: string; avatar: string };
+      const formattedFeedData: ResFeedType = {
+        comments: feedData.comments.length || 0,
+        content: feedData.content,
+        feedId: feedData._id,
+        isBlocked: feedData.isBlocked,
+        likes: feedData.likes.length || 0,
+        title: feedData.title,
+        uploadedAt: new Date(feedData.createdAt).toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        }),
+        viewsCount: feedData.viewsCount,
+        media: feedData.media,
+        userId: {
+          userName: feedUser.userName,
+          avatar: feedUser.avatar,
+        },
+      };
+      return formattedFeedData;
+    } catch (error) { 
       throw error;
     }
   }
@@ -346,6 +400,7 @@ export class FeedService implements IFeedService {
   }
 
   async getSelectedFeed(feedId: string): Promise<ResGetSelectedFeedDTO | []> {
+    // for update
     try {
       const selectedFeed = await this._feedRepo.getFeedById(feedId);
       if (!selectedFeed) {

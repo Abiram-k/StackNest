@@ -50,6 +50,24 @@ type GetAllFeedsType = axiosResponse & {
   }[];
 };
 
+type GetSingleFeedsType = axiosResponse & {
+  feed: {
+    feedId: string;
+    userId: {
+      userName: string;
+      avatar: string;
+    };
+    uploadedAt: string;
+    title: string;
+    content: string;
+    media?: string;
+    isBlocked: boolean;
+    likes: number;
+    comments: number;
+    viewsCount: number;
+  };
+};
+
 type GetLikedFeedsType = axiosResponse & {
   likedFeeds: string[];
 };
@@ -108,6 +126,10 @@ export class FeedService {
     return await this._httpService.get(
       `users/available-feeds?filter=${filter}&sort=${sort}&limit=${limit}&page=${pageParam}`
     );
+  }
+
+  async getSingleFeed(feedId: string):Promise<GetSingleFeedsType> {
+    return await this._httpService.get(`/users/feed/${feedId}`);
   }
   async getLikedFeeds(): Promise<GetLikedFeedsType> {
     return await this._httpService.get(`users/feeds/my-likes`);

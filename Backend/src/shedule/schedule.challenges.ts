@@ -21,11 +21,12 @@ cron.schedule("0 0 * * *", async () => {
       return;
     }
     const shuffled = challenges.sort(() => 0.5 - Math.random());
+
     const selectedChallenges = shuffled
       .slice(0, 4)
       .map((challenge) => challenge._id);
 
-     await challengeService.sheduleChallenge(selectedChallenges) ;
+    await challengeService.sheduleChallenge(selectedChallenges);
   } catch (error) {
     console.log(error);
     throw error;

@@ -5,8 +5,8 @@ import {
   IUserBaseRepository,
 } from "../interfaces/repositories/user.repository.interface";
 import { IUser } from "../types/IUser";
+import { PushSubscription } from "web-push";
 
- 
 export class UserBaseRepository implements IUserBaseRepository<IUser> {
   async incrementCheckin(userId: string): Promise<boolean> {
     try {
@@ -27,14 +27,12 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
       throw error;
     }
   }
-  async fetchAllUserNameExceptUser(
-    userId: string,
-  ): Promise<IUser[] | null> {
+  async fetchAllUserNameExceptUser(userId: string): Promise<IUser[] | null> {
     try {
       const query: any = {
         _id: { $ne: userId },
       };
-   
+
       return await User.find(query).select("userName -_id");
     } catch (error) {
       throw error;
@@ -57,6 +55,23 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
   async findById(id: string): Promise<IUser | null> {
     try {
       return await User.findById(id).select("-password");
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async pushNewSubscription(
+    subscription: PushSubscription,
+    userId: string
+  ): Promise<void> {
+    try {
+      const subscribeData = {
+        endpoint: subscription.endpoint,
+        keys: subscription.keys,
+      };
+      await User.findByIdAndUpdate(userId, {
+        $push: { pushSubscriptions: subscribeData },
+      });
     } catch (error) {
       throw error;
     }

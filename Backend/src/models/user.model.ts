@@ -3,6 +3,14 @@ import crypto from "crypto";
 import { IUser } from "../types/IUser";
 import { v4 as uuidv4 } from "uuid";
 
+interface PushSubscription {
+  endpoint: string;
+  keys: {
+    p256dh: string;
+    auth: string;
+  };
+}
+
 const userSchema = new mongoose.Schema<IUser>(
   {
     googleId: {
@@ -61,6 +69,15 @@ const userSchema = new mongoose.Schema<IUser>(
     avatar: {
       type: String,
     },
+    pushSubscriptions: [
+      {
+        endpoint: { type: String, required: true },
+        keys: {
+          p256dh: { type: String, required: true },
+          auth: { type: String, required: true },
+        },
+      },
+    ],
     streak: {
       type: Number,
       default: 0,
