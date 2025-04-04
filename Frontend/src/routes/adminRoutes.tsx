@@ -2,7 +2,6 @@ import AdminLayout from "@/layouts/AdminLayout";
 import ProtectAdminLogin from "@/protectedRoutes/admin/ProtectAdminLogin";
 import ProtectDashboard from "@/protectedRoutes/admin/ProtectDashboard";
 import { lazy } from "react";
-
 const AdminLoginPage = lazy(() => import("../pages/admin/auth/AdminLogin"));
 const Dashboard = lazy(() => import("../pages/admin/pages/Dashboard"));
 const RoomManagement = lazy(
@@ -10,6 +9,9 @@ const RoomManagement = lazy(
 );
 const FeedManagement = lazy(
   () => import("@/pages/admin/pages/feedManagement/FeedManagement")
+);
+const FeedDetails = lazy(
+  () => import("@/pages/admin/pages/feedManagement/FeedDetails")
 );
 const UserManagement = lazy(
   () => import("@/pages/admin/pages/userManagement/UserManagement")
@@ -95,6 +97,10 @@ export const adminRoutes: RouteObject[] = [
           {
             path: "feed-management",
             element: <FeedManagement />,
+          },
+          {
+            path: "feed-management/:feedId/details",
+            element: <FeedDetails />,
           },
         ],
       },

@@ -65,6 +65,7 @@ const MyFeeds = () => {
             <FeedItem
               key={index}
               {...feed}
+              isSingleFeed={false}
               handleDelete={handleDeleteFeed}
               handleEdit={() => {}}
               handleLikeFeed={handleLikeFeed}

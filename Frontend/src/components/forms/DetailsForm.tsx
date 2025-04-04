@@ -2,6 +2,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { errorText } from "../ui/errorText";
 import { CalendarIcon } from "lucide-react";
+import ToolTipProvider from "../providers/ToolTipProvider";
+import { Tooltip } from "../ui/tooltip";
 
 interface FormField {
   name: any;
@@ -19,6 +21,7 @@ interface FormField {
   options?: { value: string; label: string }[];
   defaultValue?: any;
   setValue: any;
+  enableAiRecommendation?: boolean;
 }
 
 interface DetailsFormProps {
@@ -30,6 +33,7 @@ interface DetailsFormProps {
   submitButtonText?: string;
   isEditing: boolean;
   formData?: any;
+  generateAIContent?: (fieldType: string) => void;
 }
 
 const DetailsForm = ({
@@ -40,6 +44,7 @@ const DetailsForm = ({
   onSubmit,
   errors,
   isPending,
+  generateAIContent,
   submitButtonText = "Update Profile",
 }: DetailsFormProps) => {
   const renderField = (field: FormField) => {
@@ -105,26 +110,71 @@ const DetailsForm = ({
 
       case "textarea":
         return (
-          <textarea
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus-visible:border-gray-200 bg-white 
+          <div className="relative">
+            <textarea
+              className={`w-full px-3 ${
+                field.enableAiRecommendation && "h-64"
+              } py-2 border rounded-lg focus:outline-none focus:ring-1 focus-visible:border-gray-200 bg-white 
               dark:border-1  dark:bg-black dark:text-white dark:border-gray-800 ${
                 isEditing ? "border-black" : "border-gray-300"
               }`}
-            placeholder={field.placeholder}
-            {...register(field.name)}
-            disabled={!isEditing}
-          />
+              placeholder={field.placeholder}
+              {...register(field.name)}
+              disabled={!isEditing}
+            />
+            {field.enableAiRecommendation && (
+              // <div className="group">
+              //   <div className="absolute right-1 -top-5 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-200 bg-gray-900 text-white text-xs rounded px-2 py-1 z-30 whitespace-nowrap">
+              //     Generate content based on the title!
+              //   </div>
+              //   <div
+              //     className="absolute right-5 top-5 -translate-y-1/2 text-blue-500 cursor-pointer transition duration-300 hover:scale-110 hover:text-blue-600 text-2xl animate-ai-glow"
+              //     onClick={() => generateAIContent?.(field.name)}
+              //   >
+              //     <svg
+              //       xmlns="http://www.w3.org/2000/svg"
+              //       className="h-5 w-5"
+              //       viewBox="0 0 24 24"
+              //       fill="currentColor"
+              //     >
+              //       <path
+              //         strokeLinecap="round"
+              //         strokeLinejoin="round"
+              //         strokeWidth={2}
+              //         d="M13 10V3L4 14h7v7l9-11h-7z"
+              //       />
+              //     </svg>
+              //   </div>
+              // </div>
+              <AiIcon name={field.name} generateAIContent={generateAIContent} />
+            )}
+          </div>
         );
 
       default:
         return (
-          <Input
-            type={field.type}
-            placeholder={field.placeholder}
-            {...register(field.name)}
-            disabled={!isEditing}
-            className={`${isEditing ? "border-black" : "border-gray-300"}`}
-          />
+          // <Input
+          //   type={field.type}
+          //   placeholder={field.placeholder}
+          //   {...register(field.name)}
+          //   disabled={!isEditing}
+          //   className={`${isEditing ? "border-black" : "border-gray-300"}`}
+          // />
+          <div className="relative">
+            <Input
+              type={field.type}
+              placeholder={field.placeholder}
+              {...register(field.name)}
+              disabled={!isEditing}
+              className={`w-full pr-10 ${
+                isEditing ? "border-black" : "border-gray-300"
+              }`}
+            />
+
+            {field.enableAiRecommendation && (
+              <AiIcon name={field.name} generateAIContent={generateAIContent} />
+            )}
+          </div>
         );
     }
   };
@@ -163,3 +213,37 @@ const DetailsForm = ({
 };
 
 export default DetailsForm;
+
+const AiIcon = ({
+  generateAIContent,
+  name,
+}: {
+  generateAIContent?: (name: string) => void;
+  name: string;
+}) => {
+  return (
+    <div className="group">
+      <div className="absolute right-1 -top-5 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-200 bg-gray-900 text-white text-xs rounded px-2 py-1 z-30 whitespace-nowrap">
+        Generate content based on the title!
+      </div>
+      <div
+        className="absolute right-5 top-5 -translate-y-1/2 text-blue-500 cursor-pointer transition duration-300 hover:scale-110 hover:text-blue-600 text-2xl animate-ai-glow"
+        onClick={() => generateAIContent?.(name)}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 10V3L4 14h7v7l9-11h-7z"
+          />
+        </svg>
+      </div>
+    </div>
+  );
+};

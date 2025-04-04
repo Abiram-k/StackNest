@@ -16,6 +16,11 @@ import { ResCommentDTO } from "../dtos/user/feeds/getComments.dto";
 import createHttpError from "http-errors";
 import { HttpStatus } from "../constants/enum.statusCode";
 import { sendNotification } from "../utils/webPush";
+import {
+  ICommentDTO,
+  IFeedDetailsDTO,
+} from "../dtos/admin/feedManagement/getFeedDetails.dto";
+import { sendFeedDeletedMail } from "../utils/email";
 const trieService = new TrieService();
 
 export class FeedService implements IFeedService {
@@ -249,7 +254,7 @@ export class FeedService implements IFeedService {
         },
       };
       return formattedFeedData;
-    } catch (error) { 
+    } catch (error) {
       throw error;
     }
   }
@@ -454,21 +459,49 @@ export class FeedService implements IFeedService {
       throw error;
     }
   }
-  async deleteFeed(feedId: string): Promise<boolean> {
+  async deleteFeed(feedId: string, reason: string): Promise<boolean> {         
     try {
-      const isDeleted = await this._feedRepo.deleteFeed(feedId);
-      return isDeleted;
+      const deletedFeed = await this._feedRepo.deleteFeed(feedId);
+      if (!deletedFeed) {
+        throw createHttpError(HttpStatus.BAD_REQUEST, "Failed to delete feed");
+      }
+      if (deletedFeed.userId instanceof Types.ObjectId) {
+        console.log("User id is not populated");
+        return false;
+      }
+      const feedUser = deletedFeed.userId as {
+        userName: string;
+        email: string;
+      };
+      sendFeedDeletedMail(
+        feedUser.userName,
+        feedUser.email,
+        deletedFeed.title,
+        reason
+      );
+      return true;
     } catch (error) {
       throw error;
     }
   }
-
-  // Admin
-
-  async getAllFeeds(): Promise<ResFeedType[] | []> {
+  async getAllFeeds(
+    search: string,
+    filter: string,
+    sort: string,
+    page: number,
+    limit: number
+  ): Promise<{ feeds: ResFeedType[]; totalPages: number }> {
     try {
-      const feeds = await this._feedRepo.getAllFeed();
-      if (!feeds) return [];
+      const result = await this._feedRepo.getAllFeed(
+        search,
+        filter,
+        sort,
+        page, 
+        limit
+      );
+      if (!result) return { feeds: [], totalPages: 0 };
+
+      const { feeds, totalPages } = result;
 
       const formattedFeeds = feeds.map((feed) => {
         const feedUser = feed.userId as { userName: string; avatar: string };
@@ -496,7 +529,88 @@ export class FeedService implements IFeedService {
           viewsCount: feed.viewsCount,
         };
       });
-      return formattedFeeds;
+      return { feeds: formattedFeeds, totalPages };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getFeedDetails(feedId: string): Promise<IFeedDetailsDTO | null> {
+    try {
+      const feedDetails = await this._feedRepo.getFeedById(feedId);
+      if (!feedDetails)
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "Feed not found,Check feed id!"
+        );
+      if (feedDetails.userId instanceof Types.ObjectId) {
+        console.log("feed userid is not populated");
+        return null;
+      }
+      const feedUser = feedDetails.userId as {
+        userName: string;
+        avatar: string;
+        _id: string;
+        email: string;
+        isBlocked: boolean;
+      };
+      const mapComments = (comments: any[]): ICommentDTO[] => {
+        return comments
+          .map((comment) => {
+            if (
+              comment instanceof Types.ObjectId ||
+              comment.userId instanceof Types.ObjectId
+            ) {
+              return null;
+            }
+
+            const user = comment.userId as {
+              userName: string;
+              avatar: string;
+              _id: string;
+              email: string;
+            };
+
+            return {
+              _id: comment._id,
+              content: comment.comment,
+              user: {
+                _id: user._id,
+                name: user.userName,
+                email: user.email,
+                avatar: user.avatar,
+              },
+              createdAt: comment.createdAt,
+            };
+          })
+          .filter(Boolean) as ICommentDTO[];
+      };
+
+      const formattedData: IFeedDetailsDTO = {
+        _id: feedDetails?._id,
+        userId: {
+          _id: feedUser._id,
+          name: feedUser.userName,
+          email: feedUser.email,
+          avatar: feedUser.avatar,
+          isBlocked: feedUser.isBlocked,
+        },
+        title: feedDetails?.title,
+        content: feedDetails?.content,
+        scheduledAt: feedDetails.scheduledAt
+          ? String(feedDetails?.scheduledAt)
+          : feedDetails.scheduledAt,
+        isPublished: feedDetails?.isPublished,
+        media: feedDetails.media || null,
+        isBlocked: feedDetails?.isBlocked,
+        viewsCount: feedDetails?.viewsCount,
+        views: feedDetails?.views.map((view) => String(view)),
+        likes: feedDetails?.likes.map((like) => String(like)),
+        comments: mapComments(feedDetails?.comments || []),
+        createdAt: String(feedDetails?.createdAt),
+        updatedAt: String(feedDetails?.updatedAt),
+      };
+      return formattedData;
     } catch (error) {
       throw error;
     }

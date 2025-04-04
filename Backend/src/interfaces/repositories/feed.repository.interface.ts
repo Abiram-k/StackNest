@@ -4,11 +4,10 @@ export interface IFeedRepository<T> {
   getFeedsByUserId(userId: Types.ObjectId): Promise<T[] | null>;
   getFeedById(feedId: string): Promise<T | null>;
   createFeed(data: Partial<T>): Promise<boolean>;
-  deleteFeed(feedId: string): Promise<boolean>;
-  deleteFeed(feedId: string): Promise<boolean>;
-  getFeedsToPublish(now: Date): Promise<T[] >;
-  deleteComment(feedId:string,commentId:string):Promise<void>;
-  publishFeed(feedId:string):Promise<void>
+  deleteFeed(feedId: string): Promise<T | null>;  
+  getFeedsToPublish(now: Date): Promise<T[]>;
+  deleteComment(feedId: string, commentId: string): Promise<void>;
+  publishFeed(feedId: string): Promise<void>;
   getLikedFeeds(userId: Types.ObjectId): Promise<string[] | []>;
   toggleLikeFeed(feedId: string, userId: Types.ObjectId): Promise<void>;
   getAllAvailableFeed(
@@ -27,6 +26,12 @@ export interface IFeedRepository<T> {
   getComments(feedId: string): Promise<T | null>;
 
   // Admin
-  getAllFeed(): Promise<T[] | null>;
+  getAllFeed(
+    search: string,
+    filter: string,
+    sort: string,
+    page: number,
+    limit: number
+  ): Promise<{ feeds: T[]; totalPages: number } | null>;
   blockOrUnblockFeed(feedId: string): Promise<void>;
 }

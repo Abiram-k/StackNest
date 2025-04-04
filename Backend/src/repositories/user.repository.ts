@@ -27,6 +27,35 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
       throw error;
     }
   }
+
+  async getStreakTableData(): Promise<IUser[]> {
+    try {
+      const user = await User.find({
+        role: { $ne: "admin" },
+        streak: { $gte: 1 },
+      })
+        .sort({ streak: -1 })
+        .limit(10)
+        .select("-_id userName avatar streak");
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getPointsTableData(): Promise<IUser[]> {
+    try {
+      const user = await User.find({
+        role: { $ne: "admin" },
+        challengePoints: { $gte: 1 },
+      })
+        .sort({ challengePoints: -1 })
+        .limit(10)
+        .select("-_id userName avatar challengePoints");
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
   async fetchAllUserNameExceptUser(userId: string): Promise<IUser[] | null> {
     try {
       const query: any = {

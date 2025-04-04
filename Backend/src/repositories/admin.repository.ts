@@ -24,6 +24,7 @@ export class AdminRespository implements IAdminRepository<IUser> {
         query.$or = [
           { userName: { $regex: `^${search}`, $options: "i" } },
           { email: { $regex: `^${search}`, $options: "i" } },
+          { _id: search }, 
         ];
       }
       if (filter == FilterTags.isBlocked) {

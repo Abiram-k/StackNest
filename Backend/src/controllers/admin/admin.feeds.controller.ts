@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { IAdminFeedController } from "../../interfaces/controllers/admin.feed.controller.interface";
 import { IFeedService } from "../../interfaces/services/feed.service.interface";
 import { HttpStatus } from "../../constants/enum.statusCode";
+import { GetAdminFeedDetailsDTO } from "../../dtos/admin/feedManagement/getFeedDetails.dto";
 
 export class AdminFeedController implements IAdminFeedController {
   private _feedService: IFeedService;
@@ -15,12 +16,44 @@ export class AdminFeedController implements IAdminFeedController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const availableFeeds = await this._feedService.getAllFeeds();
+      const filter = String(req.query.filter) || "";
+      const sort = String(req.query.sort) || "";
+      const search = String(req.query.search) || "";
+      const limit = Number(req.query.limit) || 0;
+      const page = Number(req.query.page) || 0;
+      const { feeds, totalPages } = await this._feedService.getAllFeeds(
+        search,
+        filter,
+        sort,
+        page,
+        limit
+      );
       res.status(HttpStatus.OK).json({
         message: "Successfully fetched feeds",
         success: true,
-        availableFeeds,
+        availableFeeds: feeds,
+        totalPages,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getFeedDetails(
+    req: Request,
+    res: Response<GetAdminFeedDetailsDTO>,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { feedId } = req.params;
+      if (!feedId) {
+        console.log("Feed id not founded!");
+        return;
+      }
+      const feedDetails = await this._feedService.getFeedDetails(feedId);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "Fetched feed details", success: true, feedDetails });
     } catch (error) {
       next(error);
     }
@@ -47,7 +80,8 @@ export class AdminFeedController implements IAdminFeedController {
   ): Promise<void> {
     try {
       const { feedId } = req.params;
-      await this._feedService.deleteFeed(feedId);
+      const reason = String(req.query.reason) || "";
+      await this._feedService.deleteFeed(feedId, reason);
       res
         .status(HttpStatus.OK)
         .json({ message: "Successfully deleted feed", success: true });

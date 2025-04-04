@@ -3,13 +3,13 @@ import * as yup from "yup";
 
 export const validateFeedSchema = yup.object({
   title: yup
-    .string()
-    .required("Title is required*")
-    .min(4, "At least 4 letters required"),
+    .string() 
+    .required("Title is required *")
+    .min(4, "At least 4 letters required *"),
     content: yup
     .string()
-    .required("Content is required")
-    .min(8, "At least 8 characters required"),
+    .required("Content is required *")
+    .min(8, "At least 8 characters required *"),
 
   scheduledAt: yup
     .date()

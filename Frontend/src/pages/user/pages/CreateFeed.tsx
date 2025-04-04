@@ -12,12 +12,45 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+
+const instructions = {
+  content: (title: string) => `
+  You are a technical content writer for StackNest - a developer community platform.
+  Generate a concise, well-structured description (100-120 words) that:
+  - Directly relates to the title "${title}"
+  - Uses a formal, informative tone
+  - Includes technical emojis (🫂, 💻, 🔧, ✨, ⚙️, 🔗)
+  - Is formatted with line breaks and optional bullet points
+  - Avoids marketing tone, focuses on practical developer value
+`,
+  contentPrompt: (title: string) => `
+Title: ${title}
+Generate a technical description with:
+- A brief problem statement
+- Explanation of the topic
+- Implementation insights
+- Benefits summary
+Limit to 2-3 emojis.
+`,
+  title: `You are a concise, creative technical title generator for blog posts or articles.
+   Generate a short, catchy, and relevant title (max 12 words) based on the following content.
+   Avoid clickbait. Ensure clarity, relevance, and developer appeal.`,
+  titlePropmt: (content: string) => `
+  Content:
+  ${content}
+  Generate a StackNest-compatible technical blog post title.`,
+};
+
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 const CreateFeed = () => {
   const {
     register,
     reset,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useVerifyFeedForm({
     schema: validateFeedSchema,
@@ -87,6 +120,81 @@ const CreateFeed = () => {
     selectedImage.current = file;
   };
 
+  const generateAIContent = async (fieldType: string) => {
+    try {
+      setIsLoading(true);
+
+      const title = watch("title")?.trim();
+      const content = watch("content")?.trim();
+
+      const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+
+      let prompt = "";
+      let instruction = "";
+      let targetField = "";
+
+      if (fieldType === "content") {
+        if (!title || title.length < 5) {
+          toast.warning(
+            "Please enter a meaningful title (at least 5 characters)"
+          );
+          return;
+        }
+
+        targetField = "content";
+        instruction = instructions.content(title);
+        prompt = instructions.contentPrompt(title);
+      } else if (fieldType === "title") {
+        if (!content || content.length < 20) {
+          toast.warning(
+            "Please provide enough content (at least 20 characters) to generate a title."
+          );
+          return;
+        }
+
+        targetField = "title";
+        instruction = instructions.title;
+        prompt = instructions.titlePropmt(content);
+      } else {
+        toast.error("Invalid AI generation type.");
+        return;
+      }
+
+      const modelWithInstruction = genAI.getGenerativeModel({
+        model: "gemini-1.5-flash",
+        systemInstruction: instruction,
+      });
+
+      const result = await modelWithInstruction.generateContent(prompt);
+      const generatedText = result.response.text().trim();
+
+      if (generatedText.length < 5) {
+        toast.error("Generated content too short, try again..");
+      }
+      if (targetField == "content") {
+        setValue(
+          targetField,
+          generatedText.replace(/\*\*/g, "").replace(/```/g, "")
+        );
+      }
+      if (targetField == "title") {
+        setValue(
+          targetField,
+          generatedText.replace(/\*\*/g, "").replace(/```/g, "")
+        );
+      }
+      toast.success(`AI ${targetField} generated successfully!`);
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.promptFeedback?.blockReasonMessage ||
+        error.message ||
+        "Content generation failed. Please try again.";
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-black w-full md:-ms-72 mb-20">
       {(isLoading || isPending) && <Spinner />}
@@ -129,6 +237,7 @@ const CreateFeed = () => {
               submitButtonText="Post Now"
               onSubmit={handleSubmit(handleAddPost)}
               register={register}
+              generateAIContent={generateAIContent}
               fields={[
                 [
                   {
@@ -137,6 +246,7 @@ const CreateFeed = () => {
                     type: "text",
                     placeholder: "Enter Title",
                     setValue,
+                    enableAiRecommendation: true,
                   },
                   {
                     name: "scheduledAt",
@@ -151,8 +261,9 @@ const CreateFeed = () => {
                     name: "content",
                     label: "Content",
                     type: "textarea",
-                    placeholder: "Enter Content",
+                    placeholder: "Enter Content / Generate using AI ... ",
                     setValue,
+                    enableAiRecommendation: true,
                   },
                 ],
               ]}

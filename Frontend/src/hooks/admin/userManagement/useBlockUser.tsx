@@ -13,6 +13,7 @@ export const useBlockUser = () => {
     mutationFn: (userName: string) => adminService.blockUser(userName),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["feedDetails"] });
       toast.dismiss();
       toast.success("Success");
     },

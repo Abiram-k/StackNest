@@ -13,8 +13,7 @@ const UserCardNew = () => {
 
   return (
     <div
-    className={`rounded-lg hidden lg:block shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 overflow-hidden max-w-xs w-full mb-10`}
-
+      className={`rounded-lg hidden lg:block shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 overflow-hidden max-w-xs w-full mb-10`}
     >
       <div className="bg-[#7848F4] dark:bg-[#5A32B8] h-12 relative"></div>
 
@@ -66,7 +65,7 @@ const UserCardNew = () => {
         <Button
           variant={"ghost"}
           onClick={onViewProfile}
-          className="w-full py-2 bg-primary-500 hover:bg-[#6A3AD6] dark:bg-primary-600 dark:hover:bg-[#4D2A9E] text-sm text-white dark:text-white"
+          className="w-full py-2 bg-primary-500 hover:bg-[#6A3AD6] dark:bg-primary-600 dark:hover:bg-[#4D2A9E] text-sm text-white dark:text-white hover:text-white"
         >
           View Profile
         </Button>

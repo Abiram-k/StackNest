@@ -11,6 +11,11 @@ import { GetUserCardData } from "../dtos/user/profile/getUserCardData.dto";
 import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface";
 import { IFeed } from "../types/IFeed";
 import { PushSubscription } from "web-push";
+import {
+  IPointsTableData,
+  IStatsUser,
+  IStreakTableData,
+} from "../dtos/user/profile/getStatsData.dto";
 
 export class UserProfileService implements IUserProfileService {
   constructor(
@@ -41,12 +46,47 @@ export class UserProfileService implements IUserProfileService {
 
       if (!isSubscriptionExist)
         await this._baseRepo.pushNewSubscription(subscription, userId);
-      
     } catch (error) {
       throw createHttpError(
         HttpStatus.INTERNAL_SERVER_ERROR,
         "Failed to subscribe user for push notifications"
       );
+    }
+  }
+
+  async getStatsData(userId: string): Promise<{
+    user: IStatsUser;
+    streakTableData: IStreakTableData;
+    pointsTableData: IPointsTableData;
+  }> {
+    try {
+      const userData = await this._baseRepo.findById(userId);
+      const user: IStatsUser = {
+        streakCount: userData?.streak || 0,
+        points: userData?.challengePoints || 0,
+      };
+      const streakTable = await this._baseRepo.getStreakTableData();
+      const pointTable = await this._baseRepo.getPointsTableData();
+
+      const streakTableData: IStreakTableData = streakTable.map((user) => {
+        return {
+          userName: user.userName,
+          avatar: user.avatar,
+          count: user.streak,
+        };
+      });
+
+      const pointsTableData: IStreakTableData = pointTable.map((user) => {
+          return {
+            userName: user.userName,
+            avatar: user.avatar,
+            count: user.challengePoints,
+          };
+      });
+
+      return { user, streakTableData, pointsTableData };
+    } catch (error) {
+      throw error;
     }
   }
 

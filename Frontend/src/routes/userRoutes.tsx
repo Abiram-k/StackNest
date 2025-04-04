@@ -10,6 +10,7 @@ const DailyChallengePage = lazy(
   () => import("@/pages/user/pages/DailyChallengePage")
 );
 const Favourites = lazy(() => import("@/pages/user/pages/Favorites"));
+const Leaderboard = lazy(() => import("@/pages/user/pages/Leaderboard"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
 const SingleFeed = lazy(() => import("@/pages/user/pages/SingleFeed"));
 const Highlights = lazy(() => import("@/pages/user/pages/Highlights"));
@@ -54,6 +55,7 @@ export const userRoutes: RouteObject[] = [
         element: <ProfileLayout />,
         children: [
           { index: true, element: <ProfilePage /> },
+          { path: "stats", element: <Leaderboard /> },
           { path: "settings", element: <SettingsPage /> },
           { path: "my-feeds", element: <MyFeeds /> },
           { path: "my-feed/:feedId/edit", element: <UpdateFeed /> },

@@ -289,14 +289,18 @@ export default function FeedItem({
                 <div className="relative w-full h-full group">
                   <video
                     ref={videoRef}
+                    controls
                     src={media}
                     autoPlay
                     loop
                     muted={isMuted}
                     className="w-full h-full object-cover rounded-xl"
-                  />
+                  >
+                    <source src={media} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
                   <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
+                    {/* <Button
                       onClick={togglePlayPause}
                       className="bg-gray-900/70 text-white backdrop-blur-sm px-3 py-1.5 rounded-lg gap-2 hover:bg-gray-800/80"
                       size="sm"
@@ -317,7 +321,7 @@ export default function FeedItem({
                       ) : (
                         <Volume2 className="h-4 w-4" />
                       )}
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               ) : (

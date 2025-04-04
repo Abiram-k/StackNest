@@ -6,6 +6,7 @@ import {
 } from "../../dtos/user/feeds/getMyFeeds.dto";
 import { ResGetSelectedFeedDTO } from "../../dtos/user/feeds/getSelectedFeed.dto";
 import { ResCommentDTO } from "../../dtos/user/feeds/getComments.dto";
+import { IFeedDetailsDTO } from "../../dtos/admin/feedManagement/getFeedDetails.dto";
 
 export interface IFeedService {
   getAllAvailableFeed(
@@ -17,6 +18,7 @@ export interface IFeedService {
   getSingleFeedData(feedId: string): Promise<ResFeedType | null>;
   incrementViewsCount(feedId: string, userId: Types.ObjectId): Promise<void>;
   // deleteComment(feedId:string,)
+  getFeedDetails(feedId:string):Promise<IFeedDetailsDTO | null>;
   getAllUserNames(
     userId: Types.ObjectId,
     // filter: string ,
@@ -65,11 +67,17 @@ export interface IFeedService {
   ): Promise<boolean>;
 
   getSelectedFeed(feedId: string): Promise<ResGetSelectedFeedDTO | []>;
-  deleteFeed(feedId: string): Promise<boolean>;
+  deleteFeed(feedId: string,reason:string): Promise<boolean>;
   toggleLikeFeed(feedId: string, userId: Types.ObjectId): Promise<void>;
 
   // Admin
 
-  getAllFeeds(): Promise<ResFeedType[] | []>;
+  getAllFeeds(
+    search: string,
+    filter: string,
+    sort: string,
+    page: number,
+    limit: number
+  ): Promise<{ feeds: ResFeedType[]; totalPages: number }>;
   blockOrUnblockFeed(feedId: string): Promise<void>;
 }

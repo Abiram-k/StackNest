@@ -8,8 +8,14 @@ enum FilterTags {
   "Oldest" = "Oldest",
   "Latest" = "Latest",
 }
-enum SortTags {
-  "Mostliked" = "MostLiked",
+
+enum AdminFilterOption {
+  "Blocked" = "Blocked",
+}
+enum AdminSortOptions {
+  "MostViewed" = "MostViewed",
+  "Latest" = "Latest",
+  "Oldest" = "Oldest",
 }
 
 export class FeedRepository implements IFeedRepository<IFeed> {
@@ -23,7 +29,15 @@ export class FeedRepository implements IFeedRepository<IFeed> {
 
   async getFeedById(feedId: string): Promise<IFeed | null> {
     try {
-      return await Feed.findById(feedId).populate("userId");
+      return await Feed.findById(feedId)
+        .populate("userId")
+        .populate({
+          path: "comments",
+          populate: {
+            path: "userId",
+            model: "User",
+          },
+        });
     } catch (error) {
       throw error;
     }
@@ -55,10 +69,12 @@ export class FeedRepository implements IFeedRepository<IFeed> {
     }
   }
 
-  async deleteFeed(feedId: string): Promise<boolean> {
+  async deleteFeed(feedId: string): Promise<IFeed | null> {
     try {
-      await Feed.findByIdAndDelete(feedId);
-      return true;
+      const deletedFeed = await Feed.findByIdAndDelete(feedId).populate(
+        "userId"
+      );
+      return deletedFeed;
     } catch (error) {
       throw error;
     }
@@ -78,11 +94,11 @@ export class FeedRepository implements IFeedRepository<IFeed> {
         sortQuery.createdAt = -1;
       }
 
-      if (sort === SortTags.Mostliked) {
-        sortQuery = {
-          $expr: { $size: "$like" },
-        };
-      }
+      // if (sort === SortTags.Mostliked) {
+      //   sortQuery = {
+      //     $expr: { $size: "$like" },
+      //   };
+      // }
       const skip = (page - 1) * limit;
       const feeds = await Feed.find({ isBlocked: false, isPublished: true })
         .sort(sortQuery)
@@ -199,9 +215,35 @@ export class FeedRepository implements IFeedRepository<IFeed> {
     }
   }
 
-  async getAllFeed(): Promise<IFeed[] | null> {
+  async getAllFeed(
+    search: string,
+    filter: string,
+    sort: string,
+    page: number,
+    limit: number
+  ): Promise<{ feeds: IFeed[]; totalPages: number } | null> {
     try {
-      return await Feed.find();
+      const query: any = {};
+
+      if (search) query.title = { $regex: `^${search}`, $options: "i" };
+
+      if (filter == AdminFilterOption.Blocked) query.isBlocked = true;
+
+      const sortQuery: any = {};
+      if (sort == AdminSortOptions.MostViewed) sortQuery.viewsCount = -1;
+      else if (sort == AdminSortOptions.Latest) sortQuery.createdAt = -1;
+      else if (sort == AdminSortOptions.Oldest) sortQuery.createdAt = 1;
+
+      const skip = (page - 1) * limit;
+      const totalFeeds = await Feed.countDocuments(query);
+      const totalPages = Math.ceil(totalFeeds / limit);
+
+      const feeds = await Feed.find(query)
+        .sort(sortQuery)
+        .skip(skip)
+        .limit(limit);
+
+      return { feeds, totalPages };
     } catch (error) {
       throw error;
     }

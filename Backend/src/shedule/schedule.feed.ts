@@ -4,7 +4,6 @@ import { FeedRepository } from "../repositories/feed.repository";
 import { sendFeedPublishedMail } from "../utils/email";
 
 cron.schedule("* * * * *", async () => {
-
   const now = new Date();
 
   const feedRepository = new FeedRepository();
@@ -17,6 +16,7 @@ cron.schedule("* * * * *", async () => {
     } else {
       await sendFeedPublishedMail(
         feed.userId.userName,
+        feed._id,
         feed.userId.email,
         feed.title
       );

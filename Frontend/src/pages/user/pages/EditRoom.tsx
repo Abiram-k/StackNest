@@ -48,7 +48,6 @@ export default function EditRoom() {
   const { mutate, isPending: isUpdateRoomPending } = useUpdateRoom();
 
   const onSubmit = (data: RoomSchema) => {
-    alert("Clicked")
     mutate({ id: roomId, data });
   };
 

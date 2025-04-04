@@ -3,7 +3,7 @@ import { Document, Types } from "mongoose";
 interface PushSubscription {
   endpoint: string;
   keys: {
-    p256dh: string;
+    p256dh: string;        
     auth: string;
   };
 }

@@ -27,7 +27,7 @@ const Highlights = () => {
   const debounceValue = useDebounce(search, 250);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  const LIMIT = 2;
+  const LIMIT = 20;
 
   const {
     data: availableFeedsData,

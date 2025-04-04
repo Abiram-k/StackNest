@@ -66,6 +66,7 @@ router.delete(
 
 // <<<<<<<<<<<<<<<<<<<<<<<<< FEED MANAGEMENT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.get("/feeds",adminFeedController.getAllFeeds.bind(adminFeedController))
+router.get("/feed/:feedId",adminFeedController.getFeedDetails.bind(adminFeedController))
 router.put("/feed",adminFeedController.blockOrUnblockFeed.bind(adminFeedController))
 router.delete("/feed/:feedId",adminFeedController.deleteFeed.bind(adminFeedController))
 

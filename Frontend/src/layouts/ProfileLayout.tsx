@@ -17,7 +17,11 @@ const navItems = [
     icon: <Home className="h-5 w-5" />,
     to: "/user/profile",
   },
-  { name: "Stats", icon: <BarChart2 className="h-5 w-5" />, to: "/user/stats" },
+  {
+    name: "Stats",
+    icon: <BarChart2 className="h-5 w-5" />,
+    to: "/user/profile/stats",
+  },
   {
     name: "Posts",
     icon: <FileText className="h-5 w-5" />,

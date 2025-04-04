@@ -48,6 +48,40 @@ type GetAllFeedsType = axiosResponse & {
     comments: number;
     viewsCount: number;
   }[];
+  totalPages: number;
+};
+
+interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  avatar: string;
+}
+
+interface IComment {
+  _id: string;
+  content: string;
+  user: IUser;
+  createdAt: string;
+}
+
+type GetAdminFeedDetailsType = axiosResponse & {
+  feedDetails: {
+    _id: string;
+    userId: IUser & { isBlocked: boolean };
+    title: string;
+    content: string;
+    scheduledAt: string | null;
+    isPublished: boolean;
+    media: string | null;
+    isBlocked: boolean;
+    viewsCount: number;
+    views: string[];
+    likes: string[];
+    comments: IComment[];
+    createdAt: string;
+    updatedAt: string;
+  };
 };
 
 type GetSingleFeedsType = axiosResponse & {
@@ -128,7 +162,7 @@ export class FeedService {
     );
   }
 
-  async getSingleFeed(feedId: string):Promise<GetSingleFeedsType> {
+  async getSingleFeed(feedId: string): Promise<GetSingleFeedsType> {
     return await this._httpService.get(`/users/feed/${feedId}`);
   }
   async getLikedFeeds(): Promise<GetLikedFeedsType> {
@@ -173,13 +207,32 @@ export class FeedService {
   }
 
   // Admin Calls
-  async getAllFeeds(): Promise<GetAllFeedsType> {
-    return await this._httpService.get("/admin/feeds");
+  async getAllFeeds(
+    search: string,
+    filter: string,
+    sort: string,
+    page: number,
+    limit: number
+  ): Promise<GetAllFeedsType> {
+    return await this._httpService.get(
+      `/admin/feeds?search=${search}&filter=${filter}&sort=${sort}&page=${page}&limit=${limit}`
+    );
   }
   async blockOrUnblockFeed(feedId: string): Promise<axiosResponse> {
     return await this._httpService.put("/admin/feed", { feedId });
   }
   async adminDeleteFeed(feedId: string): Promise<axiosResponse> {
     return await this._httpService.delete(`/admin/feed/${feedId}`);
+  }
+  async getFeedDetails(feedId: string): Promise<GetAdminFeedDetailsType> {
+    return await this._httpService.get(`/admin/feed/${feedId}`);
+  }
+  async removeFeedByAdmin(
+    feedId: string,
+    reason: string
+  ): Promise<axiosResponse> {
+    return await this._httpService.delete(
+      `/admin/feed/${feedId}?reason=${reason}`
+    );
   }
 }

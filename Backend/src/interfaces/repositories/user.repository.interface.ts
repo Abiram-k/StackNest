@@ -12,6 +12,8 @@ export interface IUserBaseRepository<T> {
     subscription: PushSubscription,
     userId: string
   ): Promise<void>;
+  getStreakTableData(): Promise<T[]>;
+  getPointsTableData(): Promise<IUser[]>;
   fetchAllUserNameExceptUser(
     userId: string
     // filter: string,

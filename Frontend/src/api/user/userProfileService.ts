@@ -20,6 +20,20 @@ type GetUserCardDataReponse = axiosResponse & {
     feedsCount: number;
   };
 };
+interface IUserTableData {
+  userName: string;
+  avatar: string;
+  count: number;
+}
+
+type ResgetStatsData = axiosResponse & {
+  user: {
+    streakCount: number;
+    points: number;
+  };
+  streakTableData: IUserTableData[];
+  pointsTableData: IUserTableData[];
+};
 
 export class UserProfileService {
   private readonly _httpService: HttpService;
@@ -49,6 +63,10 @@ export class UserProfileService {
     return this._httpService.get<axiosResponse & { streakCount: number }>(
       "/users/streak"
     );
+  }
+
+  async getStatsLeaderboardData(): Promise<ResgetStatsData> {
+    return this._httpService.get("/users/stats");
   }
 
   async getUserCardDetails(): Promise<GetUserCardDataReponse> {

@@ -35,6 +35,10 @@ router.get(
   "/challenge-points",
   userProfileController.getChallengePoints.bind(userProfileController)
 );
+router.get(
+  "/stats",
+  userProfileController.getStatsData.bind(userProfileController)
+);
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ROOMS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.post("/room", userRoomController.createRoom.bind(userRoomController));

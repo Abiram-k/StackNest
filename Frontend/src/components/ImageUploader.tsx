@@ -36,12 +36,14 @@ const ImageUploader = ({
 
     if (!file) return;
 
-    if (!isVideoAllowed && !validateImage(file)) return;
-    if (isVideoAllowed) {
+    if (isVideoAllowed && file.name.endsWith("mp4")) {
       if (file.size > 5 * 1024 * 1024) {
         toast.error("video my be under 5MB.");
         return false;
       }
+      toast.success("Video addedd");
+    } else {
+      validateImage(file);
     }
 
     const reader = new FileReader();

@@ -211,7 +211,7 @@ export class AuthService implements IAuthService {
       });
       await this._authRepo.setPassResetToken({ email, resetToken });
 
-      await sendPasswordResetEmail(isExistUser.email, resetToken);
+      await (isExistUser.email, resetToken);
     } catch (error) {
       throw error;
     }

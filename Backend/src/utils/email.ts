@@ -202,6 +202,7 @@ Stack Nest Team`,
 
 export const sendFeedPublishedMail = async (
   userName: string,
+  feedId:string,
   email: string,
   title: string
 ) => {
@@ -224,7 +225,7 @@ export const sendFeedPublishedMail = async (
   🌟 Great news! Your scheduled post "${title}" is now live on StackNest.
   
   📅 Publication Date: ${formattedDate} (UTC)
-  🔗 Post URL: ${`${CLIENT_URL}/user/profile/my-feeds`} 
+  🔗 Post URL: ${`${CLIENT_URL}/user/highlights/${feedId}`} 
   
   We're excited to see your content reach our developer community! Here's what's next:
   👉 Track engagement metrics in your dashboard
@@ -270,7 +271,7 @@ export const sendFeedPublishedMail = async (
             </div>
             
             <!-- Add dynamic link placeholder -->
-            <a href="${`${CLIENT_URL}/user/profile/my-feeds`} }" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #7848F4; text-decoration: none;">
+            <a href="${`${CLIENT_URL}/user/highlights/${feedId}`} }" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #7848F4; text-decoration: none;">
               <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
               </svg>
@@ -353,6 +354,95 @@ Stack Nest Team`,
           🚀 <strong>StackNest</strong> - Secure. Reliable. Developer-friendly.
         </p>
       </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+
+
+export const sendFeedDeletedMail = async (
+  userName: string,
+  email: string,
+  title: string,
+  reason: string
+) => {
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleString("en-US", {
+    weekday: "short",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  const mailOptions = {
+    from: "StackNest Team <no-reply@stacknest.com>",
+    to: email,
+    subject: `⚠️ Your Feed "${title}" Has Been Removed`,
+    text: `Hi ${userName},
+
+We wanted to inform you that your feed titled "${title}" has been removed from StackNest as of ${formattedDate} (UTC).
+
+🛠️ Reason for Removal:
+${reason}
+
+We take our community guidelines seriously to ensure a respectful and secure environment for all developers. If you believe this action was taken in error or have questions, feel free to reach out to our support team.
+
+Thank you for understanding.
+
+Best regards,  
+The StackNest Team  
+
+---------------------------------  
+💻 StackNest - Code. Share. Grow.  
+📧 Contact: support@stacknest.com
+`,
+
+    html: `
+    <div style="font-family: 'Segoe UI', system-ui, sans-serif; max-width: 640px; margin: auto; padding: 0; background: #f8fafc;">
+      <div style="background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); padding: 2rem; text-align: center;">
+        <h1 style="margin: 0; color: white; font-size: 1.75rem; font-weight: 600;">
+          ⚠️ Feed Removed from StackNest
+        </h1>
+      </div>
+
+      <div style="padding: 2rem; color: #1e293b;">
+        <p style="font-size: 1.125rem; margin-bottom: 1.5rem;">
+          Hi ${userName}, we regret to inform you that your post titled "<strong>${title}</strong>" has been removed.
+        </p>
+
+        <div style="background: white; border-radius: 0.5rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+          <h3 style="color: #DC2626; margin: 0 0 1rem 0;">Reason for Removal</h3>
+          <p style="margin: 0 0 1rem 0; font-size: 1rem; color: #334155;">
+            ${reason}
+          </p>
+
+          <p style="font-size: 0.95rem; color: #475569;">
+            📅 Action Taken On: ${formattedDate} UTC
+          </p>
+
+          <div style="margin-top: 1.5rem; padding: 1rem; background: #FEF2F2; border-left: 4px solid #DC2626; border-radius: 0.375rem;">
+            <p style="margin: 0; font-size: 0.9rem; color: #991B1B;">
+              If you believe this was a mistake or have any questions, please contact our support team.
+            </p>
+          </div>
+        </div>
+
+        <footer style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b;">
+          <p style="margin: 0.5rem 0; font-size: 0.875rem;">
+            💻 StackNest - Empowering Developers Worldwide<br>
+            <a href="${"#"}" style="color: #DC2626; text-decoration: none;">Contact Support</a>
+          </p>
+          <p style="margin: 0; font-size: 0.75rem;">
+            123 Code Lane, Tech City • © 2024 StackNest
+          </p>
+        </footer>
+      </div>
+    </div>
     `,
   };
 

@@ -15,6 +15,7 @@ import { UserResTypeDTO } from "../../dtos/public/userData.dto";
 import { ResUpdateUserProfileDTO } from "../../dtos/user/profile/updateUserProfile.dto";
 import { ResGetUserCardData } from "../../dtos/user/profile/getUserCardData.dto";
 import { Types } from "mongoose";
+import { IResgetStatsDataDTO } from "../../dtos/user/profile/getStatsData.dto";
 config();
 
 const HUG_FACE_API_KEY = process.env.HUG_FACE_API_KEY;
@@ -168,6 +169,30 @@ export class UserProfileController implements IUserProfileController {
         message: "User subscribed for notification!",
         success: true,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getStatsData(
+    req: Request,
+    res: Response<IResgetStatsDataDTO>,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { userId } = req.user as { userId: string; role: string };
+      const { user, pointsTableData, streakTableData } =
+        await this._userProfileService.getStatsData(userId);
+      res
+        .status(HttpStatus.OK)
+        .json({
+          message: "fetched stat data",
+          success: true,
+          user,
+          pointsTableData,
+          streakTableData,
+        });
+        
     } catch (error) {
       next(error);
     }

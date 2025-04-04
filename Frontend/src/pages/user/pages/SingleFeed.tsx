@@ -2,13 +2,12 @@ import PremiumAddCard from "@/components/card/PremiumAddCard";
 import UserCardNew from "@/components/card/UserCardNew";
 import { FallBackTable } from "@/components/FallBackTable";
 import FilterBar from "@/components/FilterBar";
-import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import FeedItem from "@/components/user/FeedItem";
 import { useGetLikedFeeds } from "@/hooks/feeds/useGetLikedFeeds";
 import { useGetSingleFeed } from "@/hooks/feeds/useGetSingleFeed";
 import { useToggleLikeFeed } from "@/hooks/feeds/useToggleLikeFeed";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const filterOptions = [{ value: "Oldest" }, { value: "Latest" }];
@@ -16,7 +15,6 @@ const filterOptions = [{ value: "Oldest" }, { value: "Latest" }];
 const SingleFeed = () => {
   const navigate = useNavigate();
   const { feedId } = useParams<{ feedId: string }>();
-  const [filterQuery, setFilterQuery] = useState<string>("");
   const [search, setSearch] = useState("");
   const { mutate: mutateLikeFeed, isPending: pendingLikeFeed } =
     useToggleLikeFeed();
