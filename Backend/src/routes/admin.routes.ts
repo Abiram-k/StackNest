@@ -1,8 +1,10 @@
 import express from "express";
 import {
+  adminBenefitsController,
   adminChallengeController,
   adminController,
   adminFeedController,
+  adminPremiumController,
   bannerController,
 } from "../config/di";
 import { verifyUser } from "../middlewares/verifyUser";
@@ -27,7 +29,10 @@ router.get(
   adminController.fetchSelectedRoom.bind(adminController)
 );
 router.patch("/room/:id", adminController.blockRoom.bind(adminController));
-router.get("/room/:roomId/session",adminController.getRoomSessionHistory.bind(adminController));
+router.get(
+  "/room/:roomId/session",
+  adminController.getRoomSessionHistory.bind(adminController)
+);
 
 // <<<<<<<<<<<<<<<<Banner Management>>>>>>>>>>>>>>>>>>>
 router.get("/banner", bannerController.fetchBanners.bind(bannerController));
@@ -65,9 +70,76 @@ router.delete(
 );
 
 // <<<<<<<<<<<<<<<<<<<<<<<<< FEED MANAGEMENT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-router.get("/feeds",adminFeedController.getAllFeeds.bind(adminFeedController))
-router.get("/feed/:feedId",adminFeedController.getFeedDetails.bind(adminFeedController))
-router.put("/feed",adminFeedController.blockOrUnblockFeed.bind(adminFeedController))
-router.delete("/feed/:feedId",adminFeedController.deleteFeed.bind(adminFeedController))
+router.get("/feeds", adminFeedController.getAllFeeds.bind(adminFeedController));
+router.get(
+  "/feed/:feedId",
+  adminFeedController.getFeedDetails.bind(adminFeedController)
+);
+router.put(
+  "/feed",
+  adminFeedController.blockOrUnblockFeed.bind(adminFeedController)
+);
+router.delete(
+  "/feed/:feedId",
+  adminFeedController.deleteFeed.bind(adminFeedController)
+);
+
+// <<<<<<<<<<<<<<<<<<<<<<<<< PREMIUM-PLANS MANAGEMENT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+router.get(
+  "/premium-plans",
+  adminPremiumController.getAllPremium.bind(adminPremiumController)
+);
+router.get(
+  "/premium-plan/:premiumId",
+  adminPremiumController.getSelectedPremium.bind(adminPremiumController)
+);
+router.post(
+  "/premium-plan",
+  adminPremiumController.addPremium.bind(adminPremiumController)
+);
+router.put(
+  "/premium-plan/:premiumId",
+  adminPremiumController.updatePremium.bind(adminPremiumController)
+);
+router.patch(
+  "/premium-plan/:premiumId",
+  adminPremiumController.toggleListPremium.bind(adminPremiumController)
+);
+router.delete(
+  "/premium-plan/:premiumId",
+  adminPremiumController.removePremium.bind(adminPremiumController)
+);
+
+// <<<<<<<<<<<<<<<<<<<<<<<<< BENEFITS MANAGEMENT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+router.get(
+  "/benefits",
+  adminBenefitsController.getAllBenefits.bind(adminBenefitsController)
+);
+router.get(
+  "/benefit/:benefitId",
+  adminBenefitsController.getSelectedBenefits.bind(adminBenefitsController)
+);
+router.get(
+  "/benefits-active",
+  adminBenefitsController.getActiveBenefits.bind(adminBenefitsController)
+);
+router.post(
+  "/benefit",
+  adminBenefitsController.addBenefits.bind(adminBenefitsController)
+);
+router.put(
+  "/benefit/:benefitId",
+  adminBenefitsController.updateBenefits.bind(adminBenefitsController)
+);
+router.patch(
+  "/benefit/:benefitId",
+  adminBenefitsController.toggleListing.bind(adminBenefitsController)
+);
+router.delete(
+  "/benefit/:benefitId",
+  adminBenefitsController.removeBenefits.bind(adminBenefitsController)
+);
 
 export default router;

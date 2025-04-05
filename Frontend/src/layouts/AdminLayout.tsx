@@ -7,6 +7,7 @@ import {
   DollarSign,
   FileText,
   Flag,
+  Gift,
   Globe,
   Home,
   LayoutGrid,
@@ -28,8 +29,14 @@ const navItems = [
   {
     name: "Premium Plans",
     icon: <CreditCard className="w-5 h-5" />,
-    to: "/admin/plans",
+    to: "/admin/plans-management",
   },
+  {
+    name: "Benefits ",
+    icon: <Gift className="w-5 h-5" />,
+    to: "/admin/benefits-management",
+  },
+
   {
     name: "Banners",
     icon: <Flag className="w-5 h-5" />,
@@ -55,11 +62,11 @@ const navItems = [
     icon: <Bell className="w-5 h-5" />,
     to: "/admin/notification",
   },
-  {
-    name: "Reports",
-    icon: <FileText className="w-5 h-5" />,
-    to: "/admin/reports",
-  },
+  // {
+  //   name: "Reports",
+  //   icon: <FileText className="w-5 h-5" />,
+  //   to: "/admin/reports",
+  // },
   {
     name: "Feeds",
     icon: <Globe className="w-5 h-5" />,

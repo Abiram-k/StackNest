@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IUserChallengeController } from "../../interfaces/controllers/user.challenge.controller";
+import { IUserChallengeController } from "../../interfaces/controllers/user.challenge.controller.interface";
 import { IChallengeService } from "../../interfaces/services/challenge.service.interface";
 import { HttpStatus } from "../../constants/enum.statusCode";
 

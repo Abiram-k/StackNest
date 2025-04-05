@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IUserBannerController } from "../../interfaces/controllers/user.banner.controller";
+import { IUserBannerController } from "../../interfaces/controllers/user.banner.controller.interface";
 import { HttpStatus } from "../../constants/enum.statusCode";
 import { IBannerService } from "../../interfaces/services/banner.service.interface";
 import {

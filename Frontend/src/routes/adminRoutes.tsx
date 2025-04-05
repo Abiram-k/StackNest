@@ -23,6 +23,24 @@ const RoomSessionHistory = lazy(
   () => import("@/pages/admin/pages/roomManagement/RoomSessionHistory")
 );
 
+const BenefitsManagment = lazy(
+  () => import("@/pages/admin/pages/benefitsManagement/BenefitsManagment")
+);
+const CreateBenefits = lazy(
+  () => import("@/pages/admin/pages/benefitsManagement/CreateBenefits")
+);
+const UpdateBenefits = lazy(
+  () => import("@/pages/admin/pages/benefitsManagement/UpdateBenefits")
+);
+const PremiumManagement = lazy(
+  () => import("@/pages/admin/pages/premiumManagement/PremiumManagement")
+);
+const CreatePremium = lazy(
+  () => import("@/pages/admin/pages/premiumManagement/CreatePremium")
+);
+const UpdatePremium = lazy(
+  () => import("@/pages/admin/pages/premiumManagement/UpdatePremium")
+);
 const BannerManagement = lazy(
   () => import("@/pages/admin/pages/bannerManagement/BannerManagement")
 );
@@ -86,6 +104,22 @@ export const adminRoutes: RouteObject[] = [
           { path: "banner-management", element: <BannerManagement /> },
           { path: "banner-management/add", element: <AddBanner /> },
           { path: "banner-management/:bannerId/edit", element: <EditBanner /> },
+
+          // Benefits managment
+          { path: "benefits-management", element: <BenefitsManagment /> },
+          { path: "benefits-management/add", element: <CreateBenefits /> },
+          {
+            path: "benefits-management/:benefitId/edit",
+            element: <UpdateBenefits />,
+          },
+
+          // Premium plan managment
+          { path: "plans-management", element: <PremiumManagement /> },
+          { path: "plans-management/add", element: <CreatePremium /> },
+          {
+            path: "plans-management/:premiumId/edit",
+            element: <UpdatePremium />,
+          },
 
           // Challenge management
           { path: "challenge-management", element: <ChallengeManagment /> },

@@ -28,7 +28,7 @@ const Navbar = ({
     <nav className="fixed top-0 w-full bg-background z-50 border-b shadow-sm">
       <div className="container mx-auto px-2 sm:px-4 lg:px-6">
         <div className="flex h-20 items-center justify-between">
-          <Logo isAdmin={isAdmin} />
+          <Logo />
 
           <div className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
             <div className="flex items-center gap-6">

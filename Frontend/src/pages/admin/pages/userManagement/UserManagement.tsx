@@ -53,6 +53,7 @@ const UserManagement = () => {
   });
 
   const { isPending: BlockIsPending, mutate } = useBlockUser();
+  
 
   const handleBlockUser = (user: IUser) => {
     mutate(user.userName);

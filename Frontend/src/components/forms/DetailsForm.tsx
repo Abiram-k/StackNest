@@ -84,10 +84,10 @@ const DetailsForm = ({
                 ${isEditing ? "border-black" : "border-gray-300"}`}
               disabled={!isEditing}
             >
-              <option value="">Select Gender</option>
+              <option value="">{field.defaultValue || "Select Option"}</option>
               {field.options?.map((option) => (
                 <option key={option.value} value={option.value}>
-                  {option.value}
+                  {option.label || option.value}
                 </option>
               ))}
             </select>

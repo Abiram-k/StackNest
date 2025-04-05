@@ -42,7 +42,7 @@ import { BannerService } from "../services/banner.service";
 import { IBannerController } from "../interfaces/controllers/banner.controller.interface";
 import { BannerController } from "../controllers/admin/admin.banner.controller";
 import { IBanner } from "../types/IBanner";
-import { IUserBannerController } from "../interfaces/controllers/user.banner.controller";
+import { IUserBannerController } from "../interfaces/controllers/user.banner.controller.interface";
 import { UserBannerController } from "../controllers/user/user.banner.controller";
 import { IFavorites } from "../types/IFavorites";
 import { IChallengeRespository } from "../interfaces/repositories/challenge.repository.interface";
@@ -50,7 +50,7 @@ import { IChallenge } from "../types/IChallenge";
 import { ChallengeRespository } from "../repositories/challenge.repository";
 import { IChallengeService } from "../interfaces/services/challenge.service.interface";
 import { ChallengeService } from "../services/challenge.service";
-import { IUserChallengeController } from "../interfaces/controllers/user.challenge.controller";
+import { IUserChallengeController } from "../interfaces/controllers/user.challenge.controller.interface";
 import { UserChallengeController } from "../controllers/user/user.challenge.controller";
 import { IAdminChallengeController } from "../interfaces/controllers/admin.challenge.controller.interface";
 import { AdminChallengeController } from "../controllers/admin/admin.challenge.controller";
@@ -71,6 +71,18 @@ import { IAdminFeedController } from "../interfaces/controllers/admin.feed.contr
 import { AdminFeedController } from "../controllers/admin/admin.feeds.controller";
 import { ICommentRepository } from "../interfaces/repositories/comment.repository.interface";
 import { CommentRepository } from "../repositories/comment.repository";
+import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface";
+import { IPremium } from "../types/IPremium";
+import { PremiumRepository } from "../repositories/premium.repository";
+import { PremiumService } from "../services/premium.service";
+import { IAdminPremiumController } from "../interfaces/controllers/admin.premium.controller.interface";
+import { AdminPremiumController } from "../controllers/admin/admin.premium.controller";
+import { IBenefitsRepository } from "../interfaces/repositories/benefits.repository.interface";
+import { IBenefit } from "../types/IBenefits";
+import { BenefitsRepository } from "../repositories/benefits.repository";
+import { BenefitsService } from "../services/benefits.service";
+import { IAdminBenefitController } from "../interfaces/controllers/admin.benefits.controller.interface";
+import { AdminBenefitsController } from "../controllers/admin/admin.benefits.controller";
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REPOSITORY >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -90,6 +102,9 @@ const challengeSubmissionRespository: IChallengeSubmissionRepository<IChallengeS
   new ChallengeSubmissionRepository();
 const feedRepository: IFeedRepository<IFeed> = new FeedRepository();
 const commentRepository: ICommentRepository<IComment> = new CommentRepository();
+const premiumRepository: IPremiumRepository<IPremium> = new PremiumRepository();
+const benefitsRepository: IBenefitsRepository<IBenefit> =
+  new BenefitsRepository();
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SERVICES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -121,6 +136,11 @@ const feedService: IFeedService = new FeedService(
   userBaseRepository,
   commentRepository
 );
+const premiumService = new PremiumService(
+  premiumRepository,
+  benefitsRepository
+);
+const benefitsService = new BenefitsService(benefitsRepository);
 
 //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CONTROLLERS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -151,6 +171,9 @@ const userChallengeController: IUserChallengeController =
 const adminChallengeController: IAdminChallengeController =
   new AdminChallengeController(challengeServie);
 const feedController: IFeedController = new FeedController(feedService);
+const adminPremiumController: IAdminPremiumController =
+  new AdminPremiumController(premiumService);
+const adminBenefitsController:IAdminBenefitController = new AdminBenefitsController(benefitsService);
 
 export {
   authController,
@@ -164,4 +187,6 @@ export {
   userChallengeController,
   adminChallengeController,
   feedController,
+  adminPremiumController,
+  adminBenefitsController
 };

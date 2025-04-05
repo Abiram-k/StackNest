@@ -50,13 +50,11 @@ export type UserBannerRes = {
 export type challegeType = {
   questionNo: number;
   question: string;
-  // options: string[];
   option1: string;
   option2: string;
   option3: string;
   option4: string;
   answer: string;
-  // isListed: boolean;
 };
 
 export type resChallengeType = {
@@ -87,7 +85,7 @@ export type FeedReqType = {
   media?: string;
 };
 export type FeedResType = {
-  feedId:string,
+  feedId: string;
   userId: {
     userName: string;
     avatar: string;
@@ -99,5 +97,50 @@ export type FeedResType = {
   isBlocked: boolean;
   likes: number;
   comments: number;
-  viewsCount:number;
+  viewsCount: number;
 };
+
+export interface ResPremium {
+  _id:string;
+  title: string;
+  description: string;
+  regularAmount: number;
+  discountAmount: number;
+  benefits: string[];
+  isListed: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ReqPremium {
+  title: string;
+  description: string;
+  regularAmount: number;
+  discountAmount: number;
+  benefits: string[];
+}
+
+export interface PremiumFormType {
+  title: string;
+  description: string;
+  regularAmount: number;
+  discountAmount: number;
+  benefit1: string;
+  benefit2: string;
+  benefit3: string;
+  benefit4: string;
+  benefit5: string;
+  benefit6: string;
+}
+
+export interface ResBenefit {
+  _id: string;
+  name: string;
+  description: string;
+  isActive: boolean;
+}
+
+export interface ReqBenefits {
+  name: string;
+  description: string;
+}
