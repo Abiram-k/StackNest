@@ -125,15 +125,16 @@ export default function ProfilePage() {
           credentials.signature,
           credentials.timestamp
         );
-        setValue("avatar", cloudinaryImgURL);
+        // setValue("avatar", cloudinaryImgURL);
+        if (cloudinaryImgURL) data.avatar = cloudinaryImgURL;
       }
-
       updateMutation(data);
-      setIsLoading(false);
     } catch (error) {
-      console.log("cloudinary error", error);
+      alert(error);
+      console.log("Error: ", error);
     } finally {
       setIsLoading(false);
+      setIsEditing(false);
     }
   };
 

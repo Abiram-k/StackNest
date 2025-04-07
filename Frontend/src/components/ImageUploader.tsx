@@ -43,7 +43,7 @@ const ImageUploader = ({
       }
       toast.success("Video addedd");
     } else {
-      validateImage(file);
+      if (!validateImage(file)) return false;
     }
 
     const reader = new FileReader();

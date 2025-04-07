@@ -2,8 +2,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { errorText } from "../ui/errorText";
 import { CalendarIcon } from "lucide-react";
-import ToolTipProvider from "../providers/ToolTipProvider";
-import { Tooltip } from "../ui/tooltip";
+import { AiIcon } from "../ui/AiIcon";
 
 interface FormField {
   name: any;
@@ -37,7 +36,6 @@ interface DetailsFormProps {
 }
 
 const DetailsForm = ({
-  formData,
   isEditing,
   fields,
   register,
@@ -123,29 +121,6 @@ const DetailsForm = ({
               disabled={!isEditing}
             />
             {field.enableAiRecommendation && (
-              // <div className="group">
-              //   <div className="absolute right-1 -top-5 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-200 bg-gray-900 text-white text-xs rounded px-2 py-1 z-30 whitespace-nowrap">
-              //     Generate content based on the title!
-              //   </div>
-              //   <div
-              //     className="absolute right-5 top-5 -translate-y-1/2 text-blue-500 cursor-pointer transition duration-300 hover:scale-110 hover:text-blue-600 text-2xl animate-ai-glow"
-              //     onClick={() => generateAIContent?.(field.name)}
-              //   >
-              //     <svg
-              //       xmlns="http://www.w3.org/2000/svg"
-              //       className="h-5 w-5"
-              //       viewBox="0 0 24 24"
-              //       fill="currentColor"
-              //     >
-              //       <path
-              //         strokeLinecap="round"
-              //         strokeLinejoin="round"
-              //         strokeWidth={2}
-              //         d="M13 10V3L4 14h7v7l9-11h-7z"
-              //       />
-              //     </svg>
-              //   </div>
-              // </div>
               <AiIcon name={field.name} generateAIContent={generateAIContent} />
             )}
           </div>
@@ -153,13 +128,6 @@ const DetailsForm = ({
 
       default:
         return (
-          // <Input
-          //   type={field.type}
-          //   placeholder={field.placeholder}
-          //   {...register(field.name)}
-          //   disabled={!isEditing}
-          //   className={`${isEditing ? "border-black" : "border-gray-300"}`}
-          // />
           <div className="relative">
             <Input
               type={field.type}
@@ -213,37 +181,3 @@ const DetailsForm = ({
 };
 
 export default DetailsForm;
-
-const AiIcon = ({
-  generateAIContent,
-  name,
-}: {
-  generateAIContent?: (name: string) => void;
-  name: string;
-}) => {
-  return (
-    <div className="group">
-      <div className="absolute right-1 -top-5 -translate-y-1/2 scale-0 group-hover:scale-100 transition-transform duration-200 bg-gray-900 text-white text-xs rounded px-2 py-1 z-30 whitespace-nowrap">
-        Generate content based on the title!
-      </div>
-      <div
-        className="absolute right-5 top-5 -translate-y-1/2 text-blue-500 cursor-pointer transition duration-300 hover:scale-110 hover:text-blue-600 text-2xl animate-ai-glow"
-        onClick={() => generateAIContent?.(name)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M13 10V3L4 14h7v7l9-11h-7z"
-          />
-        </svg>
-      </div>
-    </div>
-  );
-};

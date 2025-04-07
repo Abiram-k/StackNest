@@ -24,7 +24,7 @@ export const useUpdateBenefits = () => {
       navigate(-1);
     },
     onError: () => {
-      toast.error("Failed to updated benefits");
+      toast.error("Failed to update benefit");
     },
   });
 

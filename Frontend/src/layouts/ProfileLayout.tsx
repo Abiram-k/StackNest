@@ -5,7 +5,6 @@ import {
   Crown,
   FileText,
   Home,
-  Layout,
   Settings,
   Users,
 } from "lucide-react";
@@ -35,7 +34,7 @@ const navItems = [
   {
     name: "Premium plans",
     icon: <Crown className="h-5 w-5" />,
-    to: "/user/profile/premium",
+    to: "/user/profile/premium-plans",
   },
   {
     name: "Notifications",

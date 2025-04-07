@@ -4,6 +4,8 @@ export interface PremiumResDto {
   description: string;
   regularAmount: number;
   discountAmount: number;
+  periodInDays:number;
+  isExpired:boolean;
   benefits: string[];
   isListed: boolean;
   createdAt: Date;

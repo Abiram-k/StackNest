@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthRequest } from "../../types/IAuth";
-// import { UserProfileService } from "../../services/user.profile.service";
 import { config } from "dotenv";
 import axios from "axios";
-// import { findAnswers } from "../../utils/qaMatcher";
 import { HttpStatus } from "../../constants/enum.statusCode";
 import { IUserProfileController } from "../../interfaces/controllers/user.profile.controller.interface";
 import { IUserProfileService } from "../../interfaces/services/user.profile.service.interface";
@@ -11,7 +9,6 @@ import {
   ResGetUserDataDTO,
   ResProfileData,
 } from "../../dtos/user/profile/getUserData.dto";
-import { UserResTypeDTO } from "../../dtos/public/userData.dto";
 import { ResUpdateUserProfileDTO } from "../../dtos/user/profile/updateUserProfile.dto";
 import { ResGetUserCardData } from "../../dtos/user/profile/getUserCardData.dto";
 import { Types } from "mongoose";
@@ -174,6 +171,7 @@ export class UserProfileController implements IUserProfileController {
     }
   }
 
+
   async getStatsData(
     req: Request,
     res: Response<IResgetStatsDataDTO>,
@@ -183,16 +181,13 @@ export class UserProfileController implements IUserProfileController {
       const { userId } = req.user as { userId: string; role: string };
       const { user, pointsTableData, streakTableData } =
         await this._userProfileService.getStatsData(userId);
-      res
-        .status(HttpStatus.OK)
-        .json({
-          message: "fetched stat data",
-          success: true,
-          user,
-          pointsTableData,
-          streakTableData,
-        });
-        
+      res.status(HttpStatus.OK).json({
+        message: "fetched stat data",
+        success: true,
+        user,
+        pointsTableData,
+        streakTableData,
+      });
     } catch (error) {
       next(error);
     }

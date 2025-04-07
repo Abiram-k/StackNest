@@ -24,6 +24,7 @@ const CreatePremium = () => {
       benefit3: "",
       benefit4: "",
       benefit5: "",
+      periodInDays:0,
     },
   });
   const { mutate: createPremiumMutate, isPending } = useCreatePremiumPlan();
@@ -36,6 +37,7 @@ const CreatePremium = () => {
       description: data.description,
       regularAmount: data.regularAmount,
       discountAmount: data.discountAmount,
+      periodInDays:data.periodInDays,
       benefits: [
         data.benefit1,
         data.benefit2,
@@ -106,6 +108,14 @@ const CreatePremium = () => {
                       value: benefit.name,
                       label: benefit.name,
                     })),
+                    setValue,
+                  },
+
+                  {
+                    name: "periodInDays",
+                    label: "Period: ",
+                    type: "number",
+                    placeholder: "Enter Period (days) ...",
                     setValue,
                   },
                 ],

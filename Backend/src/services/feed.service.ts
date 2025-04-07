@@ -459,26 +459,32 @@ export class FeedService implements IFeedService {
       throw error;
     }
   }
-  async deleteFeed(feedId: string, reason: string): Promise<boolean> {         
+  async deleteFeed(
+    feedId: string,
+    reason: string,
+    role: string
+  ): Promise<boolean> {
     try {
       const deletedFeed = await this._feedRepo.deleteFeed(feedId);
       if (!deletedFeed) {
         throw createHttpError(HttpStatus.BAD_REQUEST, "Failed to delete feed");
       }
-      if (deletedFeed.userId instanceof Types.ObjectId) {
-        console.log("User id is not populated");
-        return false;
+      if (role !== "user") {
+        if (deletedFeed.userId instanceof Types.ObjectId) {
+          console.log("User id is not populated");
+          return false;
+        }
+        const feedUser = deletedFeed.userId as {
+          userName: string;
+          email: string;
+        };
+        sendFeedDeletedMail(
+          feedUser.userName,
+          feedUser.email,
+          deletedFeed.title,
+          reason
+        );
       }
-      const feedUser = deletedFeed.userId as {
-        userName: string;
-        email: string;
-      };
-      sendFeedDeletedMail(
-        feedUser.userName,
-        feedUser.email,
-        deletedFeed.title,
-        reason
-      );
       return true;
     } catch (error) {
       throw error;
@@ -496,7 +502,7 @@ export class FeedService implements IFeedService {
         search,
         filter,
         sort,
-        page, 
+        page,
         limit
       );
       if (!result) return { feeds: [], totalPages: 0 };

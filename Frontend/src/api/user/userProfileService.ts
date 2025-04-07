@@ -1,3 +1,4 @@
+import { ReqReport } from "@/types";
 import {
   axiosResponse,
   verifyUserProfileSchemaType,
@@ -79,5 +80,9 @@ export class UserProfileService {
     return this._httpService.get<axiosResponse & { pointsCount: number }>(
       "users/challenge-points"
     );
+  }
+
+  async report(data: ReqReport): Promise<axiosResponse> {
+    return await this._httpService.post("/users/report", data);
   }
 }

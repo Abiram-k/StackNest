@@ -43,7 +43,7 @@ const BenefitsManagment = () => {
     setIsConfirmationOpen(false);
   };
 
-  const handleBlockUser = (benefit: ResBenefit) => {
+  const handleBlockBenifit = (benefit: ResBenefit) => {
     mutateToggleListing(benefit._id);
   };
 
@@ -72,7 +72,7 @@ const BenefitsManagment = () => {
         <div className=" mt-4 md:mt-8 lg:mt-12">
           {benefitsData?.benefits?.length ? (
             <CustomTable
-              onToggleAction={handleBlockUser}
+              onToggleAction={handleBlockBenifit}
               toggleKey="isActive"
               data={benefitsData.benefits}
               columns={columns}

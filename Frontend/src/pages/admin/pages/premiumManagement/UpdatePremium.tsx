@@ -28,6 +28,7 @@ const UpdatePremium = () => {
       benefit3: "",
       benefit4: "",
       benefit5: "",
+      periodInDays:0,
     },
   });
   const { premiumId } = useParams<{ premiumId: string }>();
@@ -36,16 +37,15 @@ const UpdatePremium = () => {
   const { data: selectedData, isPending: fetchingData } = useGetSelectedPremium(
     premiumId!
   );
-  console.log(selectedData);
   const { data: activeBenefits, isPending: fetchingBenefits } =
     useGetActiveBenefits();
 
   useEffect(() => {
     if (!selectedData?.premiumPlan) return;
 
-    const { title, description, regularAmount, discountAmount } =
+    const { title, description, regularAmount, discountAmount,periodInDays } =
       selectedData.premiumPlan;
-    reset({ title, description, regularAmount, discountAmount });
+    reset({ title, description, regularAmount, discountAmount,periodInDays });
 
     selectedData.premiumPlan?.benefits?.forEach((benefit, index) => {
       if (index < 6) {
@@ -62,6 +62,7 @@ const UpdatePremium = () => {
       description: data.description,
       regularAmount: data.regularAmount,
       discountAmount: data.discountAmount,
+      periodInDays:data.periodInDays,
       benefits: [
         data.benefit1,
         data.benefit2,
@@ -144,6 +145,14 @@ const UpdatePremium = () => {
                       })) || []),
                     ],
                     defaultValue: selectedData?.premiumPlan?.benefits[2],
+                    setValue,
+                  },
+                  
+                  {
+                    name: "periodInDays",
+                    label: "Period: ",
+                    type: "number",
+                    placeholder: "Enter Period (days) ...",
                     setValue,
                   },
                 ],

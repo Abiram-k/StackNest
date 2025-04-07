@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { DefaultValues, useForm, UseFormReturn } from "react-hook-form";
 import * as yup from "yup";
 
-interface IverifyBannerProps {
+interface IverifyBenefitProps {
   schema: yup.ObjectSchema<ReqBenefits>;
   defaultValues: DefaultValues<ReqBenefits>;
 }
@@ -11,7 +11,7 @@ interface IverifyBannerProps {
 export function useVerifyBenefitForm({
   schema,
   defaultValues,
-}: IverifyBannerProps): UseFormReturn<ReqBenefits> {
+}: IverifyBenefitProps): UseFormReturn<ReqBenefits> {
   return useForm<ReqBenefits>({
     resolver: yupResolver(schema),
     defaultValues,

@@ -1,4 +1,5 @@
 import AdminLayout from "@/layouts/AdminLayout";
+
 import ProtectAdminLogin from "@/protectedRoutes/admin/ProtectAdminLogin";
 import ProtectDashboard from "@/protectedRoutes/admin/ProtectDashboard";
 import { lazy } from "react";
@@ -25,6 +26,15 @@ const RoomSessionHistory = lazy(
 
 const BenefitsManagment = lazy(
   () => import("@/pages/admin/pages/benefitsManagement/BenefitsManagment")
+);
+const CreateReward = lazy(
+  () => import("@/pages/admin/pages/rewardManagement/CreateReward")
+);
+const RewardsManagment = lazy(
+  () => import("@/pages/admin/pages/rewardManagement/RewardManagement")
+);
+const UpdateReward = lazy(
+  () => import("@/pages/admin/pages/rewardManagement/UpdateReward")
 );
 const CreateBenefits = lazy(
   () => import("@/pages/admin/pages/benefitsManagement/CreateBenefits")
@@ -111,6 +121,14 @@ export const adminRoutes: RouteObject[] = [
           {
             path: "benefits-management/:benefitId/edit",
             element: <UpdateBenefits />,
+          },
+
+          // Rewards managment
+          { path: "rewards-management", element: <RewardsManagment /> },
+          { path: "rewards-management/add", element: <CreateReward /> },
+          {
+            path: "rewards-management/:rewardId/edit",
+            element: <UpdateReward />,
           },
 
           // Premium plan managment

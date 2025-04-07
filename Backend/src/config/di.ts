@@ -83,6 +83,22 @@ import { BenefitsRepository } from "../repositories/benefits.repository";
 import { BenefitsService } from "../services/benefits.service";
 import { IAdminBenefitController } from "../interfaces/controllers/admin.benefits.controller.interface";
 import { AdminBenefitsController } from "../controllers/admin/admin.benefits.controller";
+import { IUserPremiumController } from "../interfaces/controllers/user.premium.controller.interface";
+import { UserPremiumController } from "../controllers/user/user.premium.controller";
+import { IReportRepository } from "../interfaces/repositories/report .repository.interface";
+import { ReportRepository } from "../repositories/report.repository";
+import { IReport } from "../types/IReport";
+import { ReportService } from "../services/report.service";
+import { IReportController } from "../interfaces/controllers/report.controller.interface";
+import { ReportController } from "../controllers/report.controller";
+import { IRewardRepository } from "../interfaces/repositories/reward.repository.interface";
+import { IReward } from "../types/IReward";
+import { RewardRepository } from "../repositories/reward.repository";
+import { RewardService } from "../services/reward.service";
+import { IAdminRewardController } from "../interfaces/controllers/admin.reward.controller.interface";
+import { AdminRewardController } from "../controllers/admin/admin.reward.controller";
+import { IUserRewardController } from "../interfaces/controllers/user.reward.controller.interface";
+import { UserRewardController } from "../controllers/user/user.reward.controller";
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REPOSITORY >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -105,6 +121,8 @@ const commentRepository: ICommentRepository<IComment> = new CommentRepository();
 const premiumRepository: IPremiumRepository<IPremium> = new PremiumRepository();
 const benefitsRepository: IBenefitsRepository<IBenefit> =
   new BenefitsRepository();
+const reportRepository: IReportRepository<IReport> = new ReportRepository();
+const rewardRepository: IRewardRepository<IReward> = new RewardRepository();
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SERVICES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -141,6 +159,8 @@ const premiumService = new PremiumService(
   benefitsRepository
 );
 const benefitsService = new BenefitsService(benefitsRepository);
+const reportService = new ReportService(reportRepository, roomRespository,userBaseRepository);
+const rewardService = new RewardService(rewardRepository,userBaseRepository);
 
 //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CONTROLLERS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -173,7 +193,18 @@ const adminChallengeController: IAdminChallengeController =
 const feedController: IFeedController = new FeedController(feedService);
 const adminPremiumController: IAdminPremiumController =
   new AdminPremiumController(premiumService);
-const adminBenefitsController:IAdminBenefitController = new AdminBenefitsController(benefitsService);
+const adminBenefitsController: IAdminBenefitController =
+  new AdminBenefitsController(benefitsService);
+const userPremiumController: IUserPremiumController = new UserPremiumController(
+  premiumService
+);
+const reportController: IReportController = new ReportController(reportService);
+const adminRewardController: IAdminRewardController = new AdminRewardController(
+  rewardService
+);
+const userRewardController: IUserRewardController = new UserRewardController(
+  rewardService
+);
 
 export {
   authController,
@@ -188,5 +219,9 @@ export {
   adminChallengeController,
   feedController,
   adminPremiumController,
-  adminBenefitsController
+  adminBenefitsController,
+  userPremiumController,
+  reportController,
+  adminRewardController,
+  userRewardController
 };

@@ -11,6 +11,7 @@ import { ArrowLeft } from "lucide-react";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
@@ -41,8 +42,6 @@ Limit to 2-3 emojis.
   ${content}
   Generate a StackNest-compatible technical blog post title.`,
 };
-
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const CreateFeed = () => {
   const {

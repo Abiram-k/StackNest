@@ -41,4 +41,5 @@ export interface IUserProfileController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  
 }

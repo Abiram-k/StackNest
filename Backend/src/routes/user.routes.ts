@@ -2,9 +2,12 @@ import express from "express";
 import {
   favoritesController,
   feedController,
+  reportController,
   userBannerController,
   userChallengeController,
+  userPremiumController,
   userProfileController,
+  userRewardController,
   userRoomController,
 } from "../config/di";
 
@@ -85,6 +88,12 @@ router.get(
   userBannerController.fetchBanners.bind(userBannerController)
 );
 
+// <<<<<<<<<<<<<<<<<<<<<<<< PREMIUM-PLANS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+router.get(
+  "/premium-plans",
+  userPremiumController.getAllListedPremium.bind(userPremiumController)
+);
+
 // <<<<<<<<<<<<<<<<<<<<<<<< Challenge >>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.get(
   "/challenge",
@@ -159,5 +168,17 @@ router.post(
     userProfileController
   )
 );
+
+// <<<<<<<<<<<<<<<<<<<<<<<<<<< REPORT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+router.post("/report", reportController.report.bind(reportController));
+
+// <<<<<<<<<<<<<<<<<<<<<<<<<<< REWARDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+router.get(
+  "/rewards-active",
+  userRewardController.getActiveReward.bind(userRewardController)
+);
+router.post("/reward/claim",userRewardController.claimReward.bind(userRewardController));
+router.get("/reward/claim",userRewardController.getclaimedRewards.bind(userRewardController));
 
 export default router;

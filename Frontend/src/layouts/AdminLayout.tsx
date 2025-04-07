@@ -1,11 +1,10 @@
 import Navbar from "@/components/user/Navbar";
 import SideBar from "@/components/SideBar";
 import {
-  Bell,
+  AlertCircle,
+  BadgeCheck,
   Calendar,
   CreditCard,
-  DollarSign,
-  FileText,
   Flag,
   Gift,
   Globe,
@@ -33,10 +32,19 @@ const navItems = [
   },
   {
     name: "Benefits ",
-    icon: <Gift className="w-5 h-5" />,
+    icon: <BadgeCheck className="w-5 h-5" />,
     to: "/admin/benefits-management",
   },
-
+  {
+    name: "Points Rewards",
+    icon: <Gift className="w-5 h-5" />,
+    to: "/admin/rewards-management",
+  },
+  {
+    name: "Feeds",
+    icon: <Globe className="w-5 h-5" />,
+    to: "/admin/feed-management",
+  },
   {
     name: "Banners",
     icon: <Flag className="w-5 h-5" />,
@@ -48,29 +56,15 @@ const navItems = [
     to: "/admin/room-management",
   },
   {
-    name: "Payments",
-    icon: <DollarSign className="w-5 h-5" />,
-    to: "/admin/payments",
-  },
-  {
     name: "Daily challenge",
     icon: <Calendar className="w-5 h-5" />,
     to: "/admin/challenge-management",
   },
+
   {
-    name: "Notifications",
-    icon: <Bell className="w-5 h-5" />,
-    to: "/admin/notification",
-  },
-  // {
-  //   name: "Reports",
-  //   icon: <FileText className="w-5 h-5" />,
-  //   to: "/admin/reports",
-  // },
-  {
-    name: "Feeds",
-    icon: <Globe className="w-5 h-5" />,
-    to: "/admin/feed-management",
+    name: "Reports",
+    icon: <AlertCircle className="w-5 h-5" />,
+    to: "/admin/reports",
   },
 ];
 

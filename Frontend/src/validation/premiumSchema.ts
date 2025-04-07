@@ -1,14 +1,26 @@
 import * as yup from "yup";
 
 export const validatePremiumSchema = yup.object({
-  title: yup.string().required("Title is required"),
-  description: yup.string().required("Description is required"),
+  title: yup
+    .string()
+    .required("Title is required")
+    .min(5, "Title must be at least 5 characters")
+    .max(20, "Title must be at most 20 characters"),
+
+  description: yup
+    .string()
+    .required("Description is required")
+    .min(50, "Description must be at least 50 characters")
+    .max(150, "Description must be at most 150 characters"),
 
   regularAmount: yup
     .number()
     .required("Regular amount is required")
     .positive("Regular amount must be a positive number"),
-
+  periodInDays: yup
+    .number()
+    .required("Period is required")
+    .positive("Period should be positive number"),
   discountAmount: yup
     .number()
     .required("Discount amount is required")

@@ -88,7 +88,7 @@ export default function ParticipantsList({
   };
 
   const handleRemoveFromRoom = (socketId: string) => {
-    socket.emit("room-removeUser",socketId,roomId)
+    socket.emit("room-removeUser", socketId, roomId);
   };
 
   useEffect(() => {
@@ -105,7 +105,7 @@ export default function ParticipantsList({
     <>
       <button
         onClick={() => setIsParticipantVisible(!isParticipantsVisible)}
-        className=" fixed bottom-16 right-4 md:z-50   p-3 md:p-5 bg-purple-500 rounded-full shadow-lg hover:bg-purple-600 transition-colors"
+        className=" fixed bottom-12 md:bottom-4 right-4 md:z-50   p-3 md:p-5 bg-purple-500 rounded-full shadow-lg hover:bg-purple-600 transition-colors"
       >
         {isParticipantsVisible ? (
           <ChevronRight className="w-5 h-5 text-white" />
@@ -150,8 +150,8 @@ export default function ParticipantsList({
       </Card>
 
       <Card
-        className={`lg:w-80 w-full  mt-25 md:mt-0 bg-white z-30 dark:bg-black h-[80vh]
-           rounded-lg shadow-sm border border-gray-100 dark:border-gray-800
+        className={`lg:w-80 w-full  mt-25 md:mt-0 bg-white z-30 dark:bg-black h-[70vh] border-gray-200
+           rounded-lg shadow-sm border-2  dark:border-gray-800
         fixed lg:static inset-0 lg:translate-x-0 transition-transform duration-300 ${
           isChatOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
@@ -247,7 +247,11 @@ export default function ParticipantsList({
   );
 }
 
-function ParticipantCard({ participant, isHost,handleRemoveFromRoom }: ParticipantCardProps) {
+function ParticipantCard({
+  participant,
+  isHost,
+  handleRemoveFromRoom,
+}: ParticipantCardProps) {
   return (
     <div className="group flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors border border-gray-100 dark:border-gray-800">
       <div className="flex items-center space-x-3">

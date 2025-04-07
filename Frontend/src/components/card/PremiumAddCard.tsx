@@ -1,8 +1,10 @@
 import type { FC } from "react";
 import { Crown, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const PremiumAddCard: FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="hidden lg:block rounded-xl overflow-hidden h-fit shadow-md hover:shadow-xl hover:scale-105 duration-250  w-full  bg-white dark:bg-gray-800">
       <div className="bg-[#7848F4] dark:bg-[#5A32B8] p-4 flex items-center justify-between">
@@ -41,7 +43,10 @@ const PremiumAddCard: FC = () => {
           </span>
         </div>
 
-        <Button className="w-full bg-[#7848F4] hover:bg-[#6A3AD6] dark:bg-[#5A32B8] dark:hover:bg-[#4D2A9E] text-white dark:text-white">
+        <Button
+          onClick={() => navigate("/user/profile/premium-plans")}
+          className="w-full bg-[#7848F4] hover:bg-[#6A3AD6] dark:bg-[#5A32B8] dark:hover:bg-[#4D2A9E] text-white dark:text-white"
+        >
           Subscribe Now
         </Button>
       </div>

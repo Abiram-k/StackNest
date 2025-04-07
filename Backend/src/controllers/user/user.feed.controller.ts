@@ -299,7 +299,8 @@ export class FeedController implements IFeedController {
   ): Promise<void> {
     try {
       const { feedId } = req.params;
-      await this._feedService.deleteFeed(feedId);
+      const user = req.user as { userId: Types.ObjectId; role: string };
+      await this._feedService.deleteFeed(feedId,"",user.role);
       res
         .status(HttpStatus.OK)
         .json({ mesage: "Successfully deleted feed", success: true });

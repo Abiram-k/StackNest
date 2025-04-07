@@ -25,29 +25,28 @@ export class RoomService implements IRoomService {
       const hostId = String(host);
       const hostData = await this._userBaseRepo.findById(hostId);
 
-      if (!hostData?.isVerified && data.isPremium == "Yes") {
+      const rooms = await this._roomRepo.findByHostId(host);
+
+      if (!hostData?.isVerified && rooms.length >= 1) {
+        throw createHttpError(
+          HttpStatus.BAD_REQUEST,
+          "Premium feature: You can only create one room at a time!"
+        );
+      }
+      const isAuthorisedPremiumRoomCreation = hostData?.rewards.some(
+        (reward) => reward.benefitKey == "one_premium_room_creation"
+      );
+      if (
+        !hostData?.isVerified &&
+        data.isPremium == "Yes" &&
+        !isAuthorisedPremiumRoomCreation
+      ) {
         throw createHttpError(
           HttpStatus.BAD_REQUEST,
           "Can't create premium rooms"
         );
       }
 
-      // if (data.scheduledAt) {
-      //   const scheduledDate = new Date(data.scheduledAt);
-      //   const currentDate = new Date();
-      //   if (scheduledDate < currentDate) {
-      //     roomData.startedAt = new Date();  
-      //     roomData.status = "online";
-      //   } else {
-      //     const localDate = new Date(data.scheduledAt);
-      //     const utcDate = new Date(
-      //       localDate.getTime() - localDate.getTimezoneOffset() * 60000
-      //     );
-      //     // data.scheduledAt = utcDate;
-      //     roomData.status = "scheduled";
-      //     roomData.startedAt = null;
-      //   }
-      // }
       roomData.startedAt = new Date();
       roomData.status = "online";
       roomData.roomId = nanoid(8);

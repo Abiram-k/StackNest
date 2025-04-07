@@ -107,6 +107,23 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    rewards: [
+      {
+        rewardId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Reward",
+          required: true
+        },
+        benefitKey: {
+          type: String,
+          required: true
+        },
+        redeemedAt: {
+          type: Date,
+          default: Date.now
+        },
+      }
+    ],
     premiumHistory: {
       type: [
         {

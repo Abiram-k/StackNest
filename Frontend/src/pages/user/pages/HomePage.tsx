@@ -1,5 +1,5 @@
 import MyAccordion from "@/components/Accordion";
-import { NotificationProvider } from "@/components/providers/notificationProvider";
+import { NotificationProvider } from "@/components/providers/NotificationProvider";
 import BannerSection from "@/components/user/BannerSection";
 import CreateRoomSection from "@/components/user/CreateRoomSection";
 import FreindsSection from "@/components/user/FreindsSection";

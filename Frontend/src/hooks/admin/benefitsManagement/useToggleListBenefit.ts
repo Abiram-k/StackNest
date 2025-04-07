@@ -1,7 +1,6 @@
 import { HttpService } from "@/api/httpService";
 import { BenefitsService } from "@/api/public/benefitsService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export const useToggleListBenefit = () => {

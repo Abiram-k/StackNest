@@ -67,10 +67,9 @@ export interface IFeedService {
   ): Promise<boolean>;
 
   getSelectedFeed(feedId: string): Promise<ResGetSelectedFeedDTO | []>;
-  deleteFeed(feedId: string,reason:string): Promise<boolean>;
+  deleteFeed(feedId: string,reason:string,role:string): Promise<boolean>;
   toggleLikeFeed(feedId: string, userId: Types.ObjectId): Promise<void>;
 
-  // Admin
 
   getAllFeeds(
     search: string,

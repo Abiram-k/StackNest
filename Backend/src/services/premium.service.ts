@@ -25,7 +25,9 @@ export class PremiumService implements IPremiumService {
         _id: String(plan._id),
         title: plan.title,
         description: plan.description,
+        isExpired:plan.isExpired,
         discountAmount: plan.discountAmount,
+        periodInDays: plan.periodInDays,
         regularAmount: plan.regularAmount,
         benefits: plan.benefits,
         createdAt: plan.createdAt,
@@ -37,6 +39,29 @@ export class PremiumService implements IPremiumService {
       throw error;
     }
   }
+
+  async getListedPremium(): Promise<PremiumResDto[]> {
+    try {
+      const listedPlans = await this._premiumRepo.getListedPremium()
+      const formattedData: PremiumResDto[] = listedPlans.map((plan) => ({
+        _id: String(plan._id),
+        title: plan.title,
+        description: plan.description,
+        discountAmount: plan.discountAmount,
+        isExpired:plan.isExpired,
+        periodInDays: plan.periodInDays,
+        regularAmount: plan.regularAmount,
+        benefits: plan.benefits,
+        createdAt: plan.createdAt,
+        isListed: plan.isListed,
+        updatedAt: plan.updatedAt,
+      }));
+      return formattedData;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getSelectedPremium(premiumId: string): Promise<PremiumResDto | null> {
     try {
       const premiumPlan = await this._premiumRepo.getPremiumById(premiumId);
@@ -46,7 +71,9 @@ export class PremiumService implements IPremiumService {
         title: premiumPlan.title,
         description: premiumPlan.description,
         discountAmount: premiumPlan.discountAmount,
+        isExpired:premiumPlan.isExpired,
         regularAmount: premiumPlan.regularAmount,
+        periodInDays: premiumPlan.periodInDays,
         benefits: premiumPlan.benefits,
         createdAt: premiumPlan.createdAt,
         isListed: premiumPlan.isListed,

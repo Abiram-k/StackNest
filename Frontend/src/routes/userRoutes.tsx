@@ -2,6 +2,7 @@ import ProfileLayout from "@/layouts/ProfileLayout";
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 import ProtectHome from "@/protectedRoutes/user/ProtectHome";
+import RewardsPage from "@/pages/user/pages/RewardsPage";
 
 const VideoConference = lazy(
   () => import("@/pages/user/pages/VideoConference")
@@ -14,6 +15,7 @@ const Leaderboard = lazy(() => import("@/pages/user/pages/Leaderboard"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
 const SingleFeed = lazy(() => import("@/pages/user/pages/SingleFeed"));
 const Highlights = lazy(() => import("@/pages/user/pages/Highlights"));
+const PremiumPlans = lazy(() => import("@/pages/user/pages/PremiumPlans"));
 const MyFeeds = lazy(() => import("@/pages/user/pages/MyFeeds"));
 const CreateFeed = lazy(() => import("@/pages/user/pages/CreateFeed"));
 const UpdateFeed = lazy(() => import("@/pages/user/pages/UpdateFeed"));
@@ -55,8 +57,13 @@ export const userRoutes: RouteObject[] = [
         element: <ProfileLayout />,
         children: [
           { index: true, element: <ProfilePage /> },
-          { path: "stats", element: <Leaderboard /> },
+          {
+            path: "stats",
+            element: <Leaderboard />,
+          },
+          { path: "stats/rewards", element: <RewardsPage /> },
           { path: "settings", element: <SettingsPage /> },
+          { path: "premium-plans", element: <PremiumPlans /> },
           { path: "my-feeds", element: <MyFeeds /> },
           { path: "my-feed/:feedId/edit", element: <UpdateFeed /> },
           { path: "feed/upload", element: <CreateFeed /> },

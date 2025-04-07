@@ -27,6 +27,26 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
       throw error;
     }
   }
+  async claimReward(
+    userId: string,
+    rewardId: string,
+    redeemPoint: number,
+    benefitKey: string
+  ): Promise<void> {
+    try {
+    
+      const rewardData = {
+        rewardId,
+        benefitKey,
+      };
+      await User.findByIdAndUpdate(userId, {
+        $inc: { challengePoints: -redeemPoint },
+        $push: { rewards: rewardData },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 
   async getStreakTableData(): Promise<IUser[]> {
     try {

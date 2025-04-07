@@ -23,7 +23,6 @@ const CreateBenefits = () => {
   
 
   const handleAddBenefits = (data: ReqBenefits) => {
-    console.log("Benefits Data: ", data);
     mutate(data);
   };
 

@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { WebRTCManager } from "@/lib/webRTCManager";
 import VideoArea from "@/components/user/room/VideoArea";
 import { toast } from "sonner";
+import ReportModal from "@/components/modal/ReportModal";
 export interface PeerData {
   peerId: string;
   peer: RTCPeerConnection;
@@ -36,6 +37,7 @@ export default function VideoConference() {
   const [webrtcManager, setWebRTCManager] = useState<WebRTCManager | null>(
     null
   );
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -124,8 +126,14 @@ export default function VideoConference() {
 
   return (
     <main className="flex-1 flex flex-col p-4 mb-50bg-orange-300  relative mb-20 md:mb-50 dark:bg-black h-screen">
-      <div className="text-sm text-gray-600 mb-2 dark:text-white">
-        ROOM ID: {roomId}
+      <div className=" w-full flex justify-between items-center my-2 md:my-4 ">
+        <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <span className="text-gray-500 dark:text-gray-400">Room ID:</span>
+          <span className="text-primary-500 dark:text-primary-500">
+            {roomId}
+          </span>
+        </div>
+        {!isHost && <ReportModal entityId={roomId!} type="room" />}
       </div>
       <div className="flex flex-1 gap-4 ">
         <div className="flex-1">

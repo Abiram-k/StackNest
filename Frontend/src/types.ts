@@ -101,11 +101,13 @@ export type FeedResType = {
 };
 
 export interface ResPremium {
-  _id:string;
+  _id: string;
   title: string;
   description: string;
   regularAmount: number;
   discountAmount: number;
+  isExpired: boolean;
+  periodInDays: number;
   benefits: string[];
   isListed: boolean;
   createdAt: Date;
@@ -118,6 +120,7 @@ export interface ReqPremium {
   regularAmount: number;
   discountAmount: number;
   benefits: string[];
+  periodInDays: number;
 }
 
 export interface PremiumFormType {
@@ -125,6 +128,7 @@ export interface PremiumFormType {
   description: string;
   regularAmount: number;
   discountAmount: number;
+  periodInDays: number;
   benefit1: string;
   benefit2: string;
   benefit3: string;
@@ -143,4 +147,34 @@ export interface ResBenefit {
 export interface ReqBenefits {
   name: string;
   description: string;
+}
+
+export interface ReqReport {
+  reportedEntity: string;
+  reportType: "user" | "room" | "feed" | "general";
+  reason: string;
+  message?: string;
+}
+
+export interface ResReward {
+  _id: string;
+  name: string;
+  description: string;
+  points_cost: number;
+  benefit_key:
+    | "extra_profile_edit"
+    | "one_premium_room_creation"
+    | "temporary_premium_access"
+    | "fast_customer_support";
+  type: "authorization" | "discount" | "bonus" | "feature" | "custom";
+  isActive: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ReqReward {
+  name: string;
+  description: string;
+  points_cost: number;
+  benefit_key: string;
 }

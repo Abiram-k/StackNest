@@ -8,13 +8,21 @@ import { useRemovePremium } from "@/hooks/admin/premiumManagment/useRemovePremiu
 import { useToggleListPremium } from "@/hooks/admin/premiumManagment/useToggleListPremium";
 import { ResPremium } from "@/types";
 import { Plus } from "lucide-react";
-import  { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const columns = [
   {
     key: "title" as keyof ResPremium,
     header: "Title",
+    render: (plan: ResPremium) => (
+      <p>
+        {plan.title}
+        {plan.isExpired && (
+          <span className="text-red-500 font-semibold ms-1">- expired!</span>
+        )}
+      </p>
+    ),
   },
   {
     key: "description" as keyof ResPremium,
@@ -33,7 +41,23 @@ const columns = [
       </ul>
     ),
   },
-  { key: "discountAmount" as keyof ResPremium, header: "Discount Amount" },
+  {
+    key: "discountAmount" as keyof ResPremium,
+    header: "Discount Amount",
+    render: (plan: ResPremium) => (
+      <p>
+        ₹{plan.discountAmount}
+        <span className="text-gray-400 ms-1 dark:text-gray-600 line-through">
+          ₹{plan.regularAmount}
+        </span>
+      </p>
+    ),
+  },
+  {
+    key: "periodInDays" as keyof ResPremium,
+    header: "Period",
+    render: (plan: ResPremium) => <p>{plan.periodInDays}</p>,
+  },
 ];
 
 const PremiumManagement = () => {

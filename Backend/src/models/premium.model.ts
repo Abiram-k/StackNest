@@ -19,6 +19,10 @@ const PremiumSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    periodInDays:{
+      type:Number,
+      require:true,
+    },
     benefits: {
       type: [String],
       required: true,
@@ -28,6 +32,10 @@ const PremiumSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    isExpired:{
+      type:Boolean,
+      default:false
+    }
   },
   { timestamps: true }
 );

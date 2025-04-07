@@ -36,7 +36,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
     }
   }
 
-  async findByHostId(hostId: Types.ObjectId): Promise<IRoom[] | null> {
+  async findByHostId(hostId: Types.ObjectId): Promise<IRoom[]> {
     try {
       return await Room.find({ host: hostId }).populate("participants.user");
     } catch (error) {
@@ -217,7 +217,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
           "participants.$": 1,
         }
       );
-      
+
       if (result && result.participants.length > 0) {
         return result.participants[0].lastJoined || null;
       }
@@ -235,7 +235,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
     const result = await Room.findOneAndUpdate(
       {
         roomId,
-        "participants.user": userId, 
+        "participants.user": userId,
       },
       {
         $inc: {

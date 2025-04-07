@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, IsString } from "class-validator";
+import {  IsString } from "class-validator";
 
 export class AddOrUpdateBenefitDTO {
   @IsString()

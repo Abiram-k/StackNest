@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export default function PremiumBanner() {
+  const navigate = useNavigate();
   return (
     <div className="relative w-full bg-gradient-to-br from-purple-700 to-purple-900 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 py-16 flex flex-col md:flex-row items-center justify-between relative">
@@ -17,7 +20,10 @@ export default function PremiumBanner() {
           <p className="text-purple-100 mb-6">
             Unlock room hosting and viewing
           </p>
-          <button className="bg-purple-500 animate-bounce hover:animate-none hover:bg-purple-400 text-white px-8 py-3 rounded-full font-medium transition-colors duration-200 cursor-pointer">
+          <button
+            onClick={() => navigate("/user/profile/premium-plans")}
+            className="bg-purple-500 animate-bounce hover:animate-none hover:bg-purple-400 text-white px-8 py-3 rounded-full font-medium transition-colors duration-200 cursor-pointer"
+          >
             Subscribe
           </button>
         </div>

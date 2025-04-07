@@ -46,7 +46,6 @@ export default function RoomsListPage() {
       limit: 10,
     });
 
-
   // onClick of edit icon
   const handleEditRoom = (roomId: string) => {
     navigate(`/user/room/${roomId}/edit`);
@@ -140,6 +139,7 @@ export default function RoomsListPage() {
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">My Rooms</h1>
+
             <Button
               className="bg-primary-500 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300  hover:bg-primary-600/90"
               onClick={() => navigate("/user/room/create")}
@@ -190,7 +190,7 @@ export default function RoomsListPage() {
             {availableRooms?.rooms?.length ? (
               availableRooms.rooms
                 .filter((room) => room.roomType != "general")
-                .map((room, i) => (               
+                .map((room, i) => (
                   <RoomCard
                     key={`${room.roomId}-${i}`}
                     room={room}

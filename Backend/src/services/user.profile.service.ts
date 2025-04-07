@@ -77,11 +77,11 @@ export class UserProfileService implements IUserProfileService {
       });
 
       const pointsTableData: IStreakTableData = pointTable.map((user) => {
-          return {
-            userName: user.userName,
-            avatar: user.avatar,
-            count: user.challengePoints,
-          };
+        return {
+          userName: user.userName,
+          avatar: user.avatar,
+          count: user.challengePoints,
+        };
       });
 
       return { user, streakTableData, pointsTableData };
@@ -112,7 +112,20 @@ export class UserProfileService implements IUserProfileService {
     const user = await this._baseRepo.findByUserName(data.userName);
     if (user && user.email != data.email)
       throw new Error("User name already exist");
-    return await this._baseRepo.findByIdAndUpdate(id, data);
+
+    const isAuthorisedAvatarEdit = user?.rewards?.some(
+      (reward) => reward.benefitKey == "extra_profile_edit"
+    );
+    if (!isAuthorisedAvatarEdit) {
+      delete data.avatar;
+    }
+    await this._baseRepo.findByIdAndUpdate(id, data);
+
+    if (!isAuthorisedAvatarEdit)
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        "Premium Feature: Image can't upload!"
+      );
   }
   async checkinUser(userId: string): Promise<void> {
     const user = await this._baseRepo.findById(userId);

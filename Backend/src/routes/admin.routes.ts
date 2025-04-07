@@ -5,6 +5,7 @@ import {
   adminController,
   adminFeedController,
   adminPremiumController,
+  adminRewardController,
   bannerController,
 } from "../config/di";
 import { verifyUser } from "../middlewares/verifyUser";
@@ -140,6 +141,38 @@ router.patch(
 router.delete(
   "/benefit/:benefitId",
   adminBenefitsController.removeBenefits.bind(adminBenefitsController)
+);
+
+
+// <<<<<<<<<<<<<<<<<<<<<<<<< REWARD MANAGEMENT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+router.get(
+  "/rewards",
+  adminRewardController.getAllReward.bind(adminRewardController)
+);
+router.get(
+  "/reward/:rewardId",
+  adminRewardController.getSelectedReward.bind(adminRewardController)
+);
+// router.get(
+//   "/rewards-active",
+//   adminRewardController.getActiveReward.bind(adminRewardController)
+// );
+router.post(
+  "/reward",
+  adminRewardController.addReward.bind(adminRewardController)
+);
+router.put(
+  "/reward/:rewardId",
+  adminRewardController.updateReward.bind(adminRewardController)
+);
+router.patch(
+  "/reward/:rewardId",
+  adminRewardController.toggleListing.bind(adminRewardController)
+);
+router.delete(
+  "/reward/:rewardId",
+  adminRewardController.removeReward.bind(adminRewardController)
 );
 
 export default router;

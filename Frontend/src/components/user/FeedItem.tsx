@@ -21,6 +21,7 @@ import { useGetComments } from "@/hooks/feeds/useGetComments";
 import { CommentItem } from "./CommentItem";
 import { useIncrementViewsCount } from "@/hooks/feeds/useIncrementViews";
 import { toast } from "sonner";
+import ReportModal from "../modal/ReportModal";
 
 type CommentType = {
   id: string;
@@ -81,10 +82,6 @@ export default function FeedItem({
         if (entries[0].isIntersecting) {
           IncrementViewsMutate(feedId);
         }
-        // if (entries[0].isIntersecting && !hasViewed.current) {
-        //   hasViewed.current = true; // Avoid duplicate requests
-        //   IncrementViewsMutate(feedId);
-        // }
       },
       { threshold: 0.5 }
     );
@@ -102,10 +99,6 @@ export default function FeedItem({
 
   const isVideo = media?.match(/\.(mp4|webm|ogg)$/i);
 
-  const toggleMute = () => {
-    setIsMuted((prev) => !prev);
-  };
-
   const handleLike = () => {
     handleLikeFeed?.(feedId);
     if (liked) {
@@ -114,17 +107,6 @@ export default function FeedItem({
       setLikeCount(likeCount + 1);
     }
     setLiked(!liked);
-  };
-
-  const togglePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying((prev) => !prev);
-    }
   };
 
   const handleAddComment = () => {
@@ -224,6 +206,9 @@ export default function FeedItem({
             <Eye className="h-4 w-4 mr-1" />
             <span className="font-medium">{viewsCount} views</span>
           </div>
+          {!handleEdit && !handleDelete && (
+            <ReportModal entityId={feedId} type="feed" />
+          )}
 
           <div className="flex items-center gap-2">
             {isBlocked && (

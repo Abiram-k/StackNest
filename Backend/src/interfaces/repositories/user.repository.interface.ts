@@ -12,6 +12,7 @@ export interface IUserBaseRepository<T> {
     subscription: PushSubscription,
     userId: string
   ): Promise<void>;
+  claimReward(userId:string,rewardId:string,redeemPoint:number,benefitKey:string):Promise<void>;
   getStreakTableData(): Promise<T[]>;
   getPointsTableData(): Promise<IUser[]>;
   fetchAllUserNameExceptUser(
