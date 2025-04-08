@@ -36,6 +36,8 @@ const initialValue = {
   email: "",
   streak: 0,
   streakClaimDate: new Date(),
+  isVerified: false,
+  isChatBotAuthorise: false,
 };
 const getDaysDifference = (from: Date, to: Date): number => {
   const startDate = new Date(from);
@@ -54,6 +56,7 @@ export default function ProfilePage() {
   const selectedAvatar = useRef<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChatBotOpen, setIsChatBotOpen] = useState(false);
+  const [isChatBotAuthorised, setIsChatBotAuthorised] = useState(false);
   const [streak, setStreak] = useState(0);
   const navigate = useNavigate();
   const {
@@ -85,6 +88,7 @@ export default function ProfilePage() {
     if (user?.userDetails) {
       setFormData(user.userDetails);
       if (user.userDetails.streak) setStreak(user.userDetails.streak);
+      if (user.userDetails.isChatBotAuthorise) setIsChatBotAuthorised(true);
       reset(user.userDetails);
     }
   }, [user?.userDetails, streak]);
@@ -202,6 +206,9 @@ export default function ProfilePage() {
               </Button>
 
               <div className="flex  gap-4 mb-6">
+                {formData.isVerified && (
+                  <p className="text-blue-600 text-2xl">Premium User</p>
+                )}
                 <ProfileImageUploader
                   defaultAvatar="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                   fallbackText="Profile Image"
@@ -293,16 +300,22 @@ export default function ProfilePage() {
                   avatar={formData.avatar}
                 />
               )}
-              <Button
-                onClick={() => setIsChatBotOpen(!isChatBotOpen)}
-                className={`rounded-full p-3 w-12 h-12 fixed bottom-10 right-10 md:bottom-20 md:right-20 ${
-                  isChatBotOpen
-                    ? "bg-red-500 hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600"
-                    : "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:text-white "
-                }`}
-              >
-                {isChatBotOpen ? <X size={26} /> : <MessageCircle size={27} />}{" "}
-              </Button>
+              {isChatBotAuthorised && (
+                <Button
+                  onClick={() => setIsChatBotOpen(!isChatBotOpen)}
+                  className={`rounded-full p-3 w-12 h-12 fixed bottom-10 right-10 md:bottom-20 md:right-20 ${
+                    isChatBotOpen
+                      ? "bg-red-500 hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600"
+                      : "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:text-white "
+                  }`}
+                >
+                  {isChatBotOpen ? (
+                    <X size={26} />
+                  ) : (
+                    <MessageCircle size={27} />
+                  )}{" "}
+                </Button>
+              )}
             </div>
           </div>
         </main>

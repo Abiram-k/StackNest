@@ -45,6 +45,8 @@ export class UserProfileController implements IUserProfileController {
         avatar: user.avatar,
         streak: user.streak as number,
         streakClaimDate: user.streakClaimDate as Date,
+        isChatBotAuthorise: user.isChatBotAuthorise,
+        isVerified: user.isVerified,
       };
 
       res.status(HttpStatus.OK).json({
@@ -170,7 +172,6 @@ export class UserProfileController implements IUserProfileController {
       next(error);
     }
   }
-
 
   async getStatsData(
     req: Request,

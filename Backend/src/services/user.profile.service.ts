@@ -104,6 +104,10 @@ export class UserProfileService implements IUserProfileService {
       mobileNumber: user.mobileNumber,
       streak: user.streak,
       streakClaimDate: user.streakClaimDate,
+      isVerified: user.isVerified,
+      isChatBotAuthorise: user.rewards.some(
+        (reward) => reward.benefitKey == "chat_bot_access"
+      ),
     };
     return data;
   }
@@ -114,7 +118,7 @@ export class UserProfileService implements IUserProfileService {
       throw new Error("User name already exist");
 
     const isAuthorisedAvatarEdit = user?.rewards?.some(
-      (reward) => reward.benefitKey == "extra_profile_edit"
+      (reward) => reward.benefitKey == "profile_image_edit"
     );
     if (!isAuthorisedAvatarEdit) {
       delete data.avatar;
@@ -162,7 +166,7 @@ export class UserProfileService implements IUserProfileService {
       );
 
       if (daysDifference > 1) {
-        sendStreakMissedMail(user.email, user.userName);
+        await sendStreakMissedMail(user.email, user.userName);
         await this._baseRepo.resetCheckin(userId);
         return null;
       }

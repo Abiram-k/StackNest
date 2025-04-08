@@ -7,6 +7,7 @@ import {
   adminPremiumController,
   adminRewardController,
   bannerController,
+  reportController,
 } from "../config/di";
 import { verifyUser } from "../middlewares/verifyUser";
 
@@ -174,5 +175,10 @@ router.delete(
   "/reward/:rewardId",
   adminRewardController.removeReward.bind(adminRewardController)
 );
+
+// <<<<<<<<<<<<<<<<<<<<<<<< REPORT MANAGEMENT >>>>>>>>>>>>>>>>>>>>>>>
+router.get("/reports",reportController.getAllReports.bind(reportController))
+router.post("/report/resolve",reportController.resolveReport.bind(reportController))
+router.post("/report/reject",reportController.rejectReport.bind(reportController))
 
 export default router;

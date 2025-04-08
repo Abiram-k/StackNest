@@ -34,7 +34,7 @@ export class RoomService implements IRoomService {
         );
       }
       const isAuthorisedPremiumRoomCreation = hostData?.rewards.some(
-        (reward) => reward.benefitKey == "one_premium_room_creation"
+        (reward) => reward.benefitKey == "premium_room_creation"
       );
       if (
         !hostData?.isVerified &&
@@ -59,6 +59,25 @@ export class RoomService implements IRoomService {
 
   async updateRoom(roomId: string, data: RoomSchema) {
     try {
+      const room = await this._roomRepo.findSelectedRoom(false, roomId);
+      if (!room)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Room not founded");
+      const hostId = String(room.host);
+      const host = await this._userBaseRepo.findById(hostId);
+      const isAuthorisedPremiumRoomCreation = host?.rewards.some(
+        (reward) => reward.benefitKey == "premium_room_creation"
+      );
+      if (
+        !host?.isVerified &&
+        data.isPremium == "Yes" &&
+        !isAuthorisedPremiumRoomCreation
+      ) {
+        throw createHttpError(
+          HttpStatus.BAD_REQUEST,
+          "Premium feature: Can't set as premium room"
+        );
+      }
+
       const updatedData: Partial<IRoom> = {
         title: data.title,
         limit: data.limit,

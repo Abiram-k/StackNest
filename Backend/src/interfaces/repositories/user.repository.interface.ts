@@ -17,9 +17,6 @@ export interface IUserBaseRepository<T> {
   getPointsTableData(): Promise<IUser[]>;
   fetchAllUserNameExceptUser(
     userId: string
-    // filter: string,
-    // search: string,
-    // sort: string
   ): Promise<T[] | null>;
   findByEmail(email: string): Promise<T | null>;
   findByIdAndUpdate(id: string, data: any): Promise<T | null>;
@@ -28,6 +25,9 @@ export interface IUserBaseRepository<T> {
   incrementChallengePoint(userId: string): Promise<void>;
   getStreakCount(userId: string): Promise<number | undefined>;
   resetCheckin(userId: string): Promise<boolean>;
+
+  subscribePremium(userId:string):Promise<void>
+
 }
 export interface IUserAuthRepository<T> {
   updateUserWithGoogleId(email: string, googleId: string): Promise<boolean>;

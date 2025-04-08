@@ -8,7 +8,7 @@ import FilterBar from "@/components/FilterBar";
 import { useState } from "react";
 import { useDebounce } from "@/hooks/optimizational/useDebounce";
 import Pagination from "@/components/Pagination";
-import FeedDetails from "./FeedDetails";
+import { Skeleton } from "@/components/ui/skeleton";
 const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
 
 type FeedRes = {
@@ -86,25 +86,25 @@ export default function FeedManagement() {
     blockFeed(feed._id);
   };
 
-  // if (loading) {
-  //   return (
-  //     <div className="container mx-auto p-6 max-w-4xl">
-  //       <div className="flex items-center mb-6">
-  //         <Skeleton className="h-10 w-10 rounded-full" />
-  //         <div className="ml-4 space-y-2">
-  //           <Skeleton className="h-4 w-[250px]" />
-  //           <Skeleton className="h-4 w-[200px]" />
-  //         </div>
-  //       </div>
-  //       <Skeleton className="h-[300px] w-full rounded-lg mb-6" />
-  //       <div className="space-y-2">
-  //         <Skeleton className="h-4 w-full" />
-  //         <Skeleton className="h-4 w-full" />
-  //         <Skeleton className="h-4 w-2/3" />
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (fetchFeedPending) {
+    return (
+      <div className="container mx-auto p-6 max-w-4xl">
+        <div className="flex items-center mb-6">
+          <Skeleton className="h-10 w-10 rounded-full" />
+          <div className="ml-4 space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+        <Skeleton className="h-[300px] w-full rounded-lg mb-6" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-2/3" />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="flex h-content">
       {(fetchFeedPending || blockPending) && <Spinner />}

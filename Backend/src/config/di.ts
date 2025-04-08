@@ -99,6 +99,9 @@ import { IAdminRewardController } from "../interfaces/controllers/admin.reward.c
 import { AdminRewardController } from "../controllers/admin/admin.reward.controller";
 import { IUserRewardController } from "../interfaces/controllers/user.reward.controller.interface";
 import { UserRewardController } from "../controllers/user/user.reward.controller";
+import { PaymentService } from "../services/payment.service";
+import { IUserPaymentController } from "../interfaces/controllers/user.payment.controller.interface";
+import { UserPaymentController } from "../controllers/user/user.payment.controller";
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REPOSITORY >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -141,7 +144,8 @@ const roomService: IRoomService = new RoomService(
   roomSessionRespository
 );
 const favoritesService: IFavoritesService = new FavoritesService(
-  favoritesRepository
+  favoritesRepository,
+  userBaseRepository
 );
 const bannerServie: IBannerService = new BannerService(bannerRepository);
 const challengeServie: IChallengeService = new ChallengeService(
@@ -159,8 +163,13 @@ const premiumService = new PremiumService(
   benefitsRepository
 );
 const benefitsService = new BenefitsService(benefitsRepository);
-const reportService = new ReportService(reportRepository, roomRespository,userBaseRepository);
-const rewardService = new RewardService(rewardRepository,userBaseRepository);
+const reportService = new ReportService(
+  reportRepository,
+  roomRespository,
+  userBaseRepository
+);
+const rewardService = new RewardService(rewardRepository, userBaseRepository);
+const paymentService = new PaymentService(userBaseRepository,premiumRepository);
 
 //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CONTROLLERS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -205,6 +214,9 @@ const adminRewardController: IAdminRewardController = new AdminRewardController(
 const userRewardController: IUserRewardController = new UserRewardController(
   rewardService
 );
+const paymentController: IUserPaymentController = new UserPaymentController(
+  paymentService
+);
 
 export {
   authController,
@@ -223,5 +235,6 @@ export {
   userPremiumController,
   reportController,
   adminRewardController,
-  userRewardController
+  userRewardController,
+  paymentController
 };

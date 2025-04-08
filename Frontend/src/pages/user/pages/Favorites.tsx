@@ -65,8 +65,8 @@ export default function Favourites() {
             Favourite Rooms
           </h1>
 
-          {favorites?.rooms && favorites?.rooms?.length >= 5 && (
-            <WarningMessage message="You’ve already added the maximum number of rooms to favorites!" />
+          {favorites?.rooms && favorites?.rooms?.length >= 10 && (
+            <WarningMessage message="You’ve already added the maximum of 10 rooms to favorites!" />
           )}
         </div>
 

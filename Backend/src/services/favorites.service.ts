@@ -4,12 +4,19 @@ import { IFavoritesRepository } from "../interfaces/repositories/favorites.repos
 import { IFavoritesService } from "../interfaces/services/favorites.service.interface";
 import { HttpStatus } from "../constants/enum.statusCode";
 import { IFavorites } from "../types/IFavorites";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
+import { IUser } from "../types/IUser";
 
 export class FavoritesService implements IFavoritesService {
   private _favoritesRepository: IFavoritesRepository<IFavorites>;
+  private _userBaseRepo: IUserBaseRepository<IUser>;
 
-  constructor(favoritesRepository: IFavoritesRepository<IFavorites>) {
+  constructor(
+    favoritesRepository: IFavoritesRepository<IFavorites>,
+    userBaseRepo: IUserBaseRepository<IUser>
+  ) {
     this._favoritesRepository = favoritesRepository;
+    this._userBaseRepo = userBaseRepo;
   }
 
   async fetchFavorites(userId: string): Promise<RoomResTypeDTO[] | null> {
@@ -52,8 +59,24 @@ export class FavoritesService implements IFavoritesService {
       userId,
       roomId
     );
+    const user = await this._userBaseRepo.findById(userId);
+    if (!user) throw createHttpError(HttpStatus.NOT_FOUND, "User not founded");
+
+    const isAuthorisedPremiumRoomCreation = user?.rewards.some(
+      (reward) => reward.benefitKey == "add_room_favorites"
+    );
+    if (!user?.isVerified && !isAuthorisedPremiumRoomCreation) {
+      throw createHttpError(
+        HttpStatus.BAD_REQUEST,
+        "Premium feature: Can't set as favorite"
+      );
+    }
+
     if (isExist) {
-      throw new Error("Room Already Exist in Favorites");
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        "Room Already Exist in Favorites"
+      );
     }
     const isAdded = await this._favoritesRepository.addRoomToFavorites(
       userId,
@@ -69,7 +92,10 @@ export class FavoritesService implements IFavoritesService {
       roomId
     );
     if (!isExist) {
-      throw new Error("Room Not found in Favorites");
+      throw createHttpError(
+        HttpStatus.NOT_FOUND,
+        "Room Not found in Favorites"
+      );
     }
     const isRemoved = await this._favoritesRepository.removeFromFavorites(
       userId,

@@ -7,8 +7,10 @@ export interface ResProfileData {
   country?: string;
   description?: string;
   mobileNumber?: string;
-  streak:number;
-  streakClaimDate:Date;
+  streak: number;
+  streakClaimDate: Date;
+  isVerified?: boolean;
+  isChatBotAuthorise?: boolean;
 }
 
 export interface ResGetUserDataDTO {

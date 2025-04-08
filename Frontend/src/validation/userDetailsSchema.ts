@@ -38,4 +38,6 @@ export const validateProfileSchema = yup.object({
   mobileNumber: yup.string().optional(),
   streak: yup.number().optional(),
   streakClaimDate: yup.date().optional(),
+  isVerified: yup.boolean().optional(),
+  isChatBotAuthorise: yup.boolean().optional(),
 });

@@ -27,31 +27,25 @@ import {
   Shield,
   Edit,
   Home,
-  Headphones,
   Clock,
+  Heart,
+  Brain,
 } from "lucide-react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useGetActiveReward } from "@/hooks/admin/rewardManagement/useGetActiveBenefits";
-import { ResReward } from "@/types";
+import { ResReward, RewardBenefitsT } from "@/types";
 import { Spinner } from "@/components/ui/spinner";
 import { useClaimReward } from "@/hooks/user/reward/useClaimReward";
 import { useGetClaimedRewards } from "@/hooks/user/reward/useGetClaimedRewards";
 
 type RewardType = "authorization" | "discount" | "bonus" | "feature" | "custom";
-type BenefitKey =
-  | "extra_profile_edit"
-  | "one_premium_room_creation"
-  | "temporary_premium_access"
-  | "customer_support"
-  | "fast_customer_support";
 
 export default function RewardsPage({}) {
   const [selectedReward, setSelectedReward] = useState<ResReward | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  // const { userPoints } = useParams<{ userPoints: string }>();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const userPoints = searchParams.get('userPoints')
+  const userPoints = searchParams.get("userPoints");
   const navigate = useNavigate();
 
   const { data: activeRewardData, isPending: fetchingRewards } =
@@ -69,18 +63,20 @@ export default function RewardsPage({}) {
     navigate(-1);
   };
 
-  const getBenefitIcon = (key: BenefitKey) => {
+  const getBenefitIcon = (key: RewardBenefitsT) => {
     switch (key) {
-      case "extra_profile_edit":
+      case "profile_image_edit":
         return <Edit className="h-5 w-5" />;
-      case "one_premium_room_creation":
+      case "premium_room_creation":
         return <Home className="h-5 w-5" />;
-      case "temporary_premium_access":
+      case "3d_premium_access":
         return <Star className="h-5 w-5" />;
-      case "customer_support":
-        return <Headphones className="h-5 w-5" />;
+      case "add_room_favorites":
+        return <Heart className="h-5 w-5" />;
       case "fast_customer_support":
         return <Clock className="h-5 w-5" />;
+      case "chat_bot_access":
+        return <Brain className="h-5 w-5" />;
       default:
         return <Gift className="h-5 w-5" />;
     }

@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { IRoomRepository } from "../interfaces/repositories/room.repository.interface";
 import Room from "../models/room.model";
 import { IRoom } from "../types/IRoom";
@@ -57,7 +57,7 @@ export class RoomRespository implements IRoomRepository<IRoom> {
       const query: any = {};
       if (search) {
         query.$or = [
-          { title: { $regex: search, $options: "i" } },
+          { title: { $regex: `^${search}`, $options: "i" } },
           { roomId: { $regex: search, $options: "i" } },
         ];
       }

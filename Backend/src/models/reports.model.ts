@@ -27,7 +27,7 @@ const reportSchema = new mongoose.Schema(
     },
     message: {
       type: String,
-      maxlength: 1000,  
+      maxlength: 1000,
     },
     status: {
       type: String,
@@ -38,11 +38,6 @@ const reportSchema = new mongoose.Schema(
       type: String,
       enum: ["high", "medium", "low"],
       default: "medium",
-    },
-
-    adminNote: {
-      type: String,
-      maxlength: 500,
     },
   },
   { timestamps: true }

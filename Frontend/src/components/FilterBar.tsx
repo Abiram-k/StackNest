@@ -6,7 +6,7 @@ type optionType = {
   label?: string;
 };
 type filterBarPropsType = {
-  setSearchQuery: (value: string) => void;
+  setSearchQuery?: (value: string) => void;
   setFilterQuery: (value: string) => void;
   setSortedOrder: (value: string) => void;
   filterOptions?: optionType[];
@@ -25,25 +25,27 @@ const FilterBar = ({
   const [search, setSearch] = useState("");
   return (
     <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-      <div className="relative w-full md:max-w-lg flex items-center">
-        <input
-          type="text"
-          placeholder={placeHolder ? placeHolder : "Search"}
-          className="w-full pl-4 pr-14 py-3 border -1 dark:border-gray-300 border-gray-300 rounded-full focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all duration-200 shadow-sm"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setSearchQuery(e.target.value);
-          }}
-        />
+      {setSearchQuery && (
+        <div className="relative w-full md:max-w-lg flex items-center">
+          <input
+            type="text"
+            placeholder={placeHolder ? placeHolder : "Search"}
+            className="w-full pl-4 pr-14 py-3 border -1 dark:border-gray-300 border-gray-300 rounded-full focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all duration-200 shadow-sm"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setSearchQuery(e.target.value);
+            }}
+          />
 
-        <button
-          onClick={() => setSearchQuery(search)}
-          className="absolute cursor-pointer right-0 top-1/2 transform -translate-y-1/2 px-4 py-3 bg-gray-100 border-r border-2 dark:bg-transparent rounded-r-full hover:bg-gray-200 transition"
-        >
-          <Search className="h-5 w-5 text-gray-600" />
-        </button>
-      </div>
+          <button
+            onClick={() => setSearchQuery(search)}
+            className="absolute cursor-pointer right-0 top-1/2 transform -translate-y-1/2 px-4 py-3 bg-gray-100 border-r border-2 dark:bg-transparent rounded-r-full hover:bg-gray-200 transition"
+          >
+            <Search className="h-5 w-5 text-gray-600" />
+          </button>
+        </div>
+      )}
 
       <div className="flex gap-4 w-full md:w-auto ">
         {filterOptions && (

@@ -202,7 +202,7 @@ Stack Nest Team`,
 
 export const sendFeedPublishedMail = async (
   userName: string,
-  feedId:string,
+  feedId: string,
   email: string,
   title: string
 ) => {
@@ -360,8 +360,6 @@ Stack Nest Team`,
   await transporter.sendMail(mailOptions);
 };
 
-
-
 export const sendFeedDeletedMail = async (
   userName: string,
   email: string,
@@ -443,6 +441,82 @@ The StackNest Team
         </footer>
       </div>
     </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+export const reportResolvedMail = async (email?: string) => {
+  if (!email) return;
+  const mailOptions = {
+    from: "Stack Nest Team <no-reply@stacknest.com>",
+    to: email,
+    subject: "✅ Your Report Has Been Resolved",
+    text: `Hello,
+
+Thank you for reporting an issue on StackNest. We have reviewed your report and taken the necessary action.
+
+Your input helps us maintain a safe and professional community.
+
+Best regards,  
+Stack Nest Team`,
+
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+        <h2 style="color: #28a745; text-align: center;">✅ Report Resolved</h2>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          Thank you for bringing this to our attention.
+        </p>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          We’ve reviewed your report and resolved the issue as per our community guidelines.
+        </p>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          Your contributions help us ensure StackNest remains a safe and reliable platform for everyone.
+        </p>
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />
+        <p style="text-align: center; font-size: 12px; color: #777;">
+          🚀 <strong>StackNest</strong> — We appreciate your support and vigilance.
+        </p>
+      </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+export const reportDismissedMail = async (email?: string) => {
+  if (!email) return;
+  const mailOptions = {
+    from: "Stack Nest Team <no-reply@stacknest.com>",
+    to: email,
+    subject: "🚫 Your Report Has Been Dismissed",
+    text: `Hello,
+
+Thank you for submitting a report to StackNest. After reviewing the information, we found no violation of our community guidelines and have dismissed the report.
+
+We encourage you to continue reporting any behavior you believe violates our policies.
+
+Best regards,  
+Stack Nest Team`,
+
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+        <h2 style="color: #dc3545; text-align: center;">🚫 Report Dismissed</h2>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          We appreciate your vigilance in reporting concerns.
+        </p>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          After reviewing the reported content, we found it does not violate our community guidelines and have dismissed the report.
+        </p>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          If you come across any inappropriate content in the future, feel free to report it.
+        </p>
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />
+        <p style="text-align: center; font-size: 12px; color: #777;">
+          🚀 <strong>StackNest</strong> — Keeping the community fair and transparent.
+        </p>
+      </div>
     `,
   };
 

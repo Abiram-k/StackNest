@@ -8,6 +8,7 @@ const Dashboard = lazy(() => import("../pages/admin/pages/Dashboard"));
 const RoomManagement = lazy(
   () => import("@/pages/admin/pages/roomManagement/RoomManagement")
 );
+const ReportsPage = lazy(() => import("@/pages/admin/pages/ReportPage"));
 const FeedManagement = lazy(
   () => import("@/pages/admin/pages/feedManagement/FeedManagement")
 );
@@ -138,7 +139,6 @@ export const adminRoutes: RouteObject[] = [
             path: "plans-management/:premiumId/edit",
             element: <UpdatePremium />,
           },
-
           // Challenge management
           { path: "challenge-management", element: <ChallengeManagment /> },
           { path: "challenge-management/add", element: <AddChallenge /> },
@@ -154,6 +154,7 @@ export const adminRoutes: RouteObject[] = [
             path: "feed-management/:feedId/details",
             element: <FeedDetails />,
           },
+          { path: "reports", element: <ReportsPage /> },
         ],
       },
     ],

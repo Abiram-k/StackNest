@@ -30,11 +30,13 @@ const RewardSchema = new Schema(
     benefit_key: {
       type: String,
       enum: [
-        "extra_profile_edit",
-        "one_premium_room_creation",
-        "temporary_premium_access",
-        "customer_support",
+        "profile_image_edit",
+        "premium_room_creation",
+        "3d_premium_access",
+        "3d_premium_access",
         "fast_customer_support",
+        "add_room_favorites",
+        "chat_bot_access"
       ],
       required: true,
     },
@@ -43,6 +45,3 @@ const RewardSchema = new Schema(
 );
 
 export const Reward = mongoose.model<IReward>("Reward", RewardSchema);
-
-
-

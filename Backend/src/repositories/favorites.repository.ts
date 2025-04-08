@@ -8,7 +8,7 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
   async findFavorites(
     userId: string,
     roomId: string
-  ): Promise<IFavorites | null> { 
+  ): Promise<IFavorites | null> {
     try {
       return await Favorites.findOne({ user: userId, roomId });
     } catch (error) {
@@ -49,8 +49,8 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
   async addRoomToFavorites(userId: string, roomId: string): Promise<boolean> {
     try {
       const favorites = await Favorites.find({ user: userId });
-      if (favorites.length >= 5) {
-        throw new Error("Already added 5 rooms");
+      if (favorites.length >= 10) {
+        throw new Error("Already added 10 rooms");
       }
       await Favorites.create({ user: userId, roomId });
       return true;
@@ -67,6 +67,4 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
       throw error;
     }
   }
-
-
 }

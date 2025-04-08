@@ -6,11 +6,14 @@ import { ReqReward } from "@/types";
 import { validateRewardSchema } from "@/validation/rewardSchema";
 
 const benefitOptions = [
-  { label: "Extra profile edit", value: "extra_profile_edit" },
-  { label: "One premium room creation", value: "one_premium_room_creation" },
-  { label: "Temperory premium access", value: "temporary_premium_access" },
+  { label: "Profile image edit", value: "profile_image_edit" },
+  { label: "premium room creation", value: "premium_room_creation" },
+  { label: "3 day premium access", value: "3d_premium_access" },
+  { label: "Chat bot access access from profile", value: "chat_bot_access" },
+  { label: "Add room to favorites", value: "add_room_favorites" },
   { label: "Fast customer support", value: "fast_customer_support" },
 ];
+
 const CreateReward = () => {
   const {
     register,

@@ -34,6 +34,8 @@ export type verifyUserProfileSchemaType = {
   mobileNumber?: string;
   streak?:number;
   streakClaimDate?:Date;
+  isVerified?:boolean;
+  isChatBotAuthorise?:boolean;
 };
 
 export type axiosResponse = {

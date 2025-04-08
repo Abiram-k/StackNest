@@ -13,6 +13,7 @@ const DailyChallengePage = lazy(
 const Favourites = lazy(() => import("@/pages/user/pages/Favorites"));
 const Leaderboard = lazy(() => import("@/pages/user/pages/Leaderboard"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
+const PaymentListPage = lazy(() => import("@/pages/user/pages/PaymentList"));
 const SingleFeed = lazy(() => import("@/pages/user/pages/SingleFeed"));
 const Highlights = lazy(() => import("@/pages/user/pages/Highlights"));
 const PremiumPlans = lazy(() => import("@/pages/user/pages/PremiumPlans"));
@@ -64,6 +65,7 @@ export const userRoutes: RouteObject[] = [
           { path: "stats/rewards", element: <RewardsPage /> },
           { path: "settings", element: <SettingsPage /> },
           { path: "premium-plans", element: <PremiumPlans /> },
+          { path: "premium-plans/:planId/payment", element: <PaymentListPage /> },
           { path: "my-feeds", element: <MyFeeds /> },
           { path: "my-feed/:feedId/edit", element: <UpdateFeed /> },
           { path: "feed/upload", element: <CreateFeed /> },

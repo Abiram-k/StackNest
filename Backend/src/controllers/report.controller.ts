@@ -27,4 +27,62 @@ export class ReportController implements IReportController {
       next(error);
     }
   }
+
+  async getAllReports(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const filter = String(req.query.filter) || "";
+      const sort = String(req.query.sort) || "";
+      const page = Number(req.query.page) || 0;
+      const limit = Number(req.query.limit) || 0;
+      const { reports, totalPages } = await this._reportService.getAllReports(
+        filter,
+        sort,
+        page,
+        limit
+      );
+      res.status(HttpStatus.OK).json({
+        message: "Reports fetched",
+        success: true,
+        reports,
+        totalPages,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async resolveReport(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { reportId } = req.body;
+      await this._reportService.resolveReport(reportId);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "Successfully resolved report", success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async rejectReport(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { reportId } = req.body;
+      await this._reportService.rejectReport(reportId);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "Successfully rejected report", success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

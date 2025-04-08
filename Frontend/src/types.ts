@@ -136,6 +136,15 @@ export interface PremiumFormType {
   benefit5: string;
   benefit6: string;
 }
+export type RewardBenefitsT =
+  | "profile_image_edit"
+  | "premium_room_creation"
+  | "3d_premium_access"
+  | "fast_customer_support"
+  | "add_room_favorites"
+  | "chat_bot_access";
+
+export type ReportTypeT = "user" | "room" | "feed" | "general";
 
 export interface ResBenefit {
   _id: string;
@@ -151,9 +160,22 @@ export interface ReqBenefits {
 
 export interface ReqReport {
   reportedEntity: string;
-  reportType: "user" | "room" | "feed" | "general";
+  reportType: ReportTypeT;
   reason: string;
   message?: string;
+}
+export interface ResReport {
+  _id: string;
+  userName: string;
+  reportedAt: Date;
+  userAvatar: string;
+  type: string;
+  reportedEntityId: string;
+  status:string;
+  createdAt:string;
+  reason: string;
+  message: string;
+  priority: string;
 }
 
 export interface ResReward {
@@ -161,11 +183,7 @@ export interface ResReward {
   name: string;
   description: string;
   points_cost: number;
-  benefit_key:
-    | "extra_profile_edit"
-    | "one_premium_room_creation"
-    | "temporary_premium_access"
-    | "fast_customer_support";
+  benefit_key: RewardBenefitsT;
   type: "authorization" | "discount" | "bonus" | "feature" | "custom";
   isActive: boolean;
   createdAt?: Date;

@@ -433,13 +433,7 @@ export class FeedService implements IFeedService {
   ): Promise<boolean> {
     try {
       let scheduledDate: Date | null = null;
-      // if (data.scheduledAt) {
-      //   const localDate = new Date(data.scheduledAt);
-      //   const utcDate = new Date(
-      //     localDate.getTime() - localDate.getTimezoneOffset() * 60000
-      //   );
-      //   scheduledDate = utcDate.toISOString();
-      // }
+
       if (data.scheduledAt) {
         scheduledDate = new Date(data.scheduledAt);
       }

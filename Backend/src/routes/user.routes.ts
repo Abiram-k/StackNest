@@ -2,6 +2,7 @@ import express from "express";
 import {
   favoritesController,
   feedController,
+  paymentController,
   reportController,
   userBannerController,
   userChallengeController,
@@ -180,5 +181,9 @@ router.get(
 );
 router.post("/reward/claim",userRewardController.claimReward.bind(userRewardController));
 router.get("/reward/claim",userRewardController.getclaimedRewards.bind(userRewardController));
+
+// <<<<<<<<<<<<<<<<<<<<<<<<<< PAYMENTS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+router.post("/payment/create-paypal-order",paymentController.createPaypalOrder.bind(paymentController))
+router.post("/payment/capture-paypal-order",paymentController.capturePaypalPayment.bind(paymentController))
 
 export default router;

@@ -2,5 +2,13 @@ export interface BenefitResDto {
   _id: string;
   name: string;
   description: string;
-  isActive:boolean
+  isActive: boolean;
 }
+
+export type RewardBenefitsT =
+  | "profile_image_edit"
+  | "premium_room_creation"
+  | "3d_premium_access"
+  | "fast_customer_support"
+  | "add_room_favorites"
+  | "chat_bot_access";

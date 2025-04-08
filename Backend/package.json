@@ -10,7 +10,8 @@
   },
   "author": "Abiram",
   "license": "ISC",
-  "dependencies": {
+  "dependencies": { 
+    "@paypal/checkout-server-sdk": "^1.0.3",
     "@types/socket.io": "^3.0.2",
     "axios": "^1.8.0",
     "bcrypt": "^5.1.1",
@@ -55,6 +56,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/passport": "^1.0.17",
     "@types/passport-github2": "^1.2.9",
+    "@types/paypal__checkout-server-sdk": "^1.0.8",
     "@types/web-push": "^3.6.4",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",

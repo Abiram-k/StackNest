@@ -9,6 +9,7 @@
   "author": "Abiram k",
   "license": "ISC",
   "dependencies": {
+    "@paypal/react-paypal-js": "^8.8.2",
     "mediasoup-client": "^3.9.5"
   }
 }

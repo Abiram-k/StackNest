@@ -20,7 +20,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
 import { useReport } from "@/hooks/user/userProfile/useReport";
-import { ReqReport } from "@/types";
+import { ReportTypeT, ReqReport } from "@/types";
 
 const reportReasons = [
   "Inappropriate content",
@@ -34,7 +34,7 @@ const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 interface ReportModalPropType {
   entityId: string;
-  type: "user" | "room" | "feed" | "general";
+  type:ReportTypeT;
 }
 export default function ReportModal({ entityId, type }: ReportModalPropType) {
   const [isLoading, setIsLoading] = useState(false);

@@ -10,9 +10,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const benefitOptions = [
-  { label: "Extra profile edit", value: "extra_profile_edit" },
-  { label: "One premium room creation", value: "one_premium_room_creation" },
-  { label: "Temperory premium access", value: "temporary_premium_access" },
+  { label: "Profile image edit", value: "profile_image_edit" },
+  { label: "Premium room creation", value: "premium_room_creation" },
+  { label: "Add room to favorites", value: "add_room_favorites" },
+  { label: "Chat bot access access from profile", value: "chat_bot_access" },
+  { label: "3 day premium access", value: "3d_premium_access" },
   { label: "Fast customer support", value: "fast_customer_support" },
 ];
 
@@ -44,8 +46,7 @@ const UpdateReward = () => {
     rewardId!
   );
 
-  const { mutate: updateMutate, isPending: updatePending } =
-    useUpdateReward();
+  const { mutate: updateMutate, isPending: updatePending } = useUpdateReward();
 
   useEffect(() => {
     reset(rewardData?.reward);

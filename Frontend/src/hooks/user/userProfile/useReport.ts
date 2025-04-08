@@ -1,12 +1,12 @@
 import { HttpService } from "@/api/httpService";
 import { UserProfileService } from "@/api/user/userProfileService";
 import { useSocket } from "@/lib/socket";
-import { ReqReport } from "@/types";
+import { ReportTypeT, ReqReport } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-export const useReport = (type: "user" | "room" |"feed" | "general",entityId:string) => {
+export const useReport = (type: ReportTypeT,entityId:string) => {
   const httpService = new HttpService();
   const userService = new UserProfileService(httpService);
   const socket = useSocket();
