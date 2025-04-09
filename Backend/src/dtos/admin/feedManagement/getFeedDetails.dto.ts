@@ -3,6 +3,7 @@ interface IUserDTO {
   name: string;
   email: string;
   avatar: string;
+  isVerified:boolean
 }
 
 export interface ICommentDTO {

@@ -46,9 +46,9 @@ const UpdateFeed = () => {
   const { data: selectedFeedData, isPending } = useGetSelectedFeed(feedId);
 
   useEffect(() => {
-    reset(selectedFeedData?.selectedFeed);
-    setDefaultMedia(selectedFeedData?.selectedFeed.media || "");
-  }, [selectedFeedData?.selectedFeed]);
+    reset(selectedFeedData?.feed);
+    setDefaultMedia(selectedFeedData?.feed?.media || "");
+  }, [selectedFeedData?.feed]);
 
   const handleAddPost = async (data: FeedReqType) => {
     try {

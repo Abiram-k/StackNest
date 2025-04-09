@@ -6,7 +6,7 @@ const initializeSocket = (io: Server) => {
   io.use(socketAuth);   
 
   io.on("connection", (socket) => {
-    console.log("User connected:", socket.id);
+    // console.log("User connected:", socket.id);
  
     registerRoomEvents(io, socket);
   

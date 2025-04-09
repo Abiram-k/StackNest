@@ -105,9 +105,11 @@ export class UserProfileService implements IUserProfileService {
       streak: user.streak,
       streakClaimDate: user.streakClaimDate,
       isVerified: user.isVerified,
-      isChatBotAuthorise: user.rewards.some(
-        (reward) => reward.benefitKey == "chat_bot_access"
-      ),
+      isChatBotAuthorise:
+        user.rewards.some((reward) => reward.benefitKey == "chat_bot_access") ||
+        user.premiumBenefits?.some((benefit) =>
+          benefit.benefitKeys.includes("chat_bot_access")
+        ),
     };
     return data;
   }
@@ -117,15 +119,19 @@ export class UserProfileService implements IUserProfileService {
     if (user && user.email != data.email)
       throw new Error("User name already exist");
 
-    const isAuthorisedAvatarEdit = user?.rewards?.some(
+    const isAuthorisedEditViaPoints = user?.rewards?.some(
       (reward) => reward.benefitKey == "profile_image_edit"
     );
-    if (!isAuthorisedAvatarEdit) {
+    const isAuthorisedEditViaPremium = user?.premiumBenefits?.some((benefit) =>
+      benefit.benefitKeys.includes("profile_image_edit")
+    );
+
+    if (!isAuthorisedEditViaPoints && !isAuthorisedEditViaPremium) {
       delete data.avatar;
     }
     await this._baseRepo.findByIdAndUpdate(id, data);
 
-    if (!isAuthorisedAvatarEdit)
+    if (!isAuthorisedEditViaPoints && !isAuthorisedEditViaPremium)
       throw createHttpError(
         HttpStatus.BAD_REQUEST,
         "Premium Feature: Image can't upload!"
@@ -165,7 +171,7 @@ export class UserProfileService implements IUserProfileService {
         timeDifferenceMs / (1000 * 60 * 60 * 24)
       );
 
-      if (daysDifference > 1) {
+      if (daysDifference > 1 && user.streak > 0) {
         await sendStreakMissedMail(user.email, user.userName);
         await this._baseRepo.resetCheckin(userId);
         return null;

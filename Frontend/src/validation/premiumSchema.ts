@@ -21,6 +21,10 @@ export const validatePremiumSchema = yup.object({
     .number()
     .required("Period is required")
     .positive("Period should be positive number"),
+  willExpireInDays: yup
+    .number()
+    .required("Period is required")
+    .positive("Period should be positive number"),
   discountAmount: yup
     .number()
     .required("Discount amount is required")

@@ -25,8 +25,9 @@ export class PremiumService implements IPremiumService {
         _id: String(plan._id),
         title: plan.title,
         description: plan.description,
-        isExpired:plan.isExpired,
+        isExpired: plan.isExpired,
         discountAmount: plan.discountAmount,
+        willExpireInDays: plan.willExpireInDays,
         periodInDays: plan.periodInDays,
         regularAmount: plan.regularAmount,
         benefits: plan.benefits,
@@ -40,15 +41,16 @@ export class PremiumService implements IPremiumService {
     }
   }
 
-  async getListedPremium(): Promise<PremiumResDto[]> {
+  async getListedPremium(userId:string): Promise<PremiumResDto[]> {
     try {
-      const listedPlans = await this._premiumRepo.getListedPremium()
+      const listedPlans = await this._premiumRepo.getListedPremium(userId);
       const formattedData: PremiumResDto[] = listedPlans.map((plan) => ({
         _id: String(plan._id),
         title: plan.title,
         description: plan.description,
         discountAmount: plan.discountAmount,
-        isExpired:plan.isExpired,
+        willExpireInDays: plan.willExpireInDays,
+        isExpired: plan.isExpired,
         periodInDays: plan.periodInDays,
         regularAmount: plan.regularAmount,
         benefits: plan.benefits,
@@ -71,7 +73,8 @@ export class PremiumService implements IPremiumService {
         title: premiumPlan.title,
         description: premiumPlan.description,
         discountAmount: premiumPlan.discountAmount,
-        isExpired:premiumPlan.isExpired,
+        willExpireInDays: premiumPlan.willExpireInDays,
+        isExpired: premiumPlan.isExpired,
         regularAmount: premiumPlan.regularAmount,
         periodInDays: premiumPlan.periodInDays,
         benefits: premiumPlan.benefits,

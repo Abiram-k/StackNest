@@ -29,20 +29,23 @@ export class ReportRepository implements IReportRepository<IReport> {
 
       if (filter == FiterOptions.HighPriority) {
         filterQuery.priority = "high";
+        filterQuery.status = { $eq: "pending" };
       } else if (filter == FiterOptions.MediumPriority) {
         filterQuery.priority = "medium";
+        filterQuery.status = { $eq: "pending" };
       } else if (filter == FiterOptions.LowPriority) {
         filterQuery.priority = "low";
+        filterQuery.status = { $eq: "pending" };
       } else if (filter == FiterOptions.Pending) {
         filterQuery.status = "pending";
       } else if (filter == FiterOptions.Rejected) {
-        filterQuery.status = "reviewed";
-      } else if (filter == FiterOptions.Resolved) {
         filterQuery.status = "dismissed";
+      } else if (filter == FiterOptions.Resolved) {
+        filterQuery.status = "reviewed";
       }
       const skip = (page - 1) * limit;
 
-      sortQuery.createdAt = sort === SortOptions.Latest ? -1 : 1;
+      sortQuery.createdAt = sort === SortOptions.Oldest ? 1 : -1;
 
       const totalDocuments = await ReportModel.countDocuments(filterQuery);
 

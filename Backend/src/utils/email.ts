@@ -522,3 +522,48 @@ Stack Nest Team`,
 
   await transporter.sendMail(mailOptions);
 };
+
+
+export const premiumEndedMail = async (email?: string, username?: string) => {
+  if (!email) return;
+
+  const mailOptions = {
+    from: "Stack Nest Team <no-reply@stacknest.com>",
+    to: email,
+    subject: "💡 Your Premium Plan Has Ended",
+    text: `Hello ${username || ''},
+
+Your StackNest premium subscription has ended. To continue enjoying exclusive benefits like priority support, premium features, and early access to new tools, please renew your subscription.
+
+We appreciate your support and look forward to having you back as a premium member!
+
+Best regards,  
+Stack Nest Team`,
+
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+        <h2 style="color: #f59e0b; text-align: center;">💡 Premium Ended</h2>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          Hello${username ? ` <strong>${username}</strong>,` : ''} your premium plan has ended.
+        </p>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          You no longer have access to premium-only features such as early access, advanced analytics, and exclusive content.
+        </p>
+        <p style="font-size: 16px; color: #333; text-align: center;">
+          To continue enjoying these benefits, please consider renewing your subscription.
+        </p>
+        <div style="text-align: center; margin: 20px 0;">
+          <a href="${process.env.CLIENT_URL}/user/profile/premium-plans" style="background-color: #f59e0b; color: #fff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+            Renew Premium
+          </a>
+        </div>
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />
+        <p style="text-align: center; font-size: 12px; color: #777;">
+          ⚡ <strong>StackNest</strong> — Elevate your developer journey.
+        </p>
+      </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};

@@ -89,6 +89,7 @@ export type FeedResType = {
   userId: {
     userName: string;
     avatar: string;
+    isVerified: boolean;
   };
   uploadedAt: string;
   title: string;
@@ -108,6 +109,7 @@ export interface ResPremium {
   discountAmount: number;
   isExpired: boolean;
   periodInDays: number;
+  willExpireInDays: number;
   benefits: string[];
   isListed: boolean;
   createdAt: Date;
@@ -121,6 +123,7 @@ export interface ReqPremium {
   discountAmount: number;
   benefits: string[];
   periodInDays: number;
+  willExpireInDays: number;
 }
 
 export interface PremiumFormType {
@@ -129,6 +132,7 @@ export interface PremiumFormType {
   regularAmount: number;
   discountAmount: number;
   periodInDays: number;
+  willExpireInDays: number;
   benefit1: string;
   benefit2: string;
   benefit3: string;
@@ -171,8 +175,8 @@ export interface ResReport {
   userAvatar: string;
   type: string;
   reportedEntityId: string;
-  status:string;
-  createdAt:string;
+  status: string;
+  createdAt: string;
   reason: string;
   message: string;
   priority: string;

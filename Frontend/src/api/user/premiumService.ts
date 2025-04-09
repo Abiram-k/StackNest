@@ -4,6 +4,9 @@ import { HttpService } from "../httpService";
 type GetAllPremiumType = axiosResponse & {
   premiumPlans: ResPremium[];
 };
+type GetSelectedPremiumType = axiosResponse & {
+  premiumPlan: ResPremium;
+};
 
 export class PremiumService {
   private _httpService: HttpService;
@@ -12,5 +15,8 @@ export class PremiumService {
   }
   async getListedPremium(): Promise<GetAllPremiumType> {
     return await this._httpService.get("/users/premium-plans");
+  }
+  async getSelectedPremium(planId: string): Promise<GetSelectedPremiumType> {
+    return await this._httpService.get(`/users/premium-plan/${planId}`);
   }
 }

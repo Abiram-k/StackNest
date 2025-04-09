@@ -12,9 +12,7 @@ const PremiumPlans = () => {
       {fetchingData && <Spinner />}
       <div className="flex-1">
         <div className="max-w-3xl mx-auto py-16 px-4">
-          <h1 className="text-2xl font-bold mb-8 text-center">
-            Premium Plans
-          </h1>
+          <h1 className="text-2xl font-bold mb-8 text-center">Premium Plans</h1>
           <div className="container mx-auto px-4 shadow-md py-12">
             {premiumPlansData?.premiumPlans.length ? (
               <div className="flex flex-col md:flex-row md:flex-wrap gap-6 justify-center">
@@ -24,7 +22,7 @@ const PremiumPlans = () => {
               </div>
             ) : (
               <FallBackTable
-                mainTitle="No plans are there"
+                mainTitle="No latest plans are there!"
                 subTitle="We will notify once updated"
               />
             )}

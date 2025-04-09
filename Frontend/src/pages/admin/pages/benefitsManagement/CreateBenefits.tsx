@@ -5,6 +5,16 @@ import { useVerifyBenefitForm } from "@/hooks/validation/useBenefitForm";
 import { ReqBenefits } from "@/types";
 import { validateBenefitSchema } from "@/validation/benefitSchema";
 
+const benefitOptions = [
+  { label: "Premium_badge", value: "premium_badge" },
+  { label: "Profile image edit", value: "profile_image_edit" },
+  { label: "premium room creation", value: "premium_room_creation" },
+  { label: "Chat bot access access from profile", value: "chat_bot_access" },
+  { label: "Unlimited room creation", value: "unlimited_room_creation" },
+  { label: "Add room to favorites", value: "add_room_favorites" },
+  { label: "Fast customer support", value: "fast_customer_support" },
+];
+
 const CreateBenefits = () => {
   const {
     register,
@@ -19,8 +29,7 @@ const CreateBenefits = () => {
     },
   });
 
-  const { mutate, isPending } = useCreateBenefits(); 
-  
+  const { mutate, isPending } = useCreateBenefits();
 
   const handleAddBenefits = (data: ReqBenefits) => {
     mutate(data);
@@ -28,7 +37,7 @@ const CreateBenefits = () => {
 
   return (
     <div className="flex h-screen dark:bg-black w-full">
-      {(isPending ) && <Spinner />}
+      {isPending && <Spinner />}
       <main className="flex-1 p-8  w-full">
         <h1 className="text-2xl font-bold mb-8 border-b pb-2">
           Add New Benefit
@@ -46,8 +55,8 @@ const CreateBenefits = () => {
                   {
                     name: "name",
                     label: "Name:",
-                    type: "text",
-                    placeholder: "Enter name ",
+                    type: "select",
+                    options: benefitOptions.map((benefit) => benefit),
                     setValue,
                   },
                   {

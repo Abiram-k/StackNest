@@ -90,9 +90,13 @@ router.get(
 );
 
 // <<<<<<<<<<<<<<<<<<<<<<<< PREMIUM-PLANS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-router.get(
+router.get( 
   "/premium-plans",
   userPremiumController.getAllListedPremium.bind(userPremiumController)
+);
+router.get(
+  "/premium-plan/:planId",
+  userPremiumController.getSelectedPremium.bind(userPremiumController)
 );
 
 // <<<<<<<<<<<<<<<<<<<<<<<< Challenge >>>>>>>>>>>>>>>>>>>>>>>>>>>>

@@ -4,6 +4,7 @@ import { RouteObject } from "react-router-dom";
 import ProtectHome from "@/protectedRoutes/user/ProtectHome";
 import RewardsPage from "@/pages/user/pages/RewardsPage";
 
+const PaymentSuccess = lazy(() => import("@/pages/user/pages/PaymentSuccess"));
 const VideoConference = lazy(
   () => import("@/pages/user/pages/VideoConference")
 );
@@ -64,8 +65,18 @@ export const userRoutes: RouteObject[] = [
           },
           { path: "stats/rewards", element: <RewardsPage /> },
           { path: "settings", element: <SettingsPage /> },
-          { path: "premium-plans", element: <PremiumPlans /> },
-          { path: "premium-plans/:planId/payment", element: <PaymentListPage /> },
+          {
+            path: "premium-plans",
+             element: <PremiumPlans />
+          },
+          {
+            path: "premium-plans/:planId/payment",
+            element: <PaymentListPage />,
+          },
+          {
+            path: "premium-plans/payment/:planId/success",
+            element: <PaymentSuccess />,
+          },
           { path: "my-feeds", element: <MyFeeds /> },
           { path: "my-feed/:feedId/edit", element: <UpdateFeed /> },
           { path: "feed/upload", element: <CreateFeed /> },

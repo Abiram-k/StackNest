@@ -5,7 +5,7 @@ type MyFeedsType = axiosResponse & {
   myFeeds: FeedResType[];
 };
 type GetSelectedFeedType = axiosResponse & {
-  selectedFeed: {
+  feed: {
     media?: string;
     content: string;
     title: string;
@@ -18,6 +18,7 @@ type GetAvailableFeedsType = axiosResponse & {
     userId: {
       userName: string;
       avatar: string;
+      isVerified: boolean;
     };
     uploadedAt: string;
     title: string;
@@ -90,6 +91,8 @@ type GetSingleFeedsType = axiosResponse & {
     userId: {
       userName: string;
       avatar: string;
+      isVerified: boolean,
+
     };
     uploadedAt: string;
     title: string;
@@ -115,6 +118,7 @@ type ResCommentType = axiosResponse & {
     userId: {
       userName: string;
       avatar: string;
+      isVerified: boolean;
     };
     text: string;
     replyCount: number;

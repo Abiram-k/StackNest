@@ -3,6 +3,7 @@ export interface ResCommentDTO {
   userId: {
     userName: string;
     avatar: string;
+    isVerified:boolean
   };
   text: string;
   replies: ResCommentDTO[];

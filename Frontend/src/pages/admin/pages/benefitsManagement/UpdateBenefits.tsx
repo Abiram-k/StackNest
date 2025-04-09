@@ -5,9 +5,19 @@ import { useUpdateBenefits } from "@/hooks/admin/benefitsManagement/useUpdateBen
 import { useVerifyBenefitForm } from "@/hooks/validation/useBenefitForm";
 import { ReqBenefits } from "@/types";
 import { validateBenefitSchema } from "@/validation/benefitSchema";
-import  { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+
+const benefitOptions = [
+  { label: "Premium_badge", value: "premium_badge" },
+  { label: "Profile image edit", value: "profile_image_edit" },
+  { label: "premium room creation", value: "premium_room_creation" },
+  { label: "Chat bot access access from profile", value: "chat_bot_access" },
+  { label: "Unlimited room creation", value: "unlimited_room_creation" },
+  { label: "Add room to favorites", value: "add_room_favorites" },
+  { label: "Fast customer support", value: "fast_customer_support" },
+];
 
 const UpdateBenefits = () => {
   const {
@@ -65,8 +75,8 @@ const UpdateBenefits = () => {
                   {
                     name: "name",
                     label: "Name:",
-                    type: "text",
-                    placeholder: "Enter name ",
+                    type: "select",
+                    options: benefitOptions.map((benefit) => benefit),
                     setValue,
                   },
                   {

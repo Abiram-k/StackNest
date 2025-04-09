@@ -6,7 +6,7 @@ interface PushSubscription {
     p256dh: string;
     auth: string;
   };
-} 
+}
 export interface IUser extends Document {
   _id: Types.ObjectId;
   googleId: string;
@@ -27,7 +27,18 @@ export interface IUser extends Document {
   failedLoginAttempts: number;
   challengePoints: number;
   lastLogin: Date;
-  rewards: { rewardId: Types.ObjectId; benefitKey: string; redeemedAt: Date }[];
+  rewards: {
+    rewardId: Types.ObjectId;
+    benefitKey: string;
+    redeemedAt: Date;
+    isExpired: boolean;
+  }[];
+  premiumBenefits: {
+    planId: Types.ObjectId;
+    benefitKeys: [string];
+    redeemedAt: Date;
+    isExpired: boolean;
+  }[];
   friends: string[];
   isBlocked: boolean;
   blockedUntil: Date;

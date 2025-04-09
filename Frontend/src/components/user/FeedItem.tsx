@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  CheckCircle2,
   Eye,
   Heart,
   MessageSquare,
-  Pause,
   Pencil,
-  Play,
   Share2,
   Trash2,
-  Volume2,
-  VolumeX,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -28,6 +25,7 @@ type CommentType = {
   userId: {
     userName: string;
     avatar: string;
+    isVerified: boolean;
   };
   text: string;
   replyCount?: number;
@@ -62,7 +60,6 @@ export default function FeedItem({
   const [liked, setLiked] = useState(isLikedFeed);
   const [likeCount, setLikeCount] = useState(likes);
   const [isMuted, setIsMuted] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [newComment, setNewComment] = useState("");
   const [feedComments, setFeedComments] = useState<CommentType[]>();
@@ -114,15 +111,18 @@ export default function FeedItem({
       const newCommentObj: CommentType = {
         id: Math.random().toString(),
         userId: {
-          userName: "You",
+          isVerified: userId.isVerified,
+
+          userName: userId.userName || "You",
           avatar:
+            userId.avatar ||
             "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
         },
         text: newComment,
         replies: [],
         createdAt: new Date().toISOString(),
       };
-      // setFeedComments((prev) => (prev ? [...prev, newCommentObj] : prev));
+      setFeedComments((prev) => (prev ? [...prev, newCommentObj] : prev));
       postCommentMutate({ feedId, parentId: null, comment: newComment });
       setNewComment("");
     }
@@ -132,8 +132,10 @@ export default function FeedItem({
     const newReply: CommentType = {
       id: Math.random().toString(),
       userId: {
-        userName: "You",
+        isVerified: userId.isVerified,
+        userName: userId.userName || "You",
         avatar:
+          userId.avatar ||
           "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
       },
       text,
@@ -191,24 +193,27 @@ export default function FeedItem({
           </Avatar>
 
           <div className="flex-1">
-            <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
-              {userId.userName}
-            </h3>
+            <div className="flex gap-2  items-center">
+              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                {userId.userName}
+              </h3>
+              {userId.isVerified && (
+                <span>
+                  <CheckCircle2 className="w-5 h-5 text-blue-600 bg-white rounded-full" />
+                </span>
+              )}
+            </div>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               {uploadedAt}
             </p>
           </div>
         </div>
-
         {/* Views and Actions */}
-        <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
+        <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto mb-2">
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
             <Eye className="h-4 w-4 mr-1" />
             <span className="font-medium">{viewsCount} views</span>
           </div>
-          {!handleEdit && !handleDelete && (
-            <ReportModal entityId={feedId} type="feed" />
-          )}
 
           <div className="flex items-center gap-2">
             {isBlocked && (
@@ -243,6 +248,9 @@ export default function FeedItem({
                   <Trash2 className="h-4 w-4" />
                   <span className="hidden sm:inline">Delete</span>
                 </Button>
+              )}
+              {!handleEdit && !handleDelete && (
+                <ReportModal entityId={feedId} type="feed" />
               )}
             </div>
           </div>
@@ -284,30 +292,6 @@ export default function FeedItem({
                     <source src={media} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
-                  <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {/* <Button
-                      onClick={togglePlayPause}
-                      className="bg-gray-900/70 text-white backdrop-blur-sm px-3 py-1.5 rounded-lg gap-2 hover:bg-gray-800/80"
-                      size="sm"
-                    >
-                      {isPlaying ? (
-                        <Pause className="h-4 w-4" />
-                      ) : (
-                        <Play className="h-4 w-4" />
-                      )}
-                    </Button>
-                    <Button
-                      onClick={toggleMute}
-                      className="bg-gray-900/70 text-white backdrop-blur-sm px-3 py-1.5 rounded-lg gap-2 hover:bg-gray-800/80"
-                      size="sm"
-                    >
-                      {isMuted ? (
-                        <VolumeX className="h-4 w-4" />
-                      ) : (
-                        <Volume2 className="h-4 w-4" />
-                      )}
-                    </Button> */}
-                  </div>
                 </div>
               ) : (
                 <div className="flex justify-center items-center w-full h-full">

@@ -52,9 +52,10 @@ export class ReportService implements IReportService {
         data.reportedEntity = room?._id || data.reportedEntity;
       }
       const reporter = await this._userRepo.findById(String(data.reporterId));
-      const isPremiumUser = reporter?.rewards.some(
-        (reward) => reward.benefitKey == "fast_customer_support"
-      );
+      const isPremiumUser =
+        reporter?.rewards.some(
+          (reward) => reward.benefitKey == "fast_customer_support"
+        ) || reporter?.isVerified;
       let priority = "";
       if (isPremiumUser) priority = "high";
       await this._reportRepo.createReport(data, priority);

@@ -22,21 +22,21 @@ const PremiumAddCard: FC = () => {
         <ul className="space-y-2 mb-4">
           <li className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <Check className="h-4 w-4 mr-2 text-[#7848F4] dark:text-[#5A32B8]" />
-            <span>Ad-free experience</span>
+            <span>Premium room creation</span>
           </li>
           <li className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <Check className="h-4 w-4 mr-2 text-[#7848F4] dark:text-[#5A32B8]" />
-            <span>Exclusive content</span>
+            <span>Prior customer support</span>
           </li>
           <li className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <Check className="h-4 w-4 mr-2 text-[#7848F4] dark:text-[#5A32B8]" />
-            <span>Priority support</span>
+            <span>Premium badge</span>
           </li>
         </ul>
 
         <div className="flex items-baseline mb-4">
-          <span className="text-2xl font-bold text-gray-900 dark:text-white">
-            $9.99
+          <span className="text-xl font-bold text-gray-800 dark:text-white">
+          ₹579.00
           </span>
           <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">
             /month

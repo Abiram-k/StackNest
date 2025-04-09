@@ -28,7 +28,7 @@ const UpdatePremium = () => {
       benefit3: "",
       benefit4: "",
       benefit5: "",
-      periodInDays:0,
+      periodInDays: 0,
     },
   });
   const { premiumId } = useParams<{ premiumId: string }>();
@@ -43,9 +43,22 @@ const UpdatePremium = () => {
   useEffect(() => {
     if (!selectedData?.premiumPlan) return;
 
-    const { title, description, regularAmount, discountAmount,periodInDays } =
-      selectedData.premiumPlan;
-    reset({ title, description, regularAmount, discountAmount,periodInDays });
+    const {
+      title,
+      description,
+      regularAmount,
+      discountAmount,
+      periodInDays,
+      willExpireInDays,
+    } = selectedData.premiumPlan;
+    reset({
+      title,
+      description,
+      regularAmount,
+      discountAmount,
+      periodInDays,
+      willExpireInDays,
+    });
 
     selectedData.premiumPlan?.benefits?.forEach((benefit, index) => {
       if (index < 6) {
@@ -56,13 +69,13 @@ const UpdatePremium = () => {
   }, [selectedData?.premiumPlan]);
 
   const handleUpdatePremiumPlan = (data: PremiumFormType) => {
-    console.log("Premium Plan data: ", data);
     const formattedData: ReqPremium = {
       title: data.title,
       description: data.description,
       regularAmount: data.regularAmount,
       discountAmount: data.discountAmount,
-      periodInDays:data.periodInDays,
+      periodInDays: data.periodInDays,
+      willExpireInDays: Number(data.willExpireInDays),
       benefits: [
         data.benefit1,
         data.benefit2,
@@ -147,10 +160,10 @@ const UpdatePremium = () => {
                     defaultValue: selectedData?.premiumPlan?.benefits[2],
                     setValue,
                   },
-                  
+
                   {
                     name: "periodInDays",
-                    label: "Period: ",
+                    label: "Plan duration: ",
                     type: "number",
                     placeholder: "Enter Period (days) ...",
                     setValue,
@@ -212,6 +225,13 @@ const UpdatePremium = () => {
                       })) || []),
                     ],
                     defaultValue: selectedData?.premiumPlan?.benefits[5],
+                    setValue,
+                  },
+                  {
+                    name: "willExpireInDays",
+                    label: "List premium for : ",
+                    type: "number",
+                    placeholder: "Enter Expiry in (days) ...",
                     setValue,
                   },
                 ],

@@ -2,7 +2,6 @@ import client, {
   getOrdersCaptureRequest,
   getOrdersCreateRequest,
 } from "../config/paypal-client";
-import * as paypal from "@paypal/checkout-server-sdk";
 import { HttpStatus } from "../constants/enum.statusCode";
 import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface";
 import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
@@ -11,6 +10,7 @@ import { IPremium } from "../types/IPremium";
 import { IUser } from "../types/IUser";
 import createHttpError from "http-errors";
 import { config } from "dotenv";
+import { IPremiumHistory } from "../types/IPremiumHistory";
 config();
 
 export class PaymentService implements IPaymentService {
@@ -68,8 +68,34 @@ export class PaymentService implements IPaymentService {
       const status = capture.result.status;
 
       if (status === "COMPLETED") {
+        const planData = await this._planRepo.getPremiumById(planId);
+        if (!planData)
+          throw createHttpError(HttpStatus.NOT_FOUND, "Plan not founded");
         const user = await this._userRepo.findById(userId);
-        
+        if (!user)
+          throw createHttpError(HttpStatus.NOT_FOUND, "User not founded");
+
+        const startingDate = new Date();
+        const paymentData: IPremiumHistory = {
+          status: "active",
+          startingDate,
+          endingDate: new Date(
+            startingDate.getTime() +
+              Number(planData.periodInDays) * 24 * 60 * 60 * 1000
+          ),
+          premiumPlan: planData._id,
+        };
+
+        const benefitData: {
+          planId: string;
+          benefitKeys: string[];
+          redeemedAt: Date;
+        } = {
+          planId: planData._id,
+          benefitKeys: planData.benefits,
+          redeemedAt: startingDate,
+        };
+        await this._userRepo.subscribePremium(userId, paymentData, benefitData);
         return true;
       }
       return false;

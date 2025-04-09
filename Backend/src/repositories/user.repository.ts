@@ -6,6 +6,8 @@ import {
 } from "../interfaces/repositories/user.repository.interface";
 import { IUser } from "../types/IUser";
 import { PushSubscription } from "web-push";
+import { IPremiumHistory } from "../types/IPremiumHistory";
+import { Types } from "mongoose";
 
 export class UserBaseRepository implements IUserBaseRepository<IUser> {
   async incrementCheckin(userId: string): Promise<boolean> {
@@ -34,7 +36,6 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
     benefitKey: string
   ): Promise<void> {
     try {
-    
       const rewardData = {
         rewardId,
         benefitKey,
@@ -76,6 +77,59 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
       throw error;
     }
   }
+
+  async getAllPremiumUser(): Promise<IUser[]> {
+    try {
+      return await User.find({ isVerified: true });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async premiumExpired(
+    planId: Types.ObjectId,
+    userId: Types.ObjectId
+  ): Promise<void> {
+    try {
+      const user = await User.findByIdAndUpdate(
+        userId,
+        {
+          $pull: {
+            premiumBenefits: { planId },
+            premiumHistory: { premiumPlan: planId },
+          },
+        },
+        { new: true }
+      );
+
+      if (!user) throw new Error("Failed to update user premium");
+
+      if (user.premiumBenefits.length === 0) {
+        await User.findByIdAndUpdate(userId, { isVerified: false });
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async subscribePremium(
+    userId: string,
+    paymentData: IPremiumHistory,
+    benefitData: { planId: string; benefitKeys: string[]; redeemedAt: Date }
+  ): Promise<void> {
+    try {
+      await User.findByIdAndUpdate(userId, {
+        $push: {
+          premiumHistory: paymentData,
+          premiumBenefits: benefitData,
+        },
+        $set: { isVerified: true },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async fetchAllUserNameExceptUser(userId: string): Promise<IUser[] | null> {
     try {
       const query: any = {

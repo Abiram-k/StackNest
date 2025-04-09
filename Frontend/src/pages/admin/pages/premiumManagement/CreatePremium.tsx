@@ -24,20 +24,21 @@ const CreatePremium = () => {
       benefit3: "",
       benefit4: "",
       benefit5: "",
-      periodInDays:0,
+      periodInDays: 0,
+      willExpireInDays: 0,
     },
   });
   const { mutate: createPremiumMutate, isPending } = useCreatePremiumPlan();
   const { data: activeBenefits, isPending: fetchingBenefits } =
     useGetActiveBenefits();
   const handleAddPremiumPlan = (data: PremiumFormType) => {
-    console.log("Premium Plan data: ", data);
     const formattedData: ReqPremium = {
       title: data.title,
       description: data.description,
       regularAmount: data.regularAmount,
       discountAmount: data.discountAmount,
-      periodInDays:data.periodInDays,
+      periodInDays: data.periodInDays,
+      willExpireInDays:Number(data.willExpireInDays),
       benefits: [
         data.benefit1,
         data.benefit2,
@@ -113,7 +114,7 @@ const CreatePremium = () => {
 
                   {
                     name: "periodInDays",
-                    label: "Period: ",
+                    label: "Plan duration: ",
                     type: "number",
                     placeholder: "Enter Period (days) ...",
                     setValue,
@@ -163,6 +164,13 @@ const CreatePremium = () => {
                       value: benefit.name,
                       label: benefit.name,
                     })),
+                    setValue,
+                  },
+                  {
+                    name: "willExpireInDays",
+                    label: "List premium for : ",
+                    type: "number",
+                    placeholder: "Enter Expiry in (days) ...",
                     setValue,
                   },
                 ],

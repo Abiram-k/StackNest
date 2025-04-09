@@ -12,7 +12,7 @@ cron.schedule("* * * * *", async () => {
 
     plans.forEach(async (plan) => {
       const createdAt = new Date(plan.createdAt).getTime();
-      const durationInMs = plan.periodInDays * 24 * 60 * 60 * 1000;
+      const durationInMs = plan.willExpireInDays * 24 * 60 * 60 * 1000;
       const endTime = createdAt + durationInMs;
 
       if (now > endTime) {

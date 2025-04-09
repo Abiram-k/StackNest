@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import PayPalButton from "@/components/auth/PayPalButton";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function PaymentListPage() {
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
 
   const { planId } = useParams<{ planId: string }>();
+
+  const navigate = useNavigate();
+  if (!planId) navigate(-1);
 
   const handlePaymentSelect = (method: string) => {
     setSelectedPayment(method);

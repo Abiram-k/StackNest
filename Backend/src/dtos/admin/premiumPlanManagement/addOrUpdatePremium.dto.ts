@@ -11,6 +11,8 @@ export class AddOrUpdatePremiumDTO {
   discountAmount: number;
   @IsNumber()
   periodInDays: number;
+  @IsNumber()
+  willExpireInDays: number;
   @IsArray()
   @IsString({ each: true })
   benefits: string[];

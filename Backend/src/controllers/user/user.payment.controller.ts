@@ -37,14 +37,15 @@ export class UserPaymentController implements IUserPaymentController {
     try {
       const user = req.user as { userId: string };
       const { orderID, planId } = req.body;
-      await this._paymentService.capturePaypalPayment(
-        user.userId,
-        planId,
-        orderID
-      );
+      const isPremiumSubscribed =
+        await this._paymentService.capturePaypalPayment(
+          user.userId,
+          planId,
+          orderID
+        );
       res
         .status(HttpStatus.OK)
-        .json({ message: "Paypal payment success", success: true });
+        .json({ message: "Paypal payment success", success: isPremiumSubscribed });
     } catch (error) {
       next(error);
     }

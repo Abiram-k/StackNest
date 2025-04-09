@@ -206,9 +206,6 @@ export default function ProfilePage() {
               </Button>
 
               <div className="flex  gap-4 mb-6">
-                {formData.isVerified && (
-                  <p className="text-blue-600 text-2xl">Premium User</p>
-                )}
                 <ProfileImageUploader
                   defaultAvatar="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                   fallbackText="Profile Image"
@@ -221,9 +218,23 @@ export default function ProfilePage() {
                 />
 
                 <div>
-                  <h2 className="text-xl  font-semibold ">
-                    {formData.firstName || "no Name"}
-                  </h2>
+                  {!formData.isVerified && (
+                    <h2 className="text-xl  font-semibold ">
+                      {formData.firstName || "no Name"}{" "}
+                    </h2>
+                  )}
+                  {formData.isVerified && (
+                    <div className="flex gap-1  items-center">
+                      <h2 className="text-xl  font-semibold ">
+                        {formData.firstName || "no Name"}{" "}
+                      </h2>
+                      {formData.isVerified && (
+                        <span>
+                          <CheckCircle2 className="w-5 h-5 text-blue-600 bg-white rounded-full" />
+                        </span>
+                      )}
+                    </div>
+                  )}
                   <p className="text-gray-600 dark:text-gray-500">
                     {formData.email || "noName@gmail.com"}
                   </p>

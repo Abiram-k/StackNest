@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { toast } from "sonner";
 import { axiosInstance } from "@/api/apiSevice";
+import { useNavigate } from "react-router-dom";
 const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID;
 
 const PayPalButton = ({ planId }: { planId: string }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const createOrder = async (): Promise<string> => {
     try {
@@ -15,7 +17,6 @@ const PayPalButton = ({ planId }: { planId: string }) => {
         { planId }
       );
 
-      console.log("Resonse of create paypal order", response);
       return response.data.orderId;
     } catch (error) {
       toast.error("Failed to create order");
@@ -26,11 +27,21 @@ const PayPalButton = ({ planId }: { planId: string }) => {
 
   const onApprove = async (data: { orderID: string }): Promise<void> => {
     try {
-      await axiosInstance.post("/users/payment/capture-paypal-order", {
-        orderID: data.orderID,
-        planId,
-      });
+      const response = await axiosInstance.post(
+        "/users/payment/capture-paypal-order",
+        {
+          orderID: data.orderID,
+          planId,
+        }
+      );
       setSuccess(true);
+      console.log(response.data);
+      if (response.data.success) {
+        toast.success("Payment Sucess");
+        navigate(`/user/profile/premium-plans/payment/${planId}/success`);
+      } else {
+        toast.error("Failed to save subscription");
+      }
     } catch (err) {
       setError("Payment failed");
     }

@@ -4,6 +4,8 @@ import {
   verifyUserProfileSchemaType,
 } from "../../../../types/user";
 import { IUser } from "../../types/IUser";
+import { IPremiumHistory } from "../../types/IPremiumHistory";
+import { Types } from "mongoose";
 
 export interface IUserBaseRepository<T> {
   create(userData: Partial<T>): Promise<T>;
@@ -12,12 +14,15 @@ export interface IUserBaseRepository<T> {
     subscription: PushSubscription,
     userId: string
   ): Promise<void>;
-  claimReward(userId:string,rewardId:string,redeemPoint:number,benefitKey:string):Promise<void>;
+  claimReward(
+    userId: string,
+    rewardId: string,
+    redeemPoint: number,
+    benefitKey: string
+  ): Promise<void>;
   getStreakTableData(): Promise<T[]>;
-  getPointsTableData(): Promise<IUser[]>;
-  fetchAllUserNameExceptUser(
-    userId: string
-  ): Promise<T[] | null>;
+  getPointsTableData(): Promise<T[]>;
+  fetchAllUserNameExceptUser(userId: string): Promise<T[] | null>;
   findByEmail(email: string): Promise<T | null>;
   findByIdAndUpdate(id: string, data: any): Promise<T | null>;
   findByUserName(userName: string): Promise<T | null>;
@@ -25,9 +30,13 @@ export interface IUserBaseRepository<T> {
   incrementChallengePoint(userId: string): Promise<void>;
   getStreakCount(userId: string): Promise<number | undefined>;
   resetCheckin(userId: string): Promise<boolean>;
-
-  subscribePremium(userId:string):Promise<void>
-
+  premiumExpired(planId: Types.ObjectId, userId: Types.ObjectId): Promise<void>;
+  subscribePremium(
+    userId: string,
+    paymentData: IPremiumHistory,
+    benefitData: { planId: string; benefitKeys: string[]; redeemedAt: Date }
+  ): Promise<void>;
+  getAllPremiumUser(): Promise<T[]>;
 }
 export interface IUserAuthRepository<T> {
   updateUserWithGoogleId(email: string, googleId: string): Promise<boolean>;
@@ -35,7 +44,7 @@ export interface IUserAuthRepository<T> {
   findUserByRestToken(data: typeUserResetToken): Promise<T | null>;
 
   findByGithubId(githubId: string): Promise<T | null>;
-  createOrUpdateFromGithub(profile: Partial<IUser>): Promise<T>;
+  createOrUpdateFromGithub(profile: Partial<T>): Promise<T>;
 
   getFailedAttempts(email: string): Promise<number | undefined>;
 
@@ -106,28 +115,3 @@ export interface IUserRepository {
 
   updateLastLogin(email: string): Promise<void>;
 }
-
-// // interfaces/user.repository.interface.ts
-// export interface IUserBaseRepository<T> {
-//   create(data: Partial<T>): Promise<T>;
-//   findById(id: string): Promise<T | null>;
-//   findByEmail(email: string): Promise<T | null>;
-//   findByIdAndUpdate(id: string, data: Partial<T>): Promise<T | null>;
-// }
-
-// export interface IUserAuthRepository<T> {
-//   updateLastLogin(email: string): Promise<void>;
-//   updateFailedAttempts(email: string): Promise<T | null>;
-//   blockUserAfterFailedAttempt(email: string): Promise<T>;
-//   resetFailedAttempts(email: string): Promise<T | null>;
-// }
-
-// export interface IUserPasswordRepository<T> {
-//   setPassResetToken(email: string, resetToken: string): Promise<void>;
-//   updatePassword(email: string, password: string): Promise<void>;
-// }
-
-// export interface IUserSocialRepository<T> {
-//   findUserByGoogleId(googleId: string): Promise<T | null>;
-//   updateUserWithGoogleId(email: string, googleId: string): Promise<void>;
-// }

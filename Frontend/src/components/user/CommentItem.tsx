@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useGetReplies } from "@/hooks/feeds/useGetReplies";
-import { Trash2 } from "lucide-react";
+import { CheckCircle2, Trash2 } from "lucide-react";
 import { useRemoveComment } from "@/hooks/feeds/useRemoveComment";
 import { useGetUserComments } from "@/hooks/feeds/useGetUserComments";
 
@@ -11,6 +11,7 @@ type CommentType = {
   userId: {
     userName: string;
     avatar: string;
+    isVerified: boolean;
   };
   text: string;
   replyCount?: number;
@@ -99,8 +100,17 @@ export function CommentItem({
           <div className=" bg-gray-100 rounded-lg p-3 dark:bg-black ">
             {/* <div> */}
 
-            <div className="flex items-center gap-2">
-              <span className="font-medium">{comment.userId.userName}</span>
+            <div className="flex items-center  gap-2">
+              <div className="flex gap-2  items-center justify-center">
+                {comment.userId.isVerified && (
+                  <span>
+                    <CheckCircle2 className="w-4 h-4 text-blue-600 bg-white rounded-full" />
+                  </span>
+                )}
+                <p className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                  {comment.userId.userName}
+                </p>
+              </div>
               <span className="text-xs text-gray-500">
                 {new Date(comment.createdAt).toLocaleDateString()}
               </span>

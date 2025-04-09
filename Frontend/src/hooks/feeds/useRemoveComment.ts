@@ -16,7 +16,7 @@ export const useRemoveComment = () => {
       commentId: string;
     }) => feedService.deleteComment(feedId, commentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["replies"] });
+      queryClient.invalidateQueries({ queryKey: ["replies", true] });
       queryClient.invalidateQueries({ queryKey: ["comments"] });
       toast.success("Comment removed");
     },

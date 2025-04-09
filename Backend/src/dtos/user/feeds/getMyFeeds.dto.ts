@@ -13,6 +13,7 @@ export interface ResFeedType {
   userId: {
     userName: string;
     avatar: string;
+    isVerified:boolean
   };
   title: string;
   uploadedAt: string;

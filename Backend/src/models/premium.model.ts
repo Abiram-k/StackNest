@@ -32,10 +32,14 @@ const PremiumSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    willExpireInDays:{
+      type:Number,
+      required:true
+    },
     isExpired:{
       type:Boolean,
       default:false
-    }
+    } 
   },
   { timestamps: true }
 );

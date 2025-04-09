@@ -7,6 +7,7 @@ export interface IPremium {
   discountAmount: number;
   benefits: string[];
   isListed: boolean;
+  willExpireInDays: number;
   isExpired: boolean;
   createdAt: Date;
   updatedAt: Date;

@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 export interface IComment {
   _id: string;     
-  userId: Types.ObjectId | { userName: string; avatar: string };
+  userId: Types.ObjectId | { userName: string; avatar: string,isVerified:boolean };
   comment: string;
   parentCommentId?: Types.ObjectId | IComment | null;
   likes: Types.ObjectId[];
@@ -13,7 +13,7 @@ export interface IComment {
  
 export interface IFeed {
   _id: string;     
-  userId: Types.ObjectId | { userName: string; avatar: string,email:string };
+  userId: Types.ObjectId | { userName: string; avatar: string,email:string,isVerified:boolean };
   title: string;
   content: string;
   media?: string;

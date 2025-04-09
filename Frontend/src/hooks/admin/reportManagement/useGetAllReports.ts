@@ -21,7 +21,7 @@ export const useGetAllReports = ({
     queryKey: ["reports", filter, sort, currentPage],
     queryFn: () =>
       adminService.getAllReports(
-        `?filter=${filter}&sort=${sort}&page=${currentPage}&limit=10`
+        `?filter=${filter}&sort=${sort}&page=${currentPage}&limit=8`
       ),
   });
 };

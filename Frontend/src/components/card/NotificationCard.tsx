@@ -42,7 +42,7 @@ export default function NotificationCard({
           </div>
         )}
 
-        {status === "pending" && (
+        {status === "pending" && priority !== "high" && (
           <div className="absolute top-0 -right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
             pending
           </div>

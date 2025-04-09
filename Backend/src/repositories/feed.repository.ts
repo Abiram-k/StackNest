@@ -21,7 +21,10 @@ enum AdminSortOptions {
 export class FeedRepository implements IFeedRepository<IFeed> {
   async getFeedsByUserId(userId: Types.ObjectId): Promise<IFeed[] | null> {
     try {
-      return await Feed.find({ userId }).populate("userId", "userName avatar");
+      return await Feed.find({ userId }).populate(
+        "userId",
+        "userName avatar isVerified"
+      );
     } catch (error) {
       throw error;
     }
@@ -90,15 +93,10 @@ export class FeedRepository implements IFeedRepository<IFeed> {
       let sortQuery: any = {};
       if (filter === FilterTags.Oldest) {
         sortQuery.createdAt = 1;
-      } else if (filter === FilterTags.Latest) {
+      } else {
         sortQuery.createdAt = -1;
       }
 
-      // if (sort === SortTags.Mostliked) {
-      //   sortQuery = {
-      //     $expr: { $size: "$like" },
-      //   };
-      // }
       const skip = (page - 1) * limit;
       const feeds = await Feed.find({ isBlocked: false, isPublished: true })
         .sort(sortQuery)
@@ -177,7 +175,7 @@ export class FeedRepository implements IFeedRepository<IFeed> {
         .select(" comments -_id ")
         .populate({
           path: "comments",
-          populate: { path: "userId", select: "userName avatar" },
+          populate: { path: "userId", select: "userName avatar isVerified" },
         });
     } catch (error) {
       throw error;

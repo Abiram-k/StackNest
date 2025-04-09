@@ -1,16 +1,25 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import crypto from "crypto";
 import { IUser } from "../types/IUser";
 import { v4 as uuidv4 } from "uuid";
 
-interface PushSubscription {
-  endpoint: string;
-  keys: {
-    p256dh: string;
-    auth: string;
-  };
-}
-
+const PremiumHistorySchema = new mongoose.Schema(
+  {
+    status: {
+      type: String,
+      enum: ["active", "expired", "pending"],
+      required: true,
+    },
+    startingDate: { type: Date, required: true },
+    endingDate: { type: Date, required: true },
+    premiumPlan: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Premium",
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 const userSchema = new mongoose.Schema<IUser>(
   {
     googleId: {
@@ -112,35 +121,45 @@ const userSchema = new mongoose.Schema<IUser>(
         rewardId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Reward",
-          required: true
+          required: true,
         },
         benefitKey: {
           type: String,
-          required: true
+          required: true,
         },
         redeemedAt: {
           type: Date,
-          default: Date.now
+          default: Date.now,
         },
-      }
+        isExpired: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
+    premiumBenefits: [
+      {
+        planId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Premium",
+          required: true,
+        },
+        benefitKeys: {
+          type: [String],
+          required: true,
+        },
+        redeemedAt: {
+          type: Date,
+          default: Date.now,
+        },
+        isExpired: {
+          type: Boolean,
+          default: false,
+        },
+      },
     ],
     premiumHistory: {
-      type: [
-        {
-          status: {
-            type: String,
-            enum: ["active", "expired", "pending"],
-            required: true,
-          },
-          startingDate: { type: Date, required: true },
-          endingDate: { type: Date, required: true },
-          premiumPlan: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Premium",
-            required: true,
-          },
-        },
-      ],
+      type: [PremiumHistorySchema],
       default: [],
     },
     resetToken: { type: String, default: undefined },

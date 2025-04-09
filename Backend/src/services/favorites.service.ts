@@ -62,9 +62,13 @@ export class FavoritesService implements IFavoritesService {
     const user = await this._userBaseRepo.findById(userId);
     if (!user) throw createHttpError(HttpStatus.NOT_FOUND, "User not founded");
 
-    const isAuthorisedPremiumRoomCreation = user?.rewards.some(
-      (reward) => reward.benefitKey == "add_room_favorites"
-    );
+    const isAuthorisedPremiumRoomCreation =
+      user?.rewards.some(
+        (reward) => reward.benefitKey == "add_room_favorites"
+      ) ||
+      user?.premiumBenefits?.some((benefit) =>
+        benefit.benefitKeys.includes("add_room_favorites")
+      );
     if (!user?.isVerified && !isAuthorisedPremiumRoomCreation) {
       throw createHttpError(
         HttpStatus.BAD_REQUEST,

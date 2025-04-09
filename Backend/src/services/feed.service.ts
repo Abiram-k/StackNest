@@ -48,11 +48,16 @@ export class FeedService implements IFeedService {
       let feeds: ResFeedType[] | [];
 
       feeds = myFeeds.map((feed) => {
-        const feedUser = feed.userId as { userName: string; avatar: string };
+        const feedUser = feed.userId as {
+          userName: string;
+          avatar: string;
+          isVerified: boolean;
+        };
         return {
           userId: {
             userName: feedUser.userName,
             avatar: feedUser.avatar,
+            isVerified: feedUser.isVerified,
           },
           uploadedAt: new Date(feed.createdAt).toLocaleString("en-IN", {
             day: "2-digit",
@@ -65,6 +70,7 @@ export class FeedService implements IFeedService {
           feedId: feed._id,
           title: feed.title,
           content: feed.content,
+
           media: feed.media,
           isBlocked: feed.isBlocked,
           likes: feed.likes.length,
@@ -164,6 +170,7 @@ export class FeedService implements IFeedService {
               : {
                   userName: comment.userId.userName,
                   avatar: comment.userId.avatar,
+                  isVerified: comment.userId.isVerified,
                 };
 
           return {
@@ -207,6 +214,7 @@ export class FeedService implements IFeedService {
               : {
                   userName: comment.userId.userName,
                   avatar: comment.userId.avatar,
+                  isVerified: comment.userId.isVerified,
                 };
 
           return {
@@ -230,7 +238,11 @@ export class FeedService implements IFeedService {
     try {
       const feedData = await this._feedRepo.getFeedById(feedId);
       if (!feedData) return null;
-      const feedUser = feedData.userId as { userName: string; avatar: string };
+      const feedUser = feedData.userId as {
+        userName: string;
+        avatar: string;
+        isVerified: boolean;
+      };
       const formattedFeedData: ResFeedType = {
         comments: feedData.comments.length || 0,
         content: feedData.content,
@@ -249,6 +261,7 @@ export class FeedService implements IFeedService {
         viewsCount: feedData.viewsCount,
         media: feedData.media,
         userId: {
+          isVerified: feedUser.isVerified,
           userName: feedUser.userName,
           avatar: feedUser.avatar,
         },
@@ -277,11 +290,16 @@ export class FeedService implements IFeedService {
       const { feeds, hasMore } = isFeedsThere;
 
       const formattedFeeds: ResFeedType[] = feeds.map((feed) => {
-        const feedUser = feed.userId as { userName: string; avatar: string };
+        const feedUser = feed.userId as {
+          userName: string;
+          avatar: string;
+          isVerified: boolean;
+        };
         return {
           userId: {
             userName: feedUser.userName,
             avatar: feedUser.avatar,
+            isVerified: feedUser.isVerified,
           },
           uploadedAt: new Date(feed.createdAt).toLocaleString("en-IN", {
             day: "2-digit",
@@ -504,11 +522,16 @@ export class FeedService implements IFeedService {
       const { feeds, totalPages } = result;
 
       const formattedFeeds = feeds.map((feed) => {
-        const feedUser = feed.userId as { userName: string; avatar: string };
+        const feedUser = feed.userId as {
+          userName: string;
+          avatar: string;
+          isVerified: boolean;
+        };
         return {
           userId: {
             userName: feedUser.userName,
             avatar: feedUser.avatar,
+            isVerified: feedUser.isVerified,
           },
           uploadedAt: new Date(feed.createdAt).toLocaleString("en-IN", {
             day: "2-digit",
@@ -553,6 +576,7 @@ export class FeedService implements IFeedService {
         _id: string;
         email: string;
         isBlocked: boolean;
+        isVerified: boolean;
       };
       const mapComments = (comments: any[]): ICommentDTO[] => {
         return comments
@@ -594,6 +618,7 @@ export class FeedService implements IFeedService {
           email: feedUser.email,
           avatar: feedUser.avatar,
           isBlocked: feedUser.isBlocked,
+          isVerified: feedUser.isVerified,
         },
         title: feedDetails?.title,
         content: feedDetails?.content,

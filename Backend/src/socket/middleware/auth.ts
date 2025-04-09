@@ -19,7 +19,7 @@ export const socketAuth = async (socket: Socket, next: any) => {
     const userBaseRepository = new UserBaseRepository();
 
     const user = await userBaseRepository.findById(decoded.userId as string);
-    console.log("Email after socket auth:", user?.email);
+    // console.log("Email after socket auth:", user?.email);
     if (!user) {
       throw createHttpError(HttpStatus.NOT_FOUND, "User not found");
     }

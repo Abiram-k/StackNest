@@ -15,14 +15,32 @@ export class UserPremiumController implements IUserPremiumController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const premiumPlans =  await this._premiumService.getListedPremium();
-      res
-        .status(HttpStatus.OK)
-        .json({
-          message: "successfully fetched listed premium",
-          success: true,
-          premiumPlans
-        });
+      const { userId } = req.user as { userId: string };
+      const premiumPlans = await this._premiumService.getListedPremium(userId);
+      res.status(HttpStatus.OK).json({
+        message: "successfully fetched listed premium",
+        success: true,
+        premiumPlans,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getSelectedPremium(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { planId } = req.params;
+      console.log("Plan Id: ", planId);
+      const premiumPlan = await this._premiumService.getSelectedPremium(planId);
+      res.status(HttpStatus.OK).json({
+        message: "successfully fetched premium",
+        success: true,
+        premiumPlan,
+      });
     } catch (error) {
       next(error);
     }

@@ -27,15 +27,25 @@ export class RoomService implements IRoomService {
 
       const rooms = await this._roomRepo.findByHostId(host);
 
-      if (!hostData?.isVerified && rooms.length >= 1) {
+      const isAuthorisedForUnlimitedCreation = hostData?.premiumBenefits?.some(
+        (benefit) => benefit.benefitKeys.includes("unlimited_room_creation")
+      );
+      if (hostData?.isVerified && !isAuthorisedForUnlimitedCreation) {
         throw createHttpError(
           HttpStatus.BAD_REQUEST,
+          "Upgrade your Premium to get Unlimited room creation feature"
+        );
+      }
+      if (!isAuthorisedForUnlimitedCreation && rooms.length >= 1) {
+        throw createHttpError(
+          HttpStatus.BAD_REQUEST, 
           "Premium feature: You can only create one room at a time!"
         );
       }
       const isAuthorisedPremiumRoomCreation = hostData?.rewards.some(
         (reward) => reward.benefitKey == "premium_room_creation"
       );
+
       if (
         !hostData?.isVerified &&
         data.isPremium == "Yes" &&
