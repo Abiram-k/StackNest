@@ -48,7 +48,7 @@ export class AuthService implements IAuthService {
     } catch (error) {
       console.log(error);
       throw new Error("GitHub authentication failed");
-    } 
+    }
   }
 
   async authenticateGoogleUser(token: string) {
@@ -297,4 +297,6 @@ export class AuthService implements IAuthService {
       throw error;
     }
   }
+
+ 
 }

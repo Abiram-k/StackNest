@@ -179,11 +179,10 @@ export default function FeedItem({
       className="border-b border-gray-200 dark:border-gray-800 pb-6"
       ref={postRef}
     >
-      {/* User Info Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
         <div
           className="flex items-center gap-3 flex-1 cursor-pointer"
-          onClick={() => navigate(`/user/${userId.userName}/profile`)}
+          onClick={() => navigate(`/user/${userId.userName}/view`)}
         >
           <Avatar className="h-12 w-12 border-2 border-white ring-2 ring-primary/10 ">
             <AvatarImage src={userId.avatar} alt={userId.userName} />

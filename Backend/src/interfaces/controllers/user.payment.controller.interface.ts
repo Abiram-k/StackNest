@@ -11,4 +11,14 @@ export interface IUserPaymentController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  createStripeOrder(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  stripeWebhook(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 }

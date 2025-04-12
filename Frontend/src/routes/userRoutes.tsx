@@ -11,6 +11,7 @@ const VideoConference = lazy(
 const DailyChallengePage = lazy(
   () => import("@/pages/user/pages/DailyChallengePage")
 );
+const UserInspect = lazy(() => import("@/pages/user/pages/UserInspect"));
 const Favourites = lazy(() => import("@/pages/user/pages/Favorites"));
 const Leaderboard = lazy(() => import("@/pages/user/pages/Leaderboard"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
@@ -44,6 +45,7 @@ export const userRoutes: RouteObject[] = [
       { path: "about", element: <AboutPage /> },
       { path: "contact", element: <ContactPage /> },
       { path: "favorites", element: <Favourites /> },
+      { path: ":userName/view", element: <UserInspect /> },
       {
         path: "room",
         element: <RoomsListPage />,
@@ -67,7 +69,7 @@ export const userRoutes: RouteObject[] = [
           { path: "settings", element: <SettingsPage /> },
           {
             path: "premium-plans",
-             element: <PremiumPlans />
+            element: <PremiumPlans />,
           },
           {
             path: "premium-plans/:planId/payment",

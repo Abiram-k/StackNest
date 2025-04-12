@@ -36,6 +36,16 @@ export interface IUserProfileController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getInspectData(
+    req: Request, 
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getFriendSuggestion(
+    req: Request, 
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
   subscribeUserForPushNotification(
     req: Request,
     res: Response,

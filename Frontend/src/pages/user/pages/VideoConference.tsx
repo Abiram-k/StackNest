@@ -64,6 +64,7 @@ export default function VideoConference() {
       }
       //
       socket.emit("join-room", roomId);
+      
       socket.on("participants", (data) => {
         const participantsMap = new Map<string, ParticipantType>();
         data.forEach((user: ParticipantType) => {

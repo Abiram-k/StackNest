@@ -7,7 +7,6 @@ import { premiumEndedMail } from "../utils/email";
 const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();
 cron.schedule("*/10 * * * *", async () => {
   const now = new Date();
-  console.log("Checking for premium ended users...");
   const users = await userBaseRepository.getAllPremiumUser();
   for (const user of users) {
     for (const plan of user.premiumHistory) {

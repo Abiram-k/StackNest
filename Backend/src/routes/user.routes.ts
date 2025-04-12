@@ -43,6 +43,12 @@ router.get(
   "/stats",
   userProfileController.getStatsData.bind(userProfileController)
 );
+router.get(
+  "/:userName/inspect",
+  userProfileController.getInspectData.bind(userProfileController)
+);
+router.get("/friends/suggestion",  userProfileController.getFriendSuggestion.bind(userProfileController)
+)
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ROOMS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.post("/room", userRoomController.createRoom.bind(userRoomController));
@@ -90,7 +96,7 @@ router.get(
 );
 
 // <<<<<<<<<<<<<<<<<<<<<<<< PREMIUM-PLANS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-router.get( 
+router.get(
   "/premium-plans",
   userPremiumController.getAllListedPremium.bind(userPremiumController)
 );
@@ -183,11 +189,34 @@ router.get(
   "/rewards-active",
   userRewardController.getActiveReward.bind(userRewardController)
 );
-router.post("/reward/claim",userRewardController.claimReward.bind(userRewardController));
-router.get("/reward/claim",userRewardController.getclaimedRewards.bind(userRewardController));
+router.post(
+  "/reward/claim",
+  userRewardController.claimReward.bind(userRewardController)
+);
+router.get(
+  "/reward/claim",
+  userRewardController.getclaimedRewards.bind(userRewardController)
+);
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<< PAYMENTS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-router.post("/payment/create-paypal-order",paymentController.createPaypalOrder.bind(paymentController))
-router.post("/payment/capture-paypal-order",paymentController.capturePaypalPayment.bind(paymentController))
+// Paypal
+router.post(
+  "/payment/create-paypal-order",
+  paymentController.createPaypalOrder.bind(paymentController)
+);
+router.post(
+  "/payment/capture-paypal-order",
+  paymentController.capturePaypalPayment.bind(paymentController)
+);
+
+// Stripe
+router.post(
+  "/create-payment-intent",
+  paymentController.createStripeOrder.bind(paymentController)
+);
+router.post(
+  "/webhook",
+  paymentController.stripeWebhook.bind(paymentController)
+);
 
 export default router;

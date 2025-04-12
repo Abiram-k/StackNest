@@ -134,9 +134,10 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
     try {
       const query: any = {
         _id: { $ne: userId },
+        role: "user",
       };
 
-      return await User.find(query).select("userName -_id");
+      return await User.find(query).select("-_id");
     } catch (error) {
       throw error;
     }

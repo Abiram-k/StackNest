@@ -16,6 +16,16 @@ export interface IAdminController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getUserEngagement(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getSalesDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 
   blockRoom(req: Request, res: Response, next: NextFunction): Promise<void>;
 

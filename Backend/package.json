@@ -10,7 +10,7 @@
   },
   "author": "Abiram",
   "license": "ISC",
-  "dependencies": { 
+  "dependencies": {
     "@paypal/checkout-server-sdk": "^1.0.3",
     "@types/socket.io": "^3.0.2",
     "axios": "^1.8.0",
@@ -40,6 +40,7 @@
     "passport-github2": "^0.1.12",
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.8.1",
+    "stripe": "^18.0.0",
     "uuid": "^11.1.0",
     "web-push": "^3.6.7"
   },

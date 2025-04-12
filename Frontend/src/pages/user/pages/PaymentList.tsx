@@ -1,18 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import PayPalButton from "@/components/auth/PayPalButton";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  useStripe,
+  useElements,
+  PaymentElement,
+  Elements,
+} from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import StripeCheckoutForm from "@/components/StripeCheckoutForm";
+import axios from "axios";
+import { axiosInstance } from "@/api/apiSevice";
+import { toast } from "sonner";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY!);
 
 export default function PaymentListPage() {
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
-
-  const { planId } = useParams<{ planId: string }>();
+  // const stripe = useStripe();
+  // const elements = useElements();
+  const [stripeClientSecret, setStripeClientSecret] = useState("");
 
   const navigate = useNavigate();
-  if (!planId) navigate(-1);
+  const { planId } = useParams<{ planId: string }>();
+  useEffect(() => {
+    if (!planId) navigate(-1);
+  }, [planId]);
 
-  const handlePaymentSelect = (method: string) => {
+  const handlePaymentSelect = async (method: string) => {
     setSelectedPayment(method);
+    try {
+      const response = await axiosInstance.post(
+        "/users/create-payment-intent",
+        {
+          planId,
+        }
+      );
+
+      const data = response.data;
+      setStripeClientSecret(data.clientSecret);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePayment = () => {
+    if (!selectedPayment) toast.info("Please select a payment method");
   };
 
   return (
@@ -129,15 +163,24 @@ export default function PaymentListPage() {
                 </div>
               </div>
 
-              {selectedPayment == "paypal" ? (
-                <PayPalButton planId={planId!} />
-              ) : (
+              {selectedPayment == "paypal" && <PayPalButton planId={planId!} />}
+              {!selectedPayment && (
                 <Button
                   className="w-full py-6 text-lg bg-primary-500 dark:bg-primary-600 dark:hover:bg-primary-600/90  hover:bg-primary-500/90"
                   disabled={!selectedPayment}
+                  onClick={handlePayment}
                 >
                   Pay Now
                 </Button>
+              )}
+
+              {selectedPayment === "stripe" && stripeClientSecret && (
+                <Elements
+                  stripe={stripePromise}
+                  options={{ clientSecret: stripeClientSecret }}
+                >
+                  <StripeCheckoutForm planId={planId!}/>
+                </Elements>
               )}
             </div>
           </div>

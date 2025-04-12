@@ -112,7 +112,7 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Boolean,
       default: false,
     },
-    isVerified: {
+    isVerified: { 
       type: Boolean,
       default: false,
     },

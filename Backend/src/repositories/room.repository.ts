@@ -85,6 +85,14 @@ export class RoomRespository implements IRoomRepository<IRoom> {
     }
   }
 
+  async getTotalCount(): Promise<number> {
+    try {
+      return await Room.countDocuments();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findSelectedRoom(
     populateHost: boolean,
     id: string

@@ -21,6 +21,27 @@ type GetUserCardDataReponse = axiosResponse & {
     feedsCount: number;
   };
 };
+
+type GetUserInspectReponse = axiosResponse & {
+  userData: {
+    userName: string;
+    avatar: string;
+    description: string;
+    connectionCount: number;
+    feedsCount: number;
+    streakCount: number;
+  };
+  feedData: {
+    feedId: string;
+    title: string;
+    content: string;
+    media?: string;
+    likesCount: number;
+    commentsCount: number;
+    viewsCount: number;
+    uploadedAt: string;
+  }[];
+};
 interface IUserTableData {
   userName: string;
   avatar: string;
@@ -34,6 +55,14 @@ type ResgetStatsData = axiosResponse & {
   };
   streakTableData: IUserTableData[];
   pointsTableData: IUserTableData[];
+};
+type ResGetFriendSuggestion = axiosResponse & {
+  usersData: {
+    avatar: string;
+    userName: string;
+    firstName: string;
+    description: string;
+  }[];
 };
 
 export class UserProfileService {
@@ -50,6 +79,10 @@ export class UserProfileService {
     return this._httpService.get<verifyProfileResponse>("/users/details");
   }
 
+  async getInspectData(userName: string): Promise<GetUserInspectReponse> {
+    return this._httpService.get(`/users/${userName}/inspect`);
+  }
+
   async updateUserProfile(
     data: verifyUserProfileSchemaType
   ): Promise<axiosResponse> {
@@ -64,6 +97,10 @@ export class UserProfileService {
     return this._httpService.get<axiosResponse & { streakCount: number }>(
       "/users/streak"
     );
+  }
+
+  async getFriendSuggestion(): Promise<ResGetFriendSuggestion> {
+    return this._httpService.get("/users/friends/suggestion");
   }
 
   async getStatsLeaderboardData(): Promise<ResgetStatsData> {

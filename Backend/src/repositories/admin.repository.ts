@@ -24,7 +24,7 @@ export class AdminRespository implements IAdminRepository<IUser> {
         query.$or = [
           { userName: { $regex: `^${search}`, $options: "i" } },
           { email: { $regex: `^${search}`, $options: "i" } },
-          { _id: search }, 
+          { _id: search },
         ];
       }
       if (filter == FilterTags.isBlocked) {
@@ -72,5 +72,16 @@ export class AdminRespository implements IAdminRepository<IUser> {
     } catch (error) {
       throw error;
     }
+  }
+  async getUserBasedOnYear(year: number) {
+    const start = new Date(`${year}-01-01T00:00:00.000Z`);
+    const end = new Date(`${year + 1}-01-01T00:00:00.000Z`);
+
+    return await User.find({
+      createdAt: {
+        $gte: start,
+        $lt: end,
+      },
+    });
   }
 }

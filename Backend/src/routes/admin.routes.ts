@@ -181,4 +181,8 @@ router.get("/reports",reportController.getAllReports.bind(reportController))
 router.post("/report/resolve",reportController.resolveReport.bind(reportController))
 router.post("/report/reject",reportController.rejectReport.bind(reportController))
 
+// <<<<<<<<<<<<<<<<<<<<<<<<< Dashboard >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+router.get("/user-engagement",adminController.getUserEngagement.bind(adminController))
+router.get("/sales/details",adminController.getSalesDetails.bind(adminController))
+
 export default router;

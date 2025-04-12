@@ -15,6 +15,11 @@ export interface IAuthController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  logout(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 
   initiateRegistration(
     req: Request,

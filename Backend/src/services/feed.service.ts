@@ -84,7 +84,7 @@ export class FeedService implements IFeedService {
     }
   }
 
-  async getAllUserNames(
+  async getAllUserNames( // trie suggestion
     userId: Types.ObjectId,
     search: string
   ): Promise<string[] | []> {

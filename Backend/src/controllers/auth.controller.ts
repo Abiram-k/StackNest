@@ -342,4 +342,25 @@ export class AuthController implements IAuthController {
       next(error);
     }
   }
+
+  async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { role } = req.body;
+      const cookieName = `${role}RefreshToken`;
+      const refreshToken = req.cookies[cookieName];
+      if (!refreshToken) {
+        next(new Error("No refresh token provided"));
+      }
+
+      res.clearCookie(`${role}RefreshToken`, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      });
+
+      res.status(HttpStatus.OK).json({ message: "Logged out successfully" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

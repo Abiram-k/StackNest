@@ -10,6 +10,13 @@ interface ReportResponse {
   reports: ResReport[];
   totalPages: number;
 }
+type getUserEngagementRes = axiosResponse & {
+  userEngagement: { month: string; userCount: number }[];
+  thisMonthPercentage: number | null;
+  totalUsersCount: number;
+  totalRoomsCount: number;
+  totalPremiumUserCount: number;
+};
 
 export class AdminService {
   private readonly httpService: HttpService;
@@ -28,6 +35,14 @@ export class AdminService {
       `/admin/reports${filter}`
     );
     return response;
+  }
+  async getSalesDetails(
+    type: "monthly" | "yearly",
+    month?: string
+  ): Promise<string> {
+    return await this.httpService.get(
+      `/admin/sales/details?type=${type}&month=${month}`
+    );
   }
   async resolveReport(reportId: string): Promise<axiosResponse> {
     const response = await this.httpService.post<axiosResponse>(
@@ -49,5 +64,9 @@ export class AdminService {
       `/admin/user/${userName}/block`
     );
     return response;
+  }
+
+  async getUserEngagement(year: number): Promise<getUserEngagementRes> {
+    return await this.httpService.get(`/admin/user-engagement?year=${year}`);
   }
 }

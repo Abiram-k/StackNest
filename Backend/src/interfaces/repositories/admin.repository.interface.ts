@@ -6,6 +6,6 @@ export interface IAdminRepository<T> {
     page?: number,
     limit?: number
   ): Promise<{ users: T[]; totalPages: number }>;
-
+  getUserBasedOnYear(year: number): Promise<T[]>;
   blockUser(userName: string): Promise<boolean>;
 }

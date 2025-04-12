@@ -16,6 +16,10 @@ import {
   IStatsUser,
   IStreakTableData,
 } from "../dtos/user/profile/getStatsData.dto";
+import {
+  inspectfeedDataDTO,
+  inspectuserDataDTO,
+} from "../dtos/user/profile/getInspectData.dto";
 
 export class UserProfileService implements IUserProfileService {
   constructor(
@@ -85,6 +89,90 @@ export class UserProfileService implements IUserProfileService {
       });
 
       return { user, streakTableData, pointsTableData };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getInspectData(userName: string): Promise<{
+    feedData: inspectfeedDataDTO[] | null;
+    userData: inspectuserDataDTO;
+  }> {
+    try {
+      const user = await this._baseRepo.findByUserName(userName);
+      if (!user)
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "User not founded while inspect..."
+        );
+      const feeds = await this._feedRepo.getFeedsByUserId(user._id);
+      if (!feeds)
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "Feeds not founded while inspect..."
+        );
+      const userData: inspectuserDataDTO = {
+        avatar: user.avatar,
+        connectionCount: user.friends.length,
+        description: user.description,
+        feedsCount: feeds?.length,
+        streakCount: user.streak,
+        userName: user.userName,
+      };
+      const feedDataUnfiltered: (inspectfeedDataDTO | null)[] =
+        await Promise.all(
+          feeds.map(async (f): Promise<inspectfeedDataDTO | null> => {
+            const feed = await this._feedRepo.getFeedById(f._id);
+            if (!feed) return null;
+
+            return {
+              feedId: feed._id.toString(),
+              title: feed.title,
+              content: feed.content,
+              media: feed.media ?? undefined,
+              likesCount: feed.likes?.length || 0,
+              commentsCount: feed.comments?.length || 0,
+              viewsCount: feed.views?.length || 0,
+              uploadedAt: feed.createdAt.toISOString(),
+            };
+          })
+        );
+
+      const feedData: inspectfeedDataDTO[] = feedDataUnfiltered.filter(
+        (f): f is inspectfeedDataDTO => f !== null
+      );
+
+      return { userData, feedData };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getFriendSuggestion(userId: string): Promise<
+    {
+      avatar: string;
+      userName: string;
+      firstName: string;
+      description: string;
+    }[]
+  > {
+    try {
+      if (!userId)
+        throw createHttpError(
+          HttpStatus.UNAUTHORIZED,
+          "UserId not founded while suggest..."
+        );
+      const users = await this._baseRepo.fetchAllUserNameExceptUser(userId);
+      if (!users) return [];
+      const userData = users
+        ?.map((user) => ({
+          avatar: user.avatar,
+          userName: user.userName,
+          firstName: user.firstName,
+          description: user.description,
+        }))
+        .slice(0, 4);
+      return userData;
     } catch (error) {
       throw error;
     }

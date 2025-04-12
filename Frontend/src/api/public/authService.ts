@@ -1,3 +1,4 @@
+import { axiosResponse } from "@/types";
 import { LoginResponse } from "../../../../types/index";
 import { LoginUser, typeRegisterUserWithOtp } from "../../../../types/user";
 import { HttpService } from "../httpService";
@@ -11,9 +12,12 @@ export class UserAuthService {
 
   async login(data: LoginUser, role: string): Promise<LoginResponse> {
     return this.httpService.post<LoginResponse>(`/auth/login`, {
-      role, 
+      role,
       ...data,
     });
+  }
+  async logout(role:string): Promise<axiosResponse> {
+    return this.httpService.post("/auth/logout", {role});
   }
 
   async initiateRegistration(data: { email: string }): Promise<void> {

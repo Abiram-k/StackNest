@@ -32,6 +32,35 @@ export class AdminController implements IAdminController {
     this._roomService = roomService;
   }
 
+  async getUserEngagement(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const year: number = Number(req.query.year) || 0;
+      const {
+        userEngagement,
+        thisMonthPercentage,
+        totalPremiumUserCount,
+        totalRoomsCount,
+        totalUsersCount,
+      } = await this._adminService.getUserEngagement(year);
+
+      res.status(HttpStatus.OK).json({
+        message: "successfully fetched engagement",
+        success: true,
+        userEngagement,
+        thisMonthPercentage,
+        totalPremiumUserCount,
+        totalRoomsCount,
+        totalUsersCount,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async fetchAllUsers(
     req: Request,
     res: Response<ResFetchAllUsersDTO>,
@@ -83,6 +112,24 @@ export class AdminController implements IAdminController {
         success: true,
         users: formattedUsers,
         totalPages: totalPages,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getSalesDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const type = String(req.query.type) || "";
+      const month = String(req.query.month) || "";
+      const data = await this._adminService.getSalesDetails(type, month);
+      res.status(HttpStatus.OK).json({
+        message: "Sales details fetched",
+        success: true,
       });
     } catch (error) {
       next(error);

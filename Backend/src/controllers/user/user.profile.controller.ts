@@ -13,6 +13,7 @@ import { ResUpdateUserProfileDTO } from "../../dtos/user/profile/updateUserProfi
 import { ResGetUserCardData } from "../../dtos/user/profile/getUserCardData.dto";
 import { Types } from "mongoose";
 import { IResgetStatsDataDTO } from "../../dtos/user/profile/getStatsData.dto";
+import { ResGetInspectDataDTO } from "../../dtos/user/profile/getInspectData.dto";
 config();
 
 const HUG_FACE_API_KEY = process.env.HUG_FACE_API_KEY;
@@ -192,5 +193,46 @@ export class UserProfileController implements IUserProfileController {
     } catch (error) {
       next(error);
     }
+  }
+
+  async getInspectData(
+    req: Request,
+    res: Response<ResGetInspectDataDTO>,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { userName } = req.params;
+      let { feedData, userData } =
+        await this._userProfileService.getInspectData(userName);
+      if (!feedData) feedData = [];
+      res.status(HttpStatus.OK).json({
+        message: "successfully fetched data",
+        success: true,
+        feedData,
+        userData,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getFriendSuggestion(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { userId } = req.user as { userId: string; role: string };
+      const usersData = await this._userProfileService.getFriendSuggestion(
+        userId
+      );
+      res.status(HttpStatus.OK).json({
+        message: "successfully fetched data",
+        success: true,
+        usersData,
+      });
+    } catch (error) {
+      next(error);
+    } 
   }
 }

@@ -129,7 +129,11 @@ const rewardRepository: IRewardRepository<IReward> = new RewardRepository();
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SERVICES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-const adminService: IAdminService = new AdminService(adminRespository);
+const adminService: IAdminService = new AdminService(
+  adminRespository,
+  roomRespository,
+  premiumRepository
+);
 const authService: IAuthService = new AuthService(
   userBaseRepository,
   userAuthRepository
@@ -169,7 +173,10 @@ const reportService = new ReportService(
   userBaseRepository
 );
 const rewardService = new RewardService(rewardRepository, userBaseRepository);
-const paymentService = new PaymentService(userBaseRepository,premiumRepository);
+const paymentService = new PaymentService(
+  userBaseRepository,
+  premiumRepository
+);
 
 //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CONTROLLERS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -236,5 +243,5 @@ export {
   reportController,
   adminRewardController,
   userRewardController,
-  paymentController
+  paymentController,
 };

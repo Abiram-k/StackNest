@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { adminLogout } from "@/redux/slice/adminSlice";
+import { useLogout } from "@/hooks/auth/useLogout";
 
 type navItemType = {
   name: string;
@@ -19,6 +20,14 @@ type sideBarPropsType = {
 const SideBar = ({ role, navItems }: sideBarPropsType) => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
+  const { mutate: logoutMutate } = useLogout();
+  const handleLogout = () => {
+    const currentRole = role == "user" ? "user" : "admin";
+    logoutMutate(currentRole);
+    if (role == "user") dispatch(userLogout());
+    else dispatch(adminLogout());
+    // window.location.reload();
+  };
   return (
     <div className="z-50 ">
       <button
@@ -56,11 +65,12 @@ const SideBar = ({ role, navItems }: sideBarPropsType) => {
             <Button
               variant="default"
               className="w-full cursor-pointer hover:bg-red-600/90 bg-red-600 dark:bg-red-600 dark:text-white dark:hover:bg-red-600/90"
-              onClick={() => {
-                if (role == "user") dispatch(userLogout());
-                else dispatch(adminLogout());
-                window.location.reload();
-              }}
+              // onClick={() => {
+              //   if (role == "user") dispatch(userLogout());
+              //   else dispatch(adminLogout());
+              //   window.location.reload();
+              // }}
+              onClick={handleLogout}
             >
               <LogOut className="h-5 w-5 mr-2" />
               Logout

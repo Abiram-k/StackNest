@@ -13,7 +13,7 @@ const UserCardNew = () => {
 
   return (
     <div
-      className={`rounded-lg hidden lg:block shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 overflow-hidden max-w-xs w-full mb-10`}
+      className={`rounded-lg hidden lg:block  shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 overflow-hidden max-w-xs w-full mb-10`}
     >
       <div className="bg-[#7848F4] dark:bg-[#5A32B8] h-12 relative"></div>
 

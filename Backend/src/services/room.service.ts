@@ -246,9 +246,9 @@ export class RoomService implements IRoomService {
         );
       }
 
-      if (room.participants.length >= room.limit) {
-        throw createHttpError(HttpStatus.FORBIDDEN, "Room is full");
-      }
+      // if (room.participants.length >= room.limit) {
+      //   throw createHttpError(HttpStatus.FORBIDDEN, "Room is full");
+      // }
 
       const userLastJoined = await this._roomRepo.getLastJoinedTime(
         roomId,

@@ -54,7 +54,7 @@ export const refreshAccessToken = async (
   }
 };
 
-axiosInstance.interceptors.request.use( (config) => {
+axiosInstance.interceptors.request.use((config) => {
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
@@ -94,5 +94,3 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-

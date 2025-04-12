@@ -9,6 +9,9 @@ const router = express.Router();
 router.post('/login', authController.login.bind(authController));
 router.get("/refresh-token", authController.generateAccessToken.bind(authController));
 
+// logout
+router.post("/logout",authController.logout.bind(authController));
+
 //OAuth  - Google
 router.post('/google/callback', authController.googleAuth.bind(authController));
 
