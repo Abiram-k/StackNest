@@ -28,8 +28,6 @@ export default function ReportsPage() {
     currentPage,
   });
 
-  console.log(reportData);
-
   const { mutate: resolveMutate, isPending: resolving } = useResolveReport();
   const { mutate: rejectMutate, isPending: rejecting } = useRejectReport();
   const handleResolveReport = (reportId: string) => {

@@ -126,10 +126,13 @@ export class AdminController implements IAdminController {
     try {
       const type = String(req.query.type) || "";
       const month = String(req.query.month) || "";
-      const data = await this._adminService.getSalesDetails(type, month);
+      const { data, totalSales,salesInfo } = await this._adminService.getSalesDetails(type, month);
       res.status(HttpStatus.OK).json({
         message: "Sales details fetched",
         success: true,
+        data,
+        totalSales,
+        salesInfo
       });
     } catch (error) {
       next(error);

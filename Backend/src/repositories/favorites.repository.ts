@@ -29,7 +29,6 @@ export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
         });
 
       if (!favorites || favorites.length === 0) {
-        console.log("No rooms in favorites");
         return null;
       }
 

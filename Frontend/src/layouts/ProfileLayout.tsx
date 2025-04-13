@@ -39,7 +39,7 @@ const navItems = [
   {
     name: "Notifications",
     icon: <Bell className="w-5 h-5" />,
-    to: "/admin/notification",
+    to: "/user/profile/notification",
   },
   {
     name: "Settings",

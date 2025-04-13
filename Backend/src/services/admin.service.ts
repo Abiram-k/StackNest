@@ -7,12 +7,14 @@ import { IRoomRepository } from "../interfaces/repositories/room.repository.inte
 import { IRoom } from "../types/IRoom";
 import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface";
 import { IPremium } from "../types/IPremium";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
 
 export class AdminService implements IAdminService {
   constructor(
     private _adminRepo: IAdminRepository<IUser>,
     private _roomRepo: IRoomRepository<IRoom>,
-    private _planRepo: IPremiumRepository<IPremium>
+    private _planRepo: IPremiumRepository<IPremium>,
+    private _userBaseRepo: IUserBaseRepository<IUser>
   ) {}
 
   async getUserEngagement(year: number): Promise<{
@@ -94,16 +96,151 @@ export class AdminService implements IAdminService {
     }
   }
 
-  async getSalesDetails(type: string, month: string): Promise<any> {
+  async getSalesDetails(
+    type: string,
+    month: string
+  ): Promise<{
+    data: any;
+    totalSales: number;
+    salesInfo: {
+      userName: string;
+      amount: number;
+      planName: string;
+      purchasedAt: string;
+      endedAt: string;
+    }[];
+  }> {
     try {
       if (!type)
         throw createHttpError(HttpStatus.NOT_FOUND, "Type not founded");
-      if (type == "Monthly" && !month)
+      if (type.toLowerCase() === "monthly" && !month)
         throw createHttpError(HttpStatus.NOT_FOUND, "Month not founded");
-      const users = await this._adminRepo.getUserBasedOnYear(
-        new Date().getFullYear()
-      );
-      
+
+      const users = await this._adminRepo.getAllUsers();
+      const currentYear = new Date().getFullYear();
+
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      let totalSales = 0;
+
+      for (const user of users) {
+        for (const history of user.premiumHistory) {
+          const planData = await this._planRepo.getPremiumById(
+            String(history.premiumPlan)
+          );
+          totalSales += planData?.discountAmount || 0;
+        }
+      }
+      const formatDate = (date: Date) =>
+        `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}/${date.getFullYear()}`;
+
+      let salesInfo: {
+        userName: string;
+        amount: number;
+        planName: string;
+        purchasedAt: string;
+        endedAt: string;
+      }[] = [];
+      if (type.toLowerCase() === "monthly") {
+        const targetMonthIndex = monthNames.indexOf(month);
+        const weeklySales = [0, 0, 0, 0];
+        for (const user of users) {
+          for (const history of user.premiumHistory || []) {
+            const createdAt = new Date(history.createdAt);
+
+            if (
+              createdAt.getFullYear() === currentYear &&
+              createdAt.getMonth() === targetMonthIndex
+            ) {
+              const planData = await this._planRepo.getPremiumById(
+                String(history.premiumPlan)
+              );
+              if (!planData)
+                throw createHttpError(
+                  HttpStatus.NOT_FOUND,
+                  "Failed to find plan while on dashboard"
+                );
+              const amount = planData?.discountAmount || 0;
+
+              const day = createdAt.getDate();
+              let weekIndex = 0;
+              if (day <= 7) weekIndex = 0;
+              else if (day <= 14) weekIndex = 1;
+              else if (day <= 21) weekIndex = 2;
+              else weekIndex = 3;
+
+              weeklySales[weekIndex] += amount;
+              salesInfo.push({
+                userName: user.userName,
+                amount: planData.discountAmount,
+                planName: planData.title,
+                endedAt: formatDate(new Date(history.endingDate)),
+                purchasedAt: formatDate(new Date(history.createdAt)),
+              });
+            }
+          }
+        }
+
+        const data = weeklySales.map((total, index) => ({
+          week: `Week ${index + 1}`,
+          totalSales: total,
+        }));
+        return { data, totalSales, salesInfo };
+      }
+
+      if (type.toLowerCase() === "yearly") {
+        const monthlySales = new Array(12).fill(0);
+
+        for (const user of users) {
+          for (const history of user.premiumHistory || []) {
+            const createdAt = new Date(history.createdAt);
+
+            if (createdAt.getFullYear() === currentYear) {
+              const planData = await this._planRepo.getPremiumById(
+                String(history.premiumPlan)
+              );
+              if (!planData)
+                throw createHttpError(
+                  HttpStatus.NOT_FOUND,
+                  "Failed to find plan while on dashboard"
+                );
+              const amount = planData?.discountAmount || 0;
+
+              const monthIndex = createdAt.getMonth();
+              monthlySales[monthIndex] += amount;
+              salesInfo.push({
+                userName: user.userName,
+                amount: planData.discountAmount,
+                planName: planData.title,
+                endedAt: formatDate(new Date(history.endingDate)),
+                purchasedAt: formatDate(new Date(history.createdAt)),
+              });
+            }
+          }
+        }
+
+        const data = monthlySales.map((total, index) => ({
+          month: monthNames[index],
+          totalSales: total,
+        }));
+        return { data, totalSales, salesInfo };
+      }
+
+      throw createHttpError(HttpStatus.BAD_REQUEST, "Invalid type provided.");
     } catch (error) {
       throw error;
     }

@@ -48,6 +48,8 @@ export interface IUser extends Document {
     startingDate: Date;
     endingDate: Date;
     premiumPlan: Types.ObjectId;
+    createdAt: Date;
+    updatedAt: Date;
   }[];
   resetToken: string;
   resetTokenExpiration: Date;

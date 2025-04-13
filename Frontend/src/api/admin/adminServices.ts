@@ -18,6 +18,18 @@ type getUserEngagementRes = axiosResponse & {
   totalPremiumUserCount: number;
 };
 
+type getSalesDetailsRes = axiosResponse & {
+  data: any;
+  salesInfo: {
+    userName: string;
+    amount: number;
+    planName: string;
+    purchasedAt: string;
+    endedAt: string;
+  }[];
+  totalSales: number;
+};
+
 export class AdminService {
   private readonly httpService: HttpService;
   constructor(httpService: HttpService) {
@@ -39,7 +51,7 @@ export class AdminService {
   async getSalesDetails(
     type: "monthly" | "yearly",
     month?: string
-  ): Promise<string> {
+  ): Promise<getSalesDetailsRes> {
     return await this.httpService.get(
       `/admin/sales/details?type=${type}&month=${month}`
     );

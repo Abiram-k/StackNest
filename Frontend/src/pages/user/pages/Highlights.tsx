@@ -102,6 +102,7 @@ const Highlights = () => {
                   <li
                     key={`${user}-${index}`}
                     className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    onClick={() => navigate(`/user/${user}/view`)}
                   >
                     <span className="text-gray-700 dark:text-white font-medium">
                       {user}

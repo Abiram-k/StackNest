@@ -8,12 +8,12 @@ interface NotificationCardProps {
   mutualFriends?: string[];
   profileImage: string;
   notificationId: string;
-  reason: string;
+  reason?: string;
   message: string;
-  priority: string;
-  status: string;
-  type: string;
-  reportedId: string;
+  priority?: string;
+  status?: string;
+  type?: string;
+  reportedId?: string;
   onAccept: (notificationId: string) => void;
   onReject: (notificationId: string) => void;
 }
@@ -77,16 +77,19 @@ export default function NotificationCard({
           </p>
 
           <div className="text-gray-600 text-sm space-y-1">
-            <p className="font-semibold">
-              Reason: <span className="text-blue-600">{reason}</span>
-            </p>
+            {reason && (
+              <p className="font-semibold">
+                Reason: <span className="text-blue-600">{reason}</span>
+              </p>
+            )}
 
             <p className="italic max-w-xs break-words">{message}</p>
-
-            <p>
-              Report on:{" "}
-              <span className="text-purple-600 font-medium">{type}</span>
-            </p>
+            {type && (
+              <p>
+                Report on:{" "}
+                <span className="text-purple-600 font-medium">{type}</span>
+              </p>
+            )}
 
             <p>
               {(type === "feed" || type === "room") && (

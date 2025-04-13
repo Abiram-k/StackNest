@@ -102,6 +102,18 @@ import { UserRewardController } from "../controllers/user/user.reward.controller
 import { PaymentService } from "../services/payment.service";
 import { IUserPaymentController } from "../interfaces/controllers/user.payment.controller.interface";
 import { UserPaymentController } from "../controllers/user/user.payment.controller";
+import { INotificationRepository } from "../interfaces/repositories/notification.repository.interface";
+import { INotification } from "../types/INotification";
+import { NotificationRepository } from "../repositories/notification.repository";
+import { ConnectionService } from "../services/connection.service";
+import { IConnectionService } from "../interfaces/services/connection.service.interface";
+import { IRewardService } from "../interfaces/services/reward.service.interface";
+import { IPaymentService } from "../interfaces/services/payment.service.interface";
+import { IReportService } from "../interfaces/services/report.service.interface";
+import { IBenefitsService } from "../interfaces/services/benefits.service.interface";
+import { IPremiumService } from "../interfaces/services/premium.service.interface";
+import { IUserConnectionController } from "../interfaces/controllers/user.connection.controller.interface";
+import { UserConnectionController } from "../controllers/user/user.connection.controller";
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REPOSITORY >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -126,13 +138,16 @@ const benefitsRepository: IBenefitsRepository<IBenefit> =
   new BenefitsRepository();
 const reportRepository: IReportRepository<IReport> = new ReportRepository();
 const rewardRepository: IRewardRepository<IReward> = new RewardRepository();
+const notificationRepository: INotificationRepository<INotification> =
+  new NotificationRepository();
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SERVICES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 const adminService: IAdminService = new AdminService(
   adminRespository,
   roomRespository,
-  premiumRepository
+  premiumRepository,
+  userBaseRepository
 );
 const authService: IAuthService = new AuthService(
   userBaseRepository,
@@ -162,20 +177,29 @@ const feedService: IFeedService = new FeedService(
   userBaseRepository,
   commentRepository
 );
-const premiumService = new PremiumService(
+const premiumService: IPremiumService = new PremiumService(
   premiumRepository,
   benefitsRepository
 );
-const benefitsService = new BenefitsService(benefitsRepository);
-const reportService = new ReportService(
+const benefitsService: IBenefitsService = new BenefitsService(
+  benefitsRepository
+);
+const reportService: IReportService = new ReportService(
   reportRepository,
   roomRespository,
   userBaseRepository
 );
-const rewardService = new RewardService(rewardRepository, userBaseRepository);
-const paymentService = new PaymentService(
+const rewardService: IRewardService = new RewardService(
+  rewardRepository,
+  userBaseRepository
+);
+const paymentService: IPaymentService = new PaymentService(
   userBaseRepository,
   premiumRepository
+);
+const connectionService: IConnectionService = new ConnectionService(
+  notificationRepository,
+  userBaseRepository
 );
 
 //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CONTROLLERS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -224,6 +248,8 @@ const userRewardController: IUserRewardController = new UserRewardController(
 const paymentController: IUserPaymentController = new UserPaymentController(
   paymentService
 );
+const userConnectionController: IUserConnectionController =
+  new UserConnectionController(connectionService);
 
 export {
   authController,
@@ -244,4 +270,5 @@ export {
   adminRewardController,
   userRewardController,
   paymentController,
+  userConnectionController,
 };

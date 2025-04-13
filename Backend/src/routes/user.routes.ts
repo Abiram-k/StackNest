@@ -6,6 +6,7 @@ import {
   reportController,
   userBannerController,
   userChallengeController,
+  userConnectionController,
   userPremiumController,
   userProfileController,
   userRewardController,
@@ -47,8 +48,10 @@ router.get(
   "/:userName/inspect",
   userProfileController.getInspectData.bind(userProfileController)
 );
-router.get("/friends/suggestion",  userProfileController.getFriendSuggestion.bind(userProfileController)
-)
+router.get(
+  "/friends/suggestion",
+  userProfileController.getFriendSuggestion.bind(userProfileController)
+);
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ROOMS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.post("/room", userRoomController.createRoom.bind(userRoomController));
@@ -217,6 +220,20 @@ router.post(
 router.post(
   "/webhook",
   paymentController.stripeWebhook.bind(paymentController)
+);
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<< CONNECTIONS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+router.post(
+  "/connection/request",
+  userConnectionController.sendConnectionRequest.bind(userConnectionController)
+);
+router.get(
+  "/connection/request",
+  userConnectionController.getConnectionRequests.bind(userConnectionController)
+);
+router.get(
+  "/notifications",
+  userConnectionController.getNotifactions.bind(userConnectionController)
 );
 
 export default router;

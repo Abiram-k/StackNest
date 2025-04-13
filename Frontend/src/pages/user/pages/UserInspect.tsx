@@ -1,5 +1,6 @@
-import { FallBackTable } from "@/components/FallBackTable";
 import { Spinner } from "@/components/ui/spinner";
+import { useGetConnectionRequests } from "@/hooks/user/connection/useGetConnectionRequests";
+import { useSendConnectionRequest } from "@/hooks/user/connection/useSendConnectionRequest";
 import { useGetUserInspect } from "@/hooks/user/userProfile/useGetUserInspect";
 import { Eye, Heart, MessageCircleIcon, SparklesIcon } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -9,10 +10,17 @@ export default function UserInspect() {
   const navigate = useNavigate();
   if (!userName) navigate(-1);
   const { data, isPending } = useGetUserInspect(userName!);
-  console.log("UserData: ", data);
+  const { mutate: sendRequestMutate, isPending: sendingRequest } =
+    useSendConnectionRequest();
+  const handleSendConnectionRequest = (recieverName: string) => {
+    sendRequestMutate(recieverName);
+  };
+  const { data: sendedRequests, isPending: fetchingSendedRequests } =
+    useGetConnectionRequests();
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50  my-30">
-      {isPending && <Spinner />}
+      {(isPending || sendingRequest || fetchingSendedRequests) && <Spinner />}
       <div className="container mx-auto px-4 -mt-16 md:-mt-20 flex flex-col md:flex-row gap-8">
         {/* Profile Section */}
         <div className="md:w-1/3 lg:w-1/4 flex flex-col items-center bg-white rounded-lg shadow-md p-6 z-10">
@@ -61,7 +69,19 @@ export default function UserInspect() {
             <button className="w-1/2 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
               Message
             </button>
-            <button className="w-1/2 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
+            <button
+              className={`w-1/2 py-2  text-white rounded-md transition ${
+                sendedRequests?.requests.includes(data?.userData.userName!)
+                  ? "bg-indigo-400 pointer-events-none"
+                  : "bg-indigo-600 hover:bg-indigo-700 "
+              }`}
+              onClick={() =>
+                handleSendConnectionRequest(data?.userData.userName!)
+              }
+              disabled={sendedRequests?.requests.includes(
+                data?.userData.userName!
+              )}
+            >
               Connect
             </button>
           </div>

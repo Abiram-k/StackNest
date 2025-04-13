@@ -5,6 +5,7 @@ import { Heart, Search, User, Menu, X, Flame } from "lucide-react";
 import Logo from "../ui/Logo";
 import { CustomNavLink } from "../ui/customNavLink";
 import { useGetStreakCount } from "@/hooks/user/userProfile/useGetStreakCount";
+import { useTranslation } from "react-i18next";
 
 const Navbar = ({
   isAuthenticated,
@@ -15,6 +16,7 @@ const Navbar = ({
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [streak, setStreak] = useState<number>(0);
+  const { t } = useTranslation();
 
   const { data } = useGetStreakCount({ isAdmin, isAuthenticated });
 
@@ -35,22 +37,22 @@ const Navbar = ({
               {!isAdmin ? (
                 <>
                   <CustomNavLink to="/user/home" end>
-                    Home
+                    {t("Home")}
                   </CustomNavLink>
                   <CustomNavLink to="/user/room" end>
-                    Rooms
+                    {t("Rooms")}
                   </CustomNavLink>
                   <CustomNavLink to="/user/challenge" end>
-                    Challenge
+                    {t("Challenge")}
                   </CustomNavLink>
                   <CustomNavLink to="/user/highlights" end>
-                    Highlights
+                    {t("Highlights")}
                   </CustomNavLink>
                   <CustomNavLink to="/user/about" end>
-                    About
+                    {t("About")}
                   </CustomNavLink>
                   <CustomNavLink to="/user/contact" end>
-                    Contact
+                    {t("Contact")}
                   </CustomNavLink>
                 </>
               ) : (

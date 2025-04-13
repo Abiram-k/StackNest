@@ -1,24 +1,28 @@
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useGetFriendSuggestion } from "@/hooks/user/userProfile/useGetFriendSuggestion";
 import { useNavigate } from "react-router-dom";
+import { useSendConnectionRequest } from "@/hooks/user/connection/useSendConnectionRequest";
+import { Spinner } from "../ui/spinner";
+import { useGetConnectionRequests } from "@/hooks/user/connection/useGetConnectionRequests";
+import { useTranslation } from "react-i18next";
 
 const FreindsSection = () => {
   const navigate = useNavigate();
+  const {t} = useTranslation();
   const { data: userList } = useGetFriendSuggestion();
+  const { mutate: sendRequestMutate, isPending: sendingRequest } =
+    useSendConnectionRequest();
+  const handleSendConnectionRequest = (recieverName: string) => {
+    sendRequestMutate(recieverName);
+  };
+  const { data: sendedRequests, isPending: fetchingSendedRequests } =
+    useGetConnectionRequests();
   return (
     <section className="container mx-auto px-4 py-12">
+      {(sendingRequest || fetchingSendedRequests) && <Spinner />}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Suggested Friends</h2>
-        <div className="flex gap-2">
-          <Button variant="outline" size="icon" className="rounded-full">
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon" className="rounded-full">
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
+        <h2 className="text-2xl font-bold">{t("Suggested Friends")}</h2>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {userList?.usersData?.map((item, index) => (
@@ -27,7 +31,6 @@ const FreindsSection = () => {
             className="group relative p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 dark:bg-gray-800"
           >
             <div className="flex flex-col h-full">
-              {/* Avatar Container */}
               <div className="mx-auto mb-4 w-24 h-24 relative">
                 <div className="rounded-full border-2 border-primary-500 p-1">
                   <img
@@ -41,7 +44,6 @@ const FreindsSection = () => {
                 </div>
               </div>
 
-              {/* User Info */}
               <div className="text-center mb-4 flex-1">
                 <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-1">
                   {item.firstName || item.userName || "Anonymous User"}
@@ -59,7 +61,6 @@ const FreindsSection = () => {
                 )}
               </div>
 
-              {/* Action Buttons */}
               <div className="flex gap-3 mt-auto">
                 <Button
                   variant="outline"
@@ -68,7 +69,11 @@ const FreindsSection = () => {
                 >
                   View Profile
                 </Button>
-                <Button className="w-full text-sm px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white dark:bg-primary-600 dark:hover:bg-primary-700 transition-colors">
+                <Button
+                  className="w-full text-sm px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white dark:bg-primary-600 dark:hover:bg-primary-700 transition-colors dark:text-white"
+                  onClick={() => handleSendConnectionRequest(item.userName)}
+                  disabled={sendedRequests?.requests.includes(item.userName)}
+                >
                   Connect
                 </Button>
               </div>
@@ -80,8 +85,9 @@ const FreindsSection = () => {
         <Button
           variant="link"
           className="dark:text-primary-600 text-primary-500"
+          onClick={() => navigate("/user/highlights")}
         >
-          Explore
+          {t("Explore")} →
         </Button>
       </div>
     </section>

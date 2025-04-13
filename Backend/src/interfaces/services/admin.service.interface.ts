@@ -8,7 +8,20 @@ export interface IAdminService {
     page: number,
     limit: number
   ): Promise<{ users: IUser[]; totalPages: number }>;
-  getSalesDetails(type: string, month: string): Promise<any>;
+  getSalesDetails(
+    type: string,
+    month: string
+  ): Promise<{
+    data: any;
+    totalSales: number;
+    salesInfo: {
+      userName: string;
+      amount: number;
+      planName: string;
+      purchasedAt: string;
+      endedAt: string;
+    }[];
+  }>;
 
   getUserEngagement(year: number): Promise<{
     userEngagement: { month: string; userCount: number }[];

@@ -12,6 +12,7 @@ const DailyChallengePage = lazy(
   () => import("@/pages/user/pages/DailyChallengePage")
 );
 const UserInspect = lazy(() => import("@/pages/user/pages/UserInspect"));
+const Notification = lazy(() => import("@/pages/user/pages/Notification"));
 const Favourites = lazy(() => import("@/pages/user/pages/Favorites"));
 const Leaderboard = lazy(() => import("@/pages/user/pages/Leaderboard"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
@@ -67,6 +68,7 @@ export const userRoutes: RouteObject[] = [
           },
           { path: "stats/rewards", element: <RewardsPage /> },
           { path: "settings", element: <SettingsPage /> },
+          { path: "notification", element: <Notification /> },
           {
             path: "premium-plans",
             element: <PremiumPlans />,

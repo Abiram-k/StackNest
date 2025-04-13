@@ -11,7 +11,7 @@ function App() {
     <>
       <Toaster
         duration={2500}
-        position="top-center"
+        position="bottom-right"
         richColors
         toastOptions={{
           className: "custom-toast",

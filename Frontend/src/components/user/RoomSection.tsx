@@ -1,14 +1,16 @@
 import { ArrowRight, Cpu, DoorOpen, LayoutList } from "lucide-react";
 import { useFetchAllRooms } from "@/hooks/room/useFetchRooms";
-import {  useState } from "react";
+import { useState } from "react";
 import PasswordConfirmation from "../modal/PasswordConfirmation";
 import { useJoinRoom, useVerifyRoomPassword } from "@/hooks/room/useJoinRoom";
 import { Spinner } from "../ui/spinner";
 import { Link } from "react-router-dom";
 import RoomCard from "../card/RoomCard";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
+  const { t } = useTranslation();
   const [isModalPasswordModal, setIsModalPasswordModal] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState("");
   const { data, isPending } = useFetchAllRooms("users", {
@@ -19,7 +21,6 @@ const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
     limit: 7,
   });
   const { mutate: joinRoomMutate, isPending: joinIsPending } = useJoinRoom();
-  
 
   // callback after clicking Enter <button>
   const handleEnterRoom = (type: string, isPrivate: string, roomId: string) => {
@@ -59,7 +60,7 @@ const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
       {(joinIsPending || verifyingIsPending) && <Spinner />}
       <div className="grid md:grid-cols-4 gap-8">
         <div className="col-span-1">
-          <h3 className="text-2xl font-bold mb-6">General Room</h3>
+          <h3 className="text-2xl font-bold mb-6">{t("General Room")}</h3>
           <div>
             {generalRoom ? (
               <div className="relative group bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900 rounded-xl shadow-2xl p-6 h-96 md:h-[340px] lg:h-[560px] xl:h-[460px]  border-2 border-transparent hover:border-cyan-400/30 transition-all overflow-hidden w-full">
@@ -148,7 +149,7 @@ const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
           </div>
         </div>
         <div className="col-span-3">
-          <h3 className="text-2xl font-bold mb-6">Trending Rooms</h3>
+          <h3 className="text-2xl font-bold mb-6">{t("Trending Rooms")}</h3>
           <div className="grid md:grid-cols-3 gap-4">
             {data?.rooms?.length ? (
               data.rooms
@@ -175,7 +176,7 @@ const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
               to={"/user/room"}
               className="text-center mt-3 font-semibold text-primary-500 dark:text-primary-600 hover:border-b border-primary-500 cursor-pointer inline-flex items-center gap-1"
             >
-              Explore <ArrowRight className="w-4 h-4" />
+              {t("Explore")} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

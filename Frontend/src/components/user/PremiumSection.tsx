@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export default function PremiumBanner() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <div className="relative w-full bg-gradient-to-br from-purple-700 to-purple-900 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 py-16 flex flex-col md:flex-row items-center justify-between relative">
@@ -12,19 +14,19 @@ export default function PremiumBanner() {
 
         <div className="text-center md:text-left z-10 mb-8 md:mb-0">
           <h3 className="text-purple-200 text-sm md:text-base tracking-wide uppercase mb-2">
-            START ROOM HOSTING NOW
+            {t("START ROOM HOSTING NOW")}
           </h3>
           <h2 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Subscribe to premium now!
+            {t("Subscribe to premium now")}!
           </h2>
           <p className="text-purple-100 mb-6">
-            Unlock room hosting and viewing
+            {t("Unlock room hosting and exciting rewards")}
           </p>
           <button
             onClick={() => navigate("/user/profile/premium-plans")}
             className="bg-purple-500 animate-bounce hover:animate-none hover:bg-purple-400 text-white px-8 py-3 rounded-full font-medium transition-colors duration-200 cursor-pointer"
           >
-            Subscribe
+            {t("Subscribe")}
           </button>
         </div>
 

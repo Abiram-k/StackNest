@@ -65,11 +65,6 @@ const SideBar = ({ role, navItems }: sideBarPropsType) => {
             <Button
               variant="default"
               className="w-full cursor-pointer hover:bg-red-600/90 bg-red-600 dark:bg-red-600 dark:text-white dark:hover:bg-red-600/90"
-              // onClick={() => {
-              //   if (role == "user") dispatch(userLogout());
-              //   else dispatch(adminLogout());
-              //   window.location.reload();
-              // }}
               onClick={handleLogout}
             >
               <LogOut className="h-5 w-5 mr-2" />

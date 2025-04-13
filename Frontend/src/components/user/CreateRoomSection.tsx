@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import roomImage from "../../assets/roomImage.png";
 import { Button } from "../ui/button";
-
+import { useTranslation } from "react-i18next";
 
 const CreateRoomSection = () => {
   const navigate = useNavigate();
-
+  const {t} = useTranslation()
   const handleNavigateToCreateRoom = () => {
     navigate("/user/room/create");
   };
@@ -21,15 +21,17 @@ const CreateRoomSection = () => {
           />
         </div>
         <div className="w-full md:w-1/2 text-center md:text-left">
-          <h2 className="text-3xl font-bold mb-4">Make Your Virtual Space</h2>
+          <h2 className="text-3xl font-bold mb-4">
+            {t("Make Your Virtual Space")}
+          </h2>
           <p className="text-gray-600 mb-6">
-            Connect, collaborate, and create in your own virtual space.
+            {t("Connect, collaborate, and create in your own virtual space.")}
           </p>
           <Button
             className="cursor-pointer bg-primary-500 dark:text-white dark:hover:bg-primary-600/90 dark:bg-primary-600 text-white hover:bg-primary-500/90 mb-5 "
             onClick={handleNavigateToCreateRoom}
           >
-            Create Room
+            {t("Create Room")}
           </Button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Clock, List, Moon, Sun } from "lucide-react";
+import { ArrowDown, Clock, Languages, List, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import {
@@ -7,10 +7,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "react-i18next";
 
 export default function SettingsPage() {
   const { setTheme } = useTheme();
+  const { i18n } = useTranslation();
 
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
   return (
     <div className="flex min-h-screen bg-background md:w-1/2">
       <div className="flex-1">
@@ -62,10 +67,7 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-start space-x-4">
                 <div className="p-2 bg-gray-100 rounded-full dark:bg-gray-800">
-                  <Clock
-                    size={24}
-                    className="text-gray-700 dark:text-gray-300"
-                  />
+                  <Languages className="h-[1.2rem] w-[1.2rem] text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
                   <h3 className="font-medium text-lg mb-1">Change Language</h3>
@@ -74,12 +76,27 @@ export default function SettingsPage() {
                   </p>
                 </div>
               </div>
-              <Button
-                variant="outline"
-                className="bg-red-500 hover:bg-red-600 text-white border-0"
-              >
-                Choose
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Button variant="outline" size="icon">
+                    <ArrowDown className="h-[1.2rem] w-[1.2rem] text-blue-600 dark:text-blue-400" />
+                    <span className="sr-only">Toggle Language</span>
+                  </Button>
+                  
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => changeLanguage("en")}>
+                    English
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => changeLanguage("fr")}>
+                    French
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => changeLanguage("mal")}>
+                    Malayalam
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             {/* Password Setting */}

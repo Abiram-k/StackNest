@@ -84,4 +84,11 @@ export class AdminRespository implements IAdminRepository<IUser> {
       },
     });
   }
+  async getAllUsers(): Promise<IUser[]> {
+    try {
+      return await User.find();
+    } catch (error) {
+      throw error;
+    }
+  }
 }
