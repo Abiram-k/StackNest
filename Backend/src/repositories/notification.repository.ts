@@ -21,7 +21,20 @@ export class NotificationRepository
     senderId: string
   ): Promise<INotification[]> {
     try {
-      return await Notification.find({ sender: senderId }).populate("reciever");
+      return await Notification.find({
+        sender: senderId,
+        status: "pending",
+      }).populate("reciever");
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getNotificationById(
+    notificationId: string
+  ): Promise<INotification | null> {
+    try {
+      return await Notification.findById(notificationId);
     } catch (error) {
       throw error;
     }
@@ -31,8 +44,35 @@ export class NotificationRepository
     recieverId: string
   ): Promise<INotification[]> {
     try {
-      return await Notification.find({ reciever: recieverId }).populate(
-        "sender"
+      return await Notification.find({
+        reciever: recieverId,
+        status: "pending",
+      }).populate("sender");
+    } catch (error) {
+      throw error;
+    }
+  }
+  async rejectConnectionRequestById(
+    notificationId: string
+  ): Promise<INotification | null> {
+    try {
+      return await Notification.findByIdAndUpdate(
+        notificationId,
+        { status: "rejected" },
+        { new: true }
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+  async acceptConnectionRequestById(
+    notificationId: string
+  ): Promise<INotification | null> {
+    try {
+      return await Notification.findByIdAndUpdate(
+        notificationId,
+        { status: "resolved" },
+        { new: true }
       );
     } catch (error) {
       throw error;

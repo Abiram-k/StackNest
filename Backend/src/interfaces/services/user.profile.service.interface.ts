@@ -20,14 +20,14 @@ export interface IUserProfileService {
     pointsTableData: IPointsTableData;
   }>;
   getInspectData(
-    userName: string
+    userId: string,
+    inspectedUserName: string
   ): Promise<{
+    isAlreadyInConnection: boolean;
     feedData: inspectfeedDataDTO[] | null;
     userData: inspectuserDataDTO;
   }>;
-  getFriendSuggestion(
-    userId: string
-  ): Promise<
+  getFriendSuggestion(userId: string): Promise<
     {
       avatar: string;
       userName: string;

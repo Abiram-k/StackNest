@@ -105,14 +105,15 @@ const userSchema = new mongoose.Schema<IUser>(
       default: Date.now,
     },
     friends: {
-      type: [String],
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
       default: [],
     },
     isBlocked: {
       type: Boolean,
       default: false,
     },
-    isVerified: { 
+    isVerified: {
       type: Boolean,
       default: false,
     },

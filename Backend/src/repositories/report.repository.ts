@@ -42,6 +42,8 @@ export class ReportRepository implements IReportRepository<IReport> {
         filterQuery.status = "dismissed";
       } else if (filter == FiterOptions.Resolved) {
         filterQuery.status = "reviewed";
+      } else {
+        filterQuery.status = "pending";
       }
       const skip = (page - 1) * limit;
 

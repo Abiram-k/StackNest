@@ -11,7 +11,22 @@ export interface IUserConnectionController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
-  getNotifactions(
+  getNotifications(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  acceptRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  rejectRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  unfollow(
     req: Request,
     res: Response,
     next: NextFunction

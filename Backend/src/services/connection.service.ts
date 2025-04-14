@@ -69,6 +69,21 @@ export class ConnectionService implements IConnectionService {
     try {
       const notifications =
         await this._notificationRepo.getConnectionRequestBySenderId(userId);
+      // const user = await this._userBaseRepo.findById(userId);
+      // if (!user)
+      //   throw createHttpError(
+      //     HttpStatus.UNAUTHORIZED,
+      //     "User not founded (getconnectionReq)"
+      //   );
+      // const friends = user.friends;
+      // const freindsUserName: string[] = friends
+      //   .map((friend) => {
+      //     if (typeof friend === "string" || friend instanceof Types.ObjectId)
+      //       return null;
+      //     return friend.userName;
+      //   })
+      //   .filter((userName) => userName != null);
+
       const requestedUserNames = notifications.map((notification) => {
         if (notification.reciever instanceof Types.ObjectId) {
           throw createHttpError(
@@ -112,5 +127,96 @@ export class ConnectionService implements IConnectionService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async rejectRequest(requestId: string): Promise<void> {
+    try {
+      if (!requestId)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Request Id not founded");
+      const notification =
+        await this._notificationRepo.rejectConnectionRequestById(requestId);
+      if (!notification)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Failed to reject request");
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async acceptRequest(requestId: string): Promise<void> {
+    try {
+      if (!requestId)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Request Id not founded");
+      const notification =
+        await this._notificationRepo.acceptConnectionRequestById(requestId);
+      if (!notification)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Failed to accept request");
+      const freindId = notification.sender;
+      const recieverId = notification.reciever;
+      if (
+        !(recieverId instanceof Types.ObjectId) ||
+        !(freindId instanceof Types.ObjectId)
+      ) {
+        console.log("Invalid ObjectId(s)");
+        return;
+      }
+      const isAlreayFriend = await this._userBaseRepo.isAlreadyFreind(
+        recieverId,
+        freindId
+      );
+      if (isAlreayFriend)
+        throw createHttpError(
+          HttpStatus.BAD_REQUEST,
+          "Already in your connection"
+        );
+
+      const sender = await this._userBaseRepo.findById(String(freindId));
+      const reciever = await this._userBaseRepo.findById(String(recieverId));
+      const payload = {
+        title: " Connection Request Accepted!",
+        body: `${reciever?.userName} accepted your connection request`,
+        icon: reciever?.avatar,
+        url: `/user/${reciever?.userName}/view`,
+      };
+      if (sender && sender?.pushSubscriptions.length > 0) {
+        await Promise.all(
+          sender.pushSubscriptions.map((subscription) =>
+            sendNotification(
+              { endpoint: subscription.endpoint, keys: subscription.keys },
+              payload
+            )
+          )
+        );
+      }
+      if (!freindId)
+        throw createHttpError(HttpStatus.NOT_FOUND, "FreindId not founded");
+
+      await this._userBaseRepo.addNewFriend(recieverId, freindId);
+      await this._userBaseRepo.addNewFriend(freindId, recieverId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async unfollow(userId: string, friendUserName: string): Promise<void> {
+    try {
+      if (!userId)
+        throw createHttpError(HttpStatus.UNAUTHORIZED, "User id not founded");
+      if (!friendUserName)
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "friend userName not founded"
+        );
+      const friend = await this._userBaseRepo.findByUserName(friendUserName);
+      if (!friend)
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "Enable to find friend data"
+        );
+      const friendId = String(friend._id);
+      await this._userBaseRepo.removeFreind(userId, friendId);
+      await this._userBaseRepo.removeFreind(friendId, userId);
+    } catch (error) {
+      throw error;
+    } 
   }
 }

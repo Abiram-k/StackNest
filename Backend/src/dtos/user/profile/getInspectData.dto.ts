@@ -20,6 +20,7 @@ export type inspectfeedDataDTO = {
 export interface ResGetInspectDataDTO {
   userData: inspectuserDataDTO;
   feedData: inspectfeedDataDTO[];
+  isAlreadyInConnection: boolean;
   message: string;
   success: boolean;
 }

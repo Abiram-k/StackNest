@@ -56,7 +56,6 @@ export class AuthController implements IAuthController {
         userId: user?._id as Types.ObjectId,
         role: user?.role as string,
       };
-      console.log(data);
       const token = generateAccessToken(data);
       const refreshToken = generateRefreshToken(data);
       res.cookie("userRefreshToken", refreshToken, {
@@ -187,10 +186,7 @@ export class AuthController implements IAuthController {
       const dto = plainToInstance(GenerateAccessDTO, req.query);
       const errors = await validate(dto);
       if (!validateDtoError(errors, res)) return;
-      // if (!role) {
-      //   console.log("No role founded during generating new access token");
-      //   return;
-      // }
+  
       const refreshToken = req.cookies[`${role}RefreshToken`];
 
       if (!refreshToken) {

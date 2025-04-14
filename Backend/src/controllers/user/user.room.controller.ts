@@ -237,7 +237,6 @@ export class UserRoomController implements IUserRoomController {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log("Request got to join the room");
       const dto = plainToInstance(JoinRoomDTO, req.body);
       const errors = await validate(dto);
       if (!validateDtoError(errors, res)) return;

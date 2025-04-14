@@ -63,6 +63,41 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
       throw error;
     }
   }
+
+  async addNewFriend(
+    userId: Types.ObjectId,
+    friendId: Types.ObjectId
+  ): Promise<void> {
+    try {
+      await User.findByIdAndUpdate(userId, { $push: { friends: friendId } });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async removeFreind(userId: string, friendId: string): Promise<void> {
+    try {
+      await User.findByIdAndUpdate(userId, { $pull: { friends: friendId } });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async isAlreadyFreind(
+    recieverId: Types.ObjectId,
+    freindId: Types.ObjectId
+  ): Promise<boolean> {
+    try {
+      const user = await User.findById(recieverId);
+      if (!user) {
+        throw new Error("Failed to find user (checking already friend)");
+      }
+      const friends = user.friends;
+      return friends.some((friend) => friend == String(freindId));
+    } catch (error) {
+      throw error;
+    }
+  }
   async getPointsTableData(): Promise<IUser[]> {
     try {
       const user = await User.find({
@@ -137,7 +172,7 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
         role: "user",
       };
 
-      return await User.find(query).select("-_id");
+      return await User.find(query);
     } catch (error) {
       throw error;
     }

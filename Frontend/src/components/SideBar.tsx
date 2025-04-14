@@ -8,7 +8,7 @@ import { adminLogout } from "@/redux/slice/adminSlice";
 import { useLogout } from "@/hooks/auth/useLogout";
 
 type navItemType = {
-  name: string;
+  name: string | React.ReactNode;
   icon: React.ReactNode;
   to: string;
 };
@@ -26,7 +26,7 @@ const SideBar = ({ role, navItems }: sideBarPropsType) => {
     logoutMutate(currentRole);
     if (role == "user") dispatch(userLogout());
     else dispatch(adminLogout());
-    // window.location.reload();
+    window.location.reload();
   };
   return (
     <div className="z-50 ">

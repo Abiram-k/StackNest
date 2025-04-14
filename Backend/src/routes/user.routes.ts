@@ -233,7 +233,19 @@ router.get(
 );
 router.get(
   "/notifications",
-  userConnectionController.getNotifactions.bind(userConnectionController)
+  userConnectionController.getNotifications.bind(userConnectionController)
+);
+router.post(
+  "/connection/accept",
+  userConnectionController.acceptRequest.bind(userConnectionController)
+);
+router.post(
+  "/connection/reject",
+  userConnectionController.rejectRequest.bind(userConnectionController)
+);
+router.post(
+  "/connection/unfollow",
+  userConnectionController.unfollow.bind(userConnectionController)
 );
 
 export default router;

@@ -17,7 +17,6 @@ export class UserConnectionController implements IUserConnectionController {
     try {
       const { recieverUserName } = req.body;
       const { userId } = req.user as { userId: string; role: string };
-      console.log("Request gotten: ", recieverUserName);
       await this._connectionService.sendConnectionRequest(
         userId,
         recieverUserName
@@ -51,7 +50,7 @@ export class UserConnectionController implements IUserConnectionController {
     }
   }
 
-  async getNotifactions(
+  async getNotifications(
     req: Request,
     res: Response,
     next: NextFunction
@@ -65,6 +64,57 @@ export class UserConnectionController implements IUserConnectionController {
         message: "fetched sended requests",
         success: true,
         notifications,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async acceptRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { requestId } = req.body;
+      await this._connectionService.acceptRequest(requestId);
+      res.status(HttpStatus.OK).json({
+        message: "Connection request accepted",
+        success: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async rejectRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { requestId } = req.body;
+      await this._connectionService.rejectRequest(requestId);
+      res.status(HttpStatus.OK).json({
+        message: "Connection request rejected",
+        success: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async unfollow(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { freindUserName } = req.body;
+      const { userId } = req.user as { userId: string; role: string };
+      await this._connectionService.unfollow(userId,freindUserName);
+      res.status(HttpStatus.OK).json({
+        message: "unfollowed successfully",
+        success: true,
       });
     } catch (error) {
       next(error);

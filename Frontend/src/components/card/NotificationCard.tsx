@@ -14,6 +14,7 @@ interface NotificationCardProps {
   status?: string;
   type?: string;
   reportedId?: string;
+  isFriendRequest?: boolean;
   onAccept: (notificationId: string) => void;
   onReject: (notificationId: string) => void;
 }
@@ -28,13 +29,14 @@ export default function NotificationCard({
   message,
   name,
   timeAgo,
+  isFriendRequest,
   priority,
   status,
   mutualFriends,
   profileImage,
 }: NotificationCardProps) {
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out w-full max-w-xs">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out w-full max-w-xs">
       <div className="flex flex-col items-center relative">
         {priority === "high" && status === "pending" && (
           <div className="absolute top-0 -right-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md animate-pulse">
@@ -70,7 +72,9 @@ export default function NotificationCard({
         </div>
 
         <div className="mt-4 text-center space-y-2">
-          <h3 className="font-bold text-xl text-gray-800">{name}</h3>
+          <h3 className="font-bold text-xl text-gray-800 dark:text-gray-300">
+            {name}
+          </h3>
 
           <p className="text-red-500 text-sm font-medium">
             {formatDistanceToNow(new Date(timeAgo), { addSuffix: true })}
@@ -109,7 +113,7 @@ export default function NotificationCard({
           <Button
             className="w-full bg-blue-600 hover:bg-blue-700 transition-colors duration-200 shadow-md hover:shadow-lg"
             onClick={() => onAccept(notificationId)}
-            disabled={status != "pending"}
+            disabled={status != "pending" && !isFriendRequest}
           >
             Accept
           </Button>
@@ -117,7 +121,7 @@ export default function NotificationCard({
             variant="outline"
             className="w-full text-gray-600 hover:text-red-600 border-gray-300 hover:border-red-400 transition-colors duration-200 shadow-md hover:shadow-lg"
             onClick={() => onReject(notificationId)}
-            disabled={status != "pending"}
+            disabled={status != "pending" && !isFriendRequest}
           >
             Reject
           </Button>

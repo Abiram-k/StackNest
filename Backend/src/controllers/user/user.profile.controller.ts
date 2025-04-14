@@ -202,12 +202,14 @@ export class UserProfileController implements IUserProfileController {
   ): Promise<void> {
     try {
       const { userName } = req.params;
-      let { feedData, userData } =
-        await this._userProfileService.getInspectData(userName);
+      const { userId } = req.user as { userId: string; role: string };
+      let { feedData, userData, isAlreadyInConnection } =
+        await this._userProfileService.getInspectData(userId, userName);
       if (!feedData) feedData = [];
       res.status(HttpStatus.OK).json({
         message: "successfully fetched data",
         success: true,
+        isAlreadyInConnection,
         feedData,
         userData,
       });
@@ -233,6 +235,6 @@ export class UserProfileController implements IUserProfileController {
       });
     } catch (error) {
       next(error);
-    } 
+    }
   }
 }

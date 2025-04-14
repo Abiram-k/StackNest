@@ -58,10 +58,10 @@ export default function PaymentListPage() {
               Payment Page
             </h1>
 
-            <div className="bg-gray-100 rounded-3xl p-8 shadow-sm">
+            <div className="bg-gray-100 dark:bg-gray-900 rounded-3xl p-8 shadow-sm">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div
-                  className={`bg-white rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer border-2 ${
+                  className={`bg-white dark:bg-black rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer border-2 ${
                     selectedPayment === "paypal"
                       ? "border-indigo-500"
                       : "border-transparent"
@@ -112,7 +112,7 @@ export default function PaymentListPage() {
                 </div>
 
                 <div
-                  className={`bg-white rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer border-2 ${
+                  className={`bg-white dark:bg-black rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer border-2 ${
                     selectedPayment === "stripe"
                       ? "border-indigo-500"
                       : "border-transparent"
@@ -138,7 +138,7 @@ export default function PaymentListPage() {
                 </div>
 
                 <div
-                  className={`bg-white rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer border-2 ${
+                  className={`bg-white dark:bg-black rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer border-2 ${
                     selectedPayment === "card"
                       ? "border-indigo-500"
                       : "border-transparent"
@@ -166,7 +166,7 @@ export default function PaymentListPage() {
               {selectedPayment == "paypal" && <PayPalButton planId={planId!} />}
               {!selectedPayment && (
                 <Button
-                  className="w-full py-6 text-lg bg-primary-500 dark:bg-primary-600 dark:hover:bg-primary-600/90  hover:bg-primary-500/90"
+                  className="w-full py-6 text-lg bg-primary-500 dark:bg-primary-600 dark:hover:bg-primary-600/90 cursor-pointer dark:text-white  hover:bg-primary-500/90"
                   disabled={!selectedPayment}
                   onClick={handlePayment}
                 >
@@ -179,7 +179,7 @@ export default function PaymentListPage() {
                   stripe={stripePromise}
                   options={{ clientSecret: stripeClientSecret }}
                 >
-                  <StripeCheckoutForm planId={planId!}/>
+                  <StripeCheckoutForm planId={planId!} />
                 </Elements>
               )}
             </div>

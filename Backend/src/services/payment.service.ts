@@ -110,7 +110,6 @@ export class PaymentService implements IPaymentService {
 
   async createStripeOrder(userId: string, planId: string): Promise<string> {
     try {
-      console.log("Request gotten: ", userId, planId);
       if (!userId)
         throw createHttpError(
           HttpStatus.NOT_FOUND,

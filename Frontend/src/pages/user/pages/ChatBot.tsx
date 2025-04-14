@@ -67,6 +67,7 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
   const handleSendMessage = async (e: React.FormEvent) => {
     try {
       e.preventDefault();
+      if (!message.trim().length) return; 
       const userMessage: Message = {
         id: messages.length + 1,
         text: message,
@@ -99,7 +100,6 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
       setMessage("");
     }
   };
-
 
   return (
     <div className="absolute bottom-16 right-0 w-[320px] h-[480px] bg-white  rounded-lg shadow-xl flex flex-col">
@@ -196,7 +196,7 @@ const ChatBot = React.memo(({ setIsOpen, avatar }: IChatBotType) => {
           <Button
             type="submit"
             size="icon"
-            className="rounded-full bg-primary-500 hover:bg-primary-500/90 hover:text-black dark:bg-primary-600 dark:text-white "
+            className="rounded-full bg-primary-500 hover:bg-primary-500/90 hover:text-black dark:bg-primary-600 dark:hover:bg-primary-600/90 dark:text-white "
           >
             <Send size={18} />
           </Button>

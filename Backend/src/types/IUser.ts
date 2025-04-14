@@ -39,7 +39,7 @@ export interface IUser extends Document {
     redeemedAt: Date;
     isExpired: boolean;
   }[];
-  friends: string[];
+  friends: string[] | { firstName: string; userName: string; avatar: string }[];
   isBlocked: boolean;
   blockedUntil: Date;
   isVerified: boolean;

@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 export default function SettingsPage() {
   const { setTheme } = useTheme();
   const { i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
@@ -21,7 +22,9 @@ export default function SettingsPage() {
       <div className="flex-1">
         {/* Settings Content */}
         <div className="max-w-3xl mx-auto py-16 px-4">
-          <h1 className="text-2xl font-bold mb-12 text-center">Settings</h1>
+          <h1 className="text-2xl font-bold mb-12 text-center">
+            {t("Settings")}
+          </h1>
 
           <div className="space-y-10">
             {/* Theme Setting */}
@@ -34,9 +37,11 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-medium text-lg mb-1">Change theme</h3>
+                  <h3 className="font-medium text-lg mb-1">
+                    {t("Change theme")}
+                  </h3>
                   <p className="text-muted-foreground text-sm">
-                    Switch it up! Change your app theme for a fresh look.
+                    {t("Switch it up! Change your app theme for a fresh look.")}
                   </p>
                 </div>
               </div>
@@ -70,9 +75,11 @@ export default function SettingsPage() {
                   <Languages className="h-[1.2rem] w-[1.2rem] text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-lg mb-1">Change Language</h3>
+                  <h3 className="font-medium text-lg mb-1">
+                    {t("Change Language")}
+                  </h3>
                   <p className="text-muted-foreground text-sm">
-                    All details will reset except username
+                    {t("Change to your desired language")} !
                   </p>
                 </div>
               </div>
@@ -82,7 +89,6 @@ export default function SettingsPage() {
                     <ArrowDown className="h-[1.2rem] w-[1.2rem] text-blue-600 dark:text-blue-400" />
                     <span className="sr-only">Toggle Language</span>
                   </Button>
-                  
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end">
@@ -109,9 +115,11 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-medium text-lg mb-1">Change Password</h3>
+                  <h3 className="font-medium text-lg mb-1">
+                    {t("Change Password")}
+                  </h3>
                   <p className="text-muted-foreground text-sm">
-                    All details will reset except username
+                    {t("Reset you password, for your security")}!
                   </p>
                 </div>
               </div>
@@ -119,7 +127,7 @@ export default function SettingsPage() {
                 variant="outline"
                 className="bg-red-500 hover:bg-red-600 text-white border-0"
               >
-                Change
+                {t("Change")}
               </Button>
             </div>
           </div>

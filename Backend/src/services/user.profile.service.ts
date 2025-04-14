@@ -94,12 +94,16 @@ export class UserProfileService implements IUserProfileService {
     }
   }
 
-  async getInspectData(userName: string): Promise<{
+  async getInspectData(
+    userId: string,
+    inspectedUserName: string
+  ): Promise<{
     feedData: inspectfeedDataDTO[] | null;
     userData: inspectuserDataDTO;
+    isAlreadyInConnection: boolean;
   }> {
     try {
-      const user = await this._baseRepo.findByUserName(userName);
+      const user = await this._baseRepo.findByUserName(inspectedUserName);
       if (!user)
         throw createHttpError(
           HttpStatus.NOT_FOUND,
@@ -141,8 +145,11 @@ export class UserProfileService implements IUserProfileService {
       const feedData: inspectfeedDataDTO[] = feedDataUnfiltered.filter(
         (f): f is inspectfeedDataDTO => f !== null
       );
+      const friends = user.friends;
+      const friendsIds = friends.map((friend) => friend.toString());
+      const isAlreadyInConnection = friendsIds.some((id) => id == userId);
 
-      return { userData, feedData };
+      return { userData, feedData, isAlreadyInConnection };
     } catch (error) {
       throw error;
     }
@@ -163,9 +170,18 @@ export class UserProfileService implements IUserProfileService {
           "UserId not founded while suggest..."
         );
       const users = await this._baseRepo.fetchAllUserNameExceptUser(userId);
+      const currentUser = await this._baseRepo.findById(userId);
+      if (!currentUser)
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "current user not founded while suggest..."
+        );
+      const friends = currentUser.friends;
+      const friendIds = friends.map((id) => id.toString());
       if (!users) return [];
       const userData = users
-        ?.map((user) => ({
+        .filter((user) => !friendIds.includes(String(user._id)))
+        .map((user) => ({
           avatar: user.avatar,
           userName: user.userName,
           firstName: user.firstName,

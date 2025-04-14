@@ -10,9 +10,11 @@ import { useTranslation } from "react-i18next";
 const Navbar = ({
   isAuthenticated,
   isAdmin,
+  notificationLength,
 }: {
   isAuthenticated: boolean;
   isAdmin: boolean;
+  notificationLength: number;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [streak, setStreak] = useState<number>(0);
@@ -30,7 +32,7 @@ const Navbar = ({
     <nav className="fixed top-0 w-full bg-background z-50 border-b shadow-sm">
       <div className="container mx-auto px-2 sm:px-4 lg:px-6">
         <div className="flex h-20 items-center justify-between">
-          <Logo />
+          <Logo isAdmin={isAdmin} />
 
           <div className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
             <div className="flex items-center gap-6">
@@ -129,8 +131,13 @@ const Navbar = ({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="hover:bg-muted"
+                          className="relative hover:bg-muted"
                         >
+                          {notificationLength > 0 && (
+                            <span className="absolute top-0 right-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-bold shadow-md">
+                              {notificationLength}
+                            </span>
+                          )}
                           <User className="h-7 w-7" />
                         </Button>
                       </Link>

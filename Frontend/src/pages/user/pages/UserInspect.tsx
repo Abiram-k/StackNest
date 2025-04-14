@@ -1,6 +1,7 @@
 import { Spinner } from "@/components/ui/spinner";
 import { useGetConnectionRequests } from "@/hooks/user/connection/useGetConnectionRequests";
 import { useSendConnectionRequest } from "@/hooks/user/connection/useSendConnectionRequest";
+import { useUnfollow } from "@/hooks/user/connection/useUnfollow";
 import { useGetUserInspect } from "@/hooks/user/userProfile/useGetUserInspect";
 import { Eye, Heart, MessageCircleIcon, SparklesIcon } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -17,13 +18,20 @@ export default function UserInspect() {
   };
   const { data: sendedRequests, isPending: fetchingSendedRequests } =
     useGetConnectionRequests();
+  const { mutate: unfllowMutate, isPending: unfollowPendin } = useUnfollow();
+  const handleUnfllow = (userName: string) => {
+    unfllowMutate(userName);
+  };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50  my-30">
-      {(isPending || sendingRequest || fetchingSendedRequests) && <Spinner />}
+    <div className="flex flex-col min-h-screen  my-30">
+      {(isPending ||
+        sendingRequest ||
+        unfollowPendin ||
+        fetchingSendedRequests) && <Spinner />}
       <div className="container mx-auto px-4 -mt-16 md:-mt-20 flex flex-col md:flex-row gap-8">
         {/* Profile Section */}
-        <div className="md:w-1/3 lg:w-1/4 flex flex-col items-center bg-white rounded-lg shadow-md p-6 z-10">
+        <div className="md:w-1/3 lg:w-1/4 flex flex-col items-center bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 z-10">
           <div className="relative w-32 h-32 md:w-40 md:h-40 mb-4">
             <img
               src={
@@ -69,25 +77,36 @@ export default function UserInspect() {
             <button className="w-1/2 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
               Message
             </button>
-            <button
-              className={`w-1/2 py-2  text-white rounded-md transition ${
-                sendedRequests?.requests.includes(data?.userData.userName!)
-                  ? "bg-indigo-400 pointer-events-none"
-                  : "bg-indigo-600 hover:bg-indigo-700 "
-              }`}
-              onClick={() =>
-                handleSendConnectionRequest(data?.userData.userName!)
-              }
-              disabled={sendedRequests?.requests.includes(
-                data?.userData.userName!
-              )}
-            >
-              Connect
-            </button>
+            {data?.isAlreadyInConnection ? (
+              <button
+                className={
+                  "w-1/2 py-2  text-white rounded-md transitio bg-indigo-600 hover:bg-indigo-700 "
+                }
+                onClick={() => handleUnfllow(data?.userData.userName!)}
+              >
+                Unfollow
+              </button>
+            ) : (
+              <button
+                className={`w-1/2 py-2  text-white rounded-md transition ${
+                  sendedRequests?.requests.includes(data?.userData.userName!)
+                    ? "bg-indigo-400 pointer-events-none"
+                    : "bg-indigo-600 hover:bg-indigo-700 "
+                }`}
+                onClick={() =>
+                  handleSendConnectionRequest(data?.userData.userName!)
+                }
+                disabled={sendedRequests?.requests.includes(
+                  data?.userData.userName!
+                )}
+              >
+                Connect
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="md:w-2/3 lg:w-3/4 bg-white rounded-lg shadow-md p-6">
+        <div className="md:w-2/3 lg:w-3/4 bg-white dark:bg-gray-900 rounded-lg shadow-md p-6">
           <div className="flex border-b mb-6">
             <button className="px-4 py-2 text-indigo-600 border-b-2 border-indigo-600 font-medium">
               Posts
@@ -99,7 +118,7 @@ export default function UserInspect() {
               data?.feedData.map((item) => (
                 <div
                   key={item.feedId}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
                 >
                   <div className="relative aspect-video bg-gray-100">
                     {item.media ? (
@@ -119,21 +138,21 @@ export default function UserInspect() {
                         />
                       )
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                      <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
                         <span className="text-gray-500">No media</span>
                       </div>
                     )}
                   </div>
 
                   <div className="p-4">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
                       {item.title}
                     </h2>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    <p className="text-gray-600 dark:text-gray-200 text-sm mb-4 line-clamp-3">
                       {item.content}
                     </p>
 
-                    <div className="flex justify-between items-center text-sm text-gray-500">
+                    <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-300">
                       <div className="flex space-x-4">
                         <div className="flex items-center">
                           <HeartIcon className="w-4 h-4 mr-1 text-red-500" />

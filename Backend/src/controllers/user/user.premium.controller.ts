@@ -34,7 +34,6 @@ export class UserPremiumController implements IUserPremiumController {
   ): Promise<void> {
     try {
       const { planId } = req.params;
-      console.log("Plan Id: ", planId);
       const premiumPlan = await this._premiumService.getSelectedPremium(planId);
       res.status(HttpStatus.OK).json({
         message: "successfully fetched premium",

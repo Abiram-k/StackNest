@@ -14,12 +14,16 @@ export interface IUserBaseRepository<T> {
     subscription: PushSubscription,
     userId: string
   ): Promise<void>;
+  isAlreadyFreind( recieverId: Types.ObjectId,
+    freindId: Types.ObjectId): Promise<boolean>;
   claimReward(
     userId: string,
     rewardId: string,
     redeemPoint: number,
     benefitKey: string
   ): Promise<void>;
+  removeFreind(userId:string, friendId:string):Promise<void>
+  addNewFriend(userId: Types.ObjectId, friendId: Types.ObjectId): Promise<void>;
   getStreakTableData(): Promise<T[]>;
   getPointsTableData(): Promise<T[]>;
   fetchAllUserNameExceptUser(userId: string): Promise<T[] | null>;

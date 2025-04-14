@@ -11,7 +11,7 @@ type getNoficationRes = axiosResponse & {
       avatar: string;
     };
     notificationId: string;
-    sendedAt:Date
+    sendedAt: Date;
   }[];
 };
 export class ConnectionsService {
@@ -31,5 +31,20 @@ export class ConnectionsService {
   }
   async getNotifactions(): Promise<getNoficationRes> {
     return await this._httpService.get("/users/notifications");
+  }
+  async rejectRequest(requestId: string): Promise<axiosResponse> {
+    return await this._httpService.post("/users/connection/reject", {
+      requestId,
+    });
+  }
+  async acceptRequest(requestId: string): Promise<axiosResponse> {
+    return await this._httpService.post("/users/connection/accept", {
+      requestId,
+    });
+  }
+  async unfollow(freindUserName: string): Promise<axiosResponse> {
+    return await this._httpService.post("/users/connection/unfollow", {
+      freindUserName,
+    });
   }
 }

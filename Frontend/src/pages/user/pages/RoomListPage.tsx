@@ -16,6 +16,7 @@ import { useAddToFavorites } from "@/hooks/user/favorites/useAddToFavorites";
 import { useRemoveFromFavorites } from "@/hooks/user/favorites/useRemoveFromFavorites";
 import { useFetchFavorites } from "@/hooks/user/favorites/useFetchFavorites";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
 
@@ -30,7 +31,7 @@ export default function RoomsListPage() {
   const [removeByRoomId, setRemoveByRoomId] = useState("");
   const [isModalPasswordModal, setIsModalPasswordModal] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState("");
-
+  const {t} = useTranslation();
   const navigate = useNavigate();
 
   // to fetch my rooms
@@ -138,7 +139,7 @@ export default function RoomsListPage() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold">My Rooms</h1>
+            <h1 className="text-2xl font-bold">{t("My Rooms")}</h1>
 
             <Button
               className="bg-primary-500 dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-300  hover:bg-primary-600/90"
@@ -175,7 +176,7 @@ export default function RoomsListPage() {
 
         <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Available Rooms</h2>
+            <h2 className="text-2xl font-bold">{t("Available Rooms")}</h2>
 
             <FilterBar
               setSearchQuery={setSearch}
