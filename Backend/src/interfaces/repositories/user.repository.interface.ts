@@ -14,15 +14,17 @@ export interface IUserBaseRepository<T> {
     subscription: PushSubscription,
     userId: string
   ): Promise<void>;
-  isAlreadyFreind( recieverId: Types.ObjectId,
-    freindId: Types.ObjectId): Promise<boolean>;
+  isAlreadyFreind(
+    recieverId: Types.ObjectId,
+    freindId: Types.ObjectId
+  ): Promise<boolean>;
   claimReward(
     userId: string,
     rewardId: string,
     redeemPoint: number,
     benefitKey: string
   ): Promise<void>;
-  removeFreind(userId:string, friendId:string):Promise<void>
+  removeFreind(userId: string, friendId: string): Promise<void>;
   addNewFriend(userId: Types.ObjectId, friendId: Types.ObjectId): Promise<void>;
   getStreakTableData(): Promise<T[]>;
   getPointsTableData(): Promise<T[]>;
@@ -34,6 +36,10 @@ export interface IUserBaseRepository<T> {
   incrementChallengePoint(userId: string): Promise<void>;
   getStreakCount(userId: string): Promise<number | undefined>;
   resetCheckin(userId: string): Promise<boolean>;
+  getAllFriends(
+    userId: string,
+    search:string
+  ): Promise<T | null>;
   premiumExpired(planId: Types.ObjectId, userId: Types.ObjectId): Promise<void>;
   subscribePremium(
     userId: string,

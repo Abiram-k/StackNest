@@ -25,6 +25,7 @@ type GetUserCardDataReponse = axiosResponse & {
 type GetUserInspectReponse = axiosResponse & {
   isAlreadyInConnection:boolean;
   userData: {
+    id:string;
     userName: string;
     avatar: string;
     description: string;

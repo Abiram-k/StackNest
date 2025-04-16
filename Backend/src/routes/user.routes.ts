@@ -247,5 +247,21 @@ router.post(
   "/connection/unfollow",
   userConnectionController.unfollow.bind(userConnectionController)
 );
+router.get(
+  "/connection/all",
+  userConnectionController.getAllConnections.bind(userConnectionController)
+);
+router.get(
+  "/connection/message",
+  userConnectionController.getMessages.bind(userConnectionController)
+);
+router.patch(
+  "/connection/message/read/:messageId",
+  userConnectionController.toggleIsRead.bind(userConnectionController)
+);
+router.get(
+  "/connection/message/unread/count",
+  userConnectionController.getUnreadMessageCount.bind(userConnectionController)
+);
 
 export default router;

@@ -31,4 +31,26 @@ export interface IUserConnectionController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getAllConnections(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+
+  getMessages(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+
+  toggleIsRead(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getUnreadMessageCount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 }

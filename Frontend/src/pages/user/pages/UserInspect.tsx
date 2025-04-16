@@ -74,7 +74,17 @@ export default function UserInspect() {
           </div>
 
           <div className="flex gap-4 w-full">
-            <button className="w-1/2 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
+            <button
+              className={`w-1/2 py-2 ${
+                data?.isAlreadyInConnection
+                  ? "bg-indigo-600 hover:bg-indigo-700 "
+                  : "bg-indigo-400 cursor-default"
+              }  text-white rounded-md transition`}
+              onClick={() =>
+                navigate(`/user/messaging?friend=${data?.userData.id}`)
+              }
+              disabled={!data?.isAlreadyInConnection}
+            >
               Message
             </button>
             {data?.isAlreadyInConnection ? (

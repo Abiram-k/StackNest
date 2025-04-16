@@ -13,6 +13,7 @@ const DailyChallengePage = lazy(
 );
 const UserInspect = lazy(() => import("@/pages/user/pages/UserInspect"));
 const Notification = lazy(() => import("@/pages/user/pages/Notification"));
+const MessagingApp = lazy(() => import("@/pages/user/pages/MessagingApp"));
 const Favourites = lazy(() => import("@/pages/user/pages/Favorites"));
 const Leaderboard = lazy(() => import("@/pages/user/pages/Leaderboard"));
 const SettingsPage = lazy(() => import("@/pages/user/pages/Settings"));
@@ -56,6 +57,7 @@ export const userRoutes: RouteObject[] = [
       { path: "room/:roomId/conference", element: <VideoConference /> },
       { path: "challenge", element: <DailyChallengePage /> },
       { path: "highlights", element: <Highlights /> },
+      // { path: "messaging", element: <MessagingApp /> },
       { path: "highlights/:feedId", element: <SingleFeed /> },
       {
         path: "profile",
@@ -88,4 +90,5 @@ export const userRoutes: RouteObject[] = [
       },
     ],
   },
+  { path: "/user/messaging", element: <MessagingApp /> },
 ];

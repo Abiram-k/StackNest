@@ -9,7 +9,7 @@ self.addEventListener('activate', (event) => {
 });
 
 
-self.addEventListener('push', (event) => { 
+self.addEventListener('push', (event) => {
     if (!event.data) {
         console.log('Push event but no data');
         return;
@@ -38,22 +38,21 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
-
-    // If the user already has a tab open, it focuses the existing one instead of opening a new one.
-    if (event.action === 'open' && event.notification.data.url) {
-        event.waitUntil(clients.openWindow(event.notification.data.url));
-    } else {
-        event.waitUntil(
-            clients.matchAll({ type: 'window' }).then((clientList) => {
-                if (clientList.length > 0) {
-                    clientList[0].focus();
-                } else {
-                    clients.openWindow(event.notification.data.url || '/');
+    const redirectUrl = event.notification.data?.url || '/';
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            for (const client of clientList) {
+                if (client.url.includes(redirectUrl) && 'focus' in client) {
+                    return client.focus();
                 }
-            })
-        );
-    }
+            }
+            if (clients.openWindow) {
+                return clients.openWindow(redirectUrl);
+            }
+        })
+    );
 });
+
 
 self.addEventListener('pushsubscriptionchange', async (event) => {
     console.log('Push Subscription expired or changed');

@@ -260,6 +260,27 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
       throw error;
     }
   }
+
+  // Connections
+  async getAllFriends(userId: string, search: string): Promise<IUser | null> {
+    try {
+      // return await User.findOne({
+      //   _id: userId,
+      //   // userName: { $regex: search, $options: "i" },
+      // }).populate("friends");
+      // // .select("-_id friends");
+      const user = await User.findById(userId).populate({
+        path: "friends",
+        match: {
+          userName: { $regex: search, $options: "i" }, // filters friends by username
+        },
+        // select: "userName avatar email", // optional: only select needed fields
+      });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export class UserAuthRespository implements IUserAuthRepository<IUser> {

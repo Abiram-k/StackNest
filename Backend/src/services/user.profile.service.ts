@@ -116,6 +116,7 @@ export class UserProfileService implements IUserProfileService {
           "Feeds not founded while inspect..."
         );
       const userData: inspectuserDataDTO = {
+        id: String(user._id),
         avatar: user.avatar,
         connectionCount: user.friends.length,
         description: user.description,

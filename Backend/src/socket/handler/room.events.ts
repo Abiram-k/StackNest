@@ -27,7 +27,6 @@ const rooms = new Map<string, Set<string>>();
 
 export const registerRoomEvents = (io: Server, socket: Socket) => {
   let currentRoomId: string;
-
   // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<  JOIN ROOM EVENT  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   socket.on("join-room", (roomId: string) => {

@@ -30,7 +30,6 @@ type GetAvailableFeedsType = axiosResponse & {
     viewsCount: number;
   }[];
   nextPage: number | null;
-  // totalFeeds:number;
 };
 
 type GetAllFeedsType = axiosResponse & {

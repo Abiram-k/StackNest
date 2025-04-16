@@ -104,11 +104,13 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Date,
       default: Date.now,
     },
-    friends: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "User",
-      default: [],
-    },
+    friends: [
+      {
+        type: Types.ObjectId,
+        ref: "User",
+        default: [],
+      },
+    ],
     isBlocked: {
       type: Boolean,
       default: false,

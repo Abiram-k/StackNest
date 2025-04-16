@@ -1,23 +1,36 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import { Heart, Search, User, Menu, X, Flame } from "lucide-react";
+import {
+  Heart,
+  Search,
+  User,
+  Menu,
+  X,
+  Flame,
+  MessageSquare,
+  Send,
+} from "lucide-react";
 import Logo from "../ui/Logo";
 import { CustomNavLink } from "../ui/customNavLink";
 import { useGetStreakCount } from "@/hooks/user/userProfile/useGetStreakCount";
 import { useTranslation } from "react-i18next";
+import { useGetUnreadMessagesCount } from "@/hooks/user/connection/message/useGetUnreadMessageCount";
 
 const Navbar = ({
   isAuthenticated,
   isAdmin,
   notificationLength,
+  unReadMessageCount,
 }: {
   isAuthenticated: boolean;
   isAdmin: boolean;
   notificationLength: number;
+  unReadMessageCount: number;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [streak, setStreak] = useState<number>(0);
+  // const [unReadMessageCount, setUnReadMessageCount] = useState(0);
   const { t } = useTranslation();
 
   const { data } = useGetStreakCount({ isAdmin, isAuthenticated });
@@ -139,6 +152,20 @@ const Navbar = ({
                             </span>
                           )}
                           <User className="h-7 w-7" />
+                        </Button>
+                      </Link>
+                      <Link to={"/user/messaging"}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="relative hover:bg-muted"
+                        >
+                          {unReadMessageCount > 0 && (
+                            <span className="absolute top-0 right-0 inline-flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-bold shadow-md">
+                              {unReadMessageCount}
+                            </span>
+                          )}
+                          <Send className="h-6 w-6 text-primary" />
                         </Button>
                       </Link>
                     </>

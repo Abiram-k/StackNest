@@ -7,16 +7,23 @@ import createHttpError from "http-errors";
 import { IUser } from "../types/IUser";
 import { Types } from "mongoose";
 import { sendNotification } from "../utils/webPush";
+import { IMessageRepository } from "../interfaces/repositories/message.repository.interface";
+import { IMessage } from "../types/IMessage";
+import { GetMessageDTO } from "../dtos/user/connection/useGetMessage.dto";
+import { isImageUrl, isVideoUrl } from "../utils/urlChecker";
 
 export class ConnectionService implements IConnectionService {
   private _notificationRepo: INotificationRepository<INotification>;
   private _userBaseRepo: IUserBaseRepository<IUser>;
+  private _messageRepo: IMessageRepository<IMessage>;
   constructor(
     notificationRepo: INotificationRepository<INotification>,
-    userBaseRepo: IUserBaseRepository<IUser>
+    userBaseRepo: IUserBaseRepository<IUser>,
+    messageRepo: IMessageRepository<IMessage>
   ) {
     this._notificationRepo = notificationRepo;
     this._userBaseRepo = userBaseRepo;
+    this._messageRepo = messageRepo;
   }
 
   async sendConnectionRequest(
@@ -217,6 +224,212 @@ export class ConnectionService implements IConnectionService {
       await this._userBaseRepo.removeFreind(friendId, userId);
     } catch (error) {
       throw error;
-    } 
+    }
+  }
+
+  async getAllConnections(
+    userId: string,
+    search: string
+  ): Promise<ResGetFriendDTO> {
+    try {
+      if (!userId)
+        throw createHttpError(HttpStatus.UNAUTHORIZED, "UserId not founded");
+
+      const user = await this._userBaseRepo.getAllFriends(userId, search);
+      if (!user)
+        throw createHttpError(HttpStatus.NOT_FOUND, "User not founded");
+      const friends: FriendsRes[] = await Promise.all(
+        user.friends
+          .filter(
+            (friend): friend is IUser => !(friend instanceof Types.ObjectId)
+          )
+          .map(async (friend) => {
+            const messages = await this._messageRepo.getMessages(
+              userId,
+              String(friend._id)
+            );
+            const unReadMessageCount: number =
+              await this._messageRepo.getUnreadMessagesCount(
+                userId,
+                String(friend._id)
+              );
+            const lastMessageData: IMessage | null = messages.length
+              ? messages.slice(-1)[0]
+              : null;
+            let isUserSendedLastMessage =
+              lastMessageData && String(lastMessageData.sender) == userId
+                ? true
+                : false;
+            const lastMessage = lastMessageData
+              ? `${isUserSendedLastMessage ? "You: " : ""} ${
+                  lastMessageData.content.length >= 20
+                    ? lastMessageData.content.slice(0, 20) + "..."
+                    : lastMessageData.content
+                }`
+              : "";
+            const lastMessageAt = lastMessageData
+              ? lastMessageData.createdAt
+              : null;
+            return {
+              friendId: String(friend._id),
+              avtar: friend.avatar,
+              firstName: friend.firstName,
+              lastMessage,
+              lastMessageAt,
+              userName: friend.userName,
+              unReadMessageCount,
+            };
+          })
+      );
+
+      const isMyChatThere =
+        (await this._messageRepo.getMessages(userId, userId)).length && !search;
+      if (isMyChatThere) {
+        const user = await this._userBaseRepo.findById(userId);
+        if (!user)
+          throw createHttpError(HttpStatus.NOT_FOUND, "Failed to find user");
+        const messages = await this._messageRepo.getMessages(userId, userId);
+        const lastMessageData: IMessage | null = messages.length
+          ? messages.slice(-1)[0]
+          : null;
+        let isUserSendedLastMessage =
+          lastMessageData && String(lastMessageData.sender) == userId
+            ? true
+            : false;
+        const lastMessage = lastMessageData
+          ? `${isUserSendedLastMessage ? "You: " : ""} ${
+              lastMessageData.content.length >= 20
+                ? lastMessageData.content.slice(0, 20) + "..."
+                : lastMessageData.content
+            }`
+          : "";
+        const lastMessageAt = lastMessageData
+          ? lastMessageData.createdAt
+          : null;
+        const myChatData: FriendsRes = {
+          avtar: user.avatar,
+          userName: user.userName,
+          firstName: user.firstName,
+          friendId: String(user._id),
+          lastMessage,
+          lastMessageAt,
+          unReadMessageCount: 0,
+        };
+        friends.push(myChatData);
+      }
+
+      return { friends };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Message
+
+  async getUnreadMessageCount(userId: string): Promise<number> {
+    try {
+      if (!userId)
+        throw createHttpError(HttpStatus.UNAUTHORIZED, "Userid not founded");
+      const count = await this._messageRepo.getUnreadMessageCount(userId);
+      return count;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async sendMessage(
+    userId: string,
+    friendId: string,
+    content: string
+  ): Promise<string> {
+    try {
+      if (!userId)
+        throw createHttpError(HttpStatus.UNAUTHORIZED, "User id not founded");
+      if (!friendId)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Friend Id not founded");
+      if (!content)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Content not founded");
+      content = content.trim();
+      let type: "text" | "image" | "video" = "text";
+      if (isImageUrl(content)) type = "image";
+      else if (isVideoUrl(content)) type = "video";
+      else type = "text";
+      const message = await this._messageRepo.createMessage(
+        userId,
+        friendId,
+        content,
+        type
+      );
+      const friendData = await this._userBaseRepo.findById(friendId);
+      const userData = await this._userBaseRepo.findById(userId);
+      if (!userData)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Failed to find User");
+      if (!friendData)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Failed to find friend");
+      if (userId !== friendId) {
+        const payload = {
+          title: "New Message ",
+          body: content.length > 30 ? content.slice(0, 30) + "..." : content,
+          icon: userData.avatar,
+          url: `/user/messaging?friend=${userData._id}`,
+        };
+        if (friendData && friendData?.pushSubscriptions.length > 0) {
+          await Promise.all(
+            friendData.pushSubscriptions.map((subscription) =>
+              sendNotification(
+                { endpoint: subscription.endpoint, keys: subscription.keys },
+                payload
+              )
+            )
+          );
+        }
+      }
+      return message._id;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getMessages(userId: string, friendId: string): Promise<GetMessageDTO> {
+    if (!userId)
+      throw createHttpError(HttpStatus.UNAUTHORIZED, "User id not founded");
+    if (!friendId)
+      throw createHttpError(HttpStatus.NOT_FOUND, "Friend Id not founded");
+    const friendData = await this._userBaseRepo.findById(friendId);
+    if (!friendData)
+      throw createHttpError(HttpStatus.NOT_FOUND, "Friend not founded");
+    const userData = await this._userBaseRepo.findById(userId);
+    if (!userData)
+      throw createHttpError(HttpStatus.NOT_FOUND, "User not founded");
+    const messages = await this._messageRepo.getMessages(userId, friendId);
+
+    const data: GetMessageDTO = {
+      friendData: {
+        _id: String(friendData._id),
+        name: friendData.firstName,
+        avatar: friendData.avatar,
+      },
+      userData: {
+        _id: String(userData._id),
+        name: userData.firstName,
+        avatar: userData.avatar,
+      },
+      messages: messages.map((message) => ({
+        id: message._id,
+        senderId: String(message.sender._id),
+        message: message.content,
+        type: message.type,
+        isRead: message.isRead,
+      })),
+    };
+    return data;
+  }
+
+  async toggleIsRead(messageId: string): Promise<void> {
+    try {
+      if (!messageId)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Message id not founded");
+      await this._messageRepo.toggleIsRead(messageId);
+    } catch (error) {
+      throw error;
+    }
   }
 }

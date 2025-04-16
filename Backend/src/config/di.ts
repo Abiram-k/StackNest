@@ -114,6 +114,9 @@ import { IBenefitsService } from "../interfaces/services/benefits.service.interf
 import { IPremiumService } from "../interfaces/services/premium.service.interface";
 import { IUserConnectionController } from "../interfaces/controllers/user.connection.controller.interface";
 import { UserConnectionController } from "../controllers/user/user.connection.controller";
+import { IMessageRepository } from "../interfaces/repositories/message.repository.interface";
+import { IMessage } from "../types/IMessage";
+import { MessageRepository } from "../repositories/message.repository";
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REPOSITORY >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -140,6 +143,7 @@ const reportRepository: IReportRepository<IReport> = new ReportRepository();
 const rewardRepository: IRewardRepository<IReward> = new RewardRepository();
 const notificationRepository: INotificationRepository<INotification> =
   new NotificationRepository();
+const messageRepository: IMessageRepository<IMessage> = new MessageRepository();
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SERVICES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -199,7 +203,8 @@ const paymentService: IPaymentService = new PaymentService(
 );
 const connectionService: IConnectionService = new ConnectionService(
   notificationRepository,
-  userBaseRepository
+  userBaseRepository,
+  messageRepository
 );
 
 //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CONTROLLERS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

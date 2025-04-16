@@ -111,11 +111,84 @@ export class UserConnectionController implements IUserConnectionController {
     try {
       const { freindUserName } = req.body;
       const { userId } = req.user as { userId: string; role: string };
-      await this._connectionService.unfollow(userId,freindUserName);
+      await this._connectionService.unfollow(userId, freindUserName);
       res.status(HttpStatus.OK).json({
         message: "unfollowed successfully",
         success: true,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAllConnections(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { userId } = req.user as { userId: string; role: string };
+      const search = String(req.query.search) || "";
+
+      const { friends } = await this._connectionService.getAllConnections(
+        userId,
+        search
+      );
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched all freinds",
+        success: true,
+        friends,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getMessages(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { userId } = req.user as { userId: string; role: string };
+      const friendId = String(req.query.friendId) || "";
+      const data = await this._connectionService.getMessages(userId, friendId);
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched messages",
+        success: true,
+        ...data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async toggleIsRead(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { messageId } = req.params;
+      await this._connectionService.toggleIsRead(messageId);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "Marked as readed", success: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getUnreadMessageCount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { userId } = req.user as { userId: string; role: string };
+      const count = await this._connectionService.getUnreadMessageCount(userId);
+      res
+        .status(HttpStatus.OK)
+        .json({ message: "Fetched unread count", success: true, count });
     } catch (error) {
       next(error);
     }
