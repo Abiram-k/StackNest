@@ -117,6 +117,9 @@ import { UserConnectionController } from "../controllers/user/user.connection.co
 import { IMessageRepository } from "../interfaces/repositories/message.repository.interface";
 import { IMessage } from "../types/IMessage";
 import { MessageRepository } from "../repositories/message.repository";
+import { ICallRepository } from "../interfaces/repositories/call.repository.interface";
+import { ICallLog } from "../types/ICallLog";
+import { CallRepository } from "../repositories/call.repository";
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REPOSITORY >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -144,6 +147,7 @@ const rewardRepository: IRewardRepository<IReward> = new RewardRepository();
 const notificationRepository: INotificationRepository<INotification> =
   new NotificationRepository();
 const messageRepository: IMessageRepository<IMessage> = new MessageRepository();
+const callRepository: ICallRepository<ICallLog> = new CallRepository();
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SERVICES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -204,7 +208,8 @@ const paymentService: IPaymentService = new PaymentService(
 const connectionService: IConnectionService = new ConnectionService(
   notificationRepository,
   userBaseRepository,
-  messageRepository
+  messageRepository,
+  callRepository
 );
 
 //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< CONTROLLERS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

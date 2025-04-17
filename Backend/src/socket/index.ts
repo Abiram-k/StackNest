@@ -26,7 +26,7 @@ const initializeSocket = (io: Server) => {
             io.to(friendSocketId).emit("friend-offline", userId);
           }
         }
-        console.log(`User disconnected: ${userId} ${reason}`);
+        // console.log(`User disconnected: ${userId} ${reason}`);
       }
     });
   });

@@ -5,6 +5,7 @@ interface MsgUser {
   _id: string;
   name: string;
   avatar: string;
+  userName:string;
 }
 type GetMessageRes = axiosResponse & {
   friendData: MsgUser;
@@ -42,6 +43,15 @@ type GetFriendsType = axiosResponse & {
   }[];
 };
 
+type GetCallLogsRes = axiosResponse & {
+  callLogs: {
+    firstName: string;
+    userName: string;
+    avatar: string;
+    status: "completed" | "rejected" | "missed";
+    isMeInitiated: boolean;
+  }[];
+};
 export class ConnectionsService {
   private readonly _httpService: HttpService;
   constructor(httpService: HttpService) {
@@ -93,6 +103,9 @@ export class ConnectionsService {
       `/users/connection/message?friendId=${friendId}`
     );
   }
+  async fetchCallLogs(): Promise<GetCallLogsRes> {
+    return await this._httpService.get(`/users/connection/call_logs`);
+  }
 
   async toggleIsRead(messageId: string): Promise<axiosResponse> {
     return await this._httpService.patch(
@@ -103,6 +116,14 @@ export class ConnectionsService {
   async getUnreadMessageCount(): Promise<axiosResponse & { count: number }> {
     return await this._httpService.get(
       `/users/connection/message/unread/count`
+    );
+  }
+
+  async deleteMessage(
+    messageId: string
+  ): Promise<axiosResponse & { deletedMessageId: string; friendId: string }> {
+    return await this._httpService.delete(
+      `/users/connection/message/${messageId}`
     );
   }
 }

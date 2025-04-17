@@ -193,4 +193,41 @@ export class UserConnectionController implements IUserConnectionController {
       next(error);
     }
   }
+
+  async deleteMessage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { messageId } = req.params;
+      const recieverId = await this._connectionService.deleteMessage(messageId);
+      res.status(HttpStatus.OK).json({
+        message: "Message deleted",
+        success: true,
+        deletedMessageId: messageId,
+        friendId: recieverId,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async fetchCallLogs(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { userId } = req.user as { userId: string; role: string };
+      const callLogs = await this._connectionService.fetchCallLogs(userId);
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched call logs",
+        success: true,
+        callLogs,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

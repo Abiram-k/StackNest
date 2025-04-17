@@ -2,6 +2,7 @@ interface User {
   _id: string;
   name: string;
   avatar: string;
+  userName: string;
 }
 export interface GetMessageDTO {
   friendData: User;

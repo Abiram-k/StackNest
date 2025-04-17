@@ -1,3 +1,4 @@
+import { FetchCallLogsDTO } from "../../dtos/user/connection/fetchCallLogs.dto";
 import { GetMessageDTO } from "../../dtos/user/connection/useGetMessage.dto";
 
 export interface IConnectionService {
@@ -5,7 +6,8 @@ export interface IConnectionService {
     senderId: string,
     recieverUserName: string
   ): Promise<void>;
-  getUnreadMessageCount(userId:string):Promise<number>
+  deleteMessage(messageId: string): Promise<string>;
+  getUnreadMessageCount(userId: string): Promise<number>;
   toggleIsRead(messageId: string): Promise<void>;
   getConnectionRequests(userId: string): Promise<string[]>;
   unfollow(userId: string, freindUserName: string): Promise<void>;
@@ -13,6 +15,11 @@ export interface IConnectionService {
   acceptRequest(requestId: string): Promise<void>;
   getNotifications(userId: string): Promise<ResGetNotificationDTO>;
   getAllConnections(userId: string, search: string): Promise<ResGetFriendDTO>;
-  sendMessage(userId: string, friendId: string, content: string): Promise<string>;
+  sendMessage(
+    userId: string,
+    friendId: string,
+    content: string
+  ): Promise<string>;
   getMessages(userId: string, friendId: string): Promise<GetMessageDTO>;
+  fetchCallLogs(userId: string): Promise<FetchCallLogsDTO[]>;
 }

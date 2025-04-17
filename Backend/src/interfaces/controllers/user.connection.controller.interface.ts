@@ -53,4 +53,14 @@ export interface IUserConnectionController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  deleteMessage(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  fetchCallLogs(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 }

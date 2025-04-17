@@ -11,19 +11,25 @@ import { IMessageRepository } from "../interfaces/repositories/message.repositor
 import { IMessage } from "../types/IMessage";
 import { GetMessageDTO } from "../dtos/user/connection/useGetMessage.dto";
 import { isImageUrl, isVideoUrl } from "../utils/urlChecker";
+import { FetchCallLogsDTO } from "../dtos/user/connection/fetchCallLogs.dto";
+import { ICallRepository } from "../interfaces/repositories/call.repository.interface";
+import { ICallLog } from "../types/ICallLog";
 
 export class ConnectionService implements IConnectionService {
   private _notificationRepo: INotificationRepository<INotification>;
   private _userBaseRepo: IUserBaseRepository<IUser>;
   private _messageRepo: IMessageRepository<IMessage>;
+  private _callRepo: ICallRepository<ICallLog>;
   constructor(
     notificationRepo: INotificationRepository<INotification>,
     userBaseRepo: IUserBaseRepository<IUser>,
-    messageRepo: IMessageRepository<IMessage>
+    messageRepo: IMessageRepository<IMessage>,
+    callRepo: ICallRepository<ICallLog>
   ) {
     this._notificationRepo = notificationRepo;
     this._userBaseRepo = userBaseRepo;
     this._messageRepo = messageRepo;
+    this._callRepo = callRepo;
   }
 
   async sendConnectionRequest(
@@ -336,6 +342,7 @@ export class ConnectionService implements IConnectionService {
       throw error;
     }
   }
+
   async sendMessage(
     userId: string,
     friendId: string,
@@ -406,11 +413,13 @@ export class ConnectionService implements IConnectionService {
         _id: String(friendData._id),
         name: friendData.firstName,
         avatar: friendData.avatar,
+        userName: friendData.userName,
       },
       userData: {
         _id: String(userData._id),
         name: userData.firstName,
         avatar: userData.avatar,
+        userName: userData.userName,
       },
       messages: messages.map((message) => ({
         id: message._id,
@@ -428,6 +437,65 @@ export class ConnectionService implements IConnectionService {
       if (!messageId)
         throw createHttpError(HttpStatus.NOT_FOUND, "Message id not founded");
       await this._messageRepo.toggleIsRead(messageId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteMessage(messageId: string): Promise<string> {
+    try {
+      if (!messageId)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Message id not founded");
+      const recieverId = await this._messageRepo.findByAndDelete(messageId);
+      if (!recieverId)
+        throw createHttpError(HttpStatus.FORBIDDEN, "Failed to delete message");
+      return recieverId;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async fetchCallLogs(userId: string): Promise<FetchCallLogsDTO[]> {
+    try {
+      if (!userId)
+        throw createHttpError(
+          HttpStatus.UNAUTHORIZED,
+          "User id not founded (calllog_Fetch)"
+        );
+      const callLogs = await this._callRepo.getCallLogs(userId);
+      if (!callLogs.length) return [];
+      const formattedData: FetchCallLogsDTO[] = callLogs
+        .map((log) => {
+          if (
+            log.initiator instanceof Types.ObjectId ||
+            log.reciever instanceof Types.ObjectId
+          ) {
+            console.log("Initiator or reciever not populated");
+            return null;
+          }
+          const isMeInitiated: boolean = String(log.initiator._id) == userId;
+
+          if (isMeInitiated) {
+            return {
+              firstName: log.reciever.firstName,
+              userName: log.reciever.userName,
+              avatar: log.reciever.avatar,
+              status: log.status,
+              isMeInitiated,
+            };
+          } else {
+            return {
+              firstName: log.initiator.firstName,
+              userName: log.initiator.userName,
+              avatar: log.initiator.avatar,
+              status: log.status,
+              isMeInitiated,
+            };
+          }
+        })
+        .filter((data) => data !== null);
+
+      return formattedData;
     } catch (error) {
       throw error;
     }

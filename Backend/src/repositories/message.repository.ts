@@ -38,10 +38,8 @@ export class MessageRepository implements IMessageRepository<IMessage> {
   async getUnreadMessagesCount(user1: string, user2: string): Promise<number> {
     try {
       const unReadMsgs = await Message.find({
-        $or: [
-          { sender: user1, receiver: user2 },
-          { sender: user2, receiver: user1 },
-        ],
+        sender: user2,
+        receiver: user1,
         isRead: false,
       });
       return unReadMsgs.length;
@@ -55,9 +53,18 @@ export class MessageRepository implements IMessageRepository<IMessage> {
       const messages = await Message.find({
         receiver: userId,
         isRead: false,
-        sender: { $ne: userId }, 
+        sender: { $ne: userId },
       });
       return messages.length;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findByAndDelete(messageId: string): Promise<string | null> {
+    try {
+      const deletedMessage = await Message.findByIdAndDelete(messageId);
+      return deletedMessage ? deletedMessage.receiver.toString() : null;
     } catch (error) {
       throw error;
     }

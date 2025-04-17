@@ -7,10 +7,10 @@ import {
   Mic,
   Video,
   ArrowLeft,
-  MoreHorizontal,
   CheckCheck,
   Eye,
-  Trash,
+  Trash2Icon,
+  Phone,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDebounce } from "@/hooks/optimizational/useDebounce";
@@ -18,21 +18,24 @@ import { useGetFreinds } from "@/hooks/user/connection/useGetFreinds";
 import { Spinner } from "@/components/ui/spinner";
 import { formatDistanceToNow } from "date-fns";
 import { useGetMessages } from "@/hooks/user/connection/message/useGetMessages";
-import { useSendMessage } from "@/hooks/user/connection/message/useSendMessage";
 import { toast } from "sonner";
 import { useSocket } from "@/lib/socket";
 import { Socket } from "socket.io-client";
 import { Button } from "@/components/ui/button";
-import ImageUploader from "@/components/ImageUploader";
 import { HttpService } from "@/api/httpService";
 import { ImageService } from "@/api/public/imageService";
 import { useMessageSeenObserver } from "@/hooks/user/connection/message/useMessageSeenObserver";
 import { useGetUnreadMessagesCount } from "@/hooks/user/connection/message/useGetUnreadMessageCount";
+import { useDeleteMessage } from "@/hooks/user/connection/message/useDeleteMessage";
+import ConfirmationDialog from "@/components/modal/confirmationDialog";
+import { CallWebRTCService } from "@/lib/CallWebRTCService";
+import { useFetchCallLogs } from "@/hooks/user/connection/useFetchCallLogs";
 
 interface MsgUser {
   _id: string;
   name: string;
   avatar: string;
+  userName: string;
 }
 interface MessageChat {
   id: string;
@@ -46,6 +49,7 @@ type GetMessageRes = {
   userData: MsgUser;
   messages: MessageChat[];
 };
+type CallView = "none" | "calling" | "ringing" | "in-call" | "incoming";
 
 export default function MessagingApp() {
   const [message, setMessage] = useState("");
@@ -59,8 +63,89 @@ export default function MessagingApp() {
   const [selectedMedia, setSelectedMedia] = useState<File | null>(null);
   const [isMediaUploading, setIsMediaUploading] = useState(false);
   const [isFriendOnline, setIsFriendOnline] = useState<boolean>(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
+  const [selectecMessage, setSelectedMessage] = useState<string>("");
 
   const { data: messageDataAPI } = useGetMessages(friendId);
+  const { mutate: deleteMessageMutate, isPending: deletingMessage } =
+    useDeleteMessage();
+
+  const [callerId, setCallerId] = useState<string | null>(null);
+  const [callerName, setCallerName] = useState<string | null>(null);
+  const [callerAvatar, setCallerAvatar] = useState<string | null>(null);
+  const [callView, setCallView] = useState<CallView>("none");
+  const webrtcService = useRef<CallWebRTCService>();
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current && webrtcService.current?.remoteStream) {
+      audioRef.current.srcObject = webrtcService.current.remoteStream;
+    }
+  }, [callView]);
+
+  useEffect(() => {
+    webrtcService.current = new CallWebRTCService(socket, friendId);
+
+    socket.on("call-ended", ({ from }) => {
+      webrtcService.current?.cleanup();
+      setCallView("none");
+    });
+
+    socket.on("call-accepted", ({ from, callerName, callerAvatar }) => {
+      setCallerId(from);
+      setCallerAvatar(callerAvatar);
+      setCallerName(callerName);
+      setCallView("in-call");
+    });
+
+    socket.on("signal", handleIncomingSignal);
+    socket.on("callRejected", handleCallRejection);
+
+    return () => {
+      webrtcService.current?.cleanup();
+      socket.off("call-ended");
+      socket.off("call-accepted");
+      socket.off("signal", handleIncomingSignal);
+      socket.off("callRejected", handleCallRejection);
+    };
+  }, []);
+
+  const handleCallRejection = () => {
+    setCallView("none");
+    webrtcService.current?.cleanup();
+  };
+
+  const handleIncomingSignal = async (signal: any) => {
+    if (signal.type === "offer") {
+      setCallView("incoming");
+      setCallerId(signal.from);
+      setCallerAvatar(signal.callerAvatar);
+      setCallerName(signal.callerName);
+    }
+    await webrtcService.current?.handleSignal(signal);
+  };
+
+  const startCall = async () => {
+    setCallView("calling");
+    await webrtcService.current?.initializeCall();
+  };
+
+  const acceptCall = async () => {
+    await webrtcService.current?.acceptCall();
+    setCallView("in-call");
+  };
+
+  const rejectCall = () => {
+    socket.emit("rejectCall", { to: callerId });
+    setCallView("none");
+    webrtcService.current?.cleanup();
+  };
+
+  const endCall = () => {
+    socket.emit("call-end", { to: callerId });
+    setCallView("none");
+    webrtcService.current?.cleanup();
+  };
 
   useEffect(() => {
     setMessageData(messageDataAPI);
@@ -96,7 +181,21 @@ export default function MessagingApp() {
         };
       });
     };
+
     socket.on("message-read", handleLocalIsReadTrue);
+
+    socket.on("message-delete", (messageId) => {
+      setMessageData((prev) => {
+        if (!prev) return;
+        const updatedMessages = prev.messages.filter(
+          (message) => message.id !== messageId
+        );
+        return {
+          ...prev,
+          messages: updatedMessages,
+        };
+      });
+    });
 
     socket.on("is-friend-online", (status: boolean) => {
       console.log(` socket.on("is-friend-online") , status is :${status}`);
@@ -133,6 +232,13 @@ export default function MessagingApp() {
   // cliking on file using the icon
   const handleIconClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleMessageDelete = () => {
+    if (!selectecMessage) return;
+    deleteMessageMutate(selectecMessage);
+    setIsConfirmModalOpen(false);
+    setSelectedMessage("");
   };
 
   // File handling
@@ -232,6 +338,197 @@ export default function MessagingApp() {
 
     return <p>Unsupported media type.</p>;
   };
+
+  // const CallOverlay = () => (
+  //   <div
+  //     className={`fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm
+  //       z-50
+  //     ${callView === "none" ? "hidden" : "flex"}
+  //     ${window.innerWidth >= 1024 ? "items-center justify-center" : ""}`}
+  //   >
+  //     <div
+  //       className={`bg-white dark:bg-gray-800 p-6 rounded-lg
+  //       ${window.innerWidth < 1024 ? "w-full h-full" : "max-w-md w-full"}`}
+  //     >
+  //       {callView === "calling" && (
+  //         <div className="flex flex-col items-center h-full justify-center">
+  //           <h2 className="text-xl mb-4">
+  //             Calling... {messageData?.friendData.name}{" "}
+  //           </h2>
+  //           <button
+  //             onClick={endCall}
+  //             className="bg-red-500 text-white px-6 py-2 rounded-full"
+  //           >
+  //             End Call
+  //           </button>
+  //         </div>
+  //       )}
+
+  //       {callView === "incoming" && (
+  //         <div className="flex flex-col items-center h-full justify-center">
+  //           <img
+  //             src={callerAvatar!}
+  //             alt=""
+  //             className="rouded w-10 h-10 object-cover"
+  //           />
+  //           <h2 className="text-xl mb-4">Incoming Call from {callerName}</h2>
+  //           <div className="fixed bottom-8 left-0 right-0 flex justify-center gap-4">
+  //             <button
+  //               onClick={acceptCall}
+  //               className="bg-green-500 text-white px-6 py-2 rounded-full"
+  //             >
+  //               Accept
+  //             </button>
+  //             <button
+  //               onClick={rejectCall}
+  //               className="bg-red-500 text-white px-6 py-2 rounded-full"
+  //             >
+  //               Reject
+  //             </button>
+  //           </div>
+  //         </div>
+  //       )}
+
+  //       {callView === "in-call" && (
+  //         <div className="flex flex-col items-center h-full justify-center">
+  //           <img
+  //             src={callerAvatar!}
+  //             alt=""
+  //             className="rouded w-10 h-10 object-cover"
+  //           />
+  //           <h2 className="text-xl mb-4">In Call with {callerName}</h2>
+  //           <audio ref={audioRef} autoPlay className="w-full mb-4" />
+  //           <button
+  //             onClick={endCall}
+  //             className="bg-red-500 text-white px-6 py-2 rounded-full"
+  //           >
+  //             End Call
+  //           </button>
+  //         </div>
+  //       )}
+  //     </div>
+  //   </div>
+  // );
+
+  const CallOverlay = () => (
+    <div
+      className={`fixed inset-0 bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-sm z-50
+        ${callView === "none" ? "hidden" : "flex"}
+        md:items-center md:justify-center`}
+    >
+      <div
+        className={`relative w-full h-full overflow-hidden
+          md:max-w-md md:h-auto md:rounded-2xl md:shadow-xl`}
+      >
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute bg-white/10 rounded-full animate-pulse"
+              style={{
+                width: `${Math.random() * 10 + 5}px`,
+                height: `${Math.random() * 10 + 5}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${i * 0.2}s`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Main content */}
+        <div className="flex flex-col items-center justify-center h-full p-8 text-white">
+          {/* Avatar with ripple effect */}
+          <div className="relative mb-8">
+            <div className="absolute inset-0 rounded-full animate-ripple">
+              <div className="absolute inset-0 border-4 border-white/20 rounded-full" />
+            </div>
+            <img
+              src={callerAvatar! || messageData?.friendData.avatar}
+              alt=""
+              className="w-32 h-32 rounded-full ring-4 ring-white/30 object-cover"
+            />
+          </div>
+
+          <h2 className="text-2xl font-semibold mb-2">
+            {callView === "incoming"
+              ? "Incoming Call"
+              : callView == "in-call"
+              ? `${callerName}`
+              : "Calling..."}
+          </h2>
+          <p className="text-gray-300 mb-12">
+            {messageData?.friendData.name || callerName}
+          </p>
+
+          {/* Call buttons */}
+          <div className="fixed bottom-8 left-0 right-0 flex justify-center gap-6">
+            {callView === "incoming" ? (
+              <>
+                <button
+                  onClick={rejectCall}
+                  className="p-4 bg-red-500 rounded-full shadow-lg hover:bg-red-600 transition-colors"
+                >
+                  <svg
+                    className="w-8 h-8"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={acceptCall}
+                  className="p-4 bg-green-500 rounded-full shadow-lg hover:bg-green-600 transition-colors"
+                >
+                  <svg
+                    className="w-8 h-8"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={endCall}
+                className="p-4 bg-red-500 rounded-full shadow-lg hover:bg-red-600 transition-colors"
+              >
+                <svg
+                  className="w-8 h-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+
+          <audio ref={audioRef} autoPlay className="hidden" />
+        </div>
+      </div>
+    </div>
+  );
   return (
     <>
       <div className="md:flex flex-col max-h-screen bg-white dark:bg-black  hidden scrollbar-thin overflow-hidden h-screen p-3  border-b-2 border-gray-200  ">
@@ -240,7 +537,18 @@ export default function MessagingApp() {
 
           {friendId ? (
             <div className="hidden md:flex flex-1 flex-col ">
-              {/*  Header */}
+              <CallOverlay />
+              {isConfirmModalOpen && (
+                <ConfirmationDialog
+                  onCancel={() => {
+                    setIsConfirmModalOpen(false);
+                    setSelectedMessage("");
+                  }}
+                  onConfirm={handleMessageDelete}
+                  message="Message will delete from everyone"
+                />
+              )}
+              {deletingMessage && <Spinner />}
               <div className="flex items-center justify-between p-4 border-b">
                 <div className="flex items-center">
                   <img
@@ -251,9 +559,14 @@ export default function MessagingApp() {
                     className="rounded-full mr-3"
                   />
                   <div>
-                    <h3 className="font-medium">
-                      {messageData?.friendData?.name || "No name"}
-                    </h3>
+                    <div className="flex justify-center items-center gap-2">
+                      <h3 className="font-medium">
+                        {messageData?.friendData?.name || "No name"}
+                      </h3>
+                      <span className="text-xs text-gray-500 ">
+                        (@{messageData?.friendData?.userName})
+                      </span>
+                    </div>
                     <div className="flex items-center text-sm text-green-500">
                       {isFriendOnline ? (
                         <>
@@ -270,14 +583,17 @@ export default function MessagingApp() {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <button className="flex items-center px-3 py-1.5 bg-gray-100 dark:bg-gray-900 dark:text-white rounded-md text-gray-700 hover:bg-gray-200">
-                    <Mic className="h-5 w-5 mr-1" />
+                  <button
+                    className="flex items-center px-3 py-1.5 bg-gray-100 dark:bg-gray-900 dark:text-white rounded-md text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800 "
+                    onClick={startCall}
+                  >
+                    <Phone className="h-5 w-5 mr-2" />
                     <span>VoiceCall</span>
                   </button>
-                  <button className="flex items-center px-3 py-1.5 bg-blue-50 dark:bg-gray-900  rounded-md text-blue-600 hover:bg-blue-100">
+                  {/* <button className="flex items-center px-3 py-1.5 bg-blue-50 dark:bg-gray-900  rounded-md text-blue-600 hover:bg-blue-100 dark:hover:bg-gray-800">
                     <Video className="h-5 w-5 mr-1" />
                     <span>VideoCall</span>
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
@@ -320,7 +636,13 @@ export default function MessagingApp() {
                               {message.message}
                             </p>
                           )}
-                          <Trash className="h-3 w-3 text-red-500 absolute right-3 top-1 z-30 cursor-pointer" />
+                          <Trash2Icon
+                            className="h-3 w-3 text-white absolute right-3 top-1 z-30 cursor-pointer"
+                            onClick={() => {
+                              setIsConfirmModalOpen(true);
+                              setSelectedMessage(message.id);
+                            }}
+                          />
 
                           {message.isRead ? (
                             <span className="absolute bottom-1 right-2 block ">
@@ -550,6 +872,93 @@ function MobileChat({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<File | null>(null);
   const [isMediaUploading, setIsMediaUploading] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(false);
+  const [selectecMessage, setSelectedMessage] = useState<string>("");
+  const { mutate: deleteMessageMutate, isPending: deletingMessage } =
+    useDeleteMessage();
+  const [callerId, setCallerId] = useState<string | null>(null);
+  const [callerName, setCallerName] = useState<string | null>(null);
+  const [callerAvatar, setCallerAvatar] = useState<string | null>(null);
+  const [callView, setCallView] = useState<CallView>("none");
+  const webrtcService = useRef<CallWebRTCService>();
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current && webrtcService.current?.remoteStream) {
+      audioRef.current.srcObject = webrtcService.current.remoteStream;
+    }
+  }, [callView]);
+
+  useEffect(() => {
+    webrtcService.current = new CallWebRTCService(socket, friendId!);
+
+    socket.on("call-ended", ({ from }) => {
+      webrtcService.current?.cleanup();
+      setCallView("none");
+    });
+
+    socket.on("call-accepted", ({ from, callerName, callerAvatar }) => {
+      setCallerId(from);
+      setCallerAvatar(callerAvatar);
+      setCallerName(callerName);
+      setCallView("in-call");
+    });
+
+    socket.on("signal", handleIncomingSignal);
+    socket.on("callRejected", handleCallRejection);
+
+    return () => {
+      webrtcService.current?.cleanup();
+      socket.off("call-ended");
+      socket.off("call-accepted");
+      socket.off("signal", handleIncomingSignal);
+      socket.off("callRejected", handleCallRejection);
+    };
+  }, [friendId]);
+
+  const handleCallRejection = () => {
+    setCallView("none");
+    webrtcService.current?.cleanup();
+  };
+
+  const handleIncomingSignal = async (signal: any) => {
+    if (signal.type === "offer") {
+      setCallView("incoming");
+      setCallerId(signal.from);
+      setCallerAvatar(signal.callerAvatar);
+      setCallerName(signal.callerName);
+    }
+    await webrtcService.current?.handleSignal(signal);
+  };
+
+  const startCall = async () => {
+    setCallView("calling");
+    await webrtcService.current?.initializeCall();
+  };
+
+  const acceptCall = async () => {
+    await webrtcService.current?.acceptCall();
+    setCallView("in-call");
+  };
+
+  const rejectCall = () => {
+    socket.emit("rejectCall", { to: callerId });
+    setCallView("none");
+    webrtcService.current?.cleanup();
+  };
+
+  const endCall = () => {
+    socket.emit("call-end", { to: callerId });
+    setCallView("none");
+    webrtcService.current?.cleanup();
+  };
+
+  const handleMessageDelete = () => {
+    if (!selectecMessage) return;
+    deleteMessageMutate(selectecMessage);
+    setIsConfirmModalOpen(false);
+    setSelectedMessage("");
+  };
 
   const handleIconClick = () => {
     fileInputRef.current?.click();
@@ -656,10 +1065,142 @@ function MobileChat({
     return <p>Unsupported media type.</p>;
   };
 
+  const CallOverlay = () => (
+    <div
+      className={`fixed inset-0 bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-sm z-50
+        ${callView === "none" ? "hidden" : "flex"}
+        md:items-center md:justify-center`}
+    >
+      <div
+        className={`relative w-full h-full overflow-hidden
+          md:max-w-md md:h-auto md:rounded-2xl md:shadow-xl`}
+      >
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute bg-white/10 rounded-full animate-pulse"
+              style={{
+                width: `${Math.random() * 10 + 5}px`,
+                height: `${Math.random() * 10 + 5}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${i * 0.2}s`,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Main content */}
+        <div className="flex flex-col items-center justify-center h-full p-8 text-white">
+          {/* Avatar with ripple effect */}
+          <div className="relative mb-8">
+            <div className="absolute inset-0 rounded-full animate-ripple">
+              <div className="absolute inset-0 border-4 border-white/20 rounded-full" />
+            </div>
+            <img
+              src={callerAvatar! || messageData?.friendData.avatar}
+              alt=""
+              className="w-32 h-32 rounded-full ring-4 ring-white/30 object-cover"
+            />
+          </div>
+
+          <h2 className="text-2xl font-semibold mb-2">
+            {callView === "incoming"
+              ? "Incoming Call"
+              : callView == "in-call"
+              ? `${callerName}`
+              : "Calling..."}
+          </h2>
+          <p className="text-gray-300 mb-12">
+            {messageData?.friendData.name || callerName}
+          </p>
+
+          {/* Call buttons */}
+          <div className="fixed bottom-8 left-0 right-0 flex justify-center gap-6">
+            {callView === "incoming" ? (
+              <>
+                <button
+                  onClick={rejectCall}
+                  className="p-4 bg-red-500 rounded-full shadow-lg hover:bg-red-600 transition-colors"
+                >
+                  <svg
+                    className="w-8 h-8"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={acceptCall}
+                  className="p-4 bg-green-500 rounded-full shadow-lg hover:bg-green-600 transition-colors"
+                >
+                  <svg
+                    className="w-8 h-8"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={endCall}
+                className="p-4 bg-red-500 rounded-full shadow-lg hover:bg-red-600 transition-colors"
+              >
+                <svg
+                  className="w-8 h-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+
+          <audio ref={audioRef} autoPlay className="hidden" />
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
       {friendId ? (
         <div className="flex flex-col  bg-white dark:bg-black h-screen scrollbar-thin">
+          {isConfirmModalOpen && (
+            <ConfirmationDialog
+              onCancel={() => {
+                setIsConfirmModalOpen(false);
+                setSelectedMessage("");
+              }}
+              onConfirm={handleMessageDelete}
+              message="Message will delete from everyone"
+            />
+          )}
+          {deletingMessage && <Spinner />}
+          <CallOverlay />
           <div className="flex items-center justify-between p-4 border-b">
             <div className="flex items-center">
               <Link to="/user/messaging" className="mr-3">
@@ -673,7 +1214,15 @@ function MobileChat({
                 className="rounded-full mr-3"
               />
               <div>
-                <h3 className="font-medium">{messageData?.friendData.name}</h3>
+                {/* <h3 className="font-medium">{messageData?.friendData.name}</h3> */}
+                <div className="flex justify-center items-center gap-2">
+                  <h3 className="font-medium">
+                    {messageData?.friendData?.name || "No name"}
+                  </h3>
+                  <span className="text-xs text-gray-500 ">
+                    (@{messageData?.friendData?.userName})
+                  </span>
+                </div>
                 <div className="flex items-center text-xs text-green-500">
                   {isFriendOnline ? (
                     <>
@@ -690,12 +1239,15 @@ function MobileChat({
             </div>
 
             <div className="flex items-center space-x-2">
-              <button className="p-2 rounded-full hover:bg-gray-100">
-                <Mic className="h-5 w-5" />
+              <button
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                onClick={startCall}
+              >
+                <Phone className="h-5 w-5" />
               </button>
-              <button className="p-2 rounded-full hover:bg-gray-100">
+              {/* <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
                 <Video className="h-5 w-5" />
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -737,6 +1289,13 @@ function MobileChat({
                       </p>
                     )}
                   </div>
+                  <Trash2Icon
+                    className="h-3 w-3 text-white absolute right-3 top-1 z-30 cursor-pointer"
+                    onClick={() => {
+                      setIsConfirmModalOpen(true);
+                      setSelectedMessage(message.id);
+                    }}
+                  />
                   {message.isRead ? (
                     <span className="absolute bottom-1 right-2 block ">
                       <Eye className="w-4 h-4 text-blue-400 " />
@@ -809,10 +1368,32 @@ function FreindsList() {
     search: debounceValue,
   });
   const { data: unreadMessageCountData } = useGetUnreadMessagesCount();
+  const [isCalling, setIsCalling] = useState<boolean>(false);
+  const [callerId, setCallerId] = useState<string>("");
+  const socket = useSocket();
+  const [showFriendList, setShowFriendList] = useState<boolean>(true);
 
+  const { data: callLogsData, isPending: fetchingCallLogs } =
+    useFetchCallLogs();
+
+  console.log("Call logs",callLogsData);
+
+  useEffect(() => {
+    socket.on("signal", handleIncomingSignal);
+    return () => {
+      socket.off("signal", handleIncomingSignal);
+    };
+  }, []);
+
+  const handleIncomingSignal = async (signal: any) => {
+    if (signal.type === "offer") {
+      setIsCalling(true);
+      setCallerId(signal.from);
+    }
+  };
   return (
     <div className="w-full md:w-80 lg:w-96 border-r bg-gray-50 dark:bg-black flex flex-col">
-      {fetchingfriends && <Spinner />}
+      {(fetchingfriends || fetchingCallLogs) && <Spinner />}
 
       <div className="p-4 border-b">
         <div className="flex items-center justify-between mb-4">
@@ -834,7 +1415,7 @@ function FreindsList() {
         <div className="relative">
           <input
             type="text"
-            placeholder="Search Friends"
+            placeholder="Search by User name ..."
             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={search}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -845,7 +1426,13 @@ function FreindsList() {
         </div>
 
         <div className="flex mt-4 border-b pb-2">
-          <button className="flex-1 flex justify-center py-2 border-b-2 border-blue-600">
+          <button
+            className={`flex-1 flex justify-center py-2 text-gray-500 ${
+              showFriendList &&
+              "border-blue-600 border-b-2 dark:text-white text-black"
+            }`}
+            onClick={() => setShowFriendList(true)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -861,7 +1448,13 @@ function FreindsList() {
               />
             </svg>
           </button>
-          <button className="flex-1 flex justify-center py-2 text-gray-500">
+          <button
+            className={`flex-1 flex justify-center py-2 text-gray-500 ${
+              !showFriendList &&
+              "border-blue-600 border-b-2 dark:text-white text-black"
+            }`}
+            onClick={() => setShowFriendList(false)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -880,56 +1473,137 @@ function FreindsList() {
         </div>
       </div>
 
-      <div className="overflow-y-auto flex-1">
-        {friendsData?.friends.length ? (
-          friendsData?.friends.map((friend, index) => (
-            <div
-              key={`${friend.friendId}-${index}`}
-              className="flex items-center p-3 hover:bg-gray-100 dark:hover:bg-gray-900 cursor-pointer border-b"
-              onClick={() =>
-                navigate(`/user/messaging?friend=${friend.friendId}`)
-              }
-            >
-              <img
-                src={friend.avtar}
-                alt="User Avatar"
-                width={50}
-                height={50}
-                className="rounded-full mr-3"
-              />
-              <div className="flex-1 min-w-0">
-                <div className="flex justify-between items-center">
-                  <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
-                    {friend.firstName}
-                  </h3>
-                  <div className="flex items-center">
-                    <span className="text-xs text-gray-500">
-                      {friend.lastMessageAt
-                        ? formatDistanceToNow(new Date(friend.lastMessageAt)) +
-                          " ago"
-                        : ""}
-                    </span>
-                    {friend.unReadMessageCount > 0 && (
-                      <span className="ml-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                        {friend.unReadMessageCount}
+      {showFriendList ? (
+        <div className="overflow-y-auto flex-1">
+          {friendsData?.friends.length ? (
+            friendsData?.friends.map((friend, index) => (
+              <div
+                key={`${friend.friendId}-${index}`}
+                className="flex items-center p-3 hover:bg-gray-100  dark:hover:bg-gray-900 cursor-pointer border-b relative"
+                onClick={() => {
+                  setCallerId("");
+                  setIsCalling(false);
+                  navigate(`/user/messaging?friend=${friend.friendId}`);
+                }}
+              >
+                <div className="relative">
+                  <img
+                    src={friend.avtar}
+                    alt="User Avatar"
+                    width={50}
+                    height={50}
+                    className="rounded-full mr-3"
+                  />
+                  {isCalling && callerId == friend.friendId && (
+                    <div className="absolute -right-1 bottom-0">
+                      <span className="relative flex h-6 w-6">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <div className="relative inline-flex items-center justify-center rounded-full h-6 w-6 bg-green-500">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 text-white"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                          </svg>
+                        </div>
                       </span>
-                    )}
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                      {friend.firstName}
+                    </h3>
+                    <div className="flex items-center">
+                      <span className="text-xs text-gray-500">
+                        {friend.lastMessageAt
+                          ? formatDistanceToNow(
+                              new Date(friend.lastMessageAt)
+                            ) + " ago"
+                          : ""}
+                      </span>
+                      {friend.unReadMessageCount > 0 && (
+                        <span className="ml-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                          {friend.unReadMessageCount}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-500 truncate">
+                    {friend.lastMessage}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500 py-4">
+              {debounceValue
+                ? `Oops! No result in chat. ${debounceValue}...`
+                : "Oops! You haven't connected with anyone yet. ☹️"}
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="overflow-y-auto flex-1">
+          {callLogsData?.callLogs?.length ? (
+            callLogsData.callLogs.map((log, index) => {
+              return (
+                <div
+                  key={`${log.userName}-${index}`}
+                  className="flex items-center p-3 hover:bg-gray-100 dark:hover:bg-gray-900 cursor-pointer border-b relative"
+                >
+                  <div className="relative">
+                    <img
+                      src={log.avatar}
+                      alt={`${log.firstName} Avatar`}
+                      width={50}
+                      height={50}
+                      className="rounded-full mr-3"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                        {log.firstName}
+                        {/* <span className="text-xs text-gray-500 ml-2">
+                          (@{log.userName})
+                        </span> */}
+                      </h3>
+                      <div className="flex items-center">
+                        <span
+                          className={`text-xs ${
+                            log.status === "completed"
+                              ? "text-green-500"
+                              : log.status === "rejected"
+                              ? "text-red-500"
+                              : "text-orange-500"
+                          }`}
+                        >
+                          {log.status.charAt(0).toUpperCase() +
+                            log.status.slice(1)}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-500 truncate">
+                      {log.isMeInitiated ? "Outgoing Call" : "Incoming Call"}
+                      {/* <span className="ml-2 text-xs">
+                        {log.duration ? `${log.duration}m` : ""}
+                      </span> */}
+                    </p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500 truncate">
-                  {friend.lastMessage}
-                </p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-500 py-4">
-            {debounceValue
-              ? `Oops! No result in chat. ${debounceValue}...`
-              : "Oops! You haven't connected with anyone yet. ☹️"}
-          </p>
-        )}
-      </div>
+              );
+            })
+          ) : (
+            <p className="text-center text-gray-500 py-4">
+              No call history available
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

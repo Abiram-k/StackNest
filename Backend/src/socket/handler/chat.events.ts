@@ -11,6 +11,9 @@ import { INotificationRepository } from "../../interfaces/repositories/notificat
 import { INotification } from "../../types/INotification";
 import { NotificationRepository } from "../../repositories/notification.repository";
 import { isImageUrl, isVideoUrl } from "../../utils/urlChecker";
+import { ICallRepository } from "../../interfaces/repositories/call.repository.interface";
+import { ICallLog } from "../../types/ICallLog";
+import { CallRepository } from "../../repositories/call.repository";
 
 interface MsgUser {
   _id: string;
@@ -33,12 +36,22 @@ const notificationRepo: INotificationRepository<INotification> =
   new NotificationRepository();
 const userBaseRepo: IUserBaseRepository<IUser> = new UserBaseRepository();
 const messageRepo: IMessageRepository<IMessage> = new MessageRepository();
+// const callRepo: ICallRepository<ICallLog> = new CallRepository();
+const callLogRepo: ICallRepository<ICallLog> = new CallRepository();
 const connectionService: IConnectionService = new ConnectionService(
   notificationRepo,
   userBaseRepo,
-  messageRepo
+  messageRepo,
+  callLogRepo
 );
+
 const userSocketMap = new Map<string, string>();
+
+interface CallSignal {
+  type: "offer" | "answer" | "candidate";
+  content: any;
+  to: string;
+}
 
 const getChatId = (userId: string, friendId: string) =>
   [userId, friendId].sort().join("-");
@@ -94,6 +107,86 @@ export const registerChatEvents = (
     const userId = socket.data.user?.userId;
     const chatId = getChatId(userId, friendId);
     io.to(chatId).emit("message-read", messageId);
+  });
+
+  socket.on("message-deleted", (messageId, friendId) => {
+    const chatId = getChatId(userId, friendId);
+    io.to(chatId).emit("message-delete", messageId);
+  });
+
+  // Call
+  socket.on("signal", async (data: CallSignal) => {
+    const callerName = socket.data.user.userName;
+    const callerAvatar = socket.data.user.avatar;
+    const toSocketId = onlineUsers.get(data.to);
+    if (!toSocketId) {
+      console.log("No socket id finded (signal)");
+      return;
+    }
+    if (data.type === "offer") {
+      try {
+        console.log("Saving call to db 🤖");
+        await callLogRepo.createCallLog({
+          initiator: userId,
+          reciever: data.to,
+          status: "missed",
+        });
+      } catch (err) {
+        console.error("Error saving call log:", err);
+      }
+    }
+
+    io.to(toSocketId).emit("signal", {
+      type: data.type,
+      content: data.content,
+      from: userId,
+      callerName,
+      callerAvatar,
+    });
+  });
+
+  socket.on("rejectCall", async (data: { to: string }) => {
+    const toSocketId = onlineUsers.get(data.to);
+    try {
+      console.log("Updating call status to rejected");
+      await callLogRepo.findOneAndUpdateStatus(userId, data.to, "rejected");
+    } catch (error) {
+      console.error("Error updating call log on reject:", error);
+    }
+    if (!toSocketId) {
+      console.log("No socket id finded (reject call)");
+      return;
+    }
+    io.to(toSocketId).emit("callRejected");
+  });
+
+  socket.on("call-end", async ({ to }) => {
+    const from = userId;
+    const toSocketId = onlineUsers.get(to);
+    try {
+      console.log("Updating call status to completed");
+      await callLogRepo.findOneAndUpdateStatus(userId, to, "completed");
+    } catch (error) {
+      console.error("Error updating call log on call-end:", error);
+    }
+
+    if (!toSocketId) {
+      console.log("No socket id finded (call-end)");
+      return;
+    }
+    io.to(toSocketId).emit("call-ended", { from });
+  });
+
+  socket.on("call-accepted", ({ to }) => {
+    const from = socket.data.user?.userId;
+    const callerName = socket.data.user.userName;
+    const callerAvatar = socket.data.user.avatar;
+    const toSocketId = onlineUsers.get(to);
+    if (!toSocketId) {
+      console.log("No socket id finded (call-accepted)");
+      return;
+    }
+    io.to(toSocketId).emit("call-accepted", { from, callerName, callerAvatar });
   });
 
   // socket.on("exit-chat", (friendId: string) => {

@@ -263,5 +263,13 @@ router.get(
   "/connection/message/unread/count",
   userConnectionController.getUnreadMessageCount.bind(userConnectionController)
 );
+router.delete(
+  "/connection/message/:messageId",
+  userConnectionController.deleteMessage.bind(userConnectionController)
+);
+router.get(
+  "/connection/call_logs",
+  userConnectionController.fetchCallLogs.bind(userConnectionController)
+);
 
 export default router;

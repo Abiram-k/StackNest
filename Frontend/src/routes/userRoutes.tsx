@@ -6,7 +6,7 @@ import RewardsPage from "@/pages/user/pages/RewardsPage";
 
 const PaymentSuccess = lazy(() => import("@/pages/user/pages/PaymentSuccess"));
 const VideoConference = lazy(
-  () => import("@/pages/user/pages/VideoConference")
+  () => import("@/pages/user/pages/VideoConference") 
 );
 const DailyChallengePage = lazy(
   () => import("@/pages/user/pages/DailyChallengePage")
@@ -91,4 +91,5 @@ export const userRoutes: RouteObject[] = [
     ],
   },
   { path: "/user/messaging", element: <MessagingApp /> },
+  // { path: "/user/messaging/:friendId/call", element: <CallComponent /> },
 ];

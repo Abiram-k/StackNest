@@ -9,4 +9,5 @@ export interface IMessageRepository<T> {
   getUnreadMessagesCount(user1: string, user2: string): Promise<number>;
   toggleIsRead(messageId: string): Promise<void>;
   getUnreadMessageCount(userId: string): Promise<number>;
+  findByAndDelete(messageId: string): Promise<string | null>;
 }
