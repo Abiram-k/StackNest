@@ -11,6 +11,7 @@ import {
   Eye,
   Trash2Icon,
   Phone,
+  SmileIcon,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDebounce } from "@/hooks/optimizational/useDebounce";
@@ -43,6 +44,7 @@ interface MessageChat {
   message: string;
   type: "text" | "image" | "video";
   isRead: boolean;
+  reactions: { userId: string; emoji: string }[];
 }
 type GetMessageRes = {
   friendData: MsgUser;
@@ -213,6 +215,57 @@ export default function MessagingApp() {
         setIsFriendOnline(false);
       }
     });
+
+    socket.on(
+      "reaction-removed",
+      (messageId: string, emoji: string, userId: string) => {
+        setMessageData((prev) => {
+          if (!prev) return;
+
+          const updatedMessages = prev?.messages?.map((message) => {
+            if (message.id === messageId) {
+              const updatedReactions = message.reactions.filter(
+                (reaction) =>
+                  !(reaction.userId === userId && reaction.emoji === emoji)
+              );
+              return {
+                ...message,
+                reactions: updatedReactions,
+              };
+            }
+            return message;
+          });
+
+          return {
+            ...prev,
+            messages: updatedMessages,
+          };
+        });
+      }
+    );
+
+    socket.on(
+      "new-reaction",
+      (messageId: string, emoji: string, userId: string) => {
+        setMessageData((prev) => {
+          if (!prev) return;
+          const updatedMessages = prev?.messages?.map((message) => {
+            if (message.id == messageId) {
+              return {
+                ...message,
+                reactions: [...(message.reactions || []), { userId, emoji }],
+              };
+            }
+            return message;
+          });
+          return {
+            ...prev,
+            messages: updatedMessages,
+          };
+        });
+      }
+    );
+
     return () => {
       socket.emit("exit-chat", friendId);
       socket.off("is-friend-online");
@@ -601,17 +654,38 @@ export default function MessagingApp() {
                 {messageData?.messages.map((message) => {
                   return message.senderId == friendId &&
                     message.senderId !== messageData.userData._id ? (
-                    <FrienMessageComponent
+                    <FriendMessageComponent
                       key={message.id}
                       avatar={messageData.friendData.avatar}
                       friendId={messageData.friendData._id}
                       message={message}
                       name={messageData.friendData.name}
-                      // setLocalIsReadTrue={setLocalIsReadTrue}
                     />
                   ) : (
-                    <div className="flex justify-end " key={message.id}>
+                    <div className="flex justify-end mt-12" key={message.id}>
                       <div className="relative min-w-32 ">
+                        <div className="reactions-container flex gap-1 mt-1 dark:bg-gray-900 rounded absolute bg-gray-20 shadow-md -top-10 left-12">
+                          {Object.entries(
+                            (message.reactions ?? []).reduce(
+                              (
+                                acc: Record<string, number>,
+                                r: { userId: string; emoji: string }
+                              ) => {
+                                acc[r.emoji] = (acc[r.emoji] || 0) + 1;
+                                return acc;
+                              },
+                              {}
+                            )
+                          )?.map(([emoji, count]) => (
+                            <button
+                              key={emoji}
+                              className="reaction-btn text-sm p-1 rounded-full flex items-center gap-1"
+                            >
+                              <span>{emoji}</span>
+                              <span>{count}</span>
+                            </button>
+                          ))}
+                        </div>
                         <div
                           className={`${
                             message.type === "text"
@@ -752,27 +826,62 @@ export default function MessagingApp() {
 
 // Freind Message Component (Did for toggle IsRead to true)
 
-function FrienMessageComponent({
+function FriendMessageComponent({
   friendId,
   message,
   name,
   avatar,
-}: // setLocalIsReadTrue,
-{
+}: {
   message: MessageChat;
   name: string;
   friendId: string;
   avatar: string;
-  // setLocalIsReadTrue: (messageId: string) => void;
 }) {
   const messageSeenRef = useMessageSeenObserver({
     friendId,
     messageId: message.id,
     isRead: message.isRead,
-    // onSeen: () => setLocalIsReadTrue(message.id),
   });
+  const [showReactionPicker, setShowReactionPicker] = useState(false);
+  const [reactions, setReactions] = useState<
+    { userId: string; emoji: string }[] | null
+  >(message.reactions);
+  const [showHover, setShowHover] = useState<boolean>(false);
+  const socket = useSocket();
+  const handleReaction = async (emoji: string) => {
+    const existingReaction = reactions?.find(
+      (r) => r.emoji === emoji && r.userId != friendId
+    );
+    if (existingReaction) {
+      socket.emit("delete-reaction", message.id, emoji, friendId);
+      setReactions((prev) => {
+        if (!prev) return null;
+        return prev.filter(
+          (reaction) =>
+            !(reaction.userId === friendId && reaction.emoji === emoji)
+        );
+      });
+    } else {
+      socket.emit("add-reaction", message.id, emoji, friendId);
+      setReactions((prev) => {
+        if (!prev) return null;
+        return [...prev, { userId: friendId, emoji }];
+      });
+    }
+    setShowReactionPicker(false);
+  };
+
   return (
-    <div className="flex items-start" key={message.id}>
+    <div
+      className="flex items-start relative mt-12"
+      key={message.id}
+      onMouseEnter={() => {
+        setShowHover(true);
+      }}
+      onMouseLeave={() => {
+        setShowHover(false);
+      }}
+    >
       <img
         src={avatar}
         alt={`${name} avatar`}
@@ -799,6 +908,46 @@ function FrienMessageComponent({
         ) : (
           <p className="whitespace-pre-line">{message.message}</p>
         )}
+        {!showHover && (
+          <div className="reactions-container flex gap-1 mt-1 dark:bg-gray-900 rounded-full absolute bg-gray-20 shadow-md -top-9 left-12">
+            {Object.entries(
+              (reactions ?? []).reduce(
+                (
+                  acc: Record<string, number>,
+                  r: { userId: string; emoji: string }
+                ) => {
+                  acc[r.emoji] = (acc[r.emoji] || 0) + 1;
+                  return acc;
+                },
+                {}
+              )
+            )?.map(([emoji, count]) => (
+              <button
+                key={emoji}
+                className="reaction-btn text-sm p-1 rounded-full "
+                onClick={() => handleReaction(emoji)}
+              >
+                {emoji} {count}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {showHover && (
+          <button
+            className="reaction-trigger absolute -top-4 left-14  dark:text-gray-100 hover:text-gray-700"
+            onClick={() => setShowReactionPicker(!showReactionPicker)}
+          >
+            <SmileIcon className="w-5 h-5" />
+          </button>
+        )}
+
+        {showReactionPicker && (
+          <ReactionPicker
+            onSelect={handleReaction}
+            onClose={() => setShowReactionPicker(false)}
+          />
+        )}
       </div>
     </div>
   );
@@ -815,46 +964,145 @@ function FriendMessageMobileComponent({
   name: string;
   avatar: string;
   friendId: string;
-  // setLocalIsReadTrue: (messageId: string) => void;
 }) {
   const messageSeenRef = useMessageSeenObserver({
     friendId,
     messageId: message.id,
     isRead: message.isRead,
-    // onSeen: () => setLocalIsReadTrue(message.id),
   });
+  const [showReactionPicker, setShowReactionPicker] = useState(false);
+  const [reactions, setReactions] = useState(message.reactions);
+  const [showHover, setShowHover] = useState<boolean>(false);
+  const socket = useSocket();
+  const handleReaction = async (emoji: string) => {
+    const existingReaction = reactions.find(
+      (r) => r.emoji === emoji && r.userId != friendId
+    );
+    if (existingReaction) {
+      socket.emit("delete-reaction", message.id, emoji, friendId);
+      setReactions((prev) =>
+        prev.filter(
+          (reaction) =>
+            !(reaction.userId === friendId && reaction.emoji === emoji)
+        )
+      );
+    } else {
+      socket.emit("add-reaction", message.id, emoji, friendId);
+      setReactions((prev) => [...prev, { userId: friendId, emoji }]);
+    }
+    setShowReactionPicker(false);
+  };
+
   return (
-    <div className="flex items-start" key={message.id}>
-      <img
-        src={avatar}
-        alt={`${name} avatar`}
-        width={36}
-        height={36}
-        className="rounded-full mr-2"
-      />
+    <>
       <div
-        className="bg-gray-100 dark:bg-gray-900  rounded-lg p-3 max-w-[80%] break-words"
-        ref={messageSeenRef}
+        className="flex items-start relative mt-12"
+        key={message.id}
+        onMouseEnter={() => {
+          setShowHover(true);
+        }}
+        onMouseLeave={() => {
+          setShowHover(false);
+        }}
       >
-        {message.type == "image" ? (
-          <img
-            src={message.message}
-            alt="sent image"
-            className="rounded max-w-full h-auto"
+        <img
+          src={avatar}
+          alt={`${name} avatar`}
+          width={36}
+          height={36}
+          className="rounded-full mr-2"
+        />
+        <div
+          className="bg-gray-100 dark:bg-gray-900  rounded-lg p-3 max-w-[80%] break-words"
+          ref={messageSeenRef}
+        >
+          {message.type == "image" ? (
+            <img
+              src={message.message}
+              alt="sent image"
+              className="rounded max-w-full h-auto"
+            />
+          ) : message.type == "video" ? (
+            <video
+              src={message.message}
+              controls
+              className="rounded max-w-full h-auto"
+            />
+          ) : (
+            <p className="whitespace-pre-line">{message.message}</p>
+          )}
+        </div>
+        {!showHover && (
+          <div className="reactions-container flex gap-1 mt-1 dark:bg-gray-900 rounded-full absolute -top-9 left-12">
+            {Object.entries(
+              (reactions ?? []).reduce(
+                (
+                  acc: Record<string, number>,
+                  r: { userId: string; emoji: string }
+                ) => {
+                  acc[r.emoji] = (acc[r.emoji] || 0) + 1;
+                  return acc;
+                },
+                {}
+              )
+            ).map(([emoji, count]) => (
+              <button
+                key={emoji}
+                className="reaction-btn text-sm p-1 rounded-full "
+                onClick={() => handleReaction(emoji)}
+              >
+                {emoji} {count}
+              </button>
+            ))}
+          </div>
+        )}
+        {showHover && (
+          <button
+            className="reaction-trigger absolute -top-6 left-12 text-gray-500 dark:gray-100 hover:text-gray-700 
+        
+        "
+            onClick={() => setShowReactionPicker(!showReactionPicker)}
+          >
+            <SmileIcon className="w-5 h-5" />
+          </button>
+        )}
+        {showReactionPicker && (
+          <ReactionPicker
+            onSelect={handleReaction}
+            onClose={() => setShowReactionPicker(false)}
           />
-        ) : message.type == "video" ? (
-          <video
-            src={message.message}
-            controls
-            className="rounded max-w-full h-auto"
-          />
-        ) : (
-          <p className="whitespace-pre-line">{message.message}</p>
         )}
       </div>
-    </div>
+    </>
   );
 }
+
+const EMOJI_LIST = ["👍", "👎", "😄", "❤️", "😢", "😂", "☹️", "👀"];
+
+const ReactionPicker = ({
+  onSelect,
+  onClose,
+}: {
+  onSelect: (value: string) => void;
+  onClose: () => void;
+}) => {
+  return (
+    <div className="reaction-picker absolute bottom-full right-0 bg-white border rounded-lg shadow-lg p-2 flex gap-1">
+      {EMOJI_LIST.map((emoji) => (
+        <button
+          key={emoji}
+          className="emoji-btn text-xl p-1 hover:bg-gray-100 rounded"
+          onClick={() => {
+            onSelect(emoji);
+            onClose();
+          }}
+        >
+          {emoji}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 function MobileChat({
   friendId,
@@ -1263,8 +1511,77 @@ function MobileChat({
                   key={message.id}
                 />
               ) : (
-                <div className=" relative flex justify-end" key={message.id}>
-                  <div
+                <div
+                  className=" relative flex justify-end mt-12"
+                  key={message.id}
+                >
+                  <div className="relative min-w-32 ">
+                    <div className="reactions-container flex gap-1 mt-1 dark:bg-gray-900 rounded absolute bg-gray-20 shadow-md -top-10 left-12">
+                      {Object.entries(
+                        (message.reactions ?? []).reduce(
+                          (
+                            acc: Record<string, number>,
+                            r: { userId: string; emoji: string }
+                          ) => {
+                            acc[r.emoji] = (acc[r.emoji] || 0) + 1;
+                            return acc;
+                          },
+                          {}
+                        )
+                      )?.map(([emoji, count]) => (
+                        <button
+                          key={emoji}
+                          className="reaction-btn text-sm p-1 rounded-full flex items-center gap-1"
+                        >
+                          <span>{emoji}</span>
+                          <span>{count}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <div
+                      className={`${
+                        message.type === "text"
+                          ? "bg-blue-600 p-3"
+                          : "dark:bg-gray-600 bg-gray-200 p-1"
+                      } text-white rounded-lg max-w-xs break-words relative`}
+                    >
+                      {message.type === "image" ? (
+                        <img
+                          src={message.message}
+                          alt="sent image"
+                          className="rounded max-w-full h-auto"
+                        />
+                      ) : message.type === "video" ? (
+                        <video
+                          src={message.message}
+                          controls
+                          className="rounded max-w-full h-auto"
+                        />
+                      ) : (
+                        <p className="whitespace-pre-line mb-2 mt-1">
+                          {message.message}
+                        </p>
+                      )}
+                      <Trash2Icon
+                        className="h-3 w-3 text-white absolute right-3 top-1 z-30 cursor-pointer"
+                        onClick={() => {
+                          setIsConfirmModalOpen(true);
+                          setSelectedMessage(message.id);
+                        }}
+                      />
+
+                      {message.isRead ? (
+                        <span className="absolute bottom-1 right-2 block ">
+                          <Eye className="w-4 h-4 text-blue-400 " />
+                        </span>
+                      ) : (
+                        <CheckCheck
+                          className={`absolute bottom-1 right-2 w-4 h-4 ${"text-gray-300"}`}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  {/* <div
                     className={`${
                       message.type == "text"
                         ? "bg-blue-600 p-3"
@@ -1288,7 +1605,7 @@ function MobileChat({
                         {message.message}
                       </p>
                     )}
-                  </div>
+                  </div> */}
                   <Trash2Icon
                     className="h-3 w-3 text-white absolute right-3 top-1 z-30 cursor-pointer"
                     onClick={() => {
@@ -1373,11 +1690,7 @@ function FreindsList() {
   const socket = useSocket();
   const [showFriendList, setShowFriendList] = useState<boolean>(true);
 
-  const { data: callLogsData, isPending: fetchingCallLogs } =
-    useFetchCallLogs();
-
-  console.log("Call logs",callLogsData);
-
+  const { data: callLogsData } = useFetchCallLogs(showFriendList);
   useEffect(() => {
     socket.on("signal", handleIncomingSignal);
     return () => {
@@ -1393,7 +1706,7 @@ function FreindsList() {
   };
   return (
     <div className="w-full md:w-80 lg:w-96 border-r bg-gray-50 dark:bg-black flex flex-col">
-      {(fetchingfriends || fetchingCallLogs) && <Spinner />}
+      {fetchingfriends && <Spinner />}
 
       <div className="p-4 border-b">
         <div className="flex items-center justify-between mb-4">

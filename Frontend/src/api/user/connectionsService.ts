@@ -9,13 +9,14 @@ interface MsgUser {
 }
 type GetMessageRes = axiosResponse & {
   friendData: MsgUser;
-  userData: MsgUser;
+  userData: MsgUser; 
   messages: {
     id: string;
     senderId: string;
     message: string;
     type: "text" | "image" | "video";
     isRead: boolean;
+    reactions: { userId: string; emoji: string }[];
   }[];
 };
 type getConnectionRequestRes = axiosResponse & {

@@ -13,5 +13,6 @@ export interface GetMessageDTO {
     id: string;
     senderId: string;
     isRead: boolean;
+    reactions: { userId: string; emoji: string }[];
   }[];
 }

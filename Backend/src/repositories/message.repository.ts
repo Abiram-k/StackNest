@@ -77,4 +77,31 @@ export class MessageRepository implements IMessageRepository<IMessage> {
       throw error;
     }
   }
+
+  async addReaction(
+    messageId: string,
+    emoji: string,
+    userId: string
+  ): Promise<void> {
+    try {
+      await Message.findByIdAndUpdate(messageId, {
+        $push: { reactions: { userId, emoji } },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+  async removeReaction(
+    messageId: string,
+    emoji: string,
+    userId: string
+  ): Promise<void> {
+    try {
+      await Message.findByIdAndUpdate(messageId, {
+        $pull: { reactions: { userId, emoji } },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 }

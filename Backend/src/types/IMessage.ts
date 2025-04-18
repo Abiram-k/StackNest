@@ -5,6 +5,7 @@ export interface IMessage {
   sender: Types.ObjectId;
   receiver: Types.ObjectId;
   type: "text" | "image" | "video";
+  reactions: { userId: string; emoji: string }[];
   content: string;
   isRead: boolean;
   createdAt: Date;

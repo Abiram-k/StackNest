@@ -22,4 +22,6 @@ export interface IConnectionService {
   ): Promise<string>;
   getMessages(userId: string, friendId: string): Promise<GetMessageDTO>;
   fetchCallLogs(userId: string): Promise<FetchCallLogsDTO[]>;
+  removeReaction(messageId:string,emoji:string,userId:string):Promise<void>
+  addReaction(messageId:string,emoji:string,userId:string):Promise<void>
 }

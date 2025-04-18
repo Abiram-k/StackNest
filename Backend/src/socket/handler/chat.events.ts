@@ -69,6 +69,7 @@ export const registerChatEvents = (
     socket.join(userId);
   }
 
+
   socket.on("join-chat", (friendId: string) => {
     const userId = socket.data.user?.userId;
     const chatRoomId = getChatId(userId, friendId);
@@ -189,6 +190,18 @@ export const registerChatEvents = (
     io.to(toSocketId).emit("call-accepted", { from, callerName, callerAvatar });
   });
 
+  socket.on("delete-reaction", async (messageId, emoji, friendId) => {
+    await connectionService.removeReaction(messageId, emoji, userId);
+    const chatId = getChatId(userId, friendId);
+    io.to(chatId).emit("reaction-removed", messageId, emoji, userId);
+  });
+
+  socket.on("add-reaction", async (messageId, emoji, friendId) => {
+    await connectionService.addReaction(messageId, emoji, userId);
+    const chatId = getChatId(userId, friendId);
+    io.to(chatId).emit("new-reaction", messageId, emoji, userId);
+  });
+  
   // socket.on("exit-chat", (friendId: string) => {
   //   console.log("From exit chat event, FriendId: ", friendId);
   //   const friendSocketId = onlineUsers.get(friendId);

@@ -427,6 +427,7 @@ export class ConnectionService implements IConnectionService {
         message: message.content,
         type: message.type,
         isRead: message.isRead,
+        reactions:message.reactions
       })),
     };
     return data;
@@ -496,6 +497,47 @@ export class ConnectionService implements IConnectionService {
         .filter((data) => data !== null);
 
       return formattedData;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addReaction(
+    messageId: string,
+    emoji: string,
+    userId: string
+  ): Promise<void> {
+    try {
+      if (!messageId)
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "Message id not founded (add reaction)"
+        );
+      if (!emoji)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Emoji not founded");
+      if (!userId)
+        throw createHttpError(HttpStatus.UNAUTHORIZED, "User id not fouded");
+      await this._messageRepo.addReaction(messageId, emoji, userId);
+    } catch (error) {
+      throw error;
+    }
+  }
+  async removeReaction(
+    messageId: string,
+    emoji: string,
+    userId: string
+  ): Promise<void> {
+    try {
+      if (!messageId)
+        throw createHttpError(
+          HttpStatus.NOT_FOUND,
+          "Message id not founded (remove reaction)"
+        );
+      if (!emoji)
+        throw createHttpError(HttpStatus.NOT_FOUND, "Emoji not founded");
+      if (!userId)
+        throw createHttpError(HttpStatus.UNAUTHORIZED, "User id not fouded");
+      await this._messageRepo.removeReaction(messageId, emoji, userId);
     } catch (error) {
       throw error;
     }
