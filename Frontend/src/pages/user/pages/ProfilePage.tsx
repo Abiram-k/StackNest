@@ -11,7 +11,6 @@ import DetailsForm from "@/components/forms/DetailsForm";
 import { verifyUserProfile } from "@/hooks/validation/useProfileForm";
 import { validateProfileSchema } from "@/validation/userDetailsSchema";
 import { useEffect, useRef, useState } from "react";
-import { verifyUserProfileSchemaType } from "../../../../../types/user";
 import {
   useUpdateUserProfile,
   useUserProfile,
@@ -24,6 +23,7 @@ import { HttpService } from "@/api/httpService";
 import { useCheckin } from "@/hooks/user/userProfile/useCheckin";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { verifyUserProfileSchemaType } from "@/types";
 
 const initialValue = {
   avatar: "",
@@ -201,8 +201,8 @@ export default function ProfilePage() {
                 size="sm"
                 className="absolute right-0 md:right-60 top-0 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-primary-50/90 bg-primary-500 text-white dark:hover:bg-primary-500/90 dark:bg-primary-600 dark:text-gray-200"
               >
-                <Edit2 className="h-4 w-4 mr-2" />
-                Edit
+                <Edit2 className="h-4 w-4 md:mr-2" />
+                <span className="hidden sm:inline">Edit</span>
               </Button>
 
               <div className="flex  gap-4 mb-6">
@@ -307,26 +307,23 @@ export default function ProfilePage() {
             <div className="fixed bottom-10 right-10 md:bottom-20 md:right-20">
               {isChatBotOpen && (
                 <ChatBot
+                  isChatBotAuthorised={isChatBotAuthorised}
                   setIsOpen={setIsChatBotOpen}
                   avatar={formData.avatar}
                 />
               )}
-              {isChatBotAuthorised && (
-                <Button
-                  onClick={() => setIsChatBotOpen(!isChatBotOpen)}
-                  className={`rounded-full p-3 w-12 h-12 fixed bottom-10 right-10 md:bottom-20 md:right-20 ${
-                    isChatBotOpen
-                      ? "bg-red-500 hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600"
-                      : "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:text-white "
-                  }`}
-                >
-                  {isChatBotOpen ? (
-                    <X size={26} />
-                  ) : (
-                    <MessageCircle size={27} />
-                  )}{" "}
-                </Button>
-              )}
+              {/* {isChatBotAuthorised && ( */}
+              <Button
+                onClick={() => setIsChatBotOpen(!isChatBotOpen)}
+                className={`rounded-full p-3 w-12 h-12 fixed bottom-10 right-10 md:bottom-20 md:right-20 ${
+                  isChatBotOpen
+                    ? "bg-red-500 hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600"
+                    : "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:text-white "
+                }`}
+              >
+                {isChatBotOpen ? <X size={26} /> : <MessageCircle size={27} />}{" "}
+              </Button>
+              {/* )} */}
             </div>
           </div>
         </main>

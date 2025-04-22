@@ -37,6 +37,7 @@ type GetFriendsType = axiosResponse & {
     friendId: string;
     firstName: string;
     userName: string;
+    isVerified:boolean,
     avtar: string;
     lastMessage: string;
     lastMessageAt: Date;

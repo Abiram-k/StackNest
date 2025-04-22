@@ -1,5 +1,4 @@
-import { RoomResType } from "@/types";
-import { axiosResponse } from "../../../../types/user";
+import { axiosResponse, RoomResType } from "@/types";
 import { HttpService } from "../httpService";
 
 type ResFavorites = axiosResponse & {

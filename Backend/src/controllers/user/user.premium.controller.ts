@@ -44,4 +44,24 @@ export class UserPremiumController implements IUserPremiumController {
       next(error);
     }
   }
+
+  async getPremiumHistory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { userId } = req.user as { userId: string; role: string };
+      const history = await this._premiumService.getPremiumHistory(userId);
+      res
+        .status(HttpStatus.OK)
+        .json({
+          message: "Successfully fetched premium history",
+          success: true,
+          history,
+        });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

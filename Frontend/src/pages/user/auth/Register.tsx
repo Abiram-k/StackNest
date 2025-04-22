@@ -1,7 +1,6 @@
 import { GalleryVerticalEnd } from "lucide-react";
 import { useRegisterForm } from "@/hooks/validation/useLoginForm";
 import { registerSchema } from "@/validation/authSchema";
-import { RegisterUser } from "../../../../../types/user";
 import { Form } from "@/components/forms/Form";
 import { Link } from "react-router-dom";
 import images from "../../../assets/login-img.jpg";
@@ -13,6 +12,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useInitiateRegistration } from "@/hooks/auth/useInitiateRegistration";
 import { useVerifyOtp } from "@/hooks/auth/useVerifyOtp";
 import { toast } from "sonner";
+import { RegisterUser } from "@/types";
 
 const RegisterPage = () => {
   const [userData, setUserData] = useState<RegisterUser>({

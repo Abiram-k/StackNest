@@ -12,6 +12,7 @@ import {
   Trash2Icon,
   Phone,
   SmileIcon,
+  CheckCircle2,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDebounce } from "@/hooks/optimizational/useDebounce";
@@ -616,7 +617,7 @@ export default function MessagingApp() {
                       <h3 className="font-medium">
                         {messageData?.friendData?.name || "No name"}
                       </h3>
-                      <span className="text-xs text-gray-500 ">
+                      <span className="text-xs text-gray-500 hidden sm:inline">
                         (@{messageData?.friendData?.userName})
                       </span>
                     </div>
@@ -1467,9 +1468,9 @@ function MobileChat({
                   <h3 className="font-medium">
                     {messageData?.friendData?.name || "No name"}
                   </h3>
-                  <span className="text-xs text-gray-500 ">
+                  {/* <span className="text-xs text-gray-500 ">
                     (@{messageData?.friendData?.userName})
-                  </span>
+                  </span> */}
                 </div>
                 <div className="flex items-center text-xs text-green-500">
                   {isFriendOnline ? (
@@ -1827,9 +1828,16 @@ function FreindsList() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center">
-                    <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
-                      {friend.firstName}
-                    </h3>
+                    <div className="flex justify-center items-center gap-1 md:gap-2">
+                      <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                        {friend.firstName}
+                      </h3>
+                      {friend.isVerified && (
+                        <span>
+                          <CheckCircle2 className="w-5 h-5 text-blue-600 bg-white rounded-full" />
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-center">
                       <span className="text-xs text-gray-500">
                         {friend.lastMessageAt

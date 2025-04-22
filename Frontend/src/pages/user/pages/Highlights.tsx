@@ -84,7 +84,7 @@ const Highlights = () => {
         {(fetchingIsPending ||
           pendingLikeFeed ||
           fetchingLikedFeedsPending) && <Spinner />}
-        <div className="mb-12 w-full relative">
+        {/* <div className="mb-12 w-full relative">
           <FilterBar
             placeHolder="Search Users . . . "
             filterOptions={filterOptions}
@@ -118,7 +118,7 @@ const Highlights = () => {
               )}
             </ul>
           </div>
-        </div>
+        </div> */}
         <div className="flex justify-between items-center md:mb-16 mb-8">
           <h1 className="text-3xl font-bold dark:text-white">Highlights</h1>
 
@@ -130,6 +130,41 @@ const Highlights = () => {
               <Plus className="h-5 w-5 " />
               Add New Post
             </Button>
+          </div>
+        </div>
+        <div className="mb-12 w-full relative">
+          <FilterBar
+            placeHolder="Search Users . . . "
+            filterOptions={filterOptions}
+            setFilterQuery={setFilterQuery}
+            setSortedOrder={setSortQuery}
+            setSearchQuery={setSearch}
+          />
+
+          <div className="mt-2 bg-white  rounded-lg shadow-lg overflow-hidden absolute top-15 w-full md:w-1/2 z-10">
+            <ul className="divide-y divide-gray-200">
+              {userSuggestions &&
+                userSuggestions?.length > 0 &&
+                debounceValue.length >= 1 &&
+                userSuggestions.map((user, index) => (
+                  <li
+                    key={`${user}-${index}`}
+                    className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    onClick={() => navigate(`/user/${user}/view`)}
+                  >
+                    <span className="text-gray-700 dark:text-white font-medium">
+                      {user}
+                    </span>
+                  </li>
+                ))}
+              {userSuggestions?.length == 0 && debounceValue.length >= 1 && (
+                <li className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700">
+                  <span className="text-gray-700 dark:text-white font-medium">
+                    No result found !
+                  </span>
+                </li>
+              )}
+            </ul>
           </div>
         </div>
 

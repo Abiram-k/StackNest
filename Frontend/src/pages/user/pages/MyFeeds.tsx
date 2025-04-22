@@ -37,7 +37,7 @@ const MyFeeds = () => {
   };
 
   return (
-    <main className="flex-1 p-6 max-w-4xl mx-auto w-full h-screen scrollbar-thin overflow-y-scroll md:-ms-1">
+    <main className="flex-1 p-6 max-w-4xl mx-auto w-full h-screen scrollbar-thin overflow-y-scroll md:-ms-1 mt-12">
       {(isPending || deletePending) && <Spinner />}
       {isConfirmatioOpen && (
         <ConfirmationDialog

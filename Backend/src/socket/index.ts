@@ -9,7 +9,7 @@ const initializeSocket = (io: Server) => {
   io.on("connection", (socket) => {
     const userName = socket.data.user?.userName;
 
-    console.log("User connected:", userName);
+    // console.log("User connected:", userName);
     const userId = socket.data.user?.userId;
     onlineUsers.set(userId, socket.id);
 

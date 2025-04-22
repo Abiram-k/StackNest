@@ -14,7 +14,6 @@ cron.schedule("* * * * *", async () => {
       const createdAt = new Date(plan.createdAt).getTime();
       const durationInMs = plan.willExpireInDays * 24 * 60 * 60 * 1000;
       const endTime = createdAt + durationInMs;
-
       if (now > endTime) {
         await premiumRepository.markAsExpired(plan._id);
       }

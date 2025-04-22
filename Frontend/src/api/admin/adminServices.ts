@@ -1,5 +1,4 @@
-import { ResReport } from "@/types";
-import { axiosResponse, IUser } from "../../../../types/user";
+import { axiosResponse, IUser, ResReport } from "@/types";
 import { HttpService } from "../httpService";
 
 interface UsersResponse {

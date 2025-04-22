@@ -1,6 +1,6 @@
 import { HttpService } from "@/api/httpService";
 import { ConnectionsService } from "@/api/user/connectionsService";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {useQuery } from "@tanstack/react-query";
 
 export const useGetFreinds = ({ search }: { search: string }) => {
   const httpService = new HttpService();

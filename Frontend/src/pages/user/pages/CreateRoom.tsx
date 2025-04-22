@@ -2,9 +2,9 @@ import DetailsForm from "@/components/forms/DetailsForm";
 import { useVerifyRoomForm } from "@/hooks/validation/useRoomForm";
 import { validateRoomSchema } from "@/validation/roomSchema";
 import { ArrowLeft } from "lucide-react";
-import { RoomSchema } from "../../../../../types/user";
 import { useCreateRoom } from "@/hooks/room/useCreateRoom";
 import { useNavigate } from "react-router-dom";
+import { RoomSchema } from "@/types";
 
 export default function CreateRoom() {
   const {

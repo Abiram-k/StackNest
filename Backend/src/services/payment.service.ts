@@ -32,7 +32,7 @@ export class PaymentService implements IPaymentService {
     try {
       const plan = await this._planRepo.getPremiumById(planId);
       if (!plan)
-        throw createHttpError(HttpStatus.NOT_FOUND, "Plan not founded");
+        throw createHttpError(HttpStatus.NOT_FOUND, "Plan not avalable");
       const OrdersCreateRequest = await getOrdersCreateRequest();
       const request = new OrdersCreateRequest();
       request.prefer("return=representation");
@@ -79,6 +79,17 @@ export class PaymentService implements IPaymentService {
         if (!user)
           throw createHttpError(HttpStatus.NOT_FOUND, "User not founded");
 
+        const isSubscribeAlready = user.premiumHistory.some(
+          (plan) =>
+            String(plan.premiumPlan) == planId && plan.status == "active"
+        );
+
+        if (isSubscribeAlready) {
+          throw createHttpError(
+            HttpStatus.BAD_REQUEST,
+            "Already subscribed this plan"
+          );
+        }
         const startingDate = new Date();
         const paymentData: IPremiumHistory = {
           status: "active",
@@ -123,7 +134,7 @@ export class PaymentService implements IPaymentService {
       const plan = await this._planRepo.getPremiumById(planId);
 
       if (!plan)
-        throw createHttpError(HttpStatus.NOT_FOUND, "Plan not founded");
+        throw createHttpError(HttpStatus.NOT_FOUND, "Plan not avalable");
       const paymentIntent = await stripe.paymentIntents.create({
         amount: plan.discountAmount * 100,
         currency: "usd",
@@ -140,6 +151,18 @@ export class PaymentService implements IPaymentService {
         if (!user)
           throw createHttpError(HttpStatus.NOT_FOUND, "User not founded");
 
+        const isSubscribeAlready = user.premiumHistory.some(
+          (plan) =>
+            String(plan.premiumPlan) == planId && plan.status == "active"
+        );
+
+        if (isSubscribeAlready) {
+          throw createHttpError(
+            HttpStatus.BAD_REQUEST,
+            "Already subscribed this plan"
+          );
+        }
+
         const startingDate = new Date();
         const paymentData: IPremiumHistory = {
           status: "active",
@@ -147,7 +170,7 @@ export class PaymentService implements IPaymentService {
           endingDate: new Date(
             startingDate.getTime() +
               Number(planData.periodInDays) * 24 * 60 * 60 * 1000
-          ), 
+          ),
           premiumPlan: planData._id,
         };
 
@@ -175,7 +198,6 @@ export class PaymentService implements IPaymentService {
   async stripeWebhook(sig: any, reqBody: any): Promise<any> {
     let event: Stripe.Event;
 
-    
     console.log("SIG: ", sig);
     console.log("REQ BODY: ", reqBody);
     try {

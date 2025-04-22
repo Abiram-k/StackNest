@@ -2,20 +2,27 @@ import { HttpStatus } from "../constants/enum.statusCode";
 import { PremiumResDto } from "../dtos/public/premiumData.dto";
 import { IBenefitsRepository } from "../interfaces/repositories/benefits.repository.interface";
 import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
 import { IPremiumService } from "../interfaces/services/premium.service.interface";
 import { IBenefit } from "../types/IBenefits";
 import { IPremium } from "../types/IPremium";
 import createHttpError from "http-errors";
+import { IUser } from "../types/IUser";
+import { PremiumHistoryDTO } from "../dtos/user/premium/PremiumHistory.dto";
+import { Types } from "mongoose";
 
 export class PremiumService implements IPremiumService {
   private _premiumRepo: IPremiumRepository<IPremium>;
   private _benefitsRepo: IBenefitsRepository<IBenefit>;
+  private _userRepo: IUserBaseRepository<IUser>;
   constructor(
     premiumRepo: IPremiumRepository<IPremium>,
-    benefitsRepo: IBenefitsRepository<IBenefit>
+    benefitsRepo: IBenefitsRepository<IBenefit>,
+    userRepo: IUserBaseRepository<IUser>
   ) {
     this._premiumRepo = premiumRepo;
     this._benefitsRepo = benefitsRepo;
+    this._userRepo = userRepo;
   }
 
   async getAllPremium(): Promise<PremiumResDto[]> {
@@ -41,7 +48,7 @@ export class PremiumService implements IPremiumService {
     }
   }
 
-  async getListedPremium(userId:string): Promise<PremiumResDto[]> {
+  async getListedPremium(userId: string): Promise<PremiumResDto[]> {
     try {
       const listedPlans = await this._premiumRepo.getListedPremium(userId);
       const formattedData: PremiumResDto[] = listedPlans.map((plan) => ({
@@ -120,6 +127,40 @@ export class PremiumService implements IPremiumService {
       if (!premiumId)
         throw createHttpError(HttpStatus.NOT_FOUND, "Premium id not founded");
       this._premiumRepo.findByIdAndRemove(premiumId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getPremiumHistory(userId: string): Promise<PremiumHistoryDTO[]> {
+    try {
+      if (!userId)
+        throw createHttpError(HttpStatus.UNAUTHORIZED, "Userid not founded");
+      const user = await this._userRepo.getUserForPremiumHistory(userId);
+      if (!user)
+        throw createHttpError(HttpStatus.NOT_FOUND, "User not founded");
+
+      const premiumHistory = user.premiumHistory;
+      const formattedData: PremiumHistoryDTO[] = premiumHistory
+        .map((history) => {
+          if (history.premiumPlan instanceof Types.ObjectId) return null;
+          let planDetails = history.premiumPlan;
+          return {
+            status: history.status,
+            startingDate: history.startingDate.toISOString(),
+            endingDate: history.endingDate.toISOString(),
+            plan: {
+              _id: planDetails._id,
+              benefits: planDetails.benefits,
+              discountAmount: planDetails.discountAmount,
+              regularAmount: planDetails.regularAmount,
+              description: planDetails.description,
+              title: planDetails.title,
+            },
+          };
+        })
+        .filter((data) => data != null);
+      return formattedData;
     } catch (error) {
       throw error;
     }

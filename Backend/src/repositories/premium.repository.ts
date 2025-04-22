@@ -6,11 +6,16 @@ import { IPremium } from "../types/IPremium";
 export class PremiumRepository implements IPremiumRepository<IPremium> {
   async getPremiumById(premiumId: string): Promise<IPremium | null> {
     try {
-      return await Premium.findById(premiumId);
+      return await Premium.findOne({
+        _id: premiumId,
+        isListed: true,
+        isExpired: false,
+      });
     } catch (error) {
       throw error;
     }
   }
+
   async findByIdAndUpdate(
     premiumId: string,
     data: Partial<IPremium>

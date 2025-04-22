@@ -1,11 +1,9 @@
 import { PushSubscription } from "web-push";
-import {
-  typeUserResetToken,
-  verifyUserProfileSchemaType,
-} from "../../../../types/user";
 import { IUser } from "../../types/IUser";
 import { IPremiumHistory } from "../../types/IPremiumHistory";
 import { Types } from "mongoose";
+import { typeUserResetToken } from "../../dtos/auth/login.dto";
+import { verifyUserProfileSchemaType } from "../../dtos/user/profile/getInspectData.dto";
 
 export interface IUserBaseRepository<T> {
   create(userData: Partial<T>): Promise<T>;
@@ -36,10 +34,7 @@ export interface IUserBaseRepository<T> {
   incrementChallengePoint(userId: string): Promise<void>;
   getStreakCount(userId: string): Promise<number | undefined>;
   resetCheckin(userId: string): Promise<boolean>;
-  getAllFriends(
-    userId: string,
-    search:string
-  ): Promise<T | null>;
+  getAllFriends(userId: string, search: string): Promise<T | null>;
   premiumExpired(planId: Types.ObjectId, userId: Types.ObjectId): Promise<void>;
   subscribePremium(
     userId: string,
@@ -47,6 +42,7 @@ export interface IUserBaseRepository<T> {
     benefitData: { planId: string; benefitKeys: string[]; redeemedAt: Date }
   ): Promise<void>;
   getAllPremiumUser(): Promise<T[]>;
+  getUserForPremiumHistory(userId: string): Promise<T | null>;
 }
 export interface IUserAuthRepository<T> {
   updateUserWithGoogleId(email: string, googleId: string): Promise<boolean>;

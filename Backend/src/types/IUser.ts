@@ -1,4 +1,5 @@
 import { Document, Types } from "mongoose";
+import { IPremium } from "./IPremium";
 
 interface PushSubscription {
   endpoint: string;
@@ -47,7 +48,7 @@ export interface IUser extends Document {
     status: "active" | "expired" | "pending";
     startingDate: Date;
     endingDate: Date;
-    premiumPlan: Types.ObjectId;
+    premiumPlan: Types.ObjectId | IPremium;
     createdAt: Date;
     updatedAt: Date;
   }[];

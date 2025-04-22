@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { LoginResponse } from "../../../types/index";
 import { config } from "dotenv";
 // import { AuthService } from "../services/auth.service";
 import { HttpStatus } from "../constants/enum.statusCode";
@@ -118,7 +117,7 @@ export class AuthController implements IAuthController {
         path: "/",
       });
 
-      const data: LoginResponse = {
+      const data: ResLoginDTO = {
         success: true,
         accessToken,
         message: "Login successfull",
@@ -164,7 +163,7 @@ export class AuthController implements IAuthController {
         path: "/",
       });
 
-      const data: LoginResponse = {
+      const data: ResLoginDTO = {
         success: true,
         accessToken,
         message: "Login successfull",

@@ -29,11 +29,11 @@ const ProfileLayout = () => {
       icon: <FileText className="h-5 w-5" />,
       to: "/user/profile/my-feeds",
     },
-    {
-      name: "Friends",
-      icon: <Users className="h-5 w-5" />,
-      to: "/user/profile/friends",
-    },
+    // {
+    //   name: "Friends",
+    //   icon: <Users className="h-5 w-5" />,
+    //   to: "/user/profile/friends",
+    // },
     {
       name: "Premium plans",
       icon: <Crown className="h-5 w-5" />,

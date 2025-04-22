@@ -1,4 +1,3 @@
-import { verifyUserProfileSchemaType } from "../../../types/user";
 import { HttpStatus } from "../constants/enum.statusCode";
 import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
 import { IUserProfileService } from "../interfaces/services/user.profile.service.interface";
@@ -19,6 +18,7 @@ import {
 import {
   inspectfeedDataDTO,
   inspectuserDataDTO,
+  verifyUserProfileSchemaType,
 } from "../dtos/user/profile/getInspectData.dto";
 
 export class UserProfileService implements IUserProfileService {
@@ -123,6 +123,7 @@ export class UserProfileService implements IUserProfileService {
         feedsCount: feeds?.length,
         streakCount: user.streak,
         userName: user.userName,
+        isVerified: user.isVerified,
       };
       const feedDataUnfiltered: (inspectfeedDataDTO | null)[] =
         await Promise.all(
@@ -162,6 +163,7 @@ export class UserProfileService implements IUserProfileService {
       userName: string;
       firstName: string;
       description: string;
+      isVerified: boolean;
     }[]
   > {
     try {
@@ -187,6 +189,7 @@ export class UserProfileService implements IUserProfileService {
           userName: user.userName,
           firstName: user.firstName,
           description: user.description,
+          isVerified: user.isVerified,
         }))
         .slice(0, 4);
       return userData;

@@ -107,6 +107,10 @@ router.get(
   "/premium-plan/:planId",
   userPremiumController.getSelectedPremium.bind(userPremiumController)
 );
+router.get(
+  "/premium-plans/history",
+  userPremiumController.getPremiumHistory.bind(userPremiumController)
+);
 
 // <<<<<<<<<<<<<<<<<<<<<<<< Challenge >>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.get(
@@ -224,7 +228,7 @@ router.post(
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<< CONNECTIONS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.post(
-  "/connection/request",
+  "/request",
   userConnectionController.sendConnectionRequest.bind(userConnectionController)
 );
 router.get(

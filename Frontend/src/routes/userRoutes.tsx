@@ -6,11 +6,12 @@ import RewardsPage from "@/pages/user/pages/RewardsPage";
 
 const PaymentSuccess = lazy(() => import("@/pages/user/pages/PaymentSuccess"));
 const VideoConference = lazy(
-  () => import("@/pages/user/pages/VideoConference") 
+  () => import("@/pages/user/pages/VideoConference")
 );
 const DailyChallengePage = lazy(
   () => import("@/pages/user/pages/DailyChallengePage")
 );
+const PremiumHistory = lazy(() => import("@/pages/user/pages/PremiumHistory"));
 const UserInspect = lazy(() => import("@/pages/user/pages/UserInspect"));
 const Notification = lazy(() => import("@/pages/user/pages/Notification"));
 const MessagingApp = lazy(() => import("@/pages/user/pages/MessagingApp"));
@@ -75,6 +76,7 @@ export const userRoutes: RouteObject[] = [
             path: "premium-plans",
             element: <PremiumPlans />,
           },
+          { path: "premium-plans/history", element: <PremiumHistory /> },
           {
             path: "premium-plans/:planId/payment",
             element: <PaymentListPage />,

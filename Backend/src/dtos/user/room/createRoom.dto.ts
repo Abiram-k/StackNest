@@ -38,3 +38,15 @@ export interface ResCreateRoomDTO {
   message: string;
   success: boolean;
 }
+
+
+export interface RoomSchema {
+  title: string;
+  description: string;
+  limit: number;
+  isPremium: string;
+  isPrivate: string;
+  password?: string;
+  // scheduledAt?: Date;
+}
+

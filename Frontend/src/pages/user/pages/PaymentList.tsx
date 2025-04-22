@@ -13,6 +13,7 @@ import StripeCheckoutForm from "@/components/StripeCheckoutForm";
 import axios from "axios";
 import { axiosInstance } from "@/api/apiSevice";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY!);
 
@@ -20,6 +21,7 @@ export default function PaymentListPage() {
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   // const stripe = useStripe();
   // const elements = useElements();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [stripeClientSecret, setStripeClientSecret] = useState("");
 
   const navigate = useNavigate();
@@ -30,18 +32,22 @@ export default function PaymentListPage() {
 
   const handlePaymentSelect = async (method: string) => {
     setSelectedPayment(method);
-    try {
-      const response = await axiosInstance.post(
-        "/users/create-payment-intent",
-        {
-          planId,
-        }
-      );
+    if (method == "stripe") {
+      try {
+        const response = await axiosInstance.post(
+          "/users/create-payment-intent",
+          {
+            planId,
+          }
+        );
 
-      const data = response.data;
-      setStripeClientSecret(data.clientSecret);
-    } catch (error) {
-      console.log(error);
+        const data = response.data;
+        setStripeClientSecret(data.clientSecret);
+      } catch (error: unknown) {
+        let { message } = error as { message: string };
+        toast.error(message );
+        console.log(error);
+      }
     }
   };
 
@@ -51,6 +57,7 @@ export default function PaymentListPage() {
 
   return (
     <div className="min-h-screen flex flex-col w-full md:-ms-52 lg:-ms-72">
+      {isLoading && <Spinner />}
       <div className="flex flex-1">
         <main className="flex-1 py-8 px-4">
           <div className="max-w-3xl mx-auto">

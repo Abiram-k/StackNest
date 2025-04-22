@@ -3,6 +3,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { toast } from "sonner";
 import { axiosInstance } from "@/api/apiSevice";
 import { useNavigate } from "react-router-dom";
+import { axiosResponse } from "@/types";
 const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID;
 
 const PayPalButton = ({ planId }: { planId: string }) => {
@@ -16,12 +17,15 @@ const PayPalButton = ({ planId }: { planId: string }) => {
         "/users/payment/create-paypal-order",
         { planId }
       );
-
       return response.data.orderId;
-    } catch (error) {
-      toast.error("Failed to create order");
+    } catch (error: unknown) {
+      if (error && typeof error === "object" && "message" in error) {
+        toast.error((error as { message: string }).message);
+      } else {
+        toast.error("Failed to create order");
+      }
       console.log(error);
-      throw new Error("Failed to create paypal order...");
+      throw new Error("Failed to create PayPal order...");
     }
   };
 

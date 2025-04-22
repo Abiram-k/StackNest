@@ -1,10 +1,7 @@
 import { HttpService } from "@/api/httpService";
 import { RoomService } from "@/api/public/roomService";
-import {
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { RoomSchema } from "../../../../types/user";
+import { RoomSchema } from "@/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -20,7 +17,7 @@ export const useCreateRoom = () => {
       toast.dismiss();
       toast.success("Room created successfully");
       navigate("/user/room");
-      queryClient.invalidateQueries({ queryKey: "rooms" });
+      queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
     onError: (error) => {
       console.log(error);

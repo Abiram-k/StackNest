@@ -1,12 +1,12 @@
 import { GalleryVerticalEnd } from "lucide-react";
 import { useLoginForm } from "@/hooks/validation/useLoginForm";
 import { loginSchema } from "@/validation/authSchema";
-import { LoginUser } from "../../../../../types/user";
 import { Form } from "@/components/forms/Form";
 import { Link } from "react-router-dom";
 import images from "../../../assets/login-img.jpg";
 import logo from "../../../assets/stacknest-logo.png";
 import { useLogin } from "@/hooks/auth/useLogin";
+import { LoginUser } from "@/types";
 
  const AdminLoginPage = () => {
   const {

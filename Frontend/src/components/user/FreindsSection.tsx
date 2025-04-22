@@ -6,10 +6,11 @@ import { useSendConnectionRequest } from "@/hooks/user/connection/useSendConnect
 import { Spinner } from "../ui/spinner";
 import { useGetConnectionRequests } from "@/hooks/user/connection/useGetConnectionRequests";
 import { useTranslation } from "react-i18next";
+import { CheckCircle2 } from "lucide-react";
 
 const FreindsSection = () => {
   const navigate = useNavigate();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const { data: userList } = useGetFriendSuggestion();
   const { mutate: sendRequestMutate, isPending: sendingRequest } =
     useSendConnectionRequest();
@@ -24,7 +25,7 @@ const FreindsSection = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">{t("Suggested Friends")}</h2>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 ">
         {userList?.usersData?.map((item, index) => (
           <Card
             key={index}
@@ -45,9 +46,16 @@ const FreindsSection = () => {
               </div>
 
               <div className="text-center mb-4 flex-1">
-                <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-1">
-                  {item.firstName || item.userName || "Anonymous User"}
-                </h3>
+                <div className="flex items-center justify-center gap-2">
+                  <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-1">
+                    {item.firstName || item.userName || "Anonymous User"}
+                  </h3>
+                  {item.isVerified && (
+                    <span>
+                      <CheckCircle2 className="w-5 h-5 text-blue-600 bg-white rounded-full" />
+                    </span>
+                  )}
+                </div>
                 {item.userName && (
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     @{item.userName}

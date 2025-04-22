@@ -280,6 +280,7 @@ export class ConnectionService implements IConnectionService {
               friendId: String(friend._id),
               avtar: friend.avatar,
               firstName: friend.firstName,
+              isVerified: friend.isVerified,
               lastMessage,
               lastMessageAt,
               userName: friend.userName,
@@ -317,6 +318,7 @@ export class ConnectionService implements IConnectionService {
           userName: user.userName,
           firstName: user.firstName,
           friendId: String(user._id),
+          isVerified: user.isVerified,
           lastMessage,
           lastMessageAt,
           unReadMessageCount: 0,
@@ -427,7 +429,7 @@ export class ConnectionService implements IConnectionService {
         message: message.content,
         type: message.type,
         isRead: message.isRead,
-        reactions:message.reactions
+        reactions: message.reactions,
       })),
     };
     return data;

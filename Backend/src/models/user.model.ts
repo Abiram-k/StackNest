@@ -14,7 +14,7 @@ const PremiumHistorySchema = new mongoose.Schema(
     endingDate: { type: Date, required: true },
     premiumPlan: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Premium",
+      ref: "PremiumPlans",
       required: true,
     },
   },

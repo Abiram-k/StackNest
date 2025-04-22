@@ -9,11 +9,11 @@ const Logo = ({ isAdmin }: { isAdmin: boolean }) => {
         to={isAdmin ? "/admin/dashboard/" : "/user/home"}
         className="flex items-center gap-2 font-medium"
       >
-        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+        <div className="flex h-8 w-8 md:w-6 md:h-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
           <GalleryVerticalEnd className="size-4" />
           <img src={logo} alt="stack nest logo icon" loading="lazy" />
         </div>
-        Stack Nest
+        <span className="hidden md:block">Stack Nest</span>
       </Link>
     </div>
   );

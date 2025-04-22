@@ -59,7 +59,7 @@ const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
       )}
       {(joinIsPending || verifyingIsPending) && <Spinner />}
       <div className="grid md:grid-cols-4 gap-8">
-        <div className="col-span-1">
+        <div className="col-span-3 md:col-span-1">
           <h3 className="text-2xl font-bold mb-6">{t("General Room")}</h3>
           <div>
             {generalRoom ? (

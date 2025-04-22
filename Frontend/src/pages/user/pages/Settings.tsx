@@ -123,12 +123,12 @@ export default function SettingsPage() {
                   </p>
                 </div>
               </div>
-              <Button
+              {/* <Button
                 variant="outline"
                 className="bg-red-500 hover:bg-red-600 text-white border-0"
               >
                 {t("Change")}
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

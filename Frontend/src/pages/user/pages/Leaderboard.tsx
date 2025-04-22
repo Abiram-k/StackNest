@@ -100,7 +100,7 @@ const Leaderboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col w-full justify-center md:justify-normal md:items-stretch items-center mb-20">
+    <div className="min-h-screen flex flex-col w-full justify-center md:justify-normal md:items-stretch items-center mb-20 mt-12">
       <div className="flex flex-1  w-3/4 ">
         <div className="flex-1 p-4">
           <div className="flex flex-col lg:flex-row">

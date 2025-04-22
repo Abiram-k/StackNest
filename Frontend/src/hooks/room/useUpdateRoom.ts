@@ -1,7 +1,7 @@
 import { HttpService } from "@/api/httpService";
 import { RoomService } from "@/api/public/roomService";
+import { RoomSchema } from "@/types";
 import {  useMutation, useQueryClient } from "@tanstack/react-query";
-import { RoomSchema } from "../../../../types/user";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -18,7 +18,7 @@ export const useUpdateRoom = () => {
       toast.dismiss();
       toast.success("Room Updated successfully");
       navigate("/user/room");
-      queryClient.invalidateQueries({ queryKey: "rooms" });
+      queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
     onError: (error) => {
       console.log(error);

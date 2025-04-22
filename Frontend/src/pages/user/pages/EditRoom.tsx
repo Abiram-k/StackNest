@@ -2,13 +2,13 @@ import DetailsForm from "@/components/forms/DetailsForm";
 import { useVerifyRoomForm } from "@/hooks/validation/useRoomForm";
 import { validateRoomSchema } from "@/validation/roomSchema";
 import { ArrowLeft } from "lucide-react";
-import { RoomSchema } from "../../../../../types/user";
 import { useUpdateRoom } from "@/hooks/room/useUpdateRoom";
 import { useNavigate, useParams } from "react-router-dom";
 import { Spinner } from "@/components/ui/spinner";
 import { useFetchSelectedRoom } from "@/hooks/room/userFetchSelectedRoom";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { RoomSchema } from "@/types";
 
 export default function EditRoom() {
   const {

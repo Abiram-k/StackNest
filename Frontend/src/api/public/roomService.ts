@@ -1,7 +1,5 @@
-import { RoomSchema } from "../../../../types/user";
 import { HttpService } from "../httpService";
-import { axiosResponse } from "../../../../types/user";
-import { RoomSessionType } from "@/types";
+import { axiosResponse, RoomSchema, RoomSessionType } from "@/types";
 
 type host = {
   userName: string;
@@ -60,7 +58,6 @@ export class RoomService {
   }
 
   async createRoom(data: RoomSchema) {
-    console.log(data, "From Room service ... ");
     return await this.httpService.post("users/room", data);
   }
   async updateRoom(id: string, data: RoomSchema) {

@@ -1,7 +1,7 @@
 import { DefaultValues, useForm, UseFormReturn } from "react-hook-form";
-import { RoomSchema } from "../../../../types/user";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { RoomSchema } from "@/types";
 
 interface IverifyRoomProps {
   schema: yup.ObjectSchema<RoomSchema>;

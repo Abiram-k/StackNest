@@ -31,7 +31,7 @@ export default function RoomsListPage() {
   const [removeByRoomId, setRemoveByRoomId] = useState("");
   const [isModalPasswordModal, setIsModalPasswordModal] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState("");
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   // to fetch my rooms
@@ -175,8 +175,8 @@ export default function RoomsListPage() {
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">{t("Available Rooms")}</h2>
+          <div className="flex-col md:flex-row items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold mb-2">{t("Available Rooms")}</h2>
 
             <FilterBar
               setSearchQuery={setSearch}

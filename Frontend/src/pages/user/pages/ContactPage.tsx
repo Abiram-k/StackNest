@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 interface FormData {
   name: string;
   email: string;
@@ -13,12 +15,16 @@ export default function ContactPage() {
     type: "",
     message: "",
   });
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
-    // Reset form after submission
+    if (!formData.email || !formData.email || !formData.message) {
+      toast.error("Please fill all the field");
+      return;
+    }
+    toast.success("Form submitted");
+    navigate("/user/about");
     setFormData({ name: "", email: "", type: "", message: "" });
   };
 
@@ -64,7 +70,6 @@ export default function ContactPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                required
                 className="block w-full border-0 dark:text-white border-b border-gray-300 py-1.5 text-gray-900 placeholder:text-gray-400 focus:border-blue-600 focus:ring-0 sm:text-sm sm:leading-6"
               />
             </div>
@@ -83,7 +88,6 @@ export default function ContactPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                required
                 className="block w-full border-0 dark:text-white border-b border-gray-300 py-1.5 text-gray-900 placeholder:text-gray-400 focus:border-blue-600 focus:ring-0 sm:text-sm sm:leading-6"
               />
             </div>
@@ -102,7 +106,6 @@ export default function ContactPage() {
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
-                required
                 className="block w-full border-0 border-b dark:text-white border-gray-300 py-1.5 text-gray-900 placeholder:text-gray-400 focus:border-blue-600 focus:ring-0 sm:text-sm sm:leading-6"
               />
             </div>
@@ -121,7 +124,6 @@ export default function ContactPage() {
                 rows={4}
                 value={formData.message}
                 onChange={handleChange}
-                required
                 className="block w-full border-0 border-b py-1.5 dark:text-white text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 "
               />
             </div>

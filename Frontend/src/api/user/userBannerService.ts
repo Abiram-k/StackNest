@@ -1,5 +1,4 @@
-import { UserBannerRes } from "@/types";
-import { axiosResponse } from "../../../../types/user";
+import { axiosResponse, UserBannerRes } from "@/types";
 import { HttpService } from "../httpService";
 
 type BannerRes = axiosResponse & {

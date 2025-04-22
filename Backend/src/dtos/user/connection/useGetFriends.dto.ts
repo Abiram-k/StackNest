@@ -6,6 +6,8 @@ interface FriendsRes {
   lastMessage: string;
   lastMessageAt: Date | null;
   unReadMessageCount: number;
+  isVerified:boolean,
+
 }
 interface ResGetFriendDTO {
   friends: FriendsRes[];

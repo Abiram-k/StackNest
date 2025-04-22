@@ -1,8 +1,5 @@
-import { ReqReport } from "@/types";
-import {
-  axiosResponse,
-  verifyUserProfileSchemaType,
-} from "../../../../types/user";
+import { axiosResponse, ReqReport, verifyUserProfileSchemaType } from "@/types";
+
 import { HttpService } from "../httpService";
 
 type verifyProfileResponse = axiosResponse & {
@@ -32,6 +29,7 @@ type GetUserInspectReponse = axiosResponse & {
     connectionCount: number;
     feedsCount: number;
     streakCount: number;
+    isVerified:boolean,
   };
   feedData: {
     feedId: string;
@@ -64,6 +62,7 @@ type ResGetFriendSuggestion = axiosResponse & {
     userName: string;
     firstName: string;
     description: string;
+    isVerified:boolean;
   }[];
 };
 

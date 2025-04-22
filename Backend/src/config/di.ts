@@ -187,7 +187,8 @@ const feedService: IFeedService = new FeedService(
 );
 const premiumService: IPremiumService = new PremiumService(
   premiumRepository,
-  benefitsRepository
+  benefitsRepository,
+  userBaseRepository
 );
 const benefitsService: IBenefitsService = new BenefitsService(
   benefitsRepository

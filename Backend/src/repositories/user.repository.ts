@@ -1,4 +1,3 @@
-import { typeUserResetToken } from "../../../types/user";
 import User from "../models/user.model";
 import {
   IUserAuthRepository,
@@ -8,6 +7,7 @@ import { IUser } from "../types/IUser";
 import { PushSubscription } from "web-push";
 import { IPremiumHistory } from "../types/IPremiumHistory";
 import { Types } from "mongoose";
+import { typeUserResetToken } from "../dtos/auth/login.dto";
 
 export class UserBaseRepository implements IUserBaseRepository<IUser> {
   async incrementCheckin(userId: string): Promise<boolean> {
@@ -121,6 +121,18 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
     }
   }
 
+  async getUserForPremiumHistory(userId: string): Promise<IUser | null> {
+    try {
+      return await User.findById(userId)
+        .populate({
+          path: "premiumHistory.premiumPlan",
+        })
+        .select("premiumHistory -_id");
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async premiumExpired(
     planId: Types.ObjectId,
     userId: Types.ObjectId
@@ -131,13 +143,40 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
         {
           $pull: {
             premiumBenefits: { planId },
-            premiumHistory: { premiumPlan: planId },
           },
         },
         { new: true }
       );
-
       if (!user) throw new Error("Failed to update user premium");
+
+      user.premiumHistory = user.premiumHistory.map((history) => {
+        const plan = history.premiumPlan;
+        if (
+          typeof plan === "object" &&
+          "_id" in plan &&
+          (plan._id as Types.ObjectId).toString() === planId.toString()
+        ) {
+          return {
+            ...history,
+            status: "expired",
+          };
+        }
+
+        if (
+          typeof plan === "object" &&
+          !("_id" in plan) &&
+          (plan as Types.ObjectId).toString() === planId.toString()
+        ) {
+          return {
+            ...history,
+            status: "expired",
+          };
+        }
+
+        return history;
+      });
+
+      await user.save();
 
       if (user.premiumBenefits.length === 0) {
         await User.findByIdAndUpdate(userId, { isVerified: false });

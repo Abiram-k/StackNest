@@ -3,7 +3,13 @@ import { useGetConnectionRequests } from "@/hooks/user/connection/useGetConnecti
 import { useSendConnectionRequest } from "@/hooks/user/connection/useSendConnectionRequest";
 import { useUnfollow } from "@/hooks/user/connection/useUnfollow";
 import { useGetUserInspect } from "@/hooks/user/userProfile/useGetUserInspect";
-import { Eye, Heart, MessageCircleIcon, SparklesIcon } from "lucide-react";
+import {
+  CheckCircle2,
+  Eye,
+  Heart,
+  MessageCircleIcon,
+  SparklesIcon,
+} from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 export default function UserInspect() {
@@ -45,9 +51,16 @@ export default function UserInspect() {
             />
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-900 text-center">
-            {data?.userData.userName || "No name"}
-          </h1>
+          <div className="flex justify-center items-center gap-2">
+            <h1 className="text-2xl font-bold text-gray-900 text-center">
+              {data?.userData.userName || "No name"}
+            </h1>
+            {data?.userData.isVerified && (
+              <span>
+                <CheckCircle2 className="w-5 h-5 text-blue-600 bg-white rounded-full" />
+              </span>
+            )}
+          </div>
           <p className="text-gray-600 mb-6">
             {data?.userData.description || ""}
           </p>

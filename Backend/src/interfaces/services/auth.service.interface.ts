@@ -1,4 +1,4 @@
-import { LoginUser, typeRegisterUserWithOtp } from "../../../../types/user";
+import { LoginUser, typeRegisterUserWithOtp } from "../../dtos/auth/login.dto";
 import { BaseResponseType } from "../../types/general";
 import { IUser } from "../../types/IUser";
 

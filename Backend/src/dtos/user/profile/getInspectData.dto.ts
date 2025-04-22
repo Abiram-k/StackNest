@@ -6,6 +6,7 @@ export type inspectuserDataDTO = {
   connectionCount: number;
   feedsCount: number;
   streakCount: number;
+  isVerified:boolean,
 };
 export type inspectfeedDataDTO = {
   feedId: string;
@@ -25,3 +26,19 @@ export interface ResGetInspectDataDTO {
   message: string;
   success: boolean;
 }
+
+
+export type verifyUserProfileSchemaType = {
+  email?: string;
+  avatar?: string;
+  firstName: string;
+  userName: string;
+  gender?: string;
+  country?: string;
+  description?: string;
+  mobileNumber?: string;
+  streak?:number;
+  streakClaimDate?:Date;
+  isVerified?:boolean;
+  isChatBotAuthorise?:boolean;
+};

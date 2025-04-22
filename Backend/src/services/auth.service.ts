@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import { LoginUser, typeRegisterUserWithOtp } from "../../../types/user";
 import { config } from "dotenv";
 import { Types } from "mongoose";
 import {
@@ -28,6 +27,7 @@ import { IUser } from "../types/IUser";
 import { IAuthService } from "../interfaces/services/auth.service.interface";
 import { HttpStatus } from "../constants/enum.statusCode";
 import { Profile } from "passport";
+import { LoginUser, typeRegisterUserWithOtp } from "../dtos/auth/login.dto";
 
 config();
 
@@ -297,6 +297,4 @@ export class AuthService implements IAuthService {
       throw error;
     }
   }
-
- 
 }

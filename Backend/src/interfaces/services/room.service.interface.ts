@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
-import { RoomSchema } from "../../../../types/user";
 import { IRoom } from "../../types/IRoom";
 import { IRoomSession } from "../../types/IRoomSession";
+import { RoomSchema } from "../../dtos/user/room/createRoom.dto";
 
 export interface IRoomService {
   createRoom(host: Types.ObjectId, data: RoomSchema): Promise<boolean>;

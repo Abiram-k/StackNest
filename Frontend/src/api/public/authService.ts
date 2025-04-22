@@ -1,6 +1,4 @@
-import { axiosResponse } from "@/types";
-import { LoginResponse } from "../../../../types/index";
-import { LoginUser, typeRegisterUserWithOtp } from "../../../../types/user";
+import { axiosResponse, LoginResponse, LoginUser, typeRegisterUserWithOtp } from "@/types";
 import { HttpService } from "../httpService";
 
 export class UserAuthService {

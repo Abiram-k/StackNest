@@ -3,10 +3,10 @@ import FilterBar from "@/components/FilterBar";
 import Pagination from "@/components/Pagination";
 import { useFetchAllUsers } from "@/hooks/admin/userManagement/useFetchAllUsers";
 import { useBlockUser } from "@/hooks/admin/userManagement/useBlockUser";
-import { IUser } from "../../../../../../types/user";
 import CustomTable from "@/components/CustomTable";
 import { useDebounce } from "@/hooks/optimizational/useDebounce";
 import { Spinner } from "@/components/ui/spinner";
+import { IUser } from "@/types";
 const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
 
 const filterOptions = [

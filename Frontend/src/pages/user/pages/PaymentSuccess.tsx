@@ -1,6 +1,6 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { CheckCircle, Download, Star } from "lucide-react";
+import { ArrowLeft, CheckCircle, Download, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -92,7 +92,7 @@ export default function PaymentSuccess() {
                         Regular Price
                       </span>
                       <span className="font-medium line-through text-gray-400">
-                        ${premiumPlanData?.premiumPlan.regularAmount.toFixed(2)}
+                      ₹{premiumPlanData?.premiumPlan.regularAmount.toFixed(2)}
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -100,14 +100,14 @@ export default function PaymentSuccess() {
                         Your Price
                       </span>
                       <span className="font-bold text-green-600 dark:text-green-400">
-                        $
+                      ₹
                         {premiumPlanData?.premiumPlan.discountAmount.toFixed(2)}
                       </span>
                     </div>
                     <div className="flex justify-between text-green-600 dark:text-green-400 font-medium">
                       <span>You Save</span>
                       <span>
-                        ${savingsAmount && savingsAmount.toFixed(2)} (
+                      ₹{savingsAmount && savingsAmount.toFixed(2)} (
                         {savingsPercentage}%)
                       </span>
                     </div>
@@ -130,10 +130,13 @@ export default function PaymentSuccess() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col sm:flex-row gap-4 bg-slate-50 dark:bg-slate-900/50 border-t">
-              {/* <Button className="w-full sm:w-auto" onClick={downloadReceipt}>
-                <Download className="mr-2 h-4 w-4" />
-                Download Receipt
-              </Button> */}
+              <Button
+                className="w-full sm:w-auto mt-2"
+                onClick={() => navigate("/user/profile")}
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Go Back
+              </Button>
             </CardFooter>
           </Card>
         </div>

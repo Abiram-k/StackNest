@@ -1,6 +1,5 @@
 import { useLoginForm } from "@/hooks/validation/useLoginForm";
 import { loginSchema } from "@/validation/authSchema";
-import { LoginUser } from "../../../../../types/user";
 import { Form } from "@/components/forms/Form";
 import images from "../../../assets/login-img.jpg";
 import { Captcha } from "@/components/auth/Captcha";
@@ -9,6 +8,7 @@ import Logo from "@/components/ui/Logo";
 import { useLogin } from "@/hooks/auth/useLogin";
 import useGitHubTokenValidation from "@/hooks/auth/useGitHubTokenValidation";
 import { toast } from "sonner";
+import { LoginUser } from "@/types";
 
 const sitekey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 

@@ -1,6 +1,4 @@
 import { Types } from "mongoose";
-import { verifyUserProfileSchemaType } from "../../../../types/user";
-import { IUser } from "../../types/IUser";
 import { GetUserCardData } from "../../dtos/user/profile/getUserCardData.dto";
 import { PushSubscription } from "web-push";
 import {
@@ -11,6 +9,7 @@ import {
 import {
   inspectfeedDataDTO,
   inspectuserDataDTO,
+  verifyUserProfileSchemaType,
 } from "../../dtos/user/profile/getInspectData.dto";
 export interface IUserProfileService {
   getUserDetails(id: string): Promise<verifyUserProfileSchemaType>;
@@ -33,6 +32,7 @@ export interface IUserProfileService {
       userName: string;
       firstName: string;
       description: string;
+      isVerified:boolean;
     }[]
   >;
   updateUserDetails(
