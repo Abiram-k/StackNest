@@ -19,7 +19,7 @@ const GoogleAuth = ({ isLogin }: { isLogin: boolean }) => {
 
       if (data.success) {
         navigate("/user/home");
-        dispatch(setUserCredentials({}));
+        dispatch(setUserCredentials());
         toast.success("Login Successful");
       }
     } catch (error: any) {

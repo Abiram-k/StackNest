@@ -16,7 +16,7 @@ export const useBlockRoom = () => {
       queryClient.invalidateQueries({ queryKey: ["selectedRoom"] });
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
-    onError: (error) => {
+    onError: () => {
       toast.dismiss();
       toast.error("Action Undone");
     },

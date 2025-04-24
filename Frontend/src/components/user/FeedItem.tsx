@@ -59,7 +59,7 @@ export default function FeedItem({
 }: FeedItemProp) {
   const [liked, setLiked] = useState(isLikedFeed);
   const [likeCount, setLikeCount] = useState(likes);
-  const [isMuted, setIsMuted] = useState(true);
+  // const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [newComment, setNewComment] = useState("");
   const [feedComments, setFeedComments] = useState<CommentType[]>();
@@ -285,7 +285,7 @@ export default function FeedItem({
                     src={media}
                     autoPlay
                     loop
-                    muted={isMuted}
+                    // muted={isMuted}
                     className="w-full h-full object-cover rounded-xl"
                   >
                     <source src={media} type="video/mp4" />
@@ -393,7 +393,6 @@ export default function FeedItem({
 export function CommentList({
   setFeedComments,
   feedComments,
-  setComments,
   comments,
   onReply,
   feedId,

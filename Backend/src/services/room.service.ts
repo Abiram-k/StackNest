@@ -1,5 +1,4 @@
 import { nanoid } from "nanoid";
-import { RoomSchema } from "../../../types/user";
 import { IRoomRepository } from "../interfaces/repositories/room.repository.interface";
 import { IRoom } from "../types/IRoom";
 import { Types } from "mongoose";
@@ -11,6 +10,7 @@ import { HttpStatus } from "../constants/enum.statusCode";
 import { io } from "../app";
 import { IRoomSessionRepository } from "../interfaces/repositories/room.session.repository.interface";
 import { IRoomSession } from "../types/IRoomSession";
+import { RoomSchema } from "../dtos/user/room/createRoom.dto";
 
 export class RoomService implements IRoomService {
   constructor(

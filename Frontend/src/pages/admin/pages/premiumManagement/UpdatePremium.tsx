@@ -6,7 +6,7 @@ import { useUpdatePremium } from "@/hooks/admin/premiumManagment/useUpdatePremiu
 import { usePremiumForm } from "@/hooks/validation/usePremiumForm";
 import { PremiumFormType, ReqPremium } from "@/types";
 import { validatePremiumSchema } from "@/validation/premiumSchema";
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 const UpdatePremium = () => {

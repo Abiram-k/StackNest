@@ -1,8 +1,6 @@
 import { Types } from "mongoose";
-import { IFeed } from "../../types/IFeed";
 import {
   ResFeedType,
-  ResGetMyFeedsDTO,
 } from "../../dtos/user/feeds/getMyFeeds.dto";
 import { ResGetSelectedFeedDTO } from "../../dtos/user/feeds/getSelectedFeed.dto";
 import { ResCommentDTO } from "../../dtos/user/feeds/getComments.dto";

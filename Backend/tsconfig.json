@@ -1,16 +1,16 @@
 {
-    "compilerOptions": {
-      "experimentalDecorators": true,
+  "compilerOptions": {
+    "experimentalDecorators": true,
     "strictPropertyInitialization": false,
-      "target": "ES2020",
-      "module": "ESNext",
-      "moduleResolution": "node",
-      "outDir": "./dist",
-      "rootDir": "..",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules"]
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

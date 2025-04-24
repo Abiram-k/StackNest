@@ -37,7 +37,7 @@ const useGitHubTokenValidation = () => {
         }
       );
       if (data.success) {
-        dispatch(setUserCredentials({}));
+        dispatch(setUserCredentials());
       } else {
         console.error("Invalid token:", data.message);
         toast.error("Token is invalid or expired. Please log in again.");

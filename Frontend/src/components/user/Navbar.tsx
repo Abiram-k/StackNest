@@ -8,14 +8,12 @@ import {
   Menu,
   X,
   Flame,
-  MessageSquare,
   Send,
 } from "lucide-react";
 import Logo from "../ui/Logo";
 import { CustomNavLink } from "../ui/customNavLink";
 import { useGetStreakCount } from "@/hooks/user/userProfile/useGetStreakCount";
 import { useTranslation } from "react-i18next";
-import { useGetUnreadMessagesCount } from "@/hooks/user/connection/message/useGetUnreadMessageCount";
 
 const Navbar = ({
   isAuthenticated,

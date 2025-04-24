@@ -4,14 +4,12 @@ import { useDispatch } from "react-redux";
 import { useRef, useState } from "react";
 import { HttpService } from "@/api/httpService";
 import { setUserCredentials } from "@/redux/slice/userSlice";
-import { UseFormSetError } from "react-hook-form";
 import { setAdminCredentials } from "@/redux/slice/adminSlice";
 import { UserAuthService } from "@/api/public/authService";
 import { toast } from "sonner";
 import { LoginUser } from "@/types";
 
 export const useLogin = (
-  setError: UseFormSetError<LoginUser>,
   role: string
 ) => {
   const navigate = useNavigate();
@@ -30,10 +28,10 @@ export const useLogin = (
       toast.success(data?.message || "Login successful");
       setEnableCaptcha(false);
       if (role == "user") {
-        dispatch(setUserCredentials({}));
+        dispatch(setUserCredentials());
         navigate("/user/home");
       } else {
-        dispatch(setAdminCredentials({}));
+        dispatch(setAdminCredentials());
         navigate("/admin/dashboard");
       }
       mutation.reset();

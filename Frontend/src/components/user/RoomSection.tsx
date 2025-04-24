@@ -9,7 +9,7 @@ import RoomCard from "../card/RoomCard";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 
-const RoomSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
+const RoomSection = () => {
   const { t } = useTranslation();
   const [isModalPasswordModal, setIsModalPasswordModal] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState("");

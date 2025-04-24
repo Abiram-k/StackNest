@@ -80,7 +80,6 @@ export default function ProfilePage() {
 
   const { data: user, isPending: fetchIsPending } = useUserProfile();
   const { mutate: checkinMutate, isPending: isCheckedInPending } = useCheckin(
-    streak,
     setStreak
   );
 

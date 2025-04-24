@@ -1,4 +1,3 @@
-import type { FC } from "react";
 import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetUserCardDetails } from "@/hooks/feeds/useGetUserCardDetails";

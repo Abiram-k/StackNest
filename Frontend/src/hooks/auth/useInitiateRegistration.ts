@@ -15,7 +15,7 @@ export const useInitiateRegistration = (
     reset: initiatingReset,
   } = useMutation({
     mutationFn: (data:{ email:string}) => userAuthService.initiateRegistration(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       setIsModalOpen(true);
     },
     onError: (error) => {

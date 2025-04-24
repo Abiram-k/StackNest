@@ -9,7 +9,7 @@ import { RoomSchema } from "@/types";
 export default function CreateRoom() {
   const {
     register,
-    reset,
+    // reset,
     handleSubmit,
     setValue,
     formState: { errors },
@@ -27,7 +27,7 @@ export default function CreateRoom() {
   });
   const navigate = useNavigate();
 
-  const { mutate, isPending } = useCreateRoom();
+  const { mutate } = useCreateRoom();
 
   const onSubmit = (data: RoomSchema) => {
     console.log(data);

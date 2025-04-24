@@ -17,7 +17,7 @@ export const useVerifyOtp = (setIsModalOpen: (value: boolean) => void) => {
   } = useMutation({
     mutationFn: (data: typeRegisterUserWithOtp) =>
       userAuthService.createUser(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.dismiss();
       toast.success("Otp Verified");
       setIsModalOpen(false);

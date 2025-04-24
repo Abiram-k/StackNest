@@ -1,7 +1,6 @@
 import { HttpService } from "@/api/httpService";
 import { RoomService } from "@/api/public/roomService";
 import {
-  QueryClient,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -14,7 +13,7 @@ export const useRemoveRoom = () => {
 
   const mutate = useMutation({
     mutationFn: (id: string) => roomService.removeRoom(id),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.dismiss();
       toast.success("Room was removed");
       queryClient.invalidateQueries({ queryKey: ["myRooms"] });

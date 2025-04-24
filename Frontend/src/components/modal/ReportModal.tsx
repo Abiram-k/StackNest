@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -69,7 +67,7 @@ export default function ReportModal({ entityId, type }: ReportModalPropType) {
     setCustomMessage("");
   };
 
-  const generateAIContent = async (fiedType: string) => {
+  const generateAIContent = async () => {
     try {
       if (!customMessage) {
         toast.warning("No message founded!");

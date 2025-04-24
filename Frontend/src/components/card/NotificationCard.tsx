@@ -32,7 +32,6 @@ export default function NotificationCard({
   isFriendRequest,
   priority,
   status,
-  mutualFriends,
   profileImage,
 }: NotificationCardProps) {
   return (
@@ -131,15 +130,3 @@ export default function NotificationCard({
   );
 }
 
-{
-  /* {mutualFriends && (
-        <div className="mt-4 text-center">
-          <h3 className="font-bold text-xl">{name}</h3>
-          <p className="text-red-500 text-sm">{timeAgo}</p>
-          <p className="text-gray-600 text-sm mt-1 max-w-[200px]">
-            {mutualFriends.slice(0, 2).join(", ")} and{" "}
-            {mutualFriends.length - 2} other mutual friends
-          </p>
-        </div>
-      )} */
-}

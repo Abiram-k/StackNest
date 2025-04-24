@@ -1,4 +1,4 @@
-import { ChevronLeft, Download, Smile, TrendingUp } from "lucide-react";
+import { ChevronLeft, Download,  TrendingUp } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -68,10 +68,10 @@ export default function Dashboard() {
     },
   };
 
-  const { data: userEngagementData, isPending: fetchingUserEngagement } =
+  const { data: userEngagementData } =
     useGetUserEngagement(selectedYear);
 
-  const { data: salesDetailsData, isPending: salesGetIsPending } =
+  const { data: salesDetailsData } =
     useGetSalesDetails(selectedRange, monthNames[selectedMonth]);
 
   const radialChartData = [
@@ -131,6 +131,7 @@ export default function Dashboard() {
   };
   return (
     <div className="flex h-screen  my-30">
+      
       <main className="flex-1 overflow-y-auto scrollbar-thin p-6">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-2xl font-bold mb-8">Analytics Overview</h1>

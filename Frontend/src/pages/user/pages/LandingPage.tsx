@@ -8,7 +8,7 @@ import PremiumSection from "@/components/user/PremiumSection";
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white">
-      <Navbar isAuthenticated={false} isAdmin={false} notificationLength={0} />
+      <Navbar isAuthenticated={false} isAdmin={false} notificationLength={0} unReadMessageCount={0} />
       <main className="pt-16">
         <HeroSection />
         <CreateRoomSection />

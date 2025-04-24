@@ -71,7 +71,12 @@ const navItems = [
 const AdminLayout = () => {
   return (
     <>
-      <Navbar isAuthenticated={true} isAdmin={true} notificationLength={0}/>
+      <Navbar
+        isAuthenticated={true}
+        isAdmin={true}
+        notificationLength={0}
+        unReadMessageCount={0}
+      />
       <SideBar navItems={navItems} role="admin" />
       <div className="bg-white dark:bg-black w-screen px-7 md:px-10 mt-18 md:ps-30 ">
         <Outlet />

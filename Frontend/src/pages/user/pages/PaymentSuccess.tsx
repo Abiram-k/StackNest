@@ -1,6 +1,5 @@
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import { ArrowLeft, CheckCircle, Download, Star } from "lucide-react";
+
+import { ArrowLeft, CheckCircle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,

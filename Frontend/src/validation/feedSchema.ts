@@ -13,7 +13,7 @@ export const validateFeedSchema = yup.object({
 
   scheduledAt: yup
     .date()
-    .transform((value, originalValue) => {
+    .transform((_, originalValue) => {
       return originalValue ? new Date(originalValue) : null;
     })
     .min(normalizeDate(new Date()), "Scheduled date must be in the future")

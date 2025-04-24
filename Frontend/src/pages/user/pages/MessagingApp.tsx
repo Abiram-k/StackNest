@@ -4,8 +4,6 @@ import {
   Search,
   Paperclip,
   Send,
-  Mic,
-  Video,
   ArrowLeft,
   CheckCheck,
   Eye,
@@ -89,10 +87,15 @@ export default function MessagingApp() {
   useEffect(() => {
     webrtcService.current = new CallWebRTCService(socket, friendId);
 
-    socket.on("call-ended", ({ from }) => {
+    socket.on("call-ended", () => {
       webrtcService.current?.cleanup();
       setCallView("none");
     });
+    // socket.on("call-ended", ({ from }) => {
+
+    //   webrtcService.current?.cleanup();
+    //   setCallView("none");
+    // });
 
     socket.on("call-accepted", ({ from, callerName, callerAvatar }) => {
       setCallerId(from);
@@ -392,77 +395,6 @@ export default function MessagingApp() {
 
     return <p>Unsupported media type.</p>;
   };
-
-  // const CallOverlay = () => (
-  //   <div
-  //     className={`fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm
-  //       z-50
-  //     ${callView === "none" ? "hidden" : "flex"}
-  //     ${window.innerWidth >= 1024 ? "items-center justify-center" : ""}`}
-  //   >
-  //     <div
-  //       className={`bg-white dark:bg-gray-800 p-6 rounded-lg
-  //       ${window.innerWidth < 1024 ? "w-full h-full" : "max-w-md w-full"}`}
-  //     >
-  //       {callView === "calling" && (
-  //         <div className="flex flex-col items-center h-full justify-center">
-  //           <h2 className="text-xl mb-4">
-  //             Calling... {messageData?.friendData.name}{" "}
-  //           </h2>
-  //           <button
-  //             onClick={endCall}
-  //             className="bg-red-500 text-white px-6 py-2 rounded-full"
-  //           >
-  //             End Call
-  //           </button>
-  //         </div>
-  //       )}
-
-  //       {callView === "incoming" && (
-  //         <div className="flex flex-col items-center h-full justify-center">
-  //           <img
-  //             src={callerAvatar!}
-  //             alt=""
-  //             className="rouded w-10 h-10 object-cover"
-  //           />
-  //           <h2 className="text-xl mb-4">Incoming Call from {callerName}</h2>
-  //           <div className="fixed bottom-8 left-0 right-0 flex justify-center gap-4">
-  //             <button
-  //               onClick={acceptCall}
-  //               className="bg-green-500 text-white px-6 py-2 rounded-full"
-  //             >
-  //               Accept
-  //             </button>
-  //             <button
-  //               onClick={rejectCall}
-  //               className="bg-red-500 text-white px-6 py-2 rounded-full"
-  //             >
-  //               Reject
-  //             </button>
-  //           </div>
-  //         </div>
-  //       )}
-
-  //       {callView === "in-call" && (
-  //         <div className="flex flex-col items-center h-full justify-center">
-  //           <img
-  //             src={callerAvatar!}
-  //             alt=""
-  //             className="rouded w-10 h-10 object-cover"
-  //           />
-  //           <h2 className="text-xl mb-4">In Call with {callerName}</h2>
-  //           <audio ref={audioRef} autoPlay className="w-full mb-4" />
-  //           <button
-  //             onClick={endCall}
-  //             className="bg-red-500 text-white px-6 py-2 rounded-full"
-  //           >
-  //             End Call
-  //           </button>
-  //         </div>
-  //       )}
-  //     </div>
-  //   </div>
-  // );
 
   const CallOverlay = () => (
     <div
@@ -1141,10 +1073,14 @@ function MobileChat({
   useEffect(() => {
     webrtcService.current = new CallWebRTCService(socket, friendId!);
 
-    socket.on("call-ended", ({ from }) => {
+    socket.on("call-ended", () => {
       webrtcService.current?.cleanup();
       setCallView("none");
     });
+    // socket.on("call-ended", ({ from }) => {
+    //   webrtcService.current?.cleanup();
+    //   setCallView("none");
+    // });
 
     socket.on("call-accepted", ({ from, callerName, callerAvatar }) => {
       setCallerId(from);
@@ -1463,14 +1399,10 @@ function MobileChat({
                 className="rounded-full mr-3"
               />
               <div>
-                {/* <h3 className="font-medium">{messageData?.friendData.name}</h3> */}
                 <div className="flex justify-center items-center gap-2">
                   <h3 className="font-medium">
                     {messageData?.friendData?.name || "No name"}
                   </h3>
-                  {/* <span className="text-xs text-gray-500 ">
-                    (@{messageData?.friendData?.userName})
-                  </span> */}
                 </div>
                 <div className="flex items-center text-xs text-green-500">
                   {isFriendOnline ? (
@@ -1582,31 +1514,7 @@ function MobileChat({
                       )}
                     </div>
                   </div>
-                  {/* <div
-                    className={`${
-                      message.type == "text"
-                        ? "bg-blue-600 p-3"
-                        : "dark:bg-gray-600 bg-gray-200 p-1"
-                    } text-white rounded-lg  max-w-[80%] break-words min-w-32`}
-                  >
-                    {message.type == "image" ? (
-                      <img
-                        src={message.message}
-                        alt="sent image"
-                        className="rounded max-w-full h-auto"
-                      />
-                    ) : message.type == "video" ? (
-                      <video
-                        src={message.message}
-                        controls
-                        className="rounded max-w-full h-auto"
-                      />
-                    ) : (
-                      <p className="whitespace-pre-line mb-3">
-                        {message.message}
-                      </p>
-                    )}
-                  </div> */}
+
                   <Trash2Icon
                     className="h-3 w-3 text-white absolute right-3 top-1 z-30 cursor-pointer"
                     onClick={() => {

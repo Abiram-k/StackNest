@@ -8,7 +8,7 @@ import {
 } from "../ui/carousel";
 
 const BannerSection = () => {
-  const { data, isPending } = useFetchUserBanners();
+  const { data } = useFetchUserBanners();
 
   return (
     <section className="w-full px-4 py-12">

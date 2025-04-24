@@ -12,14 +12,13 @@ import { LoginUser } from "@/types";
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useLoginForm({
     schema: loginSchema,
     defaultValues: { email: "", password: "" },
   });
 
-  const { mutate, isPending } = useLogin(setError,"admin")
+  const { mutate, isPending } = useLogin("admin")
 
   const onSubmit = (data: LoginUser) => {
     mutate(data);

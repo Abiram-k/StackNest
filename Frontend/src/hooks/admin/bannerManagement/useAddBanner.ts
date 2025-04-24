@@ -1,6 +1,6 @@
 import { BannerService } from "@/api/admin/bannerServices";
 import { HttpService } from "@/api/httpService";
-import { BannerReq, BannerRes } from "@/types";
+import { BannerReq } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 

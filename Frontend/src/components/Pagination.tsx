@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import ReactPaginate from "react-paginate";
 
 type paginationType = {
@@ -7,10 +7,10 @@ type paginationType = {
 };
 
 const Pagination = ({ totalPages, onPageChange }: paginationType) => {
-  const [currentPage, setCurrentPage] = useState(0);
+  // const [currentPage, setCurrentPage] = useState(0);
 
   const handlePageChange = ({ selected }: { selected: number }) => {
-    setCurrentPage(selected);
+    // setCurrentPage(selected);
     onPageChange(selected + 1);
   };
 

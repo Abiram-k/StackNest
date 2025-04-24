@@ -1,4 +1,4 @@
-import { ArrowDown, Clock, Languages, List, Moon, Sun } from "lucide-react";
+import { ArrowDown, Languages, List, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import {

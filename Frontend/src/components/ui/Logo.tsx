@@ -2,7 +2,7 @@ import { GalleryVerticalEnd } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/stacknest-logo.png";
 
-const Logo = ({ isAdmin }: { isAdmin: boolean }) => {
+const Logo = ({ isAdmin }: { isAdmin?: boolean }) => {
   return (
     <div className="flex justify-center gap-2 md:justify-start">
       <Link

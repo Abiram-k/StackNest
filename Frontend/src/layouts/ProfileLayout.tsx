@@ -7,7 +7,6 @@ import {
   FileText,
   Home,
   Settings,
-  Users,
 } from "lucide-react";
 import { Outlet } from "react-router-dom";
 

@@ -16,7 +16,6 @@ const LoginPage = () => {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useLoginForm({
     schema: loginSchema,
@@ -24,7 +23,7 @@ const LoginPage = () => {
   });
 
   const { mutate, isPending, enableCaptcha, captchaRef, captchaTokenRef } =
-    useLogin(setError, "user");
+    useLogin("user");
 
   useGitHubTokenValidation();
 
@@ -33,7 +32,7 @@ const LoginPage = () => {
       toast.error("Please verify the captcha");
       return;
     }
-    
+
     mutate({ captchaToken: captchaTokenRef.current, ...data });
   };
 

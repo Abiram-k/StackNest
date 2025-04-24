@@ -1,4 +1,3 @@
-import { normalizeDate } from "@/utils/normalizeDate";
 import * as yup from "yup";
 
 export const validateRoomSchema = yup.object({

@@ -2,11 +2,10 @@ import { HttpService } from "@/api/httpService";
 import { UserProfileService } from "@/api/user/userProfileService";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { axiosResponse, verifyUserProfileSchemaType } from "@/types";
+import {verifyUserProfileSchemaType } from "@/types";
 
 const userProfileService = new UserProfileService(new HttpService());
 
-// Hook to fetch user profile
 export const useUserProfile = () => {
   return useQuery({
     queryKey: ["userDetails"],
@@ -27,7 +26,7 @@ export const useUpdateUserProfile = (
   } = useMutation({
     mutationFn: (data: verifyUserProfileSchemaType) =>
       userProfileService.updateUserProfile(data),
-    onSuccess: (data: axiosResponse) => {
+    onSuccess: () => {
       setIsEditing(false);
       queryClient.invalidateQueries({ queryKey: ["userDetails"] });
       toast.dismiss();

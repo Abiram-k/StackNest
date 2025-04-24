@@ -3,7 +3,6 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { toast } from "sonner";
 import { axiosInstance } from "@/api/apiSevice";
 import { useNavigate } from "react-router-dom";
-import { axiosResponse } from "@/types";
 const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID;
 
 const PayPalButton = ({ planId }: { planId: string }) => {

@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useCheckin = (
-  streak: number,
   setStreak: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const httpService = new HttpService();
@@ -12,7 +11,7 @@ export const useCheckin = (
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: () => profileService.checkin(),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.dismiss();
       toast.success("Successfully checked in");
       queryClient.invalidateQueries({ queryKey: ["streakCount"] });

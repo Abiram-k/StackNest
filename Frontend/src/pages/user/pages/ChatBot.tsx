@@ -70,7 +70,6 @@ const ChatBot = React.memo(
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages.length]);
 
-    // const { mutate, isPending } = useHappyFaceAi();
 
     const handleSendMessage = async (e: React.FormEvent) => {
       try {

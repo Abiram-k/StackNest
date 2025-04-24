@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { data } from "react-router-dom";
 import { HttpService } from "../httpService";
 
 interface ICloudinaryResponse {

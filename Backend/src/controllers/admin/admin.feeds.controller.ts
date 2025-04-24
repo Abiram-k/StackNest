@@ -81,7 +81,7 @@ export class AdminFeedController implements IAdminFeedController {
     try {
       const { feedId } = req.params;
       const reason = String(req.query.reason) || "";
-      await this._feedService.deleteFeed(feedId, reason);
+      await this._feedService.deleteFeed(feedId, reason,"");
       res
         .status(HttpStatus.OK)
         .json({ message: "Successfully deleted feed", success: true });

@@ -2,15 +2,9 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import PayPalButton from "@/components/auth/PayPalButton";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  useStripe,
-  useElements,
-  PaymentElement,
-  Elements,
-} from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import StripeCheckoutForm from "@/components/StripeCheckoutForm";
-import axios from "axios";
 import { axiosInstance } from "@/api/apiSevice";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
@@ -19,8 +13,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY!);
 
 export default function PaymentListPage() {
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
-  // const stripe = useStripe();
-  // const elements = useElements();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [stripeClientSecret, setStripeClientSecret] = useState("");
 
@@ -34,6 +27,7 @@ export default function PaymentListPage() {
     setSelectedPayment(method);
     if (method == "stripe") {
       try {
+        setIsLoading(true);
         const response = await axiosInstance.post(
           "/users/create-payment-intent",
           {
@@ -45,8 +39,10 @@ export default function PaymentListPage() {
         setStripeClientSecret(data.clientSecret);
       } catch (error: unknown) {
         let { message } = error as { message: string };
-        toast.error(message );
+        toast.error(message);
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };

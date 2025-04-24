@@ -36,13 +36,11 @@ export class AdminRewardController implements IAdminRewardController {
   ): Promise<void> {
     try {
       const rewards = await this._rewardService.getAllRewards();
-      res
-        .status(HttpStatus.OK)
-        .json({
-          message: "Successfully fetched all rewards",
-          success: true,
-          rewards,
-        });
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched all rewards",
+        success: true,
+        rewards,
+      });
     } catch (error) {
       next(error);
     }
@@ -55,13 +53,11 @@ export class AdminRewardController implements IAdminRewardController {
     try {
       const { rewardId } = req.params;
       const reward = await this._rewardService.getSelectedReward(rewardId);
-      res
-        .status(HttpStatus.OK)
-        .json({
-          message: "Successfully fetched reward",
-          success: true,
-          reward,
-        });
+      res.status(HttpStatus.OK).json({
+        message: "Successfully fetched reward",
+        success: true,
+        reward,
+      });
     } catch (error) {
       next(error);
     }

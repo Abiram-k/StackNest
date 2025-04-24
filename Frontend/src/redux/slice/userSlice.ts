@@ -9,7 +9,7 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUserCredentials: (state, action) => {
+    setUserCredentials: (state) => {
       state.isAuthenticated = true;
     },
     

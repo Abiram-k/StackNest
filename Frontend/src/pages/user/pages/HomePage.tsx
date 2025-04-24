@@ -14,7 +14,7 @@ const HomePage = () => {
         <NotificationProvider />
         <HeroSection />
         <CreateRoomSection />
-        <RoomSection isAuthenticated />
+        <RoomSection  />
         <BannerSection />
         <FreindsSection />
         <MyAccordion />

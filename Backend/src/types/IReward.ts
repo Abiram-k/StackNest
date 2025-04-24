@@ -9,11 +9,7 @@ export interface IReward {
     type: "authorization" | "discount" | "bonus" | "feature" | "custom";
     isActive: boolean;
     benefit_key:RewardBenefitsT;
-      // | "extra_profile_edit"
-      // | "one_premium_room_creation"
-      // | "temporary_premium_access"
-      // | "fast_customer_support";
-  
+      
     createdAt?: Date;
     updatedAt?: Date;
   }

@@ -8,7 +8,7 @@ const initialState = {
   name: "admin",
   initialState,
   reducers: {
-    setAdminCredentials: (state, action) => {
+    setAdminCredentials: (state) => {
       state.isAuthenticated = true;
     },
     adminLogout: (state) => {

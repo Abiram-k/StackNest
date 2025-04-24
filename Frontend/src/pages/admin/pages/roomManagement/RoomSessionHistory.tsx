@@ -2,14 +2,14 @@ import { useState } from "react";
 import Pagination from "@/components/Pagination";
 import { Spinner } from "@/components/ui/spinner";
 import CustomTable, { Column } from "@/components/CustomTable";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDebounce } from "@/hooks/optimizational/useDebounce";
+import {  useParams } from "react-router-dom";
+// import { useDebounce } from "@/hooks/optimizational/useDebounce";
 import { RoomSessionType } from "@/types";
 import { useFetchRoomSessionHistory } from "@/hooks/room/useFetchRoomSessionHistory";
 import { formatSecondToTime } from "@/utils/formatSecondToTime";
 import { toast } from "sonner";
 
-const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
+// const delay = import.meta.env.VITE_DEBOUNCE_DELAY as number;
 
 const formatDate = (date: Date) => {
   const day = String(date.getDate()).padStart(2, "0");
@@ -76,9 +76,9 @@ const columns: Column<RoomSessionType>[] = [
 ];
 
 const RoomSessionHistory = () => {
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("");
-  const [sort, setSort] = useState("");
+  // const [search, setSearch] = useState("");
+  // const [filter, setFilter] = useState("");
+  // const [sort, setSort] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const { roomId } = useParams<{ roomId: string }>();
 
@@ -87,14 +87,15 @@ const RoomSessionHistory = () => {
     toast.success("Room ID is missing!");
     return;
   }
-  const debounceSearchValue = useDebounce(search, delay);
+  // const debounceSearchValue = useDebounce(search, delay);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { data, isLoading } = useFetchRoomSessionHistory(roomId, "admin", {
-    filter,
-    sort,
-    search: debounceSearchValue,
+    filter: "",
+    sort: "",
+    search: "",
+    // debounceSearchValue ,
     currentPage,
     limit: 10,
   });

@@ -1,6 +1,6 @@
 import { HttpService } from "@/api/httpService";
 import { RoomService } from "@/api/public/roomService";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export const useFetchRoomSessionHistory = (
   roomId: string,
@@ -19,7 +19,6 @@ export const useFetchRoomSessionHistory = (
     limit: number;
   }
 ) => {
-  const queryClient = useQueryClient();
   const httpService = new HttpService();
   const roomService = new RoomService(httpService);
 
