@@ -1,6 +1,6 @@
-import { PremiumResDto } from "../../dtos/public/premiumData.dto";
-import { PremiumHistoryDTO } from "../../dtos/user/premium/PremiumHistory.dto";
-import { IPremium } from "../../types/IPremium";
+import { PremiumResDto } from "../../dtos/public/premiumData.dto.js";
+import { PremiumHistoryDTO } from "../../dtos/user/premium/PremiumHistory.dto.js";
+import { IPremium } from "../../types/IPremium.js";
 
 export interface IPremiumService {
   getAllPremium(): Promise<PremiumResDto[]>;

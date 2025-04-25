@@ -20,4 +20,9 @@ export default defineConfig({
       events: "eventemitter3",
     },
   },
+  build: {
+    rollupOptions: {
+      external: ["fs", "path", "os", "http", "util"], // Prevent bundling these
+    }
+  }
 });

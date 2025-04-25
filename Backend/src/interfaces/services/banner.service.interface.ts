@@ -1,4 +1,4 @@
-import { IBanner } from "../../types/IBanner";
+import { IBanner } from "../../types/IBanner.js";
 
 export interface IBannerService {
   fetchBanners(): Promise<IBanner[] | null>;

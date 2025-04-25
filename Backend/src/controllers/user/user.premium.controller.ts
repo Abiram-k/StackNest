@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { IUserPremiumController } from "../../interfaces/controllers/user.premium.controller.interface";
-import { IPremiumService } from "../../interfaces/services/premium.service.interface";
-import { HttpStatus } from "../../constants/enum.statusCode";
+import { IUserPremiumController } from "../../interfaces/controllers/user.premium.controller.interface.js";
+import { IPremiumService } from "../../interfaces/services/premium.service.interface.js";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
 
 export class UserPremiumController implements IUserPremiumController {
   private _premiumService: IPremiumService;

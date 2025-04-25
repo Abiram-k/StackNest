@@ -2,7 +2,13 @@ import { GalleryVerticalEnd } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/stacknest-logo.png";
 
-const Logo = ({ isAdmin }: { isAdmin?: boolean }) => {
+const Logo = ({
+  isAdmin,
+  isAuthenticated,
+}: {
+  isAdmin?: boolean;
+  isAuthenticated?: boolean;
+}) => {
   return (
     <div className="flex justify-center gap-2 md:justify-start">
       <Link
@@ -13,7 +19,12 @@ const Logo = ({ isAdmin }: { isAdmin?: boolean }) => {
           <GalleryVerticalEnd className="size-4" />
           <img src={logo} alt="stack nest logo icon" loading="lazy" />
         </div>
-        <span className="hidden md:block">Stack Nest</span>
+
+        {isAuthenticated ? (
+          <span className="hidden md:block">Stack Nest</span>
+        ) : (
+          <span>Stack Nest</span>
+        )}
       </Link>
     </div>
   );

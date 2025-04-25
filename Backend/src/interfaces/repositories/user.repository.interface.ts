@@ -1,9 +1,9 @@
 import { PushSubscription } from "web-push";
-import { IUser } from "../../types/IUser";
-import { IPremiumHistory } from "../../types/IPremiumHistory";
+import { IUser } from "../../types/IUser.js";
+import { IPremiumHistory } from "../../types/IPremiumHistory.js";
 import { Types } from "mongoose";
-import { typeUserResetToken } from "../../dtos/auth/login.dto";
-import { verifyUserProfileSchemaType } from "../../dtos/user/profile/getInspectData.dto";
+import { typeUserResetToken } from "../../dtos/auth/login.dto.js";
+import { verifyUserProfileSchemaType } from "../../dtos/user/profile/getInspectData.dto.js";
 
 export interface IUserBaseRepository<T> {
   create(userData: Partial<T>): Promise<T>;

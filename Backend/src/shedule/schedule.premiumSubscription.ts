@@ -1,8 +1,8 @@
 import cron from "node-cron";
-import { UserBaseRepository } from "../repositories/user.repository";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
-import { IUser } from "../types/IUser";
-import { premiumEndedMail } from "../utils/email";
+import { UserBaseRepository } from "../repositories/user.repository.js";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
+import { IUser } from "../types/IUser.js";
+import { premiumEndedMail } from "../utils/email.js";
 import { Types } from "mongoose";
 
 const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();

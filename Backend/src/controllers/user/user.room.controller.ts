@@ -1,37 +1,39 @@
 import { NextFunction, Request, Response } from "express";
-// import { RoomService } from "../../services/room.service";
 import { Types } from "mongoose";
-import { HttpStatus } from "../../constants/enum.statusCode";
-import { IUserRoomController } from "../../interfaces/controllers/user.room.controller.interface";
-import { IRoomService } from "../../interfaces/services/room.service.interface";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { IUserRoomController } from "../../interfaces/controllers/user.room.controller.interface.js";
+import { IRoomService } from "../../interfaces/services/room.service.interface.js";
 import {
   CreateRoomDTO,
   ResCreateRoomDTO,
-} from "../../dtos/user/room/createRoom.dto";
+} from "../../dtos/user/room/createRoom.dto.js";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError";
+import { validateDtoError } from "../../utils/ValidateDtoError.js";
 import {
   ResUpdateRoomDTO,
   UpdateRoomDTO,
-} from "../../dtos/user/room/updateRoom.dto";
-import { ResFetchMyRoomsDTO } from "../../dtos/user/room/fetchMyRoom.dto";
-import { RoomResTypeDTO } from "../../dtos/public/roomData.dto";
+} from "../../dtos/user/room/updateRoom.dto.js";
+import { ResFetchMyRoomsDTO } from "../../dtos/user/room/fetchMyRoom.dto.js";
+import { RoomResTypeDTO } from "../../dtos/public/roomData.dto.js";
 import {
   FetchAvailableRoomDTO,
   ResFetchAvailableRoomDTO,
-} from "../../dtos/user/room/fetchAvailableRooms.dto";
-import { FetchSelectedRoomDTO } from "../../dtos/admin/roomManagement/fetchSelectedRoom.dto";
-import { ResFetchSelectedRoomDTO } from "../../dtos/user/room/fetchSelectedRoom";
+} from "../../dtos/user/room/fetchAvailableRooms.dto.js";
+import { FetchSelectedRoomDTO } from "../../dtos/admin/roomManagement/fetchSelectedRoom.dto.js";
+import { ResFetchSelectedRoomDTO } from "../../dtos/user/room/fetchSelectedRoom.js";
 import {
   RemoveRoomDTO,
   ResRemoveRoomDTO,
-} from "../../dtos/user/room/removeRoom.dto";
-import { JoinRoomDTO, ResJoinRoomDTO } from "../../dtos/user/room/joinRoom.dto";
+} from "../../dtos/user/room/removeRoom.dto.js";
+import {
+  JoinRoomDTO,
+  ResJoinRoomDTO,
+} from "../../dtos/user/room/joinRoom.dto.js";
 import {
   ResVerifyPasswordDTO,
   VerifyPasswordDTO,
-} from "../../dtos/user/room/verifyPassword";
+} from "../../dtos/user/room/verifyPassword.js";
 
 export class UserRoomController implements IUserRoomController {
   private _roomService: IRoomService;
@@ -248,14 +250,12 @@ export class UserRoomController implements IUserRoomController {
         console.log("Failed to get role", role);
         return;
       }
-      res
-        .status(HttpStatus.OK)
-        .json({
-          message: "Successfully joined in room",
-          success: true,
-          roomId: dto.roomId,
-          role,
-        });
+      res.status(HttpStatus.OK).json({
+        message: "Successfully joined in room",
+        success: true,
+        roomId: dto.roomId,
+        role,
+      });
     } catch (error) {
       next(error);
     }

@@ -1,6 +1,6 @@
-import { ICallRepository } from "../interfaces/repositories/call.repository.interface";
-import { CallLog } from "../models/callLogs.model";
-import { ICallLog } from "../types/ICallLog";
+import { ICallRepository } from "../interfaces/repositories/call.repository.interface.js";
+import { CallLog } from "../models/callLogs.model.js";
+import { ICallLog } from "../types/ICallLog.js";
 
 export class CallRepository implements ICallRepository<ICallLog> {
   async createCallLog(data: {

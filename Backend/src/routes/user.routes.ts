@@ -11,7 +11,7 @@ import {
   userProfileController,
   userRewardController,
   userRoomController,
-} from "../config/di";
+} from "../config/di.js";
 
 const router = express.Router();
 

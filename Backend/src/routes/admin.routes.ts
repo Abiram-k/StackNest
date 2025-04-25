@@ -8,8 +8,7 @@ import {
   adminRewardController,
   bannerController,
   reportController,
-} from "../config/di";
-import { verifyUser } from "../middlewares/verifyUser";
+} from "../config/di.js";
 
 const router = express.Router();
 

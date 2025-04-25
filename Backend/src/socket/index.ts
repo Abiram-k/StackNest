@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
-import { registerRoomEvents } from "./handler/room.events";
-import { socketAuth } from "./middleware/auth";
-import { registerChatEvents } from "./handler/chat.events";
+import { registerRoomEvents } from "./handler/room.events.js";
+import { socketAuth } from "./middleware/auth.js";
+import { registerChatEvents } from "./handler/chat.events.js";
 
 const initializeSocket = (io: Server) => {
   io.use(socketAuth);

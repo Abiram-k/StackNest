@@ -1,7 +1,7 @@
 import express from 'express';
-import { authController } from '../config/di';
+import { authController } from '../config/di.js';
 import passport from 'passport';
-import { verifyUser } from '../middlewares/verifyUser';
+import { verifyUser } from '../middlewares/verifyUser.js';
 
 const router = express.Router();
 

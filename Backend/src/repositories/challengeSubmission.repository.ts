@@ -1,10 +1,6 @@
-import { IChallengeRespository } from "../interfaces/repositories/challenge.repository.interface";
-import { IChallengeSubmissionRepository } from "../interfaces/repositories/challengeSubmission.repository.interface";
-import { Challenge } from "../models/challenge.model";
-import { IChallenge } from "../types/IChallenge";
-import { IChallengeSubmission } from "../types/IChallengeSubmissionSchema";
-import { ChallengeSubmission } from "../models/challengeSubmission.model";
-import { Types } from "mongoose";
+import { IChallengeSubmissionRepository } from "../interfaces/repositories/challengeSubmission.repository.interface.js";
+import { IChallengeSubmission } from "../types/IChallengeSubmissionSchema.js";
+import { ChallengeSubmission } from "../models/challengeSubmission.model.js";
 
 export class ChallengeSubmissionRepository
   implements IChallengeSubmissionRepository<IChallengeSubmission>

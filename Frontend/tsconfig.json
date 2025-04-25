@@ -5,9 +5,6 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    // "strict": true,
-    // "strictPropertyInitialization": false,
-    // "resolveJsonModule": true,
     // "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {

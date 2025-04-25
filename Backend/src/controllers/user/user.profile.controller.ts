@@ -1,19 +1,18 @@
 import { NextFunction, Request, Response } from "express";
-import { AuthRequest } from "../../types/IAuth";
+import { AuthRequest } from "../../types/IAuth.js";
 import { config } from "dotenv";
-import axios from "axios";
-import { HttpStatus } from "../../constants/enum.statusCode";
-import { IUserProfileController } from "../../interfaces/controllers/user.profile.controller.interface";
-import { IUserProfileService } from "../../interfaces/services/user.profile.service.interface";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { IUserProfileController } from "../../interfaces/controllers/user.profile.controller.interface.js";
+import { IUserProfileService } from "../../interfaces/services/user.profile.service.interface.js";
 import {
   ResGetUserDataDTO,
   ResProfileData,
-} from "../../dtos/user/profile/getUserData.dto";
-import { ResUpdateUserProfileDTO } from "../../dtos/user/profile/updateUserProfile.dto";
-import { ResGetUserCardData } from "../../dtos/user/profile/getUserCardData.dto";
+} from "../../dtos/user/profile/getUserData.dto.js";
+import { ResUpdateUserProfileDTO } from "../../dtos/user/profile/updateUserProfile.dto.js";
+import { ResGetUserCardData } from "../../dtos/user/profile/getUserCardData.dto.js";
 import { Types } from "mongoose";
-import { IResgetStatsDataDTO } from "../../dtos/user/profile/getStatsData.dto";
-import { ResGetInspectDataDTO } from "../../dtos/user/profile/getInspectData.dto";
+import { IResgetStatsDataDTO } from "../../dtos/user/profile/getStatsData.dto.js";
+import { ResGetInspectDataDTO } from "../../dtos/user/profile/getInspectData.dto.js";
 config();
 
 const HUG_FACE_API_KEY = process.env.HUG_FACE_API_KEY;

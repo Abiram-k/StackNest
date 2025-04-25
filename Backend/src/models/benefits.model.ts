@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IBenefit } from "../types/IBenefits";
+import { IBenefit } from "../types/IBenefits.js";
 
 const BenefitSchema = new mongoose.Schema(
   {

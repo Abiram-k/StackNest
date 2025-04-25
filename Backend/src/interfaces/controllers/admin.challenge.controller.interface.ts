@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ResAddNewChallengeDTO } from "../../dtos/admin/challengeManagement/addNewChallenge.dto";
+import { ResAddNewChallengeDTO } from "../../dtos/admin/challengeManagement/addNewChallenge.dto.js";
 
 export interface IAdminChallengeController {
   getChallenges(req: Request, res: Response, next: NextFunction): Promise<void>;

@@ -1,16 +1,16 @@
 import { Types } from "mongoose";
-import { GetUserCardData } from "../../dtos/user/profile/getUserCardData.dto";
+import { GetUserCardData } from "../../dtos/user/profile/getUserCardData.dto.js";
 import { PushSubscription } from "web-push";
 import {
   IPointsTableData,
   IStatsUser,
   IStreakTableData,
-} from "../../dtos/user/profile/getStatsData.dto";
+} from "../../dtos/user/profile/getStatsData.dto.js";
 import {
   inspectfeedDataDTO,
   inspectuserDataDTO,
   verifyUserProfileSchemaType,
-} from "../../dtos/user/profile/getInspectData.dto";
+} from "../../dtos/user/profile/getInspectData.dto.js";
 export interface IUserProfileService {
   getUserDetails(id: string): Promise<verifyUserProfileSchemaType>;
   getStatsData(userId: string): Promise<{

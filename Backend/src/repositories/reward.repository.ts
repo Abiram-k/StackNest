@@ -1,6 +1,6 @@
-import { IRewardRepository } from "../interfaces/repositories/reward.repository.interface";
-import { Reward } from "../models/reward.model";
-import { IReward } from "../types/IReward";
+import { IRewardRepository } from "../interfaces/repositories/reward.repository.interface.js";
+import { Reward } from "../models/reward.model.js";
+import { IReward } from "../types/IReward.js";
 
 export class RewardRepository implements IRewardRepository<IReward> {
   async getAllRewards(): Promise<IReward[]> {

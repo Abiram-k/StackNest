@@ -1,7 +1,7 @@
-import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface";
-import { Premium } from "../models/premium.model";
-import User from "../models/user.model";
-import { IPremium } from "../types/IPremium";
+import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface.js";
+import { Premium } from "../models/premium.model.js";
+import User from "../models/user.model.js";
+import { IPremium } from "../types/IPremium.js";
 
 export class PremiumRepository implements IPremiumRepository<IPremium> {
   async getPremiumById(premiumId: string): Promise<IPremium | null> {

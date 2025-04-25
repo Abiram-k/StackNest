@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { IAdminRewardController } from "../../interfaces/controllers/admin.reward.controller.interface";
-import { IRewardService } from "../../interfaces/services/reward.service.interface";
-import { HttpStatus } from "../../constants/enum.statusCode";
+import { IAdminRewardController } from "../../interfaces/controllers/admin.reward.controller.interface.js";
+import { IRewardService } from "../../interfaces/services/reward.service.interface.js";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
 import { plainToInstance } from "class-transformer";
-import { AddOrUpdateRewardDTO } from "../../dtos/admin/rewardManagement/addOrUpdateReward.dto";
+import { AddOrUpdateRewardDTO } from "../../dtos/admin/rewardManagement/addOrUpdateReward.dto.js";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError";
+import { validateDtoError } from "../../utils/ValidateDtoError.js";
 
 export class AdminRewardController implements IAdminRewardController {
   private _rewardService: IRewardService;

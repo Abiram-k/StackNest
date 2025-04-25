@@ -1,13 +1,16 @@
 import { NextFunction, Request, Response } from "express";
-import { IFavoritesController } from "../../interfaces/controllers/favorites.controller.interface";
-import { IFavoritesService } from "../../interfaces/services/favorites.service.interface";
-import { HttpStatus } from "../../constants/enum.statusCode";
-import { ResFetchFavoritesDTO } from "../../dtos/user/favorites/fetchFavorites.dto";
+import { IFavoritesController } from "../../interfaces/controllers/favorites.controller.interface.js";
+import { IFavoritesService } from "../../interfaces/services/favorites.service.interface.js";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { ResFetchFavoritesDTO } from "../../dtos/user/favorites/fetchFavorites.dto.js";
 import { plainToInstance } from "class-transformer";
-import { AddToFavoritesDTO } from "../../dtos/user/favorites/addToFavorites.dto";
+import { AddToFavoritesDTO } from "../../dtos/user/favorites/addToFavorites.dto.js";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError";
-import { RemoveFavoritesDTO, ResRemoveFavoritesDTO } from "../../dtos/user/favorites/removeFavorites.dto";
+import { validateDtoError } from "../../utils/ValidateDtoError.js";
+import {
+  RemoveFavoritesDTO,
+  ResRemoveFavoritesDTO,
+} from "../../dtos/user/favorites/removeFavorites.dto.js";
 
 export class FavoritesController implements IFavoritesController {
   private _favoritesService: IFavoritesService;
@@ -83,18 +86,16 @@ export class FavoritesController implements IFavoritesController {
       const dto = plainToInstance(RemoveFavoritesDTO, req.query);
       const errors = await validate(dto);
       if (!validateDtoError(errors, res)) return;
-      const {roomId} = dto
+      const { roomId } = dto;
 
       if (!roomId) {
         throw new Error("Room Id not found");
       }
       await this._favoritesService.removeFromFavorites(userId, roomId);
-      res
-        .status(HttpStatus.OK)
-        .json({
-          message: "SuccessFully removed from favorites",
-          success: true,
-        });
+      res.status(HttpStatus.OK).json({
+        message: "SuccessFully removed from favorites",
+        success: true,
+      });
     } catch (error) {
       next(error);
     }

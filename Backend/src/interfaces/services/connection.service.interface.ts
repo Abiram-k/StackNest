@@ -1,5 +1,5 @@
-import { FetchCallLogsDTO } from "../../dtos/user/connection/fetchCallLogs.dto";
-import { GetMessageDTO } from "../../dtos/user/connection/useGetMessage.dto";
+import { FetchCallLogsDTO } from "../../dtos/user/connection/fetchCallLogs.dto.js";
+import { GetMessageDTO } from "../../dtos/user/connection/useGetMessage.dto.js";
 
 export interface IConnectionService {
   sendConnectionRequest(

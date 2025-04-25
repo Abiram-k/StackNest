@@ -1,16 +1,16 @@
 import { nanoid } from "nanoid";
-import { IRoomRepository } from "../interfaces/repositories/room.repository.interface";
-import { IRoom } from "../types/IRoom";
+import { IRoomRepository } from "../interfaces/repositories/room.repository.interface.js";
+import { IRoom } from "../types/IRoom.js";
 import { Types } from "mongoose";
 import createHttpError from "http-errors";
-import { IRoomService } from "../interfaces/services/room.service.interface";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
-import { IUser } from "../types/IUser";
-import { HttpStatus } from "../constants/enum.statusCode";
-import { io } from "../app";
-import { IRoomSessionRepository } from "../interfaces/repositories/room.session.repository.interface";
-import { IRoomSession } from "../types/IRoomSession";
-import { RoomSchema } from "../dtos/user/room/createRoom.dto";
+import { IRoomService } from "../interfaces/services/room.service.interface.js";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
+import { IUser } from "../types/IUser.js";
+import { HttpStatus } from "../constants/enum.statusCode.js";
+import { io } from "../app.js";
+import { IRoomSessionRepository } from "../interfaces/repositories/room.session.repository.interface.js";
+import { IRoomSession } from "../types/IRoomSession.js";
+import { RoomSchema } from "../dtos/user/room/createRoom.dto.js";
 
 export class RoomService implements IRoomService {
   constructor(
@@ -38,7 +38,7 @@ export class RoomService implements IRoomService {
       }
       if (!isAuthorisedForUnlimitedCreation && rooms.length >= 1) {
         throw createHttpError(
-          HttpStatus.BAD_REQUEST, 
+          HttpStatus.BAD_REQUEST,
           "Premium feature: You can only create one room at a time!"
         );
       }

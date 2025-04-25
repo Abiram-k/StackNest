@@ -1,6 +1,6 @@
-import { IMessageRepository } from "../interfaces/repositories/message.repository.interface";
-import { Message } from "../models/message.model";
-import { IMessage } from "../types/IMessage";
+import { IMessageRepository } from "../interfaces/repositories/message.repository.interface.js";
+import { Message } from "../models/message.model.js";
+import { IMessage } from "../types/IMessage.js";
 
 export class MessageRepository implements IMessageRepository<IMessage> {
   async createMessage(

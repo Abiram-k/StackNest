@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IFeed } from "../types/IFeed";
+import { IFeed } from "../types/IFeed.js";
 
 const FeedSchema = new mongoose.Schema(
   {

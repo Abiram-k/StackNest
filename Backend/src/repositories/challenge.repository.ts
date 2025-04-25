@@ -1,6 +1,6 @@
-import { IChallengeRespository } from "../interfaces/repositories/challenge.repository.interface";
-import { Challenge } from "../models/challenge.model";
-import { IChallenge } from "../types/IChallenge";
+import { IChallengeRespository } from "../interfaces/repositories/challenge.repository.interface.js";
+import { Challenge } from "../models/challenge.model.js";
+import { IChallenge } from "../types/IChallenge.js";
 
 export class ChallengeRespository implements IChallengeRespository<IChallenge> {
   async findById(challengeId: string): Promise<IChallenge | null> {

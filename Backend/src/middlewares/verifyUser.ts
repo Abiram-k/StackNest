@@ -1,11 +1,9 @@
 import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import createHttpError from "http-errors";
-import { AuthRequest, DecodedToken } from "../types/IAuth";
-import userModel from "../models/user.model";
-import { AdminRespository } from "../repositories/admin.repository";
-import { UserBaseRepository } from "../repositories/user.repository";
-import { HttpStatus } from "../constants/enum.statusCode";
+import { AuthRequest, DecodedToken } from "../types/IAuth.js";
+import { UserBaseRepository } from "../repositories/user.repository.js";
+import { HttpStatus } from "../constants/enum.statusCode.js";
 
 export const verifyUser = async (
   req: AuthRequest,

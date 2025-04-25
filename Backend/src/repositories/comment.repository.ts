@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
-import { ICommentRepository } from "../interfaces/repositories/comment.repository.interface";
-import CommentsModel from "../models/comments.model";
-import { IComment } from "../types/IFeed";
+import { ICommentRepository } from "../interfaces/repositories/comment.repository.interface.js";
+import CommentsModel from "../models/comments.model.js";
+import { IComment } from "../types/IFeed.js";
 
 export class CommentRepository implements ICommentRepository<IComment> {
   async getComments(

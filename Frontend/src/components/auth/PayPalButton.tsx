@@ -53,7 +53,7 @@ const PayPalButton = ({ planId }: { planId: string }) => {
   return (
     <PayPalScriptProvider
       options={{
-        "client-id": PAYPAL_CLIENT_ID!,
+        clientId: PAYPAL_CLIENT_ID!,
         currency: "USD",
       }}
     >

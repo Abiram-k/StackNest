@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import {
-  Heart,
-  Search,
-  User,
-  Menu,
-  X,
-  Flame,
-  Send,
-} from "lucide-react";
+import { Heart, Search, User, Menu, X, Flame, Send } from "lucide-react";
 import Logo from "../ui/Logo";
 import { CustomNavLink } from "../ui/customNavLink";
 import { useGetStreakCount } from "@/hooks/user/userProfile/useGetStreakCount";
@@ -43,7 +35,7 @@ const Navbar = ({
     <nav className="fixed top-0 w-full bg-background z-50 border-b shadow-sm">
       <div className="container mx-auto px-2 sm:px-4 lg:px-6">
         <div className="flex h-20 items-center justify-between">
-          <Logo isAdmin={isAdmin} />
+          <Logo isAdmin={isAdmin} isAuthenticated={isAuthenticated} />
 
           <div className="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
             <div className="flex items-center gap-6">

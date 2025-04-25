@@ -1,25 +1,25 @@
-import { HttpStatus } from "../constants/enum.statusCode";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
-import { IUserProfileService } from "../interfaces/services/user.profile.service.interface";
-import { IUser } from "../types/IUser";
+import { HttpStatus } from "../constants/enum.statusCode.js";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
+import { IUserProfileService } from "../interfaces/services/user.profile.service.interface.js";
+import { IUser } from "../types/IUser.js";
 import { isSameDay } from "date-fns";
 import createHttpError from "http-errors";
-import { sendStreakMissedMail } from "../utils/email";
+import { sendStreakMissedMail } from "../utils/email.js";
 import { Types } from "mongoose";
-import { GetUserCardData } from "../dtos/user/profile/getUserCardData.dto";
-import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface";
-import { IFeed } from "../types/IFeed";
+import { GetUserCardData } from "../dtos/user/profile/getUserCardData.dto.js";
+import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface.js";
+import { IFeed } from "../types/IFeed.js";
 import { PushSubscription } from "web-push";
 import {
   IPointsTableData,
   IStatsUser,
   IStreakTableData,
-} from "../dtos/user/profile/getStatsData.dto";
+} from "../dtos/user/profile/getStatsData.dto.js";
 import {
   inspectfeedDataDTO,
   inspectuserDataDTO,
   verifyUserProfileSchemaType,
-} from "../dtos/user/profile/getInspectData.dto";
+} from "../dtos/user/profile/getInspectData.dto.js";
 
 export class UserProfileService implements IUserProfileService {
   constructor(

@@ -1,19 +1,19 @@
 import { Server, Socket } from "socket.io";
-import { ConnectionService } from "../../services/connection.service";
-import { IConnectionService } from "../../interfaces/services/connection.service.interface";
-import { IMessageRepository } from "../../interfaces/repositories/message.repository.interface";
-import { IMessage } from "../../types/IMessage";
-import { MessageRepository } from "../../repositories/message.repository";
-import { IUserBaseRepository } from "../../interfaces/repositories/user.repository.interface";
-import { IUser } from "../../types/IUser";
-import { UserBaseRepository } from "../../repositories/user.repository";
-import { INotificationRepository } from "../../interfaces/repositories/notification.repository.interface";
-import { INotification } from "../../types/INotification";
-import { NotificationRepository } from "../../repositories/notification.repository";
-import { isImageUrl, isVideoUrl } from "../../utils/urlChecker";
-import { ICallRepository } from "../../interfaces/repositories/call.repository.interface";
-import { ICallLog } from "../../types/ICallLog";
-import { CallRepository } from "../../repositories/call.repository";
+import { ConnectionService } from "../../services/connection.service.js";
+import { IConnectionService } from "../../interfaces/services/connection.service.interface.js";
+import { IMessageRepository } from "../../interfaces/repositories/message.repository.interface.js";
+import { IMessage } from "../../types/IMessage.js";
+import { MessageRepository } from "../../repositories/message.repository.js";
+import { IUserBaseRepository } from "../../interfaces/repositories/user.repository.interface.js";
+import { IUser } from "../../types/IUser.js";
+import { UserBaseRepository } from "../../repositories/user.repository.js";
+import { INotificationRepository } from "../../interfaces/repositories/notification.repository.interface.js";
+import { INotification } from "../../types/INotification.js";
+import { NotificationRepository } from "../../repositories/notification.repository.js";
+import { isImageUrl, isVideoUrl } from "../../utils/urlChecker.js";
+import { ICallRepository } from "../../interfaces/repositories/call.repository.interface.js";
+import { ICallLog } from "../../types/ICallLog.js";
+import { CallRepository } from "../../repositories/call.repository.js";
 
 interface MsgUser {
   _id: string;
@@ -68,7 +68,6 @@ export const registerChatEvents = (
     userSocketMap.set(userId, socket.id);
     socket.join(userId);
   }
-
 
   socket.on("join-chat", (friendId: string) => {
     const userId = socket.data.user?.userId;
@@ -201,7 +200,7 @@ export const registerChatEvents = (
     const chatId = getChatId(userId, friendId);
     io.to(chatId).emit("new-reaction", messageId, emoji, userId);
   });
-  
+
   // socket.on("exit-chat", (friendId: string) => {
   //   console.log("From exit chat event, FriendId: ", friendId);
   //   const friendSocketId = onlineUsers.get(friendId);

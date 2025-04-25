@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ICallLog } from "../types/ICallLog";
+import { ICallLog } from "../types/ICallLog.js";
 
 const CallLogSchema = new mongoose.Schema(
   {

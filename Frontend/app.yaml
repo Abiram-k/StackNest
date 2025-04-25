@@ -1,0 +1,21 @@
+service: stacknest
+runtime: nodejs20
+
+handlers:
+
+  # Serve static assets (JS, CSS, images) correctly
+  - url: /assets
+    static_dir: dist/assets
+    secure: always
+    http_headers:
+      Access-Control-Allow-Origin: "*"
+      X-Frame-Options: "SAMEORIGIN"
+
+  # Catch-all route: send everything else to index.html for SPA routing
+  - url: /.*
+    static_files: dist/index.html
+    upload: dist/index.html
+    secure: always
+    http_headers:
+      Access-Control-Allow-Origin: "*"
+      X-Frame-Options: "SAMEORIGIN"

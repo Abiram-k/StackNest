@@ -1,20 +1,20 @@
 import { Request, Response, NextFunction } from "express";
-import { IAdminChallengeController } from "../../interfaces/controllers/admin.challenge.controller.interface";
-import { IChallengeService } from "../../interfaces/services/challenge.service.interface";
-import { HttpStatus } from "../../constants/enum.statusCode";
-import { instanceToPlain, plainToInstance } from "class-transformer";
+import { IAdminChallengeController } from "../../interfaces/controllers/admin.challenge.controller.interface.js";
+import { IChallengeService } from "../../interfaces/services/challenge.service.interface.js";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { plainToInstance } from "class-transformer";
 import {
   AddNewChallengeDTO,
   ResAddNewChallengeDTO,
-} from "../../dtos/admin/challengeManagement/addNewChallenge.dto";
+} from "../../dtos/admin/challengeManagement/addNewChallenge.dto.js";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError";
-import { GetAllChallengesDTO } from "../../dtos/admin/challengeManagement/getChallenges.dto";
+import { validateDtoError } from "../../utils/ValidateDtoError.js";
+import { GetAllChallengesDTO } from "../../dtos/admin/challengeManagement/getChallenges.dto.js";
 import createHttpError from "http-errors";
 import {
   ResUpdateChallengeDTO,
   UpdateChallengeDTO,
-} from "../../dtos/admin/challengeManagement/updateChallenge.dto";
+} from "../../dtos/admin/challengeManagement/updateChallenge.dto.js";
 
 export class AdminChallengeController implements IAdminChallengeController {
   private _challengeService: IChallengeService;

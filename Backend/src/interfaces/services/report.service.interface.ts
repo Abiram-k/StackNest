@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { ResReportDTO } from "../../dtos/admin/reportManagement/getReport.dto";
+import { ResReportDTO } from "../../dtos/admin/reportManagement/getReport.dto.js";
 
 export interface IReportService {
   report(data: {

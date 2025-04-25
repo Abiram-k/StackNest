@@ -1,6 +1,6 @@
-import { IBannerRepository } from "../interfaces/repositories/banner.repository.interface";
-import { IBanner } from "../types/IBanner";
-import { Banner } from "../models/banner.model";
+import { IBannerRepository } from "../interfaces/repositories/banner.repository.interface.js";
+import { IBanner } from "../types/IBanner.js";
+import { Banner } from "../models/banner.model.js";
 
 export class BannerRepository implements IBannerRepository<IBanner> {
   async findById(bannerId: string): Promise<IBanner | null> {

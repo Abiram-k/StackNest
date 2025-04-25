@@ -1,13 +1,13 @@
-import User from "../models/user.model";
+import User from "../models/user.model.js";
 import {
   IUserAuthRepository,
   IUserBaseRepository,
-} from "../interfaces/repositories/user.repository.interface";
-import { IUser } from "../types/IUser";
+} from "../interfaces/repositories/user.repository.interface.js";
+import { IUser } from "../types/IUser.js";
 import { PushSubscription } from "web-push";
-import { IPremiumHistory } from "../types/IPremiumHistory";
+import { IPremiumHistory } from "../types/IPremiumHistory.js";
 import { Types } from "mongoose";
-import { typeUserResetToken } from "../dtos/auth/login.dto";
+import { typeUserResetToken } from "../dtos/auth/login.dto.js";
 
 export class UserBaseRepository implements IUserBaseRepository<IUser> {
   async incrementCheckin(userId: string): Promise<boolean> {

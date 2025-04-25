@@ -1,4 +1,4 @@
-import { challengeResDTO } from "../../public/challenges.dto";
+import { challengeResDTO } from "../../public/challenges.dto.js";
 
 export interface GetAllChallengesDTO {
   message:string;

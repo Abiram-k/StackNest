@@ -1,9 +1,8 @@
 import { Server, Socket } from "socket.io";
-import { RoomService } from "../../services/room.service";
-import { RoomRespository } from "../../repositories/room.repository";
-import { UserBaseRepository } from "../../repositories/user.repository";
-import { Console } from "console";
-import { RoomSessionRespository } from "../../repositories/room.session.repository";
+import { RoomService } from "../../services/room.service.js";
+import { RoomRespository } from "../../repositories/room.repository.js";
+import { UserBaseRepository } from "../../repositories/user.repository.js";
+import { RoomSessionRespository } from "../../repositories/room.session.repository.js";
 
 const roomRepo = new RoomRespository();
 const userBaseRepo = new UserBaseRepository();
@@ -148,7 +147,7 @@ export const registerRoomEvents = (io: Server, socket: Socket) => {
 
   // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  REMOVE USER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  socket.on("room-removeUser", (socketId: string,roomId:string) => {
+  socket.on("room-removeUser", (socketId: string, roomId: string) => {
     const userName = socket.data.user?.userName;
     if (socket.id == socketId) {
       console.log("Bro your trying to kik yourself from the room !?");

@@ -1,15 +1,15 @@
 import { Types } from "mongoose";
-import { IReportRepository } from "../interfaces/repositories/report .repository.interface";
-import { IReportService } from "../interfaces/services/report.service.interface";
-import { IReport } from "../types/IReport";
+import { IReportRepository } from "../interfaces/repositories/report .repository.interface.js";
+import { IReportService } from "../interfaces/services/report.service.interface.js";
+import { IReport } from "../types/IReport.js";
 import creatHttpError from "http-errors";
-import { HttpStatus } from "../constants/enum.statusCode";
-import { IRoomRepository } from "../interfaces/repositories/room.repository.interface";
-import { IRoom } from "../types/IRoom";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
-import { IUser } from "../types/IUser";
-import { ResReportDTO } from "../dtos/admin/reportManagement/getReport.dto";
-import { reportDismissedMail, reportResolvedMail } from "../utils/email";
+import { HttpStatus } from "../constants/enum.statusCode.js";
+import { IRoomRepository } from "../interfaces/repositories/room.repository.interface.js";
+import { IRoom } from "../types/IRoom.js";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
+import { IUser } from "../types/IUser.js";
+import { ResReportDTO } from "../dtos/admin/reportManagement/getReport.dto.js";
+import { reportDismissedMail, reportResolvedMail } from "../utils/email.js";
 
 export class ReportService implements IReportService {
   private _reportRepo: IReportRepository<IReport>;

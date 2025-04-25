@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { IUserBannerController } from "../../interfaces/controllers/user.banner.controller.interface";
-import { HttpStatus } from "../../constants/enum.statusCode";
-import { IBannerService } from "../../interfaces/services/banner.service.interface";
+import { IUserBannerController } from "../../interfaces/controllers/user.banner.controller.interface.js";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { IBannerService } from "../../interfaces/services/banner.service.interface.js";
 import {
   ResFetchBannerDTO,
   UserBannerDTO,
-} from "../../dtos/user/banner/fetchBanner.dto";
+} from "../../dtos/user/banner/fetchBanner.dto.js";
 
 export class UserBannerController implements IUserBannerController {
   private _bannerService: IBannerService;

@@ -3,31 +3,28 @@ import { config } from "dotenv";
 import { Types } from "mongoose";
 import {
   generateAccessToken,
-  generateJWT,
   generateRefreshToken,
-} from "../utils/generateJWT";
-import { googleUserResponse } from "../config/googleAuth";
-import { verifyCaptcha } from "../config/captchaVerify";
-import { hashPassword } from "../utils/hashPassword";
-import otpRepository from "../repositories/otp.repository";
-import { generateOTP } from "../utils/generateOTP";
+} from "../utils/generateJWT.js";
+import { googleUserResponse } from "../config/googleAuth.js";
+import { verifyCaptcha } from "../config/captchaVerify.js";
+import { hashPassword } from "../utils/hashPassword.js";
+import otpRepository from "../repositories/otp.repository.js";
+import { generateOTP } from "../utils/generateOTP.js";
 import jwt from "jsonwebtoken";
 import createHttpError from "http-errors";
 import {
   sendOtpMail,
   sendWelcomeMail,
-  sendPasswordResetEmail,
   sendPasswordUpdated,
-} from "../utils/email";
+} from "../utils/email.js";
 import {
   IUserAuthRepository,
   IUserBaseRepository,
-} from "../interfaces/repositories/user.repository.interface";
-import { IUser } from "../types/IUser";
-import { IAuthService } from "../interfaces/services/auth.service.interface";
-import { HttpStatus } from "../constants/enum.statusCode";
-import { Profile } from "passport";
-import { LoginUser, typeRegisterUserWithOtp } from "../dtos/auth/login.dto";
+} from "../interfaces/repositories/user.repository.interface.js";
+import { IUser } from "../types/IUser.js";
+import { IAuthService } from "../interfaces/services/auth.service.interface.js";
+import { HttpStatus } from "../constants/enum.statusCode.js";
+import { LoginUser, typeRegisterUserWithOtp } from "../dtos/auth/login.dto.js";
 
 config();
 

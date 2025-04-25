@@ -1,14 +1,14 @@
-import { HttpStatus } from "../constants/enum.statusCode";
-import { PremiumResDto } from "../dtos/public/premiumData.dto";
-import { IBenefitsRepository } from "../interfaces/repositories/benefits.repository.interface";
-import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
-import { IPremiumService } from "../interfaces/services/premium.service.interface";
-import { IBenefit } from "../types/IBenefits";
-import { IPremium } from "../types/IPremium";
+import { HttpStatus } from "../constants/enum.statusCode.js";
+import { PremiumResDto } from "../dtos/public/premiumData.dto.js";
+import { IBenefitsRepository } from "../interfaces/repositories/benefits.repository.interface.js";
+import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface.js";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
+import { IPremiumService } from "../interfaces/services/premium.service.interface.js";
+import { IBenefit } from "../types/IBenefits.js";
+import { IPremium } from "../types/IPremium.js";
 import createHttpError from "http-errors";
-import { IUser } from "../types/IUser";
-import { PremiumHistoryDTO } from "../dtos/user/premium/PremiumHistory.dto";
+import { IUser } from "../types/IUser.js";
+import { PremiumHistoryDTO } from "../dtos/user/premium/PremiumHistory.dto.js";
 import { Types } from "mongoose";
 
 export class PremiumService implements IPremiumService {

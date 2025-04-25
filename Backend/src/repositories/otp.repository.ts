@@ -1,5 +1,5 @@
-import { IOTP } from "../types/IOtp";
-import Otp from "../models/otp.model";
+import { IOTP } from "../types/IOtp.js";
+import Otp from "../models/otp.model.js";
 
 class OtpRepository {
 

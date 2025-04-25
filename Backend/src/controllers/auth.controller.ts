@@ -1,40 +1,38 @@
 import { Request, Response, NextFunction } from "express";
 import { config } from "dotenv";
-// import { AuthService } from "../services/auth.service";
-import { HttpStatus } from "../constants/enum.statusCode";
-import { IAuthController } from "../interfaces/controllers/auth.controller.interface";
-import { IAuthService } from "../interfaces/services/auth.service.interface";
+import { HttpStatus } from "../constants/enum.statusCode.js";
+import { IAuthController } from "../interfaces/controllers/auth.controller.interface.js";
+import { IAuthService } from "../interfaces/services/auth.service.interface.js";
 import { plainToInstance } from "class-transformer";
-import { GoogleAuthDTO } from "../dtos/auth/googleAuth.dto";
+import { GoogleAuthDTO } from "../dtos/auth/googleAuth.dto.js";
 import { validate } from "class-validator";
-import { validateDtoError } from "../utils/ValidateDtoError";
-import { LoginDTO, ResLoginDTO } from "../dtos/auth/login.dto";
+import { validateDtoError } from "../utils/ValidateDtoError.js";
+import { LoginDTO, ResLoginDTO } from "../dtos/auth/login.dto.js";
 import {
   GenerateAccessDTO,
   ResGenerateAccessDTO,
-} from "../dtos/auth/generateAccess.dto";
+} from "../dtos/auth/generateAccess.dto.js";
 import {
   InitiateRegistrationDTO,
   ResInitiateRegistrationDTO,
-} from "../dtos/auth/initiateRegistration.dto";
-import { RegisterDTO, ResRegisterDTO } from "../dtos/auth/register.dto";
+} from "../dtos/auth/initiateRegistration.dto.js";
+import { RegisterDTO, ResRegisterDTO } from "../dtos/auth/register.dto.js";
 import {
   ForgotPasswordDTO,
   ResForgotPasswordDTO,
-} from "../dtos/auth/forgotPassword.dto";
+} from "../dtos/auth/forgotPassword.dto.js";
 import {
   ResetPasswordDTO,
   ResResetPasswordDTO,
-} from "../dtos/auth/resetPassword.dto";
-import cloudinary from "../config/cloudinary";
+} from "../dtos/auth/resetPassword.dto.js";
+import cloudinary from "../config/cloudinary.js";
 config();
-import jwt from "jsonwebtoken";
 import { Types } from "mongoose";
 import {
   generateAccessToken,
   generateRefreshToken,
-} from "../utils/generateJWT";
-import { IUser } from "../types/IUser";
+} from "../utils/generateJWT.js";
+import { IUser } from "../types/IUser.js";
 
 const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET as string;
 const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY as string;

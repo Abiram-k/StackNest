@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import { Types } from "mongoose";
-import { FeedRepository } from "../repositories/feed.repository";
-import { sendFeedPublishedMail } from "../utils/email";
+import { FeedRepository } from "../repositories/feed.repository.js";
+import { sendFeedPublishedMail } from "../utils/email.js";
 
 cron.schedule("* * * * *", async () => {
   const now = new Date();

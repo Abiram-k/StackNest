@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AuthRequest } from "../../types/IAuth";
+import { AuthRequest } from "../../types/IAuth.js";
 
 export interface IUserProfileController {
   getUserData(

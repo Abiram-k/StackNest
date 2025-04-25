@@ -1,10 +1,10 @@
 import { Socket } from "socket.io";
 import jwt from "jsonwebtoken";
-import { UserBaseRepository } from "../../repositories/user.repository";
+import { UserBaseRepository } from "../../repositories/user.repository.js";
 import { config } from "dotenv";
-import { DecodedToken } from "../../types/IAuth";
+import { DecodedToken } from "../../types/IAuth.js";
 import createHttpError from "http-errors";
-import { HttpStatus } from "../../constants/enum.statusCode";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
 config();
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET as string;

@@ -1,22 +1,21 @@
 import { Request, Response, NextFunction } from "express";
-import { IBannerController } from "../../interfaces/controllers/banner.controller.interface";
-import { IBannerService } from "../../interfaces/services/banner.service.interface";
-import { HttpStatus } from "../../constants/enum.statusCode";
+import { IBannerController } from "../../interfaces/controllers/banner.controller.interface.js";
+import { IBannerService } from "../../interfaces/services/banner.service.interface.js";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
 import { plainToInstance } from "class-transformer";
 import {
   AddNewBannerDTO,
   ResAddNewBannerDTO,
-} from "../../dtos/admin/bannerManagement/addNewBanner.dto";
+} from "../../dtos/admin/bannerManagement/addNewBanner.dto.js";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError";
-import { ResFetchBannerDTO } from "../../dtos/admin/bannerManagement/fetchBanner.dot";
+import { validateDtoError } from "../../utils/ValidateDtoError.js";
+import { ResFetchBannerDTO } from "../../dtos/admin/bannerManagement/fetchBanner.dot.js";
 import {
   RemoveBannerDTO,
   ResRemoveBannerDTO,
-} from "../../dtos/admin/bannerManagement/removeBanner.dto";
-import { UpdateBannerDTO } from "../../dtos/admin/bannerManagement/updateBanner.dto";
-import { BannerResDTO } from "../../dtos/public/bannerData.dto";
-import { ResFetchSelectedBannerDTO } from "../../dtos/admin/bannerManagement/fetchSelectedBanner.dto";
+} from "../../dtos/admin/bannerManagement/removeBanner.dto.js";
+import { UpdateBannerDTO } from "../../dtos/admin/bannerManagement/updateBanner.dto.js";
+import { ResFetchSelectedBannerDTO } from "../../dtos/admin/bannerManagement/fetchSelectedBanner.dto.js";
 
 export class BannerController implements IBannerController {
   private _bannerService: IBannerService;
@@ -96,7 +95,7 @@ export class BannerController implements IBannerController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { bannerId } = req.params;      
+      const { bannerId } = req.params;
       const dto = plainToInstance(UpdateBannerDTO, req.body);
       const errors = await validate(dto);
       if (!validateDtoError(errors, res)) return;

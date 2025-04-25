@@ -1,18 +1,17 @@
 import { Request, Response, NextFunction } from "express";
-import { IFeedController } from "../../interfaces/controllers/user.feed.controller.interface";
-import { IFeedService } from "../../interfaces/services/feed.service.interface";
+import { IFeedController } from "../../interfaces/controllers/user.feed.controller.interface.js";
+import { IFeedService } from "../../interfaces/services/feed.service.interface.js";
 import { plainToInstance } from "class-transformer";
 import {
   ResAddFeedDTO,
   uploadFeedDTO,
-} from "../../dtos/user/feeds/uploadFeed.dto";
+} from "../../dtos/user/feeds/uploadFeed.dto.js";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError";
-import { HttpStatus } from "../../constants/enum.statusCode";
+import { validateDtoError } from "../../utils/ValidateDtoError.js";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
 import { Types } from "mongoose";
-import { ResGetMyFeedsDTO } from "../../dtos/user/feeds/getMyFeeds.dto";
-import { TrieService } from "../../services/trie.service";
-import { ResCommentDTO } from "../../dtos/user/feeds/getComments.dto";
+import { ResGetMyFeedsDTO } from "../../dtos/user/feeds/getMyFeeds.dto.js";
+import { TrieService } from "../../services/trie.service.js";
 
 export class FeedController implements IFeedController {
   private _feedService: IFeedService;
@@ -255,7 +254,8 @@ export class FeedController implements IFeedController {
     }
   }
 
-  async getSelectedFeed( // for update
+  async getSelectedFeed(
+    // for update
     req: Request,
     res: Response,
     next: NextFunction
@@ -300,7 +300,7 @@ export class FeedController implements IFeedController {
     try {
       const { feedId } = req.params;
       const user = req.user as { userId: Types.ObjectId; role: string };
-      await this._feedService.deleteFeed(feedId,"",user.role);
+      await this._feedService.deleteFeed(feedId, "", user.role);
       res
         .status(HttpStatus.OK)
         .json({ mesage: "Successfully deleted feed", success: true });

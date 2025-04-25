@@ -1,6 +1,4 @@
-import { RoomResTypeDTO } from "../../dtos/public/roomData.dto";
-import { IFavorites } from "../../types/IFavorites";
-import { IRoom } from "../../types/IRoom";
+import { IRoom } from "../../types/IRoom.js";
 
 export interface IFavoritesRepository<T> {
   findFavorites(userId: string, roomId: string): Promise<T | null>;

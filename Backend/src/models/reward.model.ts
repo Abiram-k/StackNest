@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IReward } from "../types/IReward";
+import { IReward } from "../types/IReward.js";
 
 const RewardSchema = new Schema(
   {

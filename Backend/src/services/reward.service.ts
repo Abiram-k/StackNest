@@ -1,12 +1,11 @@
-import { HttpStatus } from "../constants/enum.statusCode";
-import { RewardResDto } from "../dtos/public/rewardData.dto";
-import { IRewardRepository } from "../interfaces/repositories/reward.repository.interface";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
-import { IRewardService } from "../interfaces/services/reward.service.interface";
-import { IReward } from "../types/IReward";
+import { HttpStatus } from "../constants/enum.statusCode.js";
+import { RewardResDto } from "../dtos/public/rewardData.dto.js";
+import { IRewardRepository } from "../interfaces/repositories/reward.repository.interface.js";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
+import { IRewardService } from "../interfaces/services/reward.service.interface.js";
+import { IReward } from "../types/IReward.js";
 import createHttpError from "http-errors";
-import { IUser } from "../types/IUser";
-import { Types } from "mongoose";
+import { IUser } from "../types/IUser.js";
 
 export class RewardService implements IRewardService {
   private _rewardRepo: IRewardRepository<IReward>;

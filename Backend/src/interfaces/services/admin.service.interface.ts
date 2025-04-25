@@ -1,4 +1,4 @@
-import { IUser } from "../../types/IUser";
+import { IUser } from "../../types/IUser.js";
 
 export interface IAdminService {
   fetchAllUsers(

@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { IAdminFeedController } from "../../interfaces/controllers/admin.feed.controller.interface";
-import { IFeedService } from "../../interfaces/services/feed.service.interface";
-import { HttpStatus } from "../../constants/enum.statusCode";
-import { GetAdminFeedDetailsDTO } from "../../dtos/admin/feedManagement/getFeedDetails.dto";
+import { IAdminFeedController } from "../../interfaces/controllers/admin.feed.controller.interface.js";
+import { IFeedService } from "../../interfaces/services/feed.service.interface.js";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { GetAdminFeedDetailsDTO } from "../../dtos/admin/feedManagement/getFeedDetails.dto.js";
 
 export class AdminFeedController implements IAdminFeedController {
   private _feedService: IFeedService;

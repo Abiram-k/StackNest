@@ -1,6 +1,6 @@
 import mongoose, { Types } from "mongoose";
 import crypto from "crypto";
-import { IUser } from "../types/IUser";
+import { IUser } from "../types/IUser.js";
 import { v4 as uuidv4 } from "uuid";
 
 const PremiumHistorySchema = new mongoose.Schema(

@@ -1,6 +1,5 @@
-import { Types } from "mongoose";
-import { RewardResDto } from "../../dtos/public/rewardData.dto";
-import { IReward } from "../../types/IReward";
+import { RewardResDto } from "../../dtos/public/rewardData.dto.js";
+import { IReward } from "../../types/IReward.js";
 
 export interface IRewardService {
     addReward(data: Partial<IReward>): Promise<void>;

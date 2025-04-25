@@ -1,6 +1,6 @@
-import { UpdateChallengeDTO } from "../../dtos/admin/challengeManagement/updateChallenge.dto";
-import { challengeResDTO } from "../../dtos/public/challenges.dto";
-import { IChallengeSubmission } from "../../types/IChallengeSubmissionSchema";
+import { UpdateChallengeDTO } from "../../dtos/admin/challengeManagement/updateChallenge.dto.js";
+import { challengeResDTO } from "../../dtos/public/challenges.dto.js";
+import { IChallengeSubmission } from "../../types/IChallengeSubmissionSchema.js";
 
 export interface IChallengeService {
   addNewChallenge(data: {

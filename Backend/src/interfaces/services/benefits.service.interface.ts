@@ -1,5 +1,5 @@
-import { BenefitResDto } from "../../dtos/public/benefitData.dto";
-import { IBenefit } from "../../types/IBenefits";
+import { BenefitResDto } from "../../dtos/public/benefitData.dto.js";
+import { IBenefit } from "../../types/IBenefits.js";
 
 export interface IBenefitsService {
   addBenefits(data: Partial<IBenefit>): Promise<void>;

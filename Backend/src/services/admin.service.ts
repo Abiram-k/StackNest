@@ -1,13 +1,13 @@
-import { IAdminService } from "../interfaces/services/admin.service.interface";
-import { IAdminRepository } from "../interfaces/repositories/admin.repository.interface";
-import { IUser } from "./../types/IUser";
+import { IAdminService } from "../interfaces/services/admin.service.interface.js";
+import { IAdminRepository } from "../interfaces/repositories/admin.repository.interface.js";
+import { IUser } from "./../types/IUser.js";
 import createHttpError from "http-errors";
-import { HttpStatus } from "../constants/enum.statusCode";
-import { IRoomRepository } from "../interfaces/repositories/room.repository.interface";
-import { IRoom } from "../types/IRoom";
-import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface";
-import { IPremium } from "../types/IPremium";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
+import { HttpStatus } from "../constants/enum.statusCode.js";
+import { IRoomRepository } from "../interfaces/repositories/room.repository.interface.js";
+import { IRoom } from "../types/IRoom.js";
+import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface.js";
+import { IPremium } from "../types/IPremium.js";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
 
 export class AdminService implements IAdminService {
   constructor(

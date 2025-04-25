@@ -1,7 +1,4 @@
-import { NextFunction, Request, Response } from "express";
-import { RoomResTypeDTO } from "../../dtos/public/roomData.dto";
-import { Types } from "mongoose";
-
+import { RoomResTypeDTO } from "../../dtos/public/roomData.dto.js";
 export interface IFavoritesService {
   fetchFavorites(userId: string): Promise<RoomResTypeDTO[] | null>;
   addToFavorites(userId: string, roomId: string): Promise<void>;

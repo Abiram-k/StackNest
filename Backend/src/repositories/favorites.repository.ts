@@ -1,8 +1,7 @@
-import { RoomResTypeDTO } from "../dtos/public/roomData.dto";
-import { IFavoritesRepository } from "../interfaces/repositories/favorites.repository.interface";
-import { Favorites } from "../models/favorites.model";
-import { IFavorites } from "../types/IFavorites";
-import { IRoom } from "../types/IRoom";
+import { IFavoritesRepository } from "../interfaces/repositories/favorites.repository.interface.js";
+import { Favorites } from "../models/favorites.model.js";
+import { IFavorites } from "../types/IFavorites.js";
+import { IRoom } from "../types/IRoom.js";
 
 export class FavoritesRepository implements IFavoritesRepository<IFavorites> {
   async findFavorites(

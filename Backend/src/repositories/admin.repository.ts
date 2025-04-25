@@ -1,6 +1,6 @@
-import { IAdminRepository } from "../interfaces/repositories/admin.repository.interface";
-import { IUser } from "../types/IUser";
-import User from "../models/user.model";
+import { IAdminRepository } from "../interfaces/repositories/admin.repository.interface.js";
+import { IUser } from "../types/IUser.js";
+import User from "../models/user.model.js";
 
 enum FilterTags {
   "isBlocked" = "Blocked",
