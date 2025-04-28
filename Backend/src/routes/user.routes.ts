@@ -228,7 +228,7 @@ router.post(
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<< CONNECTIONS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 router.post(
-  "/request",
+  "/connection/request",
   userConnectionController.sendConnectionRequest.bind(userConnectionController)
 );
 router.get(

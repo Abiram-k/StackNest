@@ -36,7 +36,7 @@ export const NotificationProvider = () => {
 
 
         await notificationService.subscribeUser(newSubscription);
-        toast.success("Subscribed to notifications successfully!");
+        // toast.success("Subscribed to notifications successfully!");
       } catch (error) {
         toast.error("Error occurred while registering service worker");
         console.error("Service Worker Error:", error);
@@ -49,7 +49,7 @@ export const NotificationProvider = () => {
         if (permission === "granted") {
           await registerServiceWorker();
         } else {
-          toast.warning("Notification permission denied");
+          // toast.warning("Notification permission denied");
         }
       } catch (error) {
         console.error("Notification Permission Error:", error);

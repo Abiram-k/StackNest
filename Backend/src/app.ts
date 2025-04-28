@@ -47,11 +47,11 @@ setupLogRotation();
 app.get("/", (req: Request, res: Response) => {
   res.json({
     success: true,
-    message: "Welcome to the Stack Nest API",
+    message: "Welcome to the Stack Nest API", 
   });
-});
+}); 
 
-app.use("/auth", AuthRoutes);
+app.use("/auth", AuthRoutes); 
 app.use("/users", verifyUser, userRoutes);
 app.use("/admin", verifyUser, verifyAdmin, adminRoutes);
 

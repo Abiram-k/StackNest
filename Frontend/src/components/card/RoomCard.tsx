@@ -150,7 +150,7 @@ const RoomCard = ({
                 >
                   <img
                     src={participant.user?.avatar}
-                    alt={participant.user.userName}
+                    alt={participant.user?.userName}
                     className="w-full h-full object-cover"
                   />
                 </div>

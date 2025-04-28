@@ -93,9 +93,9 @@ const RoomSection = () => {
                   <div className="flex -space-x-2">
                     {generalRoom.participants.slice(0, 5).map((participant) => (
                       <img
-                        key={participant.user.userName}
-                        src={participant.user.avatar}
-                        alt={participant.user.userName}
+                        key={participant.user?.userName}
+                        src={participant.user?.avatar}
+                        alt={participant.user?.userName}
                         className="w-8 h-8 rounded-full border-2 border-cyan-400/30 hover:border-cyan-400 transition-all shadow-lg"
                       />
                     ))}
