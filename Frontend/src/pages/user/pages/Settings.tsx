@@ -8,8 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTranslation } from "react-i18next";
+import { useNotification } from "@/components/providers/NotificationProvider";
 
 export default function SettingsPage() {
+  const { permission, requestPermission } = useNotification();
   const { setTheme } = useTheme();
   const { i18n } = useTranslation();
   const { t } = useTranslation();
@@ -116,19 +118,23 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <h3 className="font-medium text-lg mb-1">
-                    {t("Change Password")}
+                    {t("Notification")}
                   </h3>
                   <p className="text-muted-foreground text-sm">
-                    {t("Reset you password, for your security")}!
+                    {t("Enable notification to stay upto date")}!
                   </p>
                 </div>
               </div>
-              {/* <Button
+              <Button
                 variant="outline"
+                onClick={requestPermission}
+                disabled={permission === "granted"}
                 className="bg-red-500 hover:bg-red-600 text-white border-0"
               >
-                {t("Change")}
-              </Button> */}
+                {permission === "granted"
+                  ? "Notifications Enabled"
+                  : "Enable Notifications"}
+              </Button>
             </div>
           </div>
         </div>

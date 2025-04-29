@@ -11,14 +11,15 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-black  ">
       <main className="">
-        <NotificationProvider />
-        <HeroSection />
-        <CreateRoomSection />
-        <RoomSection  />
-        <BannerSection />
-        <FreindsSection />
-        <MyAccordion />
-        <PremiumSection />
+        <NotificationProvider>
+          <HeroSection />
+          <CreateRoomSection />
+          <RoomSection />
+          <BannerSection />
+          <FreindsSection />
+          <MyAccordion />
+          <PremiumSection />
+        </NotificationProvider>
       </main>
     </div>
   );

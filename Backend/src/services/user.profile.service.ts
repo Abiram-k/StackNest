@@ -239,7 +239,11 @@ export class UserProfileService implements IUserProfileService {
     }
     await this._baseRepo.findByIdAndUpdate(id, data);
 
-    if (!isAuthorisedEditViaPoints && !isAuthorisedEditViaPremium)
+    if (
+      !isAuthorisedEditViaPoints &&
+      !isAuthorisedEditViaPremium &&
+      data.avatar
+    )
       throw createHttpError(
         HttpStatus.BAD_REQUEST,
         "Premium Feature: Image can't upload!"

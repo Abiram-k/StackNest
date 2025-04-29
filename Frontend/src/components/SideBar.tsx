@@ -61,7 +61,7 @@ const SideBar = ({ role, navItems }: sideBarPropsType) => {
             ))}
           </nav>
 
-          <div className="absolute bottom-0 w-full p-4">
+          <div className="absolute bottom-5 md:bottom-0 w-full p-4 ">
             <Button
               variant="default"
               className="w-full cursor-pointer hover:bg-red-600/90 bg-red-600 dark:bg-red-600 dark:text-white dark:hover:bg-red-600/90"

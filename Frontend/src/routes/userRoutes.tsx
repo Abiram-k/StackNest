@@ -3,6 +3,7 @@ import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 import ProtectHome from "@/protectedRoutes/user/ProtectHome";
 import RewardsPage from "@/pages/user/pages/RewardsPage";
+import { NotificationProvider } from "@/components/providers/NotificationProvider";
 
 const PaymentSuccess = lazy(() => import("@/pages/user/pages/PaymentSuccess"));
 const VideoConference = lazy(
@@ -70,7 +71,14 @@ export const userRoutes: RouteObject[] = [
             element: <Leaderboard />,
           },
           { path: "stats/rewards", element: <RewardsPage /> },
-          { path: "settings", element: <SettingsPage /> },
+          {
+            path: "settings",
+            element: (
+              <NotificationProvider>
+                <SettingsPage />
+              </NotificationProvider>
+            ),
+          },
           { path: "notification", element: <Notification /> },
           {
             path: "premium-plans",
