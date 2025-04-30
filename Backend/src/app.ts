@@ -17,7 +17,7 @@ import { verifyAdmin } from "./middlewares/verifyAdmin.js";
 import http from "http";
 import { errorLogger, setupLogRotation } from "./utils/logger.js";
 import configurePassport from "./config/passport.js";
-import initSocketIO from "./socket";
+import initSocketIO from "./socket/index.js";
 import { Server } from "socket.io";
 config();
 
