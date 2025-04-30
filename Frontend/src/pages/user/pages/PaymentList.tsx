@@ -26,6 +26,8 @@ export default function PaymentListPage() {
   const handlePaymentSelect = async (method: string) => {
     setSelectedPayment(method);
     if (method == "stripe") {
+      toast.warning("Stripe will come soon...");
+      return;
       try {
         setIsLoading(true);
         const response = await axiosInstance.post(

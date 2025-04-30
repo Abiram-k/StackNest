@@ -11,7 +11,6 @@ const ProtectHome = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   useEffect(() => {
     socket.on("incoming-calll", (recieverId: string) => {
-      alert("hai");
       navigate(`/user/messaging?friend=${recieverId}`);
     });
     return () => {
