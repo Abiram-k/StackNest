@@ -197,21 +197,23 @@ export class PaymentService implements IPaymentService {
 
   async stripeWebhook(sig: any, reqBody: any): Promise<any> {
     let event: Stripe.Event;
-
-    console.log("SIG: ", sig);
-    console.log("REQ BODY: ", reqBody);
+    const STRIPE_WEBHOOK_SECRET = "whsec_jdlDfwaxPfPsgo5Nm7GAXwGvJIlrq1uO";
+    console.log("Webhook SIGNATURE: ", sig);
+    console.log("Webhook REQ BODY: ", reqBody);
     try {
       event = stripe.webhooks.constructEvent(
         reqBody,
         sig,
-        process.env.STRIPE_WEBHOOK_SECRET as string
+        STRIPE_WEBHOOK_SECRET as string
       );
-
+      console.log("EVENT TYPE: ", event.type);
       // 🎯 TypeScript narrowing for event types
       if (event.type === "payment_intent.succeeded") {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-
-        console.log("✅ PaymentIntent was successful:", paymentIntent.id);
+        console.log(
+          "✅ PaymentIntent was successful, Payment Intent:",
+          paymentIntent
+        );
       }
     } catch (error) {
       throw error;

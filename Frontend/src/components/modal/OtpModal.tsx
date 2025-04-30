@@ -64,6 +64,7 @@ const OtpModal = ({
           <DialogTitle>Enter OTP</DialogTitle>
         </DialogHeader>
         <InputOTP
+          type="text"
           maxLength={6}
           value={otp}
           onChange={(value) => setOtp(value)}

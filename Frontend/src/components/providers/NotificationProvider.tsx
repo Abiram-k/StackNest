@@ -65,7 +65,9 @@ export const NotificationProvider = ({
     try {
       const current = Notification.permission;
       if (current === "denied") {
-        toast.info("You have blocked notifications. Please enable it in your browser settings.");
+        toast.info(
+          "You have blocked notifications. Please enable it in your browser settings."
+        );
         return;
       }
       const permission = await Notification.requestPermission();
@@ -73,7 +75,7 @@ export const NotificationProvider = ({
       if (permission === "granted") {
         await registerServiceWorker();
       } else {
-        toast.warning("Notification permission denied");
+        toast.warning("Notification permission denied/not available, Try again later ...");
       }
     } catch (error) {
       console.error("Notification Permission Error:", error);

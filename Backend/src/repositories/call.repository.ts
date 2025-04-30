@@ -21,8 +21,6 @@ export class CallRepository implements ICallRepository<ICallLog> {
     status: "completed" | "rejected" | "missed"
   ): Promise<void> {
     try {
-      console.log("From repository, updating status to:", status);
-
       await CallLog.findOneAndUpdate(
         {
           $or: [

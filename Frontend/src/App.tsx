@@ -7,6 +7,7 @@ import { Spinner } from "./components/ui/spinner";
 import { appRouter } from "./routes/router";
 
 function App() {
+
   return (
     <>
       <Toaster

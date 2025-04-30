@@ -16,6 +16,7 @@ import {
   sendOtpMail,
   sendWelcomeMail,
   sendPasswordUpdated,
+  sendPasswordResetEmail,
 } from "../utils/email.js";
 import {
   IUserAuthRepository,
@@ -208,7 +209,7 @@ export class AuthService implements IAuthService {
       });
       await this._authRepo.setPassResetToken({ email, resetToken });
 
-      await (isExistUser.email, resetToken);
+      await sendPasswordResetEmail(isExistUser.email, resetToken);
     } catch (error) {
       throw error;
     }

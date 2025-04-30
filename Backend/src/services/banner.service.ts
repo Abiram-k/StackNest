@@ -7,7 +7,7 @@ import { HttpStatus } from "../constants/enum.statusCode.js";
 export class BannerService implements IBannerService {
   private _bannerRepo: IBannerRepository<IBanner>;
   constructor(bannerRepo: IBannerRepository<IBanner>) {
-    this._bannerRepo = bannerRepo;
+    this._bannerRepo = bannerRepo; 
   }
   async fetchSelectedBanner(bannerId: string): Promise<IBanner | null> {
     try {

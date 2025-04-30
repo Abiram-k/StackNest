@@ -24,7 +24,7 @@ const LeaderboardTable: React.FC<TableProps> = ({ title, data, type }) => {
         <h2 className="text-xl font-bold">{title}</h2>
       </div>
 
-      <div className="bg-orange-100 rounded-md p-3 mb-2">
+      <div className="bg-orange-100 rounded-md p-3 mb-2 dark:text-orange-500">
         <div className="grid grid-cols-3 text-sm font-medium">
           <div className="px-2">Rank</div>
           <div className="px-2">UserName</div>

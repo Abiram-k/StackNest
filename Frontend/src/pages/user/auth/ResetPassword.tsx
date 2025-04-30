@@ -21,7 +21,7 @@ const ResetPassword = () => {
   const { mutate, isPending } = useResetPassword();
 
   const onSubmit = (data: verifyPasswordSchemaType) => {
-    console.log(data);
+    
     if (token) mutate({ token, ...data });
   };
 

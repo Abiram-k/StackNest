@@ -7,7 +7,9 @@ import HeroSection from "@/components/user/HeroSection";
 import PremiumSection from "@/components/user/PremiumSection";
 import RoomSection from "@/components/user/RoomSection";
 
+
 const HomePage = () => {
+
   return (
     <div className="min-h-screen bg-white dark:bg-black  ">
       <main className="">

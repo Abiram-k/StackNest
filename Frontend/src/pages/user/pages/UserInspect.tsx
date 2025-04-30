@@ -52,7 +52,7 @@ export default function UserInspect() {
           </div>
 
           <div className="flex justify-center items-center gap-2">
-            <h1 className="text-2xl font-bold text-gray-900 text-center">
+            <h1 className="text-2xl font-bold text-gray-900 text-center dark:text-white">
               {data?.userData.userName || "No name"}
             </h1>
             {data?.userData.isVerified && (

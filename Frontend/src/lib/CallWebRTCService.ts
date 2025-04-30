@@ -1,6 +1,8 @@
 // src/services/webrtc.service.ts
 import { Socket } from "socket.io-client";
 
+const TURN_CRED = import.meta.env.VITE_TURN_CRED;
+const INSTANCE_IP = import.meta.env.VITE_INSTANCE_IP;
 export class CallWebRTCService {
   private peerConnection: RTCPeerConnection | null = null;
   public localStream: MediaStream | null = null;
@@ -41,7 +43,6 @@ export class CallWebRTCService {
       this._socket.emit("call-accepted", {
         to: this._otherUserId,
       });
-      
     } catch (error) {
       console.error("Error accepting call:", error);
       this.cleanup();
@@ -50,7 +51,14 @@ export class CallWebRTCService {
 
   private createPeerConnection() {
     this.peerConnection = new RTCPeerConnection({
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" },
+        {
+          urls: `turn:${INSTANCE_IP}:3478?transport=udp`,
+          username: "user",
+          credential: TURN_CRED,
+        },
+      ],
     });
 
     // Add local tracks

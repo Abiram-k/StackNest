@@ -1,5 +1,6 @@
 import { Socket } from "socket.io-client";
-
+const TURN_CRED = import.meta.env.VITE_TURN_CRED;
+const INSTANCE_IP = import.meta.env.VITE_INSTANCE_IP;
 export class WebRTCManager {
   private peers = new Map<string, RTCPeerConnection>();
   private localStream?: MediaStream;
@@ -113,7 +114,14 @@ export class WebRTCManager {
   private async createPeerConnection(peerId: string) {
     try {
       const pc = new RTCPeerConnection({
-        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+        iceServers: [
+          { urls: "stun:stun.l.google.com:19302" },
+          {
+            urls: `turn:${INSTANCE_IP}:3478?transport=udp`,
+            username: "user",
+            credential: TURN_CRED,
+          },
+        ],
       });
 
       this.localStream?.getTracks().forEach((track) => {

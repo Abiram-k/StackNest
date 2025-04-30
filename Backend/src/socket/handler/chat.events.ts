@@ -125,6 +125,7 @@ export const registerChatEvents = (
     }
     if (data.type === "offer") {
       try {
+        io.to(toSocketId).emit("incoming-calll",userId)
         console.log("Saving call to db 🤖");
         await callLogRepo.createCallLog({
           initiator: userId,

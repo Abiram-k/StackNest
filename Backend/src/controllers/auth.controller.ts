@@ -183,7 +183,7 @@ export class AuthController implements IAuthController {
       const dto = plainToInstance(GenerateAccessDTO, req.query);
       const errors = await validate(dto);
       if (!validateDtoError(errors, res)) return;
-  
+
       const refreshToken = req.cookies[`${role}RefreshToken`];
 
       if (!refreshToken) {
@@ -265,7 +265,6 @@ export class AuthController implements IAuthController {
   ): Promise<void> {
     try {
       // const { email } = req.body;
-
       const dto = plainToInstance(ForgotPasswordDTO, req.body);
       const errros = await validate(dto);
       if (!validateDtoError(errros, res)) return;
