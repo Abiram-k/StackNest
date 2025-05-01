@@ -1,8 +1,10 @@
 // src/services/webrtc.service.ts
+import { createTurnConfig } from "@/utils/createTurnConfig";
 import { Socket } from "socket.io-client";
 
-const TURN_CRED = import.meta.env.VITE_TURN_CRED;
-const INSTANCE_IP = import.meta.env.VITE_INSTANCE_IP;
+// const TURN_CRED = import.meta.env.VITE_TURN_CRED;
+// const INSTANCE_IP = import.meta.env.VITE_INSTANCE_IP;
+
 export class CallWebRTCService {
   private peerConnection: RTCPeerConnection | null = null;
   public localStream: MediaStream | null = null;
@@ -49,17 +51,22 @@ export class CallWebRTCService {
     }
   }
 
-  private createPeerConnection() {
+  private async createPeerConnection() {
+    const turnServer = await createTurnConfig();
+
     this.peerConnection = new RTCPeerConnection({
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
-        {
-          urls: `turn:${INSTANCE_IP}:3478?transport=udp`,
-          username: "user",
-          credential: TURN_CRED,
-        },
-      ],
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }, turnServer],
     });
+    // this.peerConnection = new RTCPeerConnection({
+    //   iceServers: [
+    //     { urls: "stun:stun.l.google.com:19302" },
+    //     {
+    //       urls: `turn:${INSTANCE_IP}:3478?transport=udp`,
+    //       username: "user",
+    //       credential: TURN_CRED,
+    //     },
+    //   ],
+    // });
 
     // Add local tracks
     this.localStream?.getTracks().forEach((track) => {

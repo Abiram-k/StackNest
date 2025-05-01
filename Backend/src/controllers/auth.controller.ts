@@ -59,7 +59,10 @@ export class AuthController implements IAuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-        domain: "localhost",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".abiram.website"
+            : "localhost",
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: "/",
       });
@@ -110,7 +113,10 @@ export class AuthController implements IAuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-        domain: "localhost",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".abiram.website"
+            : "localhost",
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: "/",
       });
@@ -156,7 +162,10 @@ export class AuthController implements IAuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-        domain: "localhost",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".abiram.website"
+            : "localhost",
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: "/",
       });
@@ -341,13 +350,16 @@ export class AuthController implements IAuthController {
       const cookieName = `${role}RefreshToken`;
       const refreshToken = req.cookies[cookieName];
       if (!refreshToken) {
-        next(new Error("No refresh token provided"));
+        return next(new Error("No refresh token provided"));
       }
-
       res.clearCookie(`${role}RefreshToken`, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".abiram.website"
+            : "localhost",
       });
 
       res.status(HttpStatus.OK).json({ message: "Logged out successfully" });

@@ -35,7 +35,7 @@ const LeaderboardTable: React.FC<TableProps> = ({ title, data, type }) => {
       {data?.map((user, index) => (
         <div
           key={index}
-          className="grid grid-cols-3 items-center mb-3 hover:bg-gray-50 rounded-md transition-colors"
+          className="grid grid-cols-3 items-center mb-3 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-white rounded-md transition-colors"
         >
           <div className="flex items-center py-2 px-2">
             <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden mr-2 flex-shrink-0">

@@ -25,7 +25,7 @@ const Notification = () => {
             Notifications
           </h1>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-32">
+        <div className="grid items-center md:items-stretch  grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-32">
           {notificationData?.notifications &&
           notificationData.notifications.length > 0 ? (
             notificationData.notifications.map((notification) => (
