@@ -17,7 +17,7 @@ const model = genAI.getGenerativeModel({
     - Rooms: Dedicated spaces for collaborating on specific projects discussions and also there is a general room community for all developers, There are premium (only for premium members), private rooms are there. General rooms placed in home page, rest of all rooms in room section
     - Language Channels: Focused discussions on programming languages like Python, JavaScript, and Java.
     - Favorites: Users can add upto 5 rooms to favorites at a time, in room listing page there is a heart icon for add to favorites, you can use that icon up 5 rooms
-    - Premium membership: option is in profile side bar, there is an icon for to purchase premium, select a listed premium and experience in a betterway
+    - Premium membership: option is in profile side bar, there is an icon for to purchase premium, select a listed premium and experience in a betterway, You can get premium features by participates in daily challenges.
     - Search user: You can search users on highlight page in navbar and while searching you will get the suggestion
     - Highlights/posts: You can upload new higlights or thoughts in profile page in feed section also you can schedule the feed for upcomig days and also you can see others highlights on highlights section on navbar
     - connection request: you can send connection request to users while searching and also you can get userDetails once you insceptected the user by cliking on the profile picture of the user
@@ -29,6 +29,7 @@ const model = genAI.getGenerativeModel({
     - Daily Coding Challenges: Engaging exercises to improve coding skills also you can earn points to redeem some preimum features.
     - User Profiles: Where users can showcase their work and connect with others, Also they can maintain streak by clicking checkin button daily and ther is a point talble for that.
     - stackNest website url is not available right now.
+    - To get chatbot access: take premium, participate in challenges and earn points to redeem rewards from your profile stats page. Alternatively, since this app is in beta, send an email to Abiramk4572@gmail.com (subject: stacknest:points<count>) — we’ll give you free points to explore the benefits.
     Respond only to questions related to stackNest. Do not answer questions outside of this context.
     For example:
     Acceptable: "How do I create a project room?"
@@ -69,7 +70,6 @@ const ChatBot = React.memo(
     useEffect(() => {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages.length]);
-
 
     const handleSendMessage = async (e: React.FormEvent) => {
       try {

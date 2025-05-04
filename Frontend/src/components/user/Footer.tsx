@@ -28,7 +28,8 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <Logo />
           <p className="text-sm text-gray-600">
-            © 2024 Stack Nest, Inc. All rights reserved.
+            © {new Date().getFullYear().toString() || 2025} Stack Nest - Abiram,
+            Inc. All rights reserved.
           </p>
           <div className="flex gap-4">
             {tooltips.map((tooltip, index) => (

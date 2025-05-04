@@ -127,7 +127,7 @@ export default function RewardsPage({}) {
           Redeem your challenge points for exclusive rewards
         </p>
 
-        <div className="inline-flex items-center justify-center bg-slate-100 px-4 py-2 rounded-full">
+        <div className="inline-flex items-center justify-center bg-slate-100 dark:text-black px-4 py-2 rounded-full">
           <Award className="h-5 w-5 mr-2 text-amber-500" />
           <span className="font-semibold">Your Points: </span>
           <span className="ml-1 text-lg font-bold text-amber-600">

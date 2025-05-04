@@ -1426,9 +1426,7 @@ function MobileChat({
               >
                 <Phone className="h-5 w-5" />
               </button>
-              {/* <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
-                <Video className="h-5 w-5" />
-              </button> */}
+             
             </div>
           </div>
 

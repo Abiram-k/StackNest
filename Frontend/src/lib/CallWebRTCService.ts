@@ -1,6 +1,7 @@
 // src/services/webrtc.service.ts
 import { createTurnConfig } from "@/utils/createTurnConfig";
 import { Socket } from "socket.io-client";
+// import { toast } from "sonner";
 
 // const TURN_CRED = import.meta.env.VITE_TURN_CRED;
 // const INSTANCE_IP = import.meta.env.VITE_INSTANCE_IP;
@@ -17,7 +18,7 @@ export class CallWebRTCService {
       this.localStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
-      this.createPeerConnection();
+      if (!this.peerConnection) await this.createPeerConnection();
 
       const offer = await this.peerConnection!.createOffer();
       await this.peerConnection!.setLocalDescription(offer);
@@ -35,6 +36,16 @@ export class CallWebRTCService {
 
   async acceptCall() {
     try {
+      if (!this.peerConnection) {
+        throw new Error(
+          "Peer connection not initialized. Offer must be received first."
+        );
+      }
+      if (this.peerConnection.signalingState !== "have-remote-offer") {
+        throw new Error(
+          `Cannot create answer in current state: ${this.peerConnection.signalingState}`
+        );
+      }
       const answer = await this.peerConnection!.createAnswer();
       await this.peerConnection!.setLocalDescription(answer);
       this._socket.emit("signal", {
@@ -91,25 +102,47 @@ export class CallWebRTCService {
   }
 
   async handleSignal(signal: any) {
-    if (!this.peerConnection) this.createPeerConnection();
+    // if (!this.peerConnection) await this.createPeerConnection();
     try {
       switch (signal.type) {
         case "offer":
+          if (!this.peerConnection) {
+            await this.createPeerConnection();
+          }
+          await this.peerConnection!.setRemoteDescription(signal.content);
+
           if (!this.localStream) {
             this.localStream = await navigator.mediaDevices.getUserMedia({
               audio: true,
             });
+
+            this.localStream.getTracks().forEach((track) => {
+              this.peerConnection!.addTrack(track, this.localStream!);
+            });
           }
-          if (!this.peerConnection) this.createPeerConnection();
-          await this.peerConnection!.setRemoteDescription(signal.content);
+
           break;
 
         case "answer":
           if (!this.peerConnection) {
-            alert("No peer connection for answer");
+            // toast.warning("No peer connection for answer");
+
+            // toast.warning("PeerConnection missing for answer - recreating");
+            await this.createPeerConnection();
+            // return;
+          }
+
+          if (this.peerConnection!.signalingState !== "have-local-offer") {
+            console.warn(
+              "Cannot process answer in current signaling state:",
+              this.peerConnection!.signalingState
+            );
             return;
           }
+
           await this.peerConnection!.setRemoteDescription(signal.content);
+
+          // await this.peerConnection!.setRemoteDescription(signal.content);
           break;
 
         case "candidate":
@@ -117,6 +150,8 @@ export class CallWebRTCService {
             await this.peerConnection.addIceCandidate(
               new RTCIceCandidate(signal.content)
             );
+          } else {
+            console.warn("Received candidate without remote description.");
           }
           break;
       }

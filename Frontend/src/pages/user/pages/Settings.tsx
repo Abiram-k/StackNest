@@ -20,7 +20,7 @@ export default function SettingsPage() {
     i18n.changeLanguage(lang);
   };
   return (
-    <div className="flex min-h-screen bg-background md:w-1/2">
+    <div className="flex min-h-screen bg-background md:w-1/2 mx-auto md:mx-0">
       <div className="flex-1">
         {/* Settings Content */}
         <div className="max-w-3xl mx-auto py-16 px-4">

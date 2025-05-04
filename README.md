@@ -96,10 +96,11 @@ docker-compose up --build
 - Event hosting for hackathons & meetups
 - More advanced analytics for admins
 
-## 🚀 Live Demo (Coming Soon)
+## 🚀 Live Demo 
+- stacknest.abiram.website
 
 ## Stay tuned for a live hosted version on GCP!
-
+- stacknest.abiram.website (server will close soon)
 ## ✉️ Contact
 
 For any feedback, questions, or collaboration:

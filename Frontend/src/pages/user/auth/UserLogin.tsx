@@ -74,7 +74,7 @@ const LoginPage = () => {
                 ]}
                 isRegister={false}
                 onSubmit={handleSubmit(onSubmit)}
-                buttonText="Sing in"
+                buttonText="Sign in"
                 primaryTitle="Welcome Dev ! "
                 secondaryTitle="Enter your email below to login to your account"
                 register={register}
