@@ -22,7 +22,7 @@ jobs:
 
       - name: SSH and deploy
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.GCE_USERNAME }}@${{ secrets.GCE_INSTANCE_NAME }}.$(echo "${{ secrets.GCP_PROJECT_ID }}").internal << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.GCE_USERNAME }}@${{ secrets.GCE_INSTANCE_NAME }}.${{ secrets.GCP_PROJECT_ID }}.internal << 'EOF'
             cd ~/Stacknest/Backend
             git pull origin main
             npm install
