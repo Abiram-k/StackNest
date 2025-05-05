@@ -39,5 +39,4 @@ jobs:
         run: |
           gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
           cd Frontend
-          # Ensure we're deploying the correct folder
           gcloud app deploy --quiet
