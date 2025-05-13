@@ -136,7 +136,7 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
   async premiumExpired(
     planId: Types.ObjectId,
     userId: Types.ObjectId
-  ): Promise<void> {
+  ): Promise<boolean> {
     try {
       const user = await User.findByIdAndUpdate(
         userId,
@@ -149,8 +149,18 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
       );
       if (!user) throw new Error("Failed to update user premium");
 
+      const isAlreadyExpired = user.premiumHistory.some((history) => {
+        return (
+          history.status === "expired" &&
+          history.premiumPlan.toString() === planId.toString()
+        );
+      });
+
+      if (isAlreadyExpired) return false;
+
       user.premiumHistory = user.premiumHistory.map((history) => {
         const plan = history.premiumPlan;
+
         if (
           typeof plan === "object" &&
           "_id" in plan &&
@@ -181,6 +191,7 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
       if (user.premiumBenefits.length === 0) {
         await User.findByIdAndUpdate(userId, { isVerified: false });
       }
+      return true
     } catch (error) {
       throw error;
     }

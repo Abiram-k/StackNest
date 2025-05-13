@@ -35,7 +35,10 @@ export interface IUserBaseRepository<T> {
   getStreakCount(userId: string): Promise<number | undefined>;
   resetCheckin(userId: string): Promise<boolean>;
   getAllFriends(userId: string, search: string): Promise<T | null>;
-  premiumExpired(planId: Types.ObjectId, userId: Types.ObjectId): Promise<void>;
+  premiumExpired(
+    planId: Types.ObjectId,
+    userId: Types.ObjectId
+  ): Promise<boolean>;
   subscribePremium(
     userId: string,
     paymentData: IPremiumHistory,

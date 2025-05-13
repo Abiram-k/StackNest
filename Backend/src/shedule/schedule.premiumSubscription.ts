@@ -6,15 +6,20 @@ import { premiumEndedMail } from "../utils/email.js";
 import { Types } from "mongoose";
 
 const userBaseRepository: IUserBaseRepository<IUser> = new UserBaseRepository();
-cron.schedule("* * * * *", async () => {
+cron.schedule("0 0 * * *", async () => {
   const now = new Date();
   const users = await userBaseRepository.getAllPremiumUser();
   for (const user of users) {
     for (const plan of user.premiumHistory) {
       if (plan.endingDate <= now) {
-        if (plan.premiumPlan instanceof Types.ObjectId)
-          await userBaseRepository.premiumExpired(plan.premiumPlan, user._id);
-        await premiumEndedMail(user.email, user.userName);
+        if (plan.premiumPlan instanceof Types.ObjectId) {
+          const isAlreadyExpired = await userBaseRepository.premiumExpired(
+            plan.premiumPlan,
+            user._id
+          );
+          if (!isAlreadyExpired)
+            await premiumEndedMail(user.email, user.userName);
+        }
       }
     }
   }

@@ -25,6 +25,10 @@ const SingleFeed = () => {
   };
 
   const { data: feedData, isPending } = useGetSingleFeed(feedId!);
+  if (!feedData) {
+    navigate(-1);
+    return;
+  }
 
   return (
     <div>
