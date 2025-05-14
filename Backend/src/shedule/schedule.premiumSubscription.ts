@@ -13,11 +13,11 @@ cron.schedule("0 0 * * *", async () => {
     for (const plan of user.premiumHistory) {
       if (plan.endingDate <= now) {
         if (plan.premiumPlan instanceof Types.ObjectId) {
-          const isAlreadyExpired = await userBaseRepository.premiumExpired(
+          const isAlreadyNotExpired = await userBaseRepository.premiumExpired(
             plan.premiumPlan,
             user._id
           );
-          if (!isAlreadyExpired)
+          if (isAlreadyNotExpired)
             await premiumEndedMail(user.email, user.userName);
         }
       }
