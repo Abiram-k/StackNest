@@ -1,12 +1,12 @@
 import { ChallengeService } from "@/api/admin/challengeService";
 import { HttpService } from "@/api/httpService";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useToggleListingChallenge = () => {
   const httpService = new HttpService();
   const challengeService = new ChallengeService(httpService);
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: (challengeId: string) =>
@@ -14,7 +14,7 @@ export const useToggleListingChallenge = () => {
     onSuccess: () => {
       toast.dismiss();
       toast.success("Action Success");
-      queryClient.invalidateQueries({ queryKey: ["challenge"] });
+      // queryClient.invalidateQueries({ queryKey: ["challenge"] });
     },
     onError: () => {
       toast.dismiss();

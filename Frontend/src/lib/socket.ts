@@ -1,4 +1,4 @@
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { tokenManager } from "./tokenManager";
 import { toast } from "sonner";
@@ -14,7 +14,6 @@ export const socket = io(SERVER_URL, {
 });
 
 export const useSocket = () => {
-
   useEffect(() => {
     const initSocketConnection = async () => {
       let token = tokenManager.getCurrentToken();
@@ -48,7 +47,6 @@ export const useSocket = () => {
       socket.off("connect");
       socket.off("disconnect");
     };
-    
   }, [tokenManager.getCurrentToken()]);
 
   return socket;

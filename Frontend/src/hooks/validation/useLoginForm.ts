@@ -64,7 +64,6 @@ export function useVerifyEmail({
   });
 }
 
-
 interface IverifyPasswordFormProps {
   schema: yup.ObjectSchema<verifyPasswordSchemaType>;
   defaultValues: DefaultValues<verifyPasswordSchemaType>;
@@ -79,4 +78,3 @@ export function useVerifyPassword({
     defaultValues,
   });
 }
-
