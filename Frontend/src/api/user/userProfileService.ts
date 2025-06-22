@@ -1,6 +1,7 @@
 import { axiosResponse, ReqReport, verifyUserProfileSchemaType } from "@/types";
 
 import { HttpService } from "../httpService";
+import { USER_PROFILE_ROUTES } from "@/constants/apiRoutes";
 
 type verifyProfileResponse = axiosResponse & {
   userDetails: verifyUserProfileSchemaType;
@@ -20,16 +21,16 @@ type GetUserCardDataReponse = axiosResponse & {
 };
 
 type GetUserInspectReponse = axiosResponse & {
-  isAlreadyInConnection:boolean;
+  isAlreadyInConnection: boolean;
   userData: {
-    id:string;
+    id: string;
     userName: string;
     avatar: string;
     description: string;
     connectionCount: number;
     feedsCount: number;
     streakCount: number;
-    isVerified:boolean,
+    isVerified: boolean;
   };
   feedData: {
     feedId: string;
@@ -62,7 +63,7 @@ type ResGetFriendSuggestion = axiosResponse & {
     userName: string;
     firstName: string;
     description: string;
-    isVerified:boolean;
+    isVerified: boolean;
   }[];
 };
 
@@ -74,53 +75,62 @@ export class UserProfileService {
   }
 
   async getOpenAiResponse(prompt: string): Promise<openaiResponse> {
-    return this._httpService.post("/users/chatbot", { prompt });
+    return this._httpService.post(USER_PROFILE_ROUTES.GET_OPENAI_RESPONSE, {
+      prompt,
+    });
   }
   async getUserProfile(): Promise<verifyProfileResponse> {
-    return this._httpService.get<verifyProfileResponse>("/users/details");
+    return this._httpService.get<verifyProfileResponse>(
+      USER_PROFILE_ROUTES.GET_USER_PROFILE
+    );
   }
 
   async getInspectData(userName: string): Promise<GetUserInspectReponse> {
-    return this._httpService.get(`/users/${userName}/inspect`);
+    return this._httpService.get(
+      USER_PROFILE_ROUTES.GET_INSPECT_DATA(userName)
+    );
   }
 
   async updateUserProfile(
     data: verifyUserProfileSchemaType
   ): Promise<axiosResponse> {
-    return this._httpService.put<axiosResponse>("/users/details", data);
+    return this._httpService.put<axiosResponse>(
+      USER_PROFILE_ROUTES.UPDATE_USER_PROFILE,
+      data
+    );
   }
 
   async checkin(): Promise<axiosResponse> {
-    return this._httpService.patch<axiosResponse>("/users/checkin");
+    return this._httpService.patch<axiosResponse>(USER_PROFILE_ROUTES.CHECKIN);
   }
 
   async getStreakCount(): Promise<axiosResponse & { streakCount: number }> {
     return this._httpService.get<axiosResponse & { streakCount: number }>(
-      "/users/streak"
+      USER_PROFILE_ROUTES.GET_STREAK_COUNT
     );
   }
 
   async getFriendSuggestion(): Promise<ResGetFriendSuggestion> {
-    return this._httpService.get("/users/friends/suggestion");
+    return this._httpService.get(USER_PROFILE_ROUTES.GET_FRIEND_SUGGESTION);
   }
 
   async getStatsLeaderboardData(): Promise<ResgetStatsData> {
-    return this._httpService.get("/users/stats");
+    return this._httpService.get(USER_PROFILE_ROUTES.GET_STATS_LEADERBOARD);
   }
 
   async getUserCardDetails(): Promise<GetUserCardDataReponse> {
-    return this._httpService.get("/users/card/data");
+    return this._httpService.get(USER_PROFILE_ROUTES.GET_USER_CARD_DATA);
   }
 
   async fetchChallengePoints(): Promise<
     axiosResponse & { pointsCount: number }
   > {
     return this._httpService.get<axiosResponse & { pointsCount: number }>(
-      "users/challenge-points"
+      USER_PROFILE_ROUTES.FETCH_CHALLENGE_POINTS
     );
   }
 
   async report(data: ReqReport): Promise<axiosResponse> {
-    return await this._httpService.post("/users/report", data);
+    return await this._httpService.post(USER_PROFILE_ROUTES.REPORT, data);
   }
 }

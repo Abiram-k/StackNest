@@ -1,6 +1,7 @@
 import CustomTable from "@/components/CustomTable";
 import { FallBackTable } from "@/components/FallBackTable";
 import ConfirmationDialog from "@/components/modal/confirmationDialog";
+import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useGetAllBenefit } from "@/hooks/admin/benefitsManagement/useGetAllBenefits";
@@ -22,10 +23,11 @@ const columns = [
 const BenefitsManagment = () => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [benefitId, setBenefitId] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
   const { data: benefitsData, isPending: fetchBenefitPending } =
-    useGetAllBenefit();
+    useGetAllBenefit({ currentPage });
 
   const { mutate: removeMutate, isPending: removePending } = useRemoveBenefit();
 
@@ -86,6 +88,10 @@ const BenefitsManagment = () => {
             />
           )}
         </div>
+        <Pagination
+          onPageChange={setCurrentPage}
+          totalPages={benefitsData?.totalPages || 1}
+        />
       </main>
     </div>
   );

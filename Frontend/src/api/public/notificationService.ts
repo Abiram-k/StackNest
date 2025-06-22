@@ -1,5 +1,6 @@
 import { axiosResponse } from "@/types";
 import { HttpService } from "../httpService";
+import { NOTIFICATION_ROUTES } from "@/constants/apiRoutes";
 
 export class NotificationService {
   private _httpService: HttpService;
@@ -9,7 +10,7 @@ export class NotificationService {
 
   async subscribeUser(subscription: any): Promise<axiosResponse> {
     const response = await this._httpService.post<axiosResponse>(
-      "/users/subscribe",
+      NOTIFICATION_ROUTES.SUBSCRIBE_USER,
       {
         subscription,
       }

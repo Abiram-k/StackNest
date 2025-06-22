@@ -1,6 +1,7 @@
 import CustomTable from "@/components/CustomTable";
 import { FallBackTable } from "@/components/FallBackTable";
 import ConfirmationDialog from "@/components/modal/confirmationDialog";
+import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useGetAllPremium } from "@/hooks/admin/premiumManagment/useGetAllPremium";
@@ -64,11 +65,12 @@ const PremiumManagement = () => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("");
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: premiumPlandata, isPending: fetchingPremium } =
-    useGetAllPremium();
+    useGetAllPremium({ currentPage });
 
-  console.log(premiumPlandata);
+  // console.log(premiumPlandata);
 
   const { mutate: listingMutate, isPending: ListingPending } =
     useToggleListPremium();
@@ -86,6 +88,7 @@ const PremiumManagement = () => {
     setSelectedPlan(planId);
     setIsConfirmationOpen(true);
   };
+
   const handleRemovePlanWithConfirm = () => {
     removeMutate(selectedPlan);
     setIsConfirmationOpen(false);
@@ -130,6 +133,10 @@ const PremiumManagement = () => {
             subTitle="Add new challenges now"
           />
         )}
+        <Pagination
+          onPageChange={setCurrentPage}
+          totalPages={premiumPlandata?.totalPages || 1}
+        />
       </div>
     </main>
   );

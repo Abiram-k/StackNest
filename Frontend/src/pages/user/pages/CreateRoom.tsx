@@ -89,7 +89,7 @@ export default function CreateRoom() {
                 {
                   name: "password",
                   label: "Password",
-                  type: "text",
+                  type: "password",
                   placeholder: "Enter password",
                   setValue,
                 },

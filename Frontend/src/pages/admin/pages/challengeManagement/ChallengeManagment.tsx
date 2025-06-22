@@ -1,6 +1,7 @@
 import CustomTable from "@/components/CustomTable";
 import { FallBackTable } from "@/components/FallBackTable";
 import ConfirmationDialog from "@/components/modal/confirmationDialog";
+import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useGetAllChallenges } from "@/hooks/admin/challengeManagement/useGetAllChallenges";
@@ -36,9 +37,10 @@ const columns = [
 const ChallengeManagment = () => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [selectedChallenge, setSelectedChallenge] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
-  const { data, isPending } = useGetAllChallenges();
+  const { data, isPending } = useGetAllChallenges({ currentPage });
 
   const { mutate: removeMutate, isPending: removePending } =
     useRemoveChallenge();
@@ -63,7 +65,7 @@ const ChallengeManagment = () => {
     removeMutate(selectedChallenge);
     setIsConfirmationOpen(false);
   };
-  
+
   const handleCancel = () => {
     toast.success("Action Cancelled");
     setIsConfirmationOpen(false);
@@ -109,6 +111,10 @@ const ChallengeManagment = () => {
           />
         )}
       </div>
+      <Pagination
+        onPageChange={setCurrentPage}
+        totalPages={data?.totalPages || 1}
+      />
     </main>
   );
 };

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { HttpService } from "../httpService";
+import { IMAGE_ROUTES } from "@/constants/apiRoutes";
 
 interface ICloudinaryResponse {
   secure_url: string;
@@ -29,7 +30,6 @@ export class ImageService {
     signature: string,
     timestamp: number
   ): Promise<string> {
-
     const formData = new FormData();
     formData.append("file", file);
     formData.append("api_key", apiKey);
@@ -48,8 +48,7 @@ export class ImageService {
 
   async getCloudinaryCredentials(): Promise<ICloudinaryCredentials> {
     return await this._httpService.get<ICloudinaryCredentials>(
-      "/auth/cloudinary/sign"
+      IMAGE_ROUTES.GET_CLOUDINARY_CREDENTIALS
     );
   }
-  
 }

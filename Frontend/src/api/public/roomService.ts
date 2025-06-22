@@ -1,3 +1,4 @@
+import { ROOM_ROUTES } from "@/constants/apiRoutes";
 import { HttpService } from "../httpService";
 import { axiosResponse, RoomSchema, RoomSessionType } from "@/types";
 
@@ -20,9 +21,8 @@ export interface IRoom extends Document {
   startedAt: Date;
   participants: {
     user: { userName: string; avatar: string };
-    totalDuration:number,
-   lastJoined:Date,
-
+    totalDuration: number;
+    lastJoined: Date;
   }[];
   isPrivate: string;
   isPremium: string;
@@ -47,9 +47,9 @@ type fetchSelectRoomResponse = axiosResponse & {
 };
 
 type fetchRoomSessoinRespons = axiosResponse & {
-  session:RoomSessionType[]
-  totalPages: number,
-}
+  session: RoomSessionType[];
+  totalPages: number;
+};
 
 export class RoomService {
   private httpService: HttpService;
@@ -58,51 +58,60 @@ export class RoomService {
   }
 
   async createRoom(data: RoomSchema) {
-    return await this.httpService.post("users/room", data);
+    return await this.httpService.post(ROOM_ROUTES.CREATE_ROOM, data);
   }
   async updateRoom(id: string, data: RoomSchema) {
-    return await this.httpService.put(`users/room?id=${id}`, data);
+    return await this.httpService.put(ROOM_ROUTES.UPDATE_ROOM(id), data);
   }
   async fetchMyrooms(): Promise<roomResponse> {
-    return await this.httpService.get("users/room/my-rooms");
+    return await this.httpService.get(ROOM_ROUTES.MY_ROOMS);
   }
   async fetchAvailableRooms(
     role: string,
     filters: string
   ): Promise<availableRoomResponse> {
-    return await this.httpService.get(`${role}/room/available-rooms${filters}`);
+    return await this.httpService.get(
+      ROOM_ROUTES.AVAILABLE_ROOMS(role, filters)
+    );
   }
 
   async fetchSelectedRoom(
     role: string,
     id: string
   ): Promise<fetchSelectRoomResponse> {
-    return await this.httpService.get(`${role}/room/${id}`);
+    return await this.httpService.get(ROOM_ROUTES.SELECTED_ROOM(role, id));
   }
 
   async removeRoom(id: string): Promise<axiosResponse> {
-    return await this.httpService.delete(`users/room/${id}`);
+    return await this.httpService.delete(ROOM_ROUTES.DELETE_ROOM(id));
   }
 
   async blockRoom(id: string): Promise<axiosResponse> {
-    return await this.httpService.patch(`admin/room/${id}`);
+    return await this.httpService.patch(ROOM_ROUTES.BLOCK_ROOM(id));
   }
 
-  async joinRoom(data: { roomId: string }): Promise<axiosResponse & {roomId:string,role:string}> {
-    return await this.httpService.post("/users/room/join", data);
+  async joinRoom(data: {
+    roomId: string;
+  }): Promise<axiosResponse & { roomId: string; role: string }> {
+    return await this.httpService.post(ROOM_ROUTES.JOIN_ROOM, data);
   }
 
   async verifyPassword(
     roomId: string,
     password: string
   ): Promise<axiosResponse> {
-    return await this.httpService.post(`users/room/verify-password/${roomId}`, {
+    return await this.httpService.post(ROOM_ROUTES.VERIFY_PASSWORD(roomId), {
       password,
     });
   }
 
-  async fetchRoomSession( roomId:string, role: string,
-    filters: string):Promise<fetchRoomSessoinRespons>{
-      return await this.httpService.get(`${role}/room/${roomId}/session${filters}`);
-    }
+  async fetchRoomSession(
+    roomId: string,
+    role: string,
+    filters: string
+  ): Promise<fetchRoomSessoinRespons> {
+    return await this.httpService.get(
+      ROOM_ROUTES.FETCH_ROOM_SESSION(roomId, role, filters)
+    );
+  }
 }

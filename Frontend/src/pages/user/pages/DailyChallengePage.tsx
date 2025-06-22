@@ -22,7 +22,6 @@ export default function DailyChallengePage() {
   const { data: submittedChallenges, isPending: submittedChallengePending } =
     useFetchAllSubmittedChallenges();
 
-  console.log("Submitted Challenge: ", submittedChallenges);
 
   const handleSubmit = (challengeId: string) => {
     submitMutate(

@@ -6,7 +6,7 @@ import { useChallengeForm } from "@/hooks/validation/useChallengeForm";
 import { challegeType, resChallengeType } from "@/types";
 import { validateChallengeSchema } from "@/validation/challengeSchema";
 import { useEffect } from "react";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const UpdateChallenge = () => {
@@ -37,7 +37,7 @@ const UpdateChallenge = () => {
     useUpdateChallenge();
 
   const { data: allChallenges, isPending: fetchingChallengePending } =
-    useGetAllChallenges();
+    useGetAllChallenges({});
 
   useEffect(() => {
     if (allChallenges && challengeId) {

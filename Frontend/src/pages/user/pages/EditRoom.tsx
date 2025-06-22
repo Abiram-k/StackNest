@@ -107,7 +107,7 @@ export default function EditRoom() {
                 {
                   name: "password",
                   label: "Password",
-                  type: "text",
+                  type: "password",
                   placeholder: "Enter password",
                   setValue,
                 },

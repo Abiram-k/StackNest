@@ -1,5 +1,6 @@
 import { axiosResponse, IUser, ResReport } from "@/types";
 import { HttpService } from "../httpService";
+import { ADMIN_ROUTES } from "@/constants/apiRoutes";
 
 interface UsersResponse {
   users: IUser[];
@@ -37,13 +38,13 @@ export class AdminService {
 
   async fetchAllUsers(filter: string): Promise<UsersResponse> {
     const response = await this.httpService.get<UsersResponse>(
-      `/admin/users${filter}`
+      ADMIN_ROUTES.USERS(filter)
     );
     return response;
   }
   async getAllReports(filter: string): Promise<ReportResponse> {
     const response = await this.httpService.get<ReportResponse>(
-      `/admin/reports${filter}`
+      ADMIN_ROUTES.REPORTS(filter)
     );
     return response;
   }
@@ -51,20 +52,18 @@ export class AdminService {
     type: "monthly" | "yearly",
     month?: string
   ): Promise<getSalesDetailsRes> {
-    return await this.httpService.get(
-      `/admin/sales/details?type=${type}&month=${month}`
-    );
+    return await this.httpService.get(ADMIN_ROUTES.SALES_DETAILS(type, month));
   }
   async resolveReport(reportId: string): Promise<axiosResponse> {
     const response = await this.httpService.post<axiosResponse>(
-      `/admin/report/resolve`,
+      ADMIN_ROUTES.REPORT_RESOLVE,
       { reportId }
     );
     return response;
   }
   async rejectReport(reportId: string): Promise<axiosResponse> {
     const response = await this.httpService.post<axiosResponse>(
-      `/admin/report/reject`,
+      ADMIN_ROUTES.REPORT_REJECT,
       { reportId }
     );
     return response;
@@ -72,12 +71,12 @@ export class AdminService {
 
   async blockUser(userName: string): Promise<axiosResponse> {
     const response = await this.httpService.patch<axiosResponse>(
-      `/admin/user/${userName}/block`
+      ADMIN_ROUTES.BLOCK_USER(userName)
     );
     return response;
   }
 
   async getUserEngagement(year: number): Promise<getUserEngagementRes> {
-    return await this.httpService.get(`/admin/user-engagement?year=${year}`);
+    return await this.httpService.get(ADMIN_ROUTES.USER_ENGAGEMENT(year));
   }
 }

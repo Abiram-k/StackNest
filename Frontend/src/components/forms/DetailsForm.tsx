@@ -15,7 +15,8 @@ interface FormField {
     | "textarea"
     | "email"
     | "tel"
-    | "date";
+    | "date"
+    | "password";
   placeholder?: string;
   options?: { value: string; label: string }[];
   defaultValue?: any;

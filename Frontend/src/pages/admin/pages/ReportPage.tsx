@@ -1,4 +1,5 @@
 import NotificationCard from "@/components/card/NotificationCard";
+import { FallBackTable } from "@/components/FallBackTable";
 import FilterBar from "@/components/FilterBar";
 import Pagination from "@/components/Pagination";
 import { Spinner } from "@/components/ui/spinner";
@@ -76,6 +77,13 @@ export default function ReportsPage() {
             totalPages={reportData?.totalPages || 1}
           />
         )}
+        {!reportData?.reports ||
+          (reportData.reports.length == 0 && (
+            <FallBackTable
+              mainTitle="No Reports yet"
+              subTitle="We will notify once report update"
+            />
+          ))}
       </div>
     </div>
   );
