@@ -34,12 +34,20 @@ export class ChallengeService implements IChallengeService {
     this._challengeSubmissionRepo = challengeSubmissionRepo;
   }
 
-  async getAllChallenges(): Promise<challengeResDTO[] | null> {
-    return await this._challengeRepo.fetchAllChallenge();
+  async getAllChallenges(
+    currentPage: number,
+    limit: number
+  ): Promise<{
+    challenges: challengeResDTO[];
+    totalPages: number;
+  }> {
+    const { challenges, totalPages } =
+      await this._challengeRepo.fetchAllChallenge(currentPage, limit);
+    return { challenges, totalPages };
   }
   async addNewChallenge(data: typeChallengeReq): Promise<boolean> {
     try {
-      const challenges = await this._challengeRepo.fetchAllChallenge();
+      const { challenges } = await this._challengeRepo.fetchAllChallenge();
       const isQuestionNumberExisit = challenges?.some(
         (challenge) => challenge.questionNo == data.questionNo
       );
@@ -123,7 +131,8 @@ export class ChallengeService implements IChallengeService {
     try {
       if (!challengeId)
         throw createHttpError(HttpStatus.NOT_FOUND, "Challenge Id not founded");
-      const challenge = await this._challengeRepo.fetchAllChallenge();
+      const { challenges: challenge } =
+        await this._challengeRepo.fetchAllChallenge();
       if (challenge && challenge?.length <= 4) {
         throw createHttpError(
           HttpStatus.NOT_FOUND,

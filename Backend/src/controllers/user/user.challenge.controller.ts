@@ -14,7 +14,7 @@ export class UserChallengeController implements IUserChallengeController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const challenges = await this._challengeService.getAllChallenges();
+      const { challenges } = await this._challengeService.getAllChallenges();
       res.status(HttpStatus.OK).json({
         message: "Successfully fetched all challenges",
         success: true,

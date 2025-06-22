@@ -11,16 +11,22 @@ export class BenefitsService implements IBenefitsService {
     this._benefitsRepo = benefitsRepo;
   }
 
-  async getAllBenefits(): Promise<BenefitResDto[]> {
+  async getAllBenefits(
+    currentPage: number,
+    limit: number
+  ): Promise<{ benefits: BenefitResDto[]; totalPages: number }> {
     try {
-      const benefits = await this._benefitsRepo.getAllBenefits();
+      const { benefits, totalPages } = await this._benefitsRepo.getAllBenefits(
+        currentPage,
+        limit
+      );
       const formattedData: BenefitResDto[] = benefits.map((benefit) => ({
         _id: benefit._id,
         description: benefit.description,
         isActive: benefit.isActive,
         name: benefit.name,
       }));
-      return formattedData;
+      return { benefits: formattedData, totalPages };
     } catch (error) {
       throw error;
     }

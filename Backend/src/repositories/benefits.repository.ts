@@ -3,9 +3,18 @@ import { Benefit } from "../models/benefits.model.js";
 import { IBenefit } from "../types/IBenefits.js";
 
 export class BenefitsRepository implements IBenefitsRepository<IBenefit> {
-  async getAllBenefits(): Promise<IBenefit[]> {
+  async getAllBenefits(
+    currentPage: number,
+    limit: number
+  ): Promise<{ benefits: IBenefit[]; totalPages: number }> {
     try {
-      return await Benefit.find();
+      const totalBenefits = await Benefit.countDocuments();
+      const totalPages = Math.floor(totalBenefits / limit);
+      const benefits = await Benefit.find()
+        .skip((currentPage - 1) * limit)
+        .limit(limit);
+      // return await Benefit.find();
+      return { benefits, totalPages };
     } catch (error) {
       throw error;
     }

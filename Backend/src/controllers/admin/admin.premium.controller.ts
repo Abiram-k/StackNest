@@ -18,14 +18,20 @@ export class AdminPremiumController implements IAdminPremiumController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const premiumPlans = await this._premiumService.getAllPremium();
+      const currentPage = Number(req.query.currentPage) || 1;
+      const limit = Number(req.query.limit) || 10;
+      const { premium, totalPages } = await this._premiumService.getAllPremium(
+        currentPage,
+        limit
+      );
       res.status(HttpStatus.OK).json({
         message: "Successfully fetched premium plans",
         success: true,
-        premiumPlans,
+        premiumPlans: premium,
+        totalPages,
       });
     } catch (error) {
-      next(error);
+      next(error); 
     }
   }
   async addPremium(

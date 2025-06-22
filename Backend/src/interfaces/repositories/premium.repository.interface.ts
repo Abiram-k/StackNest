@@ -1,6 +1,9 @@
 export interface IPremiumRepository<T> {
-  getAllPremium(): Promise<T[]>;
-  getListedPremium(userId:string): Promise<T[]>;
+  getAllPremium(
+    currentPage?: number,
+    limit?: number
+  ): Promise<{ premium: T[]; totalPages: number }>;
+  getListedPremium(userId: string): Promise<T[]>;
   getPremiumById(premiumId: string): Promise<T | null>;
   createPremium(data: Partial<T>): Promise<void>;
   markAsExpired(premiumId: string): Promise<void>;

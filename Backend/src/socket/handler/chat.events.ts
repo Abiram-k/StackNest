@@ -75,9 +75,11 @@ export const registerChatEvents = (
     socket.join(chatRoomId);
     socket.data.friendIds.add(friendId);
     const friendSocketId = onlineUsers.get(friendId);
+
     if (friendSocketId) {
       io.to(friendSocketId).emit("friend-online", userId); // sending user id to friend, if the friend is in online
     }
+
     const isFriendOnline = onlineUsers.has(friendId);
     socket.emit("is-friend-online", isFriendOnline);
   });
@@ -125,7 +127,7 @@ export const registerChatEvents = (
     }
     if (data.type === "offer") {
       try {
-        io.to(toSocketId).emit("incoming-calll",userId)
+        io.to(toSocketId).emit("incoming-calll", userId);
         console.log("Saving call to db 🤖");
         await callLogRepo.createCallLog({
           initiator: userId,

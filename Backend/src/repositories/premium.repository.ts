@@ -42,9 +42,24 @@ export class PremiumRepository implements IPremiumRepository<IPremium> {
     }
   }
 
-  async getAllPremium(): Promise<IPremium[]> {
+  async getAllPremium(
+    currentPage: number,
+    limit: number
+  ): Promise<{ premium: IPremium[]; totalPages: number }> {
     try {
-      return await Premium.find();
+      if (currentPage && limit) {
+        const totalPlans = await Premium.countDocuments();
+        const totalPages = Math.floor(totalPlans / limit);
+        const premium = await Premium.find()
+          .skip((currentPage - 1) * limit)
+          .limit(limit);
+
+        return { totalPages, premium };
+      } else {
+        // return await Premium.find();
+        const premium = await Premium.find();
+        return { premium, totalPages: 0 };
+      }
     } catch (error) {
       throw error;
     }

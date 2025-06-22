@@ -17,7 +17,10 @@ export interface IChallengeService {
     challengeId: string,
     answer: string
   ): Promise<boolean>;
-  getAllChallenges(): Promise<challengeResDTO[] | null>;
+  getAllChallenges(
+    currentPage?: number,
+    limit?: number
+  ): Promise<{ challenges: challengeResDTO[]; totalPages: number }>;
   updateChallenge(challengeId: string, data: UpdateChallengeDTO): Promise<void>;
   toggleListing(challengeId: string): Promise<void>;
   removeChallenge(challengeId: string): Promise<void>;

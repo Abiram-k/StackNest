@@ -47,11 +47,17 @@ export class AdminChallengeController implements IAdminChallengeController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const challenges = await this._challengeService.getAllChallenges();
+      const currentPage = Number(req.query.currentPage) || 1;
+      const limit = Number(req.query.limit) || 10;
+
+      const { challenges, totalPages } =
+        await this._challengeService.getAllChallenges(currentPage, limit);
+
       res.status(HttpStatus.OK).json({
         message: "Successfully fetched all challenges",
         success: true,
         challenges,
+        totalPages,
       });
     } catch (error) {
       next(error);

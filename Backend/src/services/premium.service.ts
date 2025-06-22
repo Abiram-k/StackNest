@@ -25,9 +25,13 @@ export class PremiumService implements IPremiumService {
     this._userRepo = userRepo;
   }
 
-  async getAllPremium(): Promise<PremiumResDto[]> {
+  async getAllPremium(
+    currentPage: number,
+    limit: number
+  ): Promise<{ premium: PremiumResDto[]; totalPages: number }> {
     try {
-      const premiumPlans = await this._premiumRepo.getAllPremium();
+      const { premium: premiumPlans, totalPages } =
+        await this._premiumRepo.getAllPremium(currentPage, limit);
       const formattedData: PremiumResDto[] = premiumPlans.map((plan) => ({
         _id: String(plan._id),
         title: plan.title,
@@ -42,7 +46,7 @@ export class PremiumService implements IPremiumService {
         isListed: plan.isListed,
         updatedAt: plan.updatedAt,
       }));
-      return formattedData;
+      return { premium: formattedData, totalPages };
     } catch (error) {
       throw error;
     }

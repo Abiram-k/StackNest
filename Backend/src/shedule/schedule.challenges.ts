@@ -15,7 +15,7 @@ const challengeService = new ChallengeService(
 
 cron.schedule("0 0 * * *", async () => {
   try {
-    const challenges = await challengeService.getAllChallenges();
+    const { challenges } = await challengeService.getAllChallenges();
     if (!challenges || challenges.length < 4) {
       console.log(" Adequite challenges not there in cron");
       return;

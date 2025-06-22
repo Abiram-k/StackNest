@@ -19,11 +19,15 @@ export class AdminBenefitsController implements IAdminBenefitController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const benefits = await this._benefitsService.getAllBenefits();
+      const currentPage = Number(req.query.currentPage) || 1;
+      const limit = Number(req.query.limit) || 10;
+      const { benefits, totalPages } =
+        await this._benefitsService.getAllBenefits(currentPage, limit);
       res.status(HttpStatus.OK).json({
         message: "Successfully fetched benefits",
         success: true,
         benefits,
+        totalPages,
       });
     } catch (error) {
       next(error);

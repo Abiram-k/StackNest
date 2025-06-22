@@ -13,7 +13,7 @@ import "./shedule/schedule.planExpiry.js";
 import "./shedule/schedule.premiumSubscription.js";
 import { config } from "dotenv"; 
 import { verifyUser } from "./middlewares/verifyUser.js";
-import { verifyAdmin } from "./middlewares/verifyAdmin.js"; 
+import { verifyAdmin } from "./middlewares/verifyAdmin.js";  
 import http from "http";
 import { errorLogger, setupLogRotation } from "./utils/logger.js";
 import configurePassport from "./config/passport.js";

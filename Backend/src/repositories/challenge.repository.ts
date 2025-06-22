@@ -19,9 +19,23 @@ export class ChallengeRespository implements IChallengeRespository<IChallenge> {
     }
   }
 
-  async fetchAllChallenge(): Promise<IChallenge[] | null> {
+  async fetchAllChallenge(
+    currentPage?: number,
+    limit?: number
+  ): Promise<{ challenges: IChallenge[]; totalPages: number }> {
     try {
-      return await Challenge.find();
+      if (currentPage && limit) {
+        let totalChallenges = await Challenge.countDocuments();
+        let totalPages = Math.floor(totalChallenges / limit);
+        const challenges = await Challenge.find()
+          .skip((currentPage - 1) * limit)
+          .limit(limit);
+        return { challenges, totalPages };
+      } else {
+        const challenges = await Challenge.find();
+        return { challenges, totalPages: 0 };
+      }
+      // return await Challenge.find();
     } catch (error) {
       throw error;
     }

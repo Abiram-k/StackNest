@@ -7,7 +7,7 @@ cron.schedule("* * * * *", async () => {
   try {
     const premiumRepository: IPremiumRepository<IPremium> =
       new PremiumRepository();
-    const plans = await premiumRepository.getAllPremium();
+    const { premium: plans } = await premiumRepository.getAllPremium();
     const now = new Date().getTime();
 
     plans.forEach(async (plan) => {
