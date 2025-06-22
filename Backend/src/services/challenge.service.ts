@@ -35,8 +35,8 @@ export class ChallengeService implements IChallengeService {
   }
 
   async getAllChallenges(
-    currentPage: number,
-    limit: number
+    currentPage?: number,
+    limit?: number
   ): Promise<{
     challenges: challengeResDTO[];
     totalPages: number;
