@@ -21,7 +21,7 @@ export class ChallengeRespository implements IChallengeRespository<IChallenge> {
 
   async fetchAllChallenge(
     currentPage?: number,
-    limit?: number
+    limit?: number 
   ): Promise<{ challenges: IChallenge[]; totalPages: number }> {
     try {
       if (currentPage && limit) {
