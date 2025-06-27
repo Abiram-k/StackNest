@@ -12,12 +12,14 @@ import otpRepository from "../repositories/otp.repository.js";
 import { generateOTP } from "../utils/generateOTP.js";
 import jwt from "jsonwebtoken";
 import createHttpError from "http-errors";
+
 import {
   sendOtpMail,
   sendWelcomeMail,
   sendPasswordUpdated,
   sendPasswordResetEmail,
 } from "../utils/email.js";
+
 import {
   IUserAuthRepository,
   IUserBaseRepository,
