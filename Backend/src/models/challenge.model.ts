@@ -23,7 +23,7 @@ const challengeSchema = new mongoose.Schema(
     },
     isListed: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   { timestamps: true }

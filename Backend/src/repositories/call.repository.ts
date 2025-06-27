@@ -1,15 +1,23 @@
 import { ICallRepository } from "../interfaces/repositories/call.repository.interface.js";
 import { CallLog } from "../models/callLogs.model.js";
 import { ICallLog } from "../types/ICallLog.js";
+import { BaseRepository } from "./base.repository.js";
 
-export class CallRepository implements ICallRepository<ICallLog> {
+export class CallRepository
+  extends BaseRepository<ICallLog>
+  implements ICallRepository<ICallLog>
+{
+  constructor() {
+    super(CallLog);
+  }
   async createCallLog(data: {
     initiator: string;
     reciever: string;
     status: "completed" | "rejected" | "missed";
   }): Promise<void> {
     try {
-      await CallLog.create(data);
+      await this.model.create(data);
+      // await CallLog.create(data);
     } catch (error) {
       throw error;
     }

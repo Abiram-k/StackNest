@@ -2,7 +2,7 @@ import passport, { Profile } from "passport";
 import { Strategy as GitHubStrategy } from "passport-github2";
 import { AuthService } from "../services/auth.service.js";
 import { UserBaseRepository } from "../repositories/user.repository.js";
-import { UserAuthRespository } from "../repositories/user.repository.js";
+import { UserAuthRespository } from "../repositories/user.auth.repository.js";
 import { IUser } from "../types/IUser.js";
 import {
   IUserAuthRepository,

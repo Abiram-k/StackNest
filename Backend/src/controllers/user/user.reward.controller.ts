@@ -1,5 +1,5 @@
-import { HttpStatus } from "../../constants/enum.statusCode.js";
 import { Request, Response, NextFunction } from "express";
+import { HttpStatus } from "../../constants/enum.statusCode.js";
 import { IUserRewardController } from "../../interfaces/controllers/user.reward.controller.interface.js";
 import { IRewardService } from "../../interfaces/services/reward.service.interface.js";
 

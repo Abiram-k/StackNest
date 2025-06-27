@@ -14,11 +14,11 @@ export const useCreateBenefits = () => {
     mutationFn: (data: ReqBenefits) => benefitsService.addBenefits(data),
     onSuccess: () => {
       toast.success("New benefits added");
-      queryClient.invalidateQueries({queryKey:["benefits"]})
+      queryClient.invalidateQueries({ queryKey: ["benefits"] });
       navigate(-1);
     },
-    onError: () => {
-      toast.error("Failed to add benefits");
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to add benefits");
     },
   });
 

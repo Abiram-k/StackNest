@@ -2,8 +2,15 @@ import { Types } from "mongoose";
 import { ICommentRepository } from "../interfaces/repositories/comment.repository.interface.js";
 import CommentsModel from "../models/comments.model.js";
 import { IComment } from "../types/IFeed.js";
+import { BaseRepository } from "./base.repository.js";
 
-export class CommentRepository implements ICommentRepository<IComment> {
+export class CommentRepository
+  extends BaseRepository<IComment>
+  implements ICommentRepository<IComment>
+{
+  constructor() {
+    super(CommentsModel);
+  }
   async getComments(
     feedId: string,
     parentCommentId: string
@@ -50,6 +57,7 @@ export class CommentRepository implements ICommentRepository<IComment> {
   async getUserComments(userId: Types.ObjectId): Promise<string[] | []> {
     try {
       const comments = await CommentsModel.find({ userId });
+      // const comments = await CommentsModel.find({ userId });
       return comments.map((comment) => comment._id);
     } catch (error) {
       throw error;

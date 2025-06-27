@@ -19,3 +19,4 @@ export interface IRoom extends Document {
   limit: number;
   createdAt: Date;
 }
+

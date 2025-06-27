@@ -12,6 +12,7 @@ import createHttpError from "http-errors";
 import { config } from "dotenv";
 import Stripe from "stripe";
 import { IPremiumHistory } from "../types/IPremiumHistory.js";
+import mongoose, { ClientSession } from "mongoose";
 config();
 // const stripe = new Stripe(process.env.STRIPE_SECERET!, {
 //   apiVersion:"2025-03-31.basil",
@@ -65,6 +66,8 @@ export class PaymentService implements IPaymentService {
     planId: string,
     orderID: string
   ): Promise<boolean> {
+    const session: ClientSession = await mongoose.startSession();
+    session.startTransaction();
     try {
       const OrdersCaptureRequest = await getOrdersCaptureRequest();
       const request = new OrdersCaptureRequest(orderID);
@@ -73,11 +76,13 @@ export class PaymentService implements IPaymentService {
 
       if (status === "COMPLETED") {
         const planData = await this._planRepo.getPremiumById(planId);
-        if (!planData)
+        if (!planData) {
           throw createHttpError(HttpStatus.NOT_FOUND, "Plan not founded");
+        }
         const user = await this._userRepo.findById(userId);
-        if (!user)
+        if (!user) {
           throw createHttpError(HttpStatus.NOT_FOUND, "User not founded");
+        }
 
         const isSubscribeAlready = user.premiumHistory.some(
           (plan) =>
@@ -87,7 +92,7 @@ export class PaymentService implements IPaymentService {
         if (isSubscribeAlready) {
           throw createHttpError(
             HttpStatus.BAD_REQUEST,
-            "Already subscribed this plan"
+            "Already subscribed this plan!"
           );
         }
         const startingDate = new Date();
@@ -110,12 +115,24 @@ export class PaymentService implements IPaymentService {
           benefitKeys: planData.benefits,
           redeemedAt: startingDate,
         };
-        await this._userRepo.subscribePremium(userId, paymentData, benefitData);
+        await this._userRepo.subscribePremium(
+          userId,
+          paymentData,
+          benefitData,
+          session
+        );
+        await session.commitTransaction();
+
         return true;
       }
       return false;
     } catch (error) {
-      throw error;
+      if (session.inTransaction()) {
+        await session.abortTransaction();
+      }
+      throw error; 
+    } finally {
+      session.endSession();
     }
   }
 

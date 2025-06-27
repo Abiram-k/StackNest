@@ -74,8 +74,9 @@ const UpdateBenefits = () => {
                 [
                   {
                     name: "name",
-                    label: "Name:",
+                    label: "Name *Can't edit this field",
                     type: "select",
+                    disbled: true,
                     options: benefitOptions.map((benefit) => benefit),
                     setValue,
                   },

@@ -3,6 +3,7 @@ import { IFeedRepository } from "../interfaces/repositories/feed.repository.inte
 import Feed from "../models/feed.model.js";
 import "../models/comments.model.js";
 import { IFeed } from "../types/IFeed.js";
+import { BaseRepository } from "./base.repository.js";
 
 enum FilterTags {
   "Oldest" = "Oldest",
@@ -18,13 +19,18 @@ enum AdminSortOptions {
   "Oldest" = "Oldest",
 }
 
-export class FeedRepository implements IFeedRepository<IFeed> {
+export class FeedRepository
+  extends BaseRepository<IFeed>
+  implements IFeedRepository<IFeed>
+{
+  constructor() {
+    super(Feed);
+  }
   async getFeedsByUserId(userId: Types.ObjectId): Promise<IFeed[] | null> {
     try {
-      return await Feed.find({ userId }).populate(
-        "userId",
-        "userName avatar isVerified"
-      );
+      return await Feed.find({ userId })
+        .sort({ createdAt: -1 })
+        .populate("userId", "userName avatar isVerified");
     } catch (error) {
       throw error;
     }
@@ -47,7 +53,8 @@ export class FeedRepository implements IFeedRepository<IFeed> {
   }
   async createFeed(data: Partial<IFeed>): Promise<boolean> {
     try {
-      await Feed.create(data);
+      await this.create(data);
+      // await Feed.create(data);
       return true;
     } catch (error) {
       throw error;
@@ -66,7 +73,8 @@ export class FeedRepository implements IFeedRepository<IFeed> {
   }
   async publishFeed(feedId: string): Promise<void> {
     try {
-      await Feed.findByIdAndUpdate(feedId, { isPublished: true });
+      await this.updateById(feedId, { isPublished: true });
+      // await Feed.findByIdAndUpdate(feedId, { isPublished: true });
     } catch (error) {
       throw error;
     }

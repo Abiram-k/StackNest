@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { IReportRepository } from "../interfaces/repositories/report .repository.interface.js";
 import { ReportModel } from "../models/reports.model.js";
 import { IReport } from "../types/IReport.js";
+import { BaseRepository } from "./base.repository.js";
 
 enum SortOptions {
   "Latest" = "Latest",
@@ -16,7 +17,13 @@ enum FiterOptions {
   "LowPriority" = "LowPriority",
 }
 
-export class ReportRepository implements IReportRepository<IReport> {
+export class ReportRepository
+  extends BaseRepository<IReport>
+  implements IReportRepository<IReport>
+{
+  constructor() {
+    super(ReportModel);
+  }
   async getAllReports(
     filter: string,
     sort: string,

@@ -1,9 +1,9 @@
 import { IOTP } from "../types/IOtp.js";
 import Otp from "../models/otp.model.js";
+import { BaseRepository } from "./base.repository.js";
+import { IOtpRepository } from "../interfaces/repositories/otp.repository.interface.js";
 
-class OtpRepository {
-
-
+class OtpRepository implements IOtpRepository<IOTP> {
   async findOtpByMail(email: string): Promise<IOTP | null> {
     try {
       return await Otp.findOne({ email });
@@ -19,7 +19,7 @@ class OtpRepository {
       throw error;
     }
   }
-  
+
   async create({ email, otp, expiresAt }: IOTP): Promise<void> {
     try {
       await Otp.create({

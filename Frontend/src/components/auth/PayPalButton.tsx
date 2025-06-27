@@ -3,6 +3,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { toast } from "sonner";
 import { axiosInstance } from "@/api/apiSevice";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID;
 
 const PayPalButton = ({ planId }: { planId: string }) => {
@@ -45,7 +46,14 @@ const PayPalButton = ({ planId }: { planId: string }) => {
       } else {
         toast.error("Failed to save subscription");
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      console.log("Paypal order error: ", err);
+      let message = "Something went wrong.";
+
+      if (axios.isAxiosError(err)) {
+        message = err.response?.data?.message || "Payment failed.";
+      }
+      toast.error(message);
       setError("Payment failed");
     }
   };

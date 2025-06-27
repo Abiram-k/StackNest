@@ -6,10 +6,18 @@ import {
 import { IUser } from "../types/IUser.js";
 import { PushSubscription } from "web-push";
 import { IPremiumHistory } from "../types/IPremiumHistory.js";
-import { Types } from "mongoose";
+import { ClientSession, Types } from "mongoose";
 import { typeUserResetToken } from "../dtos/auth/login.dto.js";
+import { BaseRepository } from "./base.repository.js";
 
-export class UserBaseRepository implements IUserBaseRepository<IUser> {
+export class UserBaseRepository
+  extends BaseRepository<IUser>
+  implements IUserBaseRepository<IUser>
+{
+  constructor() {
+    super(User);
+  }
+
   async incrementCheckin(userId: string): Promise<boolean> {
     try {
       await User.findByIdAndUpdate(userId, {
@@ -191,7 +199,7 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
       if (user.premiumBenefits.length === 0) {
         await User.findByIdAndUpdate(userId, { isVerified: false });
       }
-      return true
+      return true;
     } catch (error) {
       throw error;
     }
@@ -200,16 +208,21 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
   async subscribePremium(
     userId: string,
     paymentData: IPremiumHistory,
-    benefitData: { planId: string; benefitKeys: string[]; redeemedAt: Date }
+    benefitData: { planId: string; benefitKeys: string[]; redeemedAt: Date },
+    session: ClientSession
   ): Promise<void> {
     try {
-      await User.findByIdAndUpdate(userId, {
-        $push: {
-          premiumHistory: paymentData,
-          premiumBenefits: benefitData,
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: {
+            premiumHistory: paymentData,
+            premiumBenefits: benefitData,
+          },
+          $set: { isVerified: true },
         },
-        $set: { isVerified: true },
-      });
+        { session }
+      );
     } catch (error) {
       throw error;
     }
@@ -234,16 +247,19 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
 
   async findByEmail(email: string): Promise<IUser | null> {
     try {
-      return await User.findOne({
-        email,
-      });
+      // return await User.findOne({
+      //   email,
+      // });
+      return await this.model.findOne({ email });
     } catch (error) {
       throw error;
     }
   }
+
   async findById(id: string): Promise<IUser | null> {
     try {
-      return await User.findById(id).select("-password");
+      // return await User.findById(id).select("-password");
+      return await this.model.findById(id).select("-password");
     } catch (error) {
       throw error;
     }
@@ -333,166 +349,167 @@ export class UserBaseRepository implements IUserBaseRepository<IUser> {
   }
 }
 
-export class UserAuthRespository implements IUserAuthRepository<IUser> {
-  async findByGithubId(githubId: string) {
-    return User.findOne({ githubId });
-  }
-  async createOrUpdateFromGithub(profile: Partial<IUser>) {
-    return User.findOneAndUpdate({ email: profile.email }, profile, {
-      upsert: true,
-      new: true,
-    });
-  }
-  async findUserByGoogleId(googleId: string): Promise<IUser | null> {
-    try {
-      return await User.findOne({
-        googleId,
-      });
-    } catch (error) {
-      throw error;
-    }
-  }
-  async updateUserWithGoogleId(
-    email: string,
-    googleId: string
-  ): Promise<boolean> {
-    try {
-      await User.findOneAndUpdate(
-        { email },
-        {
-          $set: {
-            googleId,
-          },
-        },
-        { new: true }
-      );
-      return true;
-    } catch (error) {
-      console.error("Error setting reset token:", error);
-      throw new Error("Failed to set reset token");
-    }
-  }
+// export class UserAuthRespository implements IUserAuthRepository<IUser> {
+//   async findByGithubId(githubId: string) {
+//     return User.findOne({ githubId });
+//   }
 
-  async updateLastLogin(email: string) {
-    try {
-      await User.findOneAndUpdate(
-        { email },
-        { $set: { lastLogin: new Date() } }
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
+//   async createOrUpdateFromGithub(profile: Partial<IUser>) {
+//     return User.findOneAndUpdate({ email: profile.email }, profile, {
+//       upsert: true,
+//       new: true,
+//     });
+//   }
+//   async findUserByGoogleId(googleId: string): Promise<IUser | null> {
+//     try {
+//       return await User.findOne({
+//         googleId,
+//       });
+//     } catch (error) {
+//       throw error;
+//     }
+//   }
+//   async updateUserWithGoogleId(
+//     email: string,
+//     googleId: string
+//   ): Promise<boolean> {
+//     try {
+//       await User.findOneAndUpdate(
+//         { email },
+//         {
+//           $set: {
+//             googleId,
+//           },
+//         },
+//         { new: true }
+//       );
+//       return true;
+//     } catch (error) {
+//       console.error("Error setting reset token:", error);
+//       throw new Error("Failed to set reset token");
+//     }
+//   }
 
-  async setPassResetToken({
-    email,
-    resetToken,
-  }: {
-    email: string;
-    resetToken: string;
-  }): Promise<boolean> {
-    try {
-      const updatedUser = await User.findOneAndUpdate(
-        { email },
-        {
-          $set: {
-            resetToken,
-            resetTokenExpiration: new Date(Date.now() + 15 * 60 * 1000),
-          },
-        },
-        { new: true }
-      );
-      return true;
-    } catch (error) {
-      console.error("Error setting reset token:", error);
-      throw new Error("Failed to set reset token");
-    }
-  }
-  async updatePassword({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }): Promise<boolean> {
-    try {
-      const updatedUser = await User.findOneAndUpdate(
-        { email },
-        {
-          $set: {
-            password,
-            resetToken: undefined,
-            resetTokenExpiration: undefined,
-          },
-        }
-      );
-      return true;
-    } catch (error) {
-      console.error("Failed to update password:", error);
-      throw new Error("Failed to update password");
-    }
-  }
-  async findUserByRestToken(data: typeUserResetToken): Promise<IUser | null> {
-    try {
-      return User.findOne({
-        _id: data.id,
-        resetToken: data.resetToken,
-        resetTokenExpiration: { $gt: new Date() },
-      });
-    } catch (error) {
-      throw new Error("Failed to reset password and token");
-    }
-  }
+//   async updateLastLogin(email: string) {
+//     try {
+//       await User.findOneAndUpdate(
+//         { email },
+//         { $set: { lastLogin: new Date() } }
+//       );
+//     } catch (error) {
+//       throw error;
+//     }
+//   }
 
-  async getFailedAttempts(email: string): Promise<number | undefined> {
-    try {
-      const user = await User.findOne({ email });
-      return user?.failedLoginAttempts;
-    } catch (error) {
-      throw error;
-    }
-  }
-  async updateFailedAttempts(email: string): Promise<IUser | null> {
-    try {
-      return await User.findOneAndUpdate(
-        { email },
-        {
-          $inc: {
-            failedLoginAttempts: 1,
-          },
-        },
-        { new: true }
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
+//   async setPassResetToken({
+//     email,
+//     resetToken,
+//   }: {
+//     email: string;
+//     resetToken: string;
+//   }): Promise<boolean> {
+//     try {
+//       const updatedUser = await User.findOneAndUpdate(
+//         { email },
+//         {
+//           $set: {
+//             resetToken,
+//             resetTokenExpiration: new Date(Date.now() + 15 * 60 * 1000),
+//           },
+//         },
+//         { new: true }
+//       );
+//       return true;
+//     } catch (error) {
+//       console.error("Error setting reset token:", error);
+//       throw new Error("Failed to set reset token");
+//     }
+//   }
+//   async updatePassword({
+//     email,
+//     password,
+//   }: {
+//     email: string;
+//     password: string;
+//   }): Promise<boolean> {
+//     try {
+//       const updatedUser = await User.findOneAndUpdate(
+//         { email },
+//         {
+//           $set: {
+//             password,
+//             resetToken: undefined,
+//             resetTokenExpiration: undefined,
+//           },
+//         }
+//       );
+//       return true;
+//     } catch (error) {
+//       console.error("Failed to update password:", error);
+//       throw new Error("Failed to update password");
+//     }
+//   }
+//   async findUserByRestToken(data: typeUserResetToken): Promise<IUser | null> {
+//     try {
+//       return User.findOne({
+//         _id: data.id,
+//         resetToken: data.resetToken,
+//         resetTokenExpiration: { $gt: new Date() },
+//       });
+//     } catch (error) {
+//       throw new Error("Failed to reset password and token");
+//     }
+//   }
 
-  async resetFailedAttempts(email: string): Promise<IUser | null> {
-    try {
-      return await User.findOneAndUpdate(
-        { email },
-        { failedLoginAttempts: 0, isBlocked: false, blockedUntil: null }
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
+//   async getFailedAttempts(email: string): Promise<number | undefined> {
+//     try {
+//       const user = await User.findOne({ email });
+//       return user?.failedLoginAttempts;
+//     } catch (error) {
+//       throw error;
+//     }
+//   }
+//   async updateFailedAttempts(email: string): Promise<IUser | null> {
+//     try {
+//       return await User.findOneAndUpdate(
+//         { email },
+//         {
+//           $inc: {
+//             failedLoginAttempts: 1,
+//           },
+//         },
+//         { new: true }
+//       );
+//     } catch (error) {
+//       throw error;
+//     }
+//   }
 
-  async blockUserAfterFailedAttempt(email: string): Promise<IUser> {
-    try {
-      const user = await User.findOneAndUpdate(
-        { email },
-        {
-          isBlocked: true,
-          blockedUntil: new Date(Date.now() + 30 * 60 * 1000),
-        },
-        { new: true }
-      );
-      if (!user) throw new Error("User not found");
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  }
-}
+//   async resetFailedAttempts(email: string): Promise<IUser | null> {
+//     try {
+//       return await User.findOneAndUpdate(
+//         { email },
+//         { failedLoginAttempts: 0, isBlocked: false, blockedUntil: null }
+//       );
+//     } catch (error) {
+//       throw error;
+//     }
+//   }
+
+//   async blockUserAfterFailedAttempt(email: string): Promise<IUser> {
+//     try {
+//       const user = await User.findOneAndUpdate(
+//         { email },
+//         {
+//           isBlocked: true,
+//           blockedUntil: new Date(Date.now() + 30 * 60 * 1000),
+//         },
+//         { new: true }
+//       );
+//       if (!user) throw new Error("User not found");
+//       return user;
+//     } catch (error) {
+//       throw error;
+//     }
+//   }
+// }

@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { IRoomRepository } from "../interfaces/repositories/room.repository.interface.js";
 import Room from "../models/room.model.js";
 import { IRoom } from "../types/IRoom.js";
+import { BaseRepository } from "./base.repository.js";
 
 enum FilterTags {
   "Private" = "Private",
@@ -9,7 +10,14 @@ enum FilterTags {
   "Live" = "Live",
 }
 
-export class RoomRespository implements IRoomRepository<IRoom> {
+export class RoomRespository
+  extends BaseRepository<IRoom>
+  implements IRoomRepository<IRoom>
+{
+  constructor() {
+    super(Room);
+  }
+
   async createRoom(roomData: Partial<IRoom>): Promise<boolean> {
     try {
       const room = await Room.create(roomData);
@@ -96,11 +104,13 @@ export class RoomRespository implements IRoomRepository<IRoom> {
     id: string
   ): Promise<IRoom | null> {
     try {
-      let query = Room.findById(id);
+      let query = this.model.findById(id);
+      // let query = Room.findById(id);
       if (populateHost) {
         query.populate("host").populate("participants.user");
       }
-      return query.exec();
+      return query;
+      // return query.exec();
     } catch (error) {
       throw error;
     }
@@ -137,7 +147,8 @@ export class RoomRespository implements IRoomRepository<IRoom> {
 
   async findByRoomId(roomId: string): Promise<IRoom | null> {
     try {
-      return await Room.findOne({ roomId });
+      return await this.findOne({ roomId });
+      // return await Room.findOne({ roomId });
     } catch (error) {
       throw error;
     }

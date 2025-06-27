@@ -1,5 +1,5 @@
-import { IUserConnectionController } from "../../interfaces/controllers/user.connection.controller.interface.js";
 import { NextFunction, Request, Response } from "express";
+import { IUserConnectionController } from "../../interfaces/controllers/user.connection.controller.interface.js";
 import { IConnectionService } from "../../interfaces/services/connection.service.interface.js";
 import { HttpStatus } from "../../constants/enum.statusCode.js";
 

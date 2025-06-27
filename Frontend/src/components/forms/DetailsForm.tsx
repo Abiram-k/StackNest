@@ -5,6 +5,7 @@ import { CalendarIcon } from "lucide-react";
 import { AiIcon } from "../ui/AiIcon";
 
 interface FormField {
+  disbled?: boolean;
   name: any;
   label: string;
   type:
@@ -81,7 +82,7 @@ const DetailsForm = ({
                 focus:border-primary-500 bg-white dark:bg-black dark:text-white 
                   appearance-none relative 
                 ${isEditing ? "border-black" : "border-gray-300"}`}
-              disabled={!isEditing}
+              disabled={!isEditing || field.disbled}
             >
               <option value="">{field.defaultValue || "Select Option"}</option>
               {field.options?.map((option) => (
@@ -134,7 +135,7 @@ const DetailsForm = ({
               type={field.type}
               placeholder={field.placeholder}
               {...register(field.name)}
-              disabled={!isEditing}
+              disabled={!isEditing || field.disbled}
               className={`w-full pr-10 ${
                 isEditing ? "border-black" : "border-gray-300"
               }`}

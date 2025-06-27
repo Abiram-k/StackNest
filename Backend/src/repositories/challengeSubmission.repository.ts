@@ -1,16 +1,22 @@
 import { IChallengeSubmissionRepository } from "../interfaces/repositories/challengeSubmission.repository.interface.js";
 import { IChallengeSubmission } from "../types/IChallengeSubmissionSchema.js";
 import { ChallengeSubmission } from "../models/challengeSubmission.model.js";
+import { BaseRepository } from "./base.repository.js";
 
 export class ChallengeSubmissionRepository
+  extends BaseRepository<IChallengeSubmission>
   implements IChallengeSubmissionRepository<IChallengeSubmission>
 {
+  constructor() {
+    super(ChallengeSubmission);
+  }
   async findIsSubmittedChallenge(
     userId: string,
     challengeId: string
   ): Promise<IChallengeSubmission[] | null> {
     try {
       return await ChallengeSubmission.find({ userId, challengeId });
+      return []
     } catch (error) {
       throw error;
     }

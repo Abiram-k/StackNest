@@ -1,18 +1,27 @@
 import { IRewardRepository } from "../interfaces/repositories/reward.repository.interface.js";
 import { Reward } from "../models/reward.model.js";
 import { IReward } from "../types/IReward.js";
+import { BaseRepository } from "./base.repository.js";
 
-export class RewardRepository implements IRewardRepository<IReward> {
+export class RewardRepository
+  extends BaseRepository<IReward>
+  implements IRewardRepository<IReward>
+{
+  constructor() {
+    super(Reward);
+  }
   async getAllRewards(): Promise<IReward[]> {
     try {
-      return await Reward.find();
+      // return await Reward.find();
+      return await this.findAll();
     } catch (error) {
       throw error;
     }
   }
   async createReward(data: Partial<IReward>): Promise<void> {
     try {
-      await Reward.create(data);
+      // await Reward.create(data);
+      await this.create(data);
     } catch (error) {
       throw error;
     }
@@ -45,14 +54,16 @@ export class RewardRepository implements IRewardRepository<IReward> {
   }
   async getRewardById(rewardId: string): Promise<IReward | null> {
     try {
-      return await Reward.findById(rewardId);
+      return await this.findById(rewardId);
+      // return await Reward.findById(rewardId);
     } catch (error) {
       throw error;
     }
   }
   async getActiveRewards(): Promise<IReward[]> {
     try {
-      return await Reward.find({ isActive: true });
+      return await this.findAll({ isActive: true });
+      // return await Reward.find({ isActive: true });
     } catch (error) {
       throw error;
     }

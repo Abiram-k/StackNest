@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { config } from "dotenv";
+import { plainToInstance } from "class-transformer";
 import { HttpStatus } from "../constants/enum.statusCode.js";
 import { IAuthController } from "../interfaces/controllers/auth.controller.interface.js";
 import { IAuthService } from "../interfaces/services/auth.service.interface.js";
-import { plainToInstance } from "class-transformer";
 import { GoogleAuthDTO } from "../dtos/auth/googleAuth.dto.js";
 import { validate } from "class-validator";
 import { validateDtoError } from "../utils/ValidateDtoError.js";

@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec tsx src/server.ts",
-    "build":"tsc"
+    "build": "tsc"
   },
   "author": "Abiram",
   "license": "ISC",
@@ -60,6 +60,7 @@
     "@types/passport-github2": "^1.2.9",
     "@types/paypal__checkout-server-sdk": "^1.0.8",
     "@types/web-push": "^3.6.4",
+    "esbuild": "^0.25.5",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",

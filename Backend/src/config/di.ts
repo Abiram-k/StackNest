@@ -1,9 +1,7 @@
 // config/di.ts
 import { AuthService } from "../services/auth.service.js";
-import {
-  UserAuthRespository,
-  UserBaseRepository,
-} from "../repositories/user.repository.js";
+import { UserBaseRepository } from "../repositories/user.repository.js";
+
 import { AuthController } from "../controllers/auth.controller.js";
 import { UserProfileService } from "../services/user.profile.service.js";
 import { UserProfileController } from "../controllers/user/user.profile.controller.js";
@@ -120,6 +118,7 @@ import { MessageRepository } from "../repositories/message.repository.js";
 import { ICallRepository } from "../interfaces/repositories/call.repository.interface.js";
 import { ICallLog } from "../types/ICallLog.js";
 import { CallRepository } from "../repositories/call.repository.js";
+import { UserAuthRespository } from "../repositories/user.auth.repository.js";
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< REPOSITORY >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 

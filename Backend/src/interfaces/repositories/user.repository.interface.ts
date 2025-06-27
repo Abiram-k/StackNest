@@ -1,7 +1,7 @@
 import { PushSubscription } from "web-push";
 import { IUser } from "../../types/IUser.js";
 import { IPremiumHistory } from "../../types/IPremiumHistory.js";
-import { Types } from "mongoose";
+import { ClientSession, Types } from "mongoose";
 import { typeUserResetToken } from "../../dtos/auth/login.dto.js";
 import { verifyUserProfileSchemaType } from "../../dtos/user/profile/getInspectData.dto.js";
 
@@ -42,7 +42,8 @@ export interface IUserBaseRepository<T> {
   subscribePremium(
     userId: string,
     paymentData: IPremiumHistory,
-    benefitData: { planId: string; benefitKeys: string[]; redeemedAt: Date }
+    benefitData: { planId: string; benefitKeys: string[]; redeemedAt: Date },
+    session: ClientSession
   ): Promise<void>;
   getAllPremiumUser(): Promise<T[]>;
   getUserForPremiumHistory(userId: string): Promise<T | null>;

@@ -1,8 +1,15 @@
 import { IMessageRepository } from "../interfaces/repositories/message.repository.interface.js";
 import { Message } from "../models/message.model.js";
 import { IMessage } from "../types/IMessage.js";
+import { BaseRepository } from "./base.repository.js";
 
-export class MessageRepository implements IMessageRepository<IMessage> {
+export class MessageRepository
+  extends BaseRepository<IMessage>
+  implements IMessageRepository<IMessage>
+{
+  constructor() {
+    super(Message);
+  }
   async createMessage(
     sender: string,
     receiver: string,
@@ -37,11 +44,16 @@ export class MessageRepository implements IMessageRepository<IMessage> {
 
   async getUnreadMessagesCount(user1: string, user2: string): Promise<number> {
     try {
-      const unReadMsgs = await Message.find({
+      const unReadMsgs = await this.findAll({
         sender: user2,
         receiver: user1,
         isRead: false,
       });
+      // const unReadMsgs = await Message.find({
+      //   sender: user2,
+      //   receiver: user1,
+      //   isRead: false,
+      // });
       return unReadMsgs.length;
     } catch (error) {
       throw error;

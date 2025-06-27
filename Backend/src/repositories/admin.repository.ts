@@ -1,6 +1,7 @@
 import { IAdminRepository } from "../interfaces/repositories/admin.repository.interface.js";
 import { IUser } from "../types/IUser.js";
 import User from "../models/user.model.js";
+import { BaseRepository } from "./base.repository.js";
 
 enum FilterTags {
   "isBlocked" = "Blocked",
@@ -9,7 +10,13 @@ enum FilterTags {
   "isAscending" = "Ascending",
 }
 
-export class AdminRespository implements IAdminRepository<IUser> {
+export class AdminRespository
+  extends BaseRepository<IUser>
+  implements IAdminRepository<IUser>
+{
+  constructor() {
+    super(User);
+  }
   async getUsers(
     filter?: string,
     sort?: string,
@@ -77,16 +84,23 @@ export class AdminRespository implements IAdminRepository<IUser> {
     const start = new Date(`${year}-01-01T00:00:00.000Z`);
     const end = new Date(`${year + 1}-01-01T00:00:00.000Z`);
 
-    return await User.find({
+    return await this.findAll({
       createdAt: {
         $gte: start,
         $lt: end,
       },
     });
+    // return await User.find({
+    //   createdAt: {
+    //     $gte: start,
+    //     $lt: end,
+    //   },
+    // });
   }
   async getAllUsers(): Promise<IUser[]> {
     try {
-      return await User.find();
+      // return await User.find();
+      return await this.findAll();
     } catch (error) {
       throw error;
     }
