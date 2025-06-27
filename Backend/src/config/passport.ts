@@ -16,7 +16,7 @@ config();
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID as string;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET as string;
-const CALLBACK_URL = process.env.GITHUB_CALLBACK_URL || "/auth/github/callback";
+const CALLBACK_URL = `${process.env.BACKEND_URL}/auth/github/callback`;
 
 if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
   throw new Error("Missing GitHub OAuth credentials in environment variables.");

@@ -15,7 +15,7 @@ router.post("/logout",authController.logout.bind(authController));
 //OAuth  - Google
 router.post('/google/callback', authController.googleAuth.bind(authController));
 
-//OAuth - Github
+//OAuth - Github 
 router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
 router.get('/github/callback',
   passport.authenticate('github', { failureRedirect: '/auth/login', session: false }),
