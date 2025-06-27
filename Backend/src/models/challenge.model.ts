@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IChallenge } from "../types/IChallenge.js";
+import { IChallenge } from "../types/IChallenge";
 
 const challengeSchema = new mongoose.Schema(
   {

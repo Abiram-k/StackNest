@@ -1,27 +1,27 @@
 import { NextFunction, Request, Response } from "express";
-import { HttpStatus } from "../../constants/enum.statusCode.js";
-import { IAdminController } from "../../interfaces/controllers/admin.controller.interface.js";
-import { IAdminService } from "../../interfaces/services/admin.service.interface.js";
-import { IRoomService } from "../../interfaces/services/room.service.interface.js";
+import { HttpStatus } from "../../constants/enum.statusCode";
+import { IAdminController } from "../../interfaces/controllers/admin.controller.interface";
+import { IAdminService } from "../../interfaces/services/admin.service.interface";
+import { IRoomService } from "../../interfaces/services/room.service.interface";
 import { plainToInstance } from "class-transformer";
 import {
   FetchAllUsersDTO,
   ResFetchAllUsersDTO,
-} from "../../dtos/admin/userManagement/fetchAllUsers.dto.js";
+} from "../../dtos/admin/userManagement/fetchAllUsers.dto";
 import { validate } from "class-validator";
-import { UserResTypeDTO } from "../../dtos/public/userData.dto.js";
+import { UserResTypeDTO } from "../../dtos/public/userData.dto";
 import {
   BlockUserDTO,
   ResBlockUserDTO,
-} from "../../dtos/admin/userManagement/blockUser.dto.js";
-import { validateDtoError } from "../../utils/ValidateDtoError.js";
-import { ResFetchAllRoomDTO } from "../../dtos/admin/roomManagement/fetchAllRooms.dto.js";
-import { RoomResTypeDTO } from "../../dtos/public/roomData.dto.js";
+} from "../../dtos/admin/userManagement/blockUser.dto";
+import { validateDtoError } from "../../utils/ValidateDtoError";
+import { ResFetchAllRoomDTO } from "../../dtos/admin/roomManagement/fetchAllRooms.dto";
+import { RoomResTypeDTO } from "../../dtos/public/roomData.dto";
 import {
   FetchSelectedRoomDTO,
   ResFetchSelectedRoomDTO,
-} from "../../dtos/admin/roomManagement/fetchSelectedRoom.dto.js";
-import { BlockRoomDTO } from "../../dtos/admin/roomManagement/blockRoom.dto.js";
+} from "../../dtos/admin/roomManagement/fetchSelectedRoom.dto";
+import { BlockRoomDTO } from "../../dtos/admin/roomManagement/blockRoom.dto";
 
 export class AdminController implements IAdminController {
   private _adminService: IAdminService;

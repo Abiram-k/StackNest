@@ -1,4 +1,4 @@
-interface FriendsRes {
+export interface FriendsRes {
   friendId: string;
   firstName: string;
   userName: string;
@@ -9,6 +9,6 @@ interface FriendsRes {
   isVerified:boolean,
 
 }
-interface ResGetFriendDTO {
+export interface ResGetFriendDTO {
   friends: FriendsRes[];
 }

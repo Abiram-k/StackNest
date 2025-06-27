@@ -1,12 +1,12 @@
 import { Types } from "mongoose";
-import { HttpStatus } from "../constants/enum.statusCode.js";
-import { IReportController } from "../interfaces/controllers/report.controller.interface.js";
-import { IReportService } from "../interfaces/services/report.service.interface.js";
+import { HttpStatus } from "../constants/enum.statusCode";
+import { IReportController } from "../interfaces/controllers/report.controller.interface";
+import { IReportService } from "../interfaces/services/report.service.interface";
 import { NextFunction, Request, Response } from "express";
 import { plainToInstance } from "class-transformer";
-import { ReqReportDTO } from "../dtos/user/report/report.dto.js";
+import { ReqReportDTO } from "../dtos/user/report/report.dto";
 import { validate } from "class-validator";
-import { validateDtoError } from "../utils/ValidateDtoError.js";
+import { validateDtoError } from "../utils/ValidateDtoError";
 
 export class ReportController implements IReportController {
   private _reportService: IReportService;

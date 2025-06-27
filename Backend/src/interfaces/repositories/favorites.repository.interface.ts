@@ -1,4 +1,4 @@
-import { IRoom } from "../../types/IRoom.js";
+import { IRoom } from "../../types/IRoom";
 
 export interface IFavoritesRepository<T> {
   findFavorites(userId: string, roomId: string): Promise<T | null>;

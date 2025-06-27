@@ -1,5 +1,5 @@
 import { IsString, IsUrl, MinLength } from "class-validator";
-import { BannerResDTO } from "../../public/bannerData.dto.js";
+import { BannerResDTO } from "../../public/bannerData.dto";
 
 export class FetchSelectedBannerDTO {
   @IsString()

@@ -1,6 +1,6 @@
 import { config } from "dotenv";
-import server from "./app.js";
-import { connectDB } from "./config/db.js";
+import server from "./app";
+import { connectDB } from "./config/db";
 // import { connectDB } from "./config/db";
 
 // for environment variables

@@ -8,7 +8,7 @@ import {
   adminRewardController,
   bannerController,
   reportController,
-} from "../config/di.js";
+} from "../config/di";
 
 const router = express.Router();
 

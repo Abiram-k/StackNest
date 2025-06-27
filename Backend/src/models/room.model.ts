@@ -1,5 +1,5 @@
 import mongoose, { Schema, Types } from "mongoose";
-import { IRoom } from "../types/IRoom.js";
+import { IRoom } from "../types/IRoom";
 
 const roomSchema = new mongoose.Schema(
   {

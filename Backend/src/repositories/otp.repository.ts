@@ -1,7 +1,7 @@
-import { IOTP } from "../types/IOtp.js";
-import Otp from "../models/otp.model.js";
-import { BaseRepository } from "./base.repository.js";
-import { IOtpRepository } from "../interfaces/repositories/otp.repository.interface.js";
+import { IOTP } from "../types/IOtp";
+import Otp from "../models/otp.model";
+import { BaseRepository } from "./base.repository";
+import { IOtpRepository } from "../interfaces/repositories/otp.repository.interface";
 
 class OtpRepository implements IOtpRepository<IOTP> {
   async findOtpByMail(email: string): Promise<IOTP | null> {

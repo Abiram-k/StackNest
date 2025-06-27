@@ -1,11 +1,11 @@
 import createHttpError from "http-errors";
-import { RoomResTypeDTO } from "../dtos/public/roomData.dto.js";
-import { IFavoritesRepository } from "../interfaces/repositories/favorites.repository.interface.js";
-import { IFavoritesService } from "../interfaces/services/favorites.service.interface.js";
-import { HttpStatus } from "../constants/enum.statusCode.js";
-import { IFavorites } from "../types/IFavorites.js";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
-import { IUser } from "../types/IUser.js";
+import { RoomResTypeDTO } from "../dtos/public/roomData.dto";
+import { IFavoritesRepository } from "../interfaces/repositories/favorites.repository.interface";
+import { IFavoritesService } from "../interfaces/services/favorites.service.interface";
+import { HttpStatus } from "../constants/enum.statusCode";
+import { IFavorites } from "../types/IFavorites";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
+import { IUser } from "../types/IUser";
 
 export class FavoritesService implements IFavoritesService {
   private _favoritesRepository: IFavoritesRepository<IFavorites>;

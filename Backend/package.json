@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "Stack nest backend Sever",
   "main": "src/server.ts",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec tsx src/server.ts",
+    "dev": "nodemon src/server.ts",
+    "watch": "tsc -w",
+    "start": "node dist/server.js",
     "build": "tsc"
   },
   "author": "Abiram",
@@ -33,7 +35,7 @@
     "moment": "^2.30.1",
     "mongoose": "^8.10.1",
     "morgan": "^1.10.0",
-    "nanoid": "^5.1.2",
+    "nanoid": "^3.3.4",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
     "openai": "^4.86.2",

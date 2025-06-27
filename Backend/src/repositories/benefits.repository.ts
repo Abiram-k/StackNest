@@ -1,7 +1,7 @@
-import { IBenefitsRepository } from "../interfaces/repositories/benefits.repository.interface.js";
-import { Benefit } from "../models/benefits.model.js";
-import { IBenefit } from "../types/IBenefits.js";
-import { BaseRepository } from "./base.repository.js";
+import { IBenefitsRepository } from "../interfaces/repositories/benefits.repository.interface";
+import { Benefit } from "../models/benefits.model";
+import { IBenefit } from "../types/IBenefits";
+import { BaseRepository } from "./base.repository";
 
 export class BenefitsRepository
   extends BaseRepository<IBenefit>

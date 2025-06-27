@@ -1,7 +1,7 @@
-import { IChallengeRespository } from "../interfaces/repositories/challenge.repository.interface.js";
-import { Challenge } from "../models/challenge.model.js";
-import { IChallenge } from "../types/IChallenge.js";
-import { BaseRepository } from "./base.repository.js";
+import { IChallengeRespository } from "../interfaces/repositories/challenge.repository.interface";
+import { Challenge } from "../models/challenge.model";
+import { IChallenge } from "../types/IChallenge";
+import { BaseRepository } from "./base.repository";
 
 export class ChallengeRespository
   extends BaseRepository<IChallenge>

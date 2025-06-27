@@ -1,5 +1,5 @@
-import { RewardResDto } from "../../dtos/public/rewardData.dto.js";
-import { IReward } from "../../types/IReward.js";
+import { RewardResDto } from "../../dtos/public/rewardData.dto";
+import { IReward } from "../../types/IReward";
 
 export interface IRewardService {
     addReward(data: Partial<IReward>): Promise<void>;

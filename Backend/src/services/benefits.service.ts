@@ -1,8 +1,8 @@
-import { HttpStatus } from "../constants/enum.statusCode.js";
-import { BenefitResDto } from "../dtos/public/benefitData.dto.js";
-import { IBenefitsRepository } from "../interfaces/repositories/benefits.repository.interface.js";
-import { IBenefitsService } from "../interfaces/services/benefits.service.interface.js";
-import { IBenefit } from "../types/IBenefits.js";
+import { HttpStatus } from "../constants/enum.statusCode";
+import { BenefitResDto } from "../dtos/public/benefitData.dto";
+import { IBenefitsRepository } from "../interfaces/repositories/benefits.repository.interface";
+import { IBenefitsService } from "../interfaces/services/benefits.service.interface";
+import { IBenefit } from "../types/IBenefits";
 import createHttpError from "http-errors";
 
 export class BenefitsService implements IBenefitsService {

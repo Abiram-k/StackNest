@@ -1,6 +1,6 @@
-import { IRoomSessionRepository } from "../interfaces/repositories/room.session.repository.interface.js";
-import RoomSession from "../models/room.session.model.js";
-import { IRoomSession } from "../types/IRoomSession.js";
+import { IRoomSessionRepository } from "../interfaces/repositories/room.session.repository.interface";
+import RoomSession from "../models/room.session.model";
+import { IRoomSession } from "../types/IRoomSession";
 
 export class RoomSessionRespository
   implements IRoomSessionRepository<IRoomSession>

@@ -1,5 +1,5 @@
 import { Schema, model, Types } from "mongoose";
-import { IRoomSession } from "../types/IRoomSession.js";
+import { IRoomSession } from "../types/IRoomSession";
 
 const roomSessionSchema = new Schema(
   {

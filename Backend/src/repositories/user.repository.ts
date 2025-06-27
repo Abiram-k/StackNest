@@ -1,14 +1,14 @@
-import User from "../models/user.model.js";
+import User from "../models/user.model";
 import {
   IUserAuthRepository,
   IUserBaseRepository,
-} from "../interfaces/repositories/user.repository.interface.js";
-import { IUser } from "../types/IUser.js";
+} from "../interfaces/repositories/user.repository.interface";
+import { IUser } from "../types/IUser";
 import { PushSubscription } from "web-push";
-import { IPremiumHistory } from "../types/IPremiumHistory.js";
+import { IPremiumHistory } from "../types/IPremiumHistory";
 import { ClientSession, Types } from "mongoose";
-import { typeUserResetToken } from "../dtos/auth/login.dto.js";
-import { BaseRepository } from "./base.repository.js";
+import { typeUserResetToken } from "../dtos/auth/login.dto";
+import { BaseRepository } from "./base.repository";
 
 export class UserBaseRepository
   extends BaseRepository<IUser>

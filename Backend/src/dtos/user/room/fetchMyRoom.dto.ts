@@ -1,4 +1,4 @@
-import { RoomResTypeDTO } from "../../public/roomData.dto.js";
+import { RoomResTypeDTO } from "../../public/roomData.dto";
 
 export interface ResFetchMyRoomsDTO {
     message:string;

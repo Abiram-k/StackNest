@@ -1,16 +1,16 @@
 import { NextFunction, Request, Response } from "express";
-import { IFavoritesController } from "../../interfaces/controllers/favorites.controller.interface.js";
-import { IFavoritesService } from "../../interfaces/services/favorites.service.interface.js";
-import { HttpStatus } from "../../constants/enum.statusCode.js";
-import { ResFetchFavoritesDTO } from "../../dtos/user/favorites/fetchFavorites.dto.js";
+import { IFavoritesController } from "../../interfaces/controllers/favorites.controller.interface";
+import { IFavoritesService } from "../../interfaces/services/favorites.service.interface";
+import { HttpStatus } from "../../constants/enum.statusCode";
+import { ResFetchFavoritesDTO } from "../../dtos/user/favorites/fetchFavorites.dto";
 import { plainToInstance } from "class-transformer";
-import { AddToFavoritesDTO } from "../../dtos/user/favorites/addToFavorites.dto.js";
+import { AddToFavoritesDTO } from "../../dtos/user/favorites/addToFavorites.dto";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError.js";
+import { validateDtoError } from "../../utils/ValidateDtoError";
 import {
   RemoveFavoritesDTO,
   ResRemoveFavoritesDTO,
-} from "../../dtos/user/favorites/removeFavorites.dto.js";
+} from "../../dtos/user/favorites/removeFavorites.dto";
 
 export class FavoritesController implements IFavoritesController {
   private _favoritesService: IFavoritesService;

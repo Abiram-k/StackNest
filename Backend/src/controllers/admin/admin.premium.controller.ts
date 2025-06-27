@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { IAdminPremiumController } from "../../interfaces/controllers/admin.premium.controller.interface.js";
-import { IPremiumService } from "../../interfaces/services/premium.service.interface.js";
-import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { IAdminPremiumController } from "../../interfaces/controllers/admin.premium.controller.interface";
+import { IPremiumService } from "../../interfaces/services/premium.service.interface";
+import { HttpStatus } from "../../constants/enum.statusCode";
 import { plainToInstance } from "class-transformer";
-import { AddOrUpdatePremiumDTO } from "../../dtos/admin/premiumPlanManagement/addOrUpdatePremium.dto.js";
+import { AddOrUpdatePremiumDTO } from "../../dtos/admin/premiumPlanManagement/addOrUpdatePremium.dto";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError.js";
+import { validateDtoError } from "../../utils/ValidateDtoError";
 
 export class AdminPremiumController implements IAdminPremiumController {
   private _premiumService: IPremiumService;

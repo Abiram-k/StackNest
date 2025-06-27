@@ -1,6 +1,6 @@
-import { LoginUser, typeRegisterUserWithOtp } from "../../dtos/auth/login.dto.js";
-import { BaseResponseType } from "../../types/general.js";
-import { IUser } from "../../types/IUser.js";
+import { LoginUser, typeRegisterUserWithOtp } from "../../dtos/auth/login.dto";
+import { BaseResponseType } from "../../types/general";
+import { IUser } from "../../types/IUser";
 
 export interface IAuthService {
   authenticateGoogleUser(token: string): Promise<{

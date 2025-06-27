@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { IUserPaymentController } from "../../interfaces/controllers/user.payment.controller.interface.js";
-import { IPaymentService } from "../../interfaces/services/payment.service.interface.js";
-import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { IUserPaymentController } from "../../interfaces/controllers/user.payment.controller.interface";
+import { IPaymentService } from "../../interfaces/services/payment.service.interface";
+import { HttpStatus } from "../../constants/enum.statusCode";
 
 export class UserPaymentController implements IUserPaymentController {
   private _paymentService: IPaymentService;

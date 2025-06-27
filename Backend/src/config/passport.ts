@@ -1,14 +1,14 @@
 import passport, { Profile } from "passport";
 import { Strategy as GitHubStrategy } from "passport-github2";
-import { AuthService } from "../services/auth.service.js";
-import { UserBaseRepository } from "../repositories/user.repository.js";
-import { UserAuthRespository } from "../repositories/user.auth.repository.js";
-import { IUser } from "../types/IUser.js";
+import { AuthService } from "../services/auth.service";
+import { UserBaseRepository } from "../repositories/user.repository";
+import { UserAuthRespository } from "../repositories/user.auth.repository";
+import { IUser } from "../types/IUser";
 import {
   IUserAuthRepository,
   IUserBaseRepository,
-} from "../interfaces/repositories/user.repository.interface.js";
-import { IAuthService } from "../interfaces/services/auth.service.interface.js";
+} from "../interfaces/repositories/user.repository.interface";
+import { IAuthService } from "../interfaces/services/auth.service.interface";
 import { config } from "dotenv";
 import axios from "axios";
 import { VerifyCallback } from "jsonwebtoken";

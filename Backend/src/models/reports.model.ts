@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IReport } from "../types/IReport.js";
+import { IReport } from "../types/IReport";
 
 const reportSchema = new mongoose.Schema(
   {

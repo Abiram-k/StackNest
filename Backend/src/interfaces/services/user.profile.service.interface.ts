@@ -1,16 +1,16 @@
 import { Types } from "mongoose";
-import { GetUserCardData } from "../../dtos/user/profile/getUserCardData.dto.js";
+import { GetUserCardData } from "../../dtos/user/profile/getUserCardData.dto";
 import { PushSubscription } from "web-push";
 import {
   IPointsTableData,
   IStatsUser,
   IStreakTableData,
-} from "../../dtos/user/profile/getStatsData.dto.js";
+} from "../../dtos/user/profile/getStatsData.dto";
 import {
   inspectfeedDataDTO,
   inspectuserDataDTO,
   verifyUserProfileSchemaType,
-} from "../../dtos/user/profile/getInspectData.dto.js";
+} from "../../dtos/user/profile/getInspectData.dto";
 export interface IUserProfileService {
   getUserDetails(id: string): Promise<verifyUserProfileSchemaType>;
   getStatsData(userId: string): Promise<{
@@ -32,7 +32,7 @@ export interface IUserProfileService {
       userName: string;
       firstName: string;
       description: string;
-      isVerified:boolean;
+      isVerified: boolean;
     }[]
   >;
   updateUserDetails(

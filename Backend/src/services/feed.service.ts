@@ -1,22 +1,22 @@
 import { Types } from "mongoose";
-import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface.js";
-import { IFeedService } from "../interfaces/services/feed.service.interface.js";
-import { IComment, IFeed } from "../types/IFeed.js";
-import { ResFeedType } from "../dtos/user/feeds/getMyFeeds.dto.js";
-import { ResGetSelectedFeedDTO } from "../dtos/user/feeds/getSelectedFeed.dto.js";
-import { TrieService } from "./trie.service.js";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
-import { IUser } from "../types/IUser.js";
-import { ICommentRepository } from "../interfaces/repositories/comment.repository.interface.js";
-import { ResCommentDTO } from "../dtos/user/feeds/getComments.dto.js";
+import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface";
+import { IFeedService } from "../interfaces/services/feed.service.interface";
+import { IComment, IFeed } from "../types/IFeed";
+import { ResFeedType } from "../dtos/user/feeds/getMyFeeds.dto";
+import { ResGetSelectedFeedDTO } from "../dtos/user/feeds/getSelectedFeed.dto";
+import { TrieService } from "./trie.service";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
+import { IUser } from "../types/IUser";
+import { ICommentRepository } from "../interfaces/repositories/comment.repository.interface";
+import { ResCommentDTO } from "../dtos/user/feeds/getComments.dto";
 import createHttpError from "http-errors";
-import { HttpStatus } from "../constants/enum.statusCode.js";
-import { sendNotification } from "../utils/webPush.js";
+import { HttpStatus } from "../constants/enum.statusCode";
+import { sendNotification } from "../utils/webPush";
 import {
   ICommentDTO,
   IFeedDetailsDTO,
-} from "../dtos/admin/feedManagement/getFeedDetails.dto.js";
-import { sendFeedDeletedMail } from "../utils/email.js";
+} from "../dtos/admin/feedManagement/getFeedDetails.dto";
+import { sendFeedDeletedMail } from "../utils/email";
 const trieService = new TrieService();
 
 export class FeedService implements IFeedService {
@@ -39,7 +39,7 @@ export class FeedService implements IFeedService {
 
       if (!myFeeds) {
         console.log("No My feeds: ", myFeeds);
-        return myFeeds;
+        return []; 
       }
       let feeds: ResFeedType[] | [];
 
@@ -621,7 +621,7 @@ export class FeedService implements IFeedService {
         content: feedDetails?.content,
         scheduledAt: feedDetails.scheduledAt
           ? String(feedDetails?.scheduledAt)
-          : feedDetails.scheduledAt,
+          : null,
         isPublished: feedDetails?.isPublished,
         media: feedDetails.media || null,
         isBlocked: feedDetails?.isBlocked,

@@ -1,21 +1,21 @@
 import { Request, Response, NextFunction } from "express";
-import { IBannerController } from "../../interfaces/controllers/banner.controller.interface.js";
-import { IBannerService } from "../../interfaces/services/banner.service.interface.js";
-import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { IBannerController } from "../../interfaces/controllers/banner.controller.interface";
+import { IBannerService } from "../../interfaces/services/banner.service.interface";
+import { HttpStatus } from "../../constants/enum.statusCode";
 import { plainToInstance } from "class-transformer";
 import {
   AddNewBannerDTO,
   ResAddNewBannerDTO,
-} from "../../dtos/admin/bannerManagement/addNewBanner.dto.js";
+} from "../../dtos/admin/bannerManagement/addNewBanner.dto";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError.js";
-import { ResFetchBannerDTO } from "../../dtos/admin/bannerManagement/fetchBanner.dot.js";
+import { validateDtoError } from "../../utils/ValidateDtoError";
+import { ResFetchBannerDTO } from "../../dtos/admin/bannerManagement/fetchBanner.dot";
 import {
   RemoveBannerDTO,
   ResRemoveBannerDTO,
-} from "../../dtos/admin/bannerManagement/removeBanner.dto.js";
-import { UpdateBannerDTO } from "../../dtos/admin/bannerManagement/updateBanner.dto.js";
-import { ResFetchSelectedBannerDTO } from "../../dtos/admin/bannerManagement/fetchSelectedBanner.dto.js";
+} from "../../dtos/admin/bannerManagement/removeBanner.dto";
+import { UpdateBannerDTO } from "../../dtos/admin/bannerManagement/updateBanner.dto";
+import { ResFetchSelectedBannerDTO } from "../../dtos/admin/bannerManagement/fetchSelectedBanner.dto";
 
 export class BannerController implements IBannerController {
   private _bannerService: IBannerService;

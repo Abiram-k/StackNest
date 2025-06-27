@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
-import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface.js";
-import Feed from "../models/feed.model.js";
-import "../models/comments.model.js";
-import { IFeed } from "../types/IFeed.js";
-import { BaseRepository } from "./base.repository.js";
+import { IFeedRepository } from "../interfaces/repositories/feed.repository.interface";
+import Feed from "../models/feed.model";
+import "../models/comments.model";
+import { IFeed } from "../types/IFeed";
+import { BaseRepository } from "./base.repository";
 
 enum FilterTags {
   "Oldest" = "Oldest",

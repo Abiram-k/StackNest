@@ -1,19 +1,27 @@
-import { HttpStatus } from "../constants/enum.statusCode.js";
-import { INotificationRepository } from "../interfaces/repositories/notification.repository.interface.js";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
-import { IConnectionService } from "../interfaces/services/connection.service.interface.js";
-import { INotification } from "../types/INotification.js";
+import { HttpStatus } from "../constants/enum.statusCode";
+import { INotificationRepository } from "../interfaces/repositories/notification.repository.interface";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
+import { IConnectionService } from "../interfaces/services/connection.service.interface";
+import { INotification } from "../types/INotification";
 import createHttpError from "http-errors";
-import { IUser } from "../types/IUser.js";
+import { IUser } from "../types/IUser";
 import { Types } from "mongoose";
-import { sendNotification } from "../utils/webPush.js";
-import { IMessageRepository } from "../interfaces/repositories/message.repository.interface.js";
-import { IMessage } from "../types/IMessage.js";
-import { GetMessageDTO } from "../dtos/user/connection/useGetMessage.dto.js";
-import { isImageUrl, isVideoUrl } from "../utils/urlChecker.js";
-import { FetchCallLogsDTO } from "../dtos/user/connection/fetchCallLogs.dto.js";
-import { ICallRepository } from "../interfaces/repositories/call.repository.interface.js";
-import { ICallLog } from "../types/ICallLog.js";
+import { sendNotification } from "../utils/webPush";
+import { IMessageRepository } from "../interfaces/repositories/message.repository.interface";
+import { IMessage } from "../types/IMessage";
+import { GetMessageDTO } from "../dtos/user/connection/useGetMessage.dto";
+import { isImageUrl, isVideoUrl } from "../utils/urlChecker";
+import { FetchCallLogsDTO } from "../dtos/user/connection/fetchCallLogs.dto";
+import { ICallRepository } from "../interfaces/repositories/call.repository.interface";
+import { ICallLog } from "../types/ICallLog";
+import {
+  ResGetNotificationDTO,
+  notificationType,
+} from "../dtos/user/connection/useGetNotification.dto";
+import {
+  FriendsRes,
+  ResGetFriendDTO,
+} from "../dtos/user/connection/useGetFriends.dto";
 
 export class ConnectionService implements IConnectionService {
   private _notificationRepo: INotificationRepository<INotification>;

@@ -1,5 +1,5 @@
 import { IsString } from "class-validator";
-import { UserResTypeDTO } from "../../public/userData.dto.js";
+import { UserResTypeDTO } from "../../public/userData.dto";
 
 export class FetchAllUsersDTO {
   @IsString()

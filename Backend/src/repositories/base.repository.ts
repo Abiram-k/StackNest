@@ -5,7 +5,7 @@ import {
   UpdateQuery,
   QueryOptions,
 } from "mongoose";
-import { IBaseRepository } from "../interfaces/repositories/base.repository.interface.js";
+import { IBaseRepository } from "../interfaces/repositories/base.repository.interface";
 
 export class BaseRepository<T> implements IBaseRepository<T> {
   protected model: Model<T>;

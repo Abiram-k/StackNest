@@ -1,19 +1,19 @@
 import { Server, Socket } from "socket.io";
-import { ConnectionService } from "../../services/connection.service.js";
-import { IConnectionService } from "../../interfaces/services/connection.service.interface.js";
-import { IMessageRepository } from "../../interfaces/repositories/message.repository.interface.js";
-import { IMessage } from "../../types/IMessage.js";
-import { MessageRepository } from "../../repositories/message.repository.js";
-import { IUserBaseRepository } from "../../interfaces/repositories/user.repository.interface.js";
-import { IUser } from "../../types/IUser.js";
-import { UserBaseRepository } from "../../repositories/user.repository.js";
-import { INotificationRepository } from "../../interfaces/repositories/notification.repository.interface.js";
-import { INotification } from "../../types/INotification.js";
-import { NotificationRepository } from "../../repositories/notification.repository.js";
-import { isImageUrl, isVideoUrl } from "../../utils/urlChecker.js";
-import { ICallRepository } from "../../interfaces/repositories/call.repository.interface.js";
-import { ICallLog } from "../../types/ICallLog.js";
-import { CallRepository } from "../../repositories/call.repository.js";
+import { ConnectionService } from "../../services/connection.service";
+import { IConnectionService } from "../../interfaces/services/connection.service.interface";
+import { IMessageRepository } from "../../interfaces/repositories/message.repository.interface";
+import { IMessage } from "../../types/IMessage";
+import { MessageRepository } from "../../repositories/message.repository";
+import { IUserBaseRepository } from "../../interfaces/repositories/user.repository.interface";
+import { IUser } from "../../types/IUser";
+import { UserBaseRepository } from "../../repositories/user.repository";
+import { INotificationRepository } from "../../interfaces/repositories/notification.repository.interface";
+import { INotification } from "../../types/INotification";
+import { NotificationRepository } from "../../repositories/notification.repository";
+import { isImageUrl, isVideoUrl } from "../../utils/urlChecker";
+import { ICallRepository } from "../../interfaces/repositories/call.repository.interface";
+import { ICallLog } from "../../types/ICallLog";
+import { CallRepository } from "../../repositories/call.repository";
 
 interface MsgUser {
   _id: string;

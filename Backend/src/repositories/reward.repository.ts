@@ -1,7 +1,7 @@
-import { IRewardRepository } from "../interfaces/repositories/reward.repository.interface.js";
-import { Reward } from "../models/reward.model.js";
-import { IReward } from "../types/IReward.js";
-import { BaseRepository } from "./base.repository.js";
+import { IRewardRepository } from "../interfaces/repositories/reward.repository.interface";
+import { Reward } from "../models/reward.model";
+import { IReward } from "../types/IReward";
+import { BaseRepository } from "./base.repository";
 
 export class RewardRepository
   extends BaseRepository<IReward>

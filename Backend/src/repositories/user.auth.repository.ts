@@ -1,8 +1,8 @@
-import { typeUserResetToken } from "../dtos/auth/login.dto.js";
-import { IUserAuthRepository } from "../interfaces/repositories/user.repository.interface.js";
-import User from "../models/user.model.js";
-import { IUser } from "../types/IUser.js";
-import { BaseRepository } from "./base.repository.js";
+import { typeUserResetToken } from "../dtos/auth/login.dto";
+import { IUserAuthRepository } from "../interfaces/repositories/user.repository.interface";
+import User from "../models/user.model";
+import { IUser } from "../types/IUser";
+import { BaseRepository } from "./base.repository";
 
 export class UserAuthRespository
   extends BaseRepository<IUser>

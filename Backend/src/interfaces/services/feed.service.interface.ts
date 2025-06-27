@@ -1,10 +1,10 @@
 import { Types } from "mongoose";
 import {
   ResFeedType,
-} from "../../dtos/user/feeds/getMyFeeds.dto.js";
-import { ResGetSelectedFeedDTO } from "../../dtos/user/feeds/getSelectedFeed.dto.js";
-import { ResCommentDTO } from "../../dtos/user/feeds/getComments.dto.js";
-import { IFeedDetailsDTO } from "../../dtos/admin/feedManagement/getFeedDetails.dto.js";
+} from "../../dtos/user/feeds/getMyFeeds.dto";
+import { ResGetSelectedFeedDTO } from "../../dtos/user/feeds/getSelectedFeed.dto";
+import { ResCommentDTO } from "../../dtos/user/feeds/getComments.dto";
+import { IFeedDetailsDTO } from "../../dtos/admin/feedManagement/getFeedDetails.dto";
 
 export interface IFeedService {
   getAllAvailableFeed(

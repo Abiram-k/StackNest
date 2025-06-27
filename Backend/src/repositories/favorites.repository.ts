@@ -1,8 +1,8 @@
-import { IFavoritesRepository } from "../interfaces/repositories/favorites.repository.interface.js";
-import { Favorites } from "../models/favorites.model.js";
-import { IFavorites } from "../types/IFavorites.js";
-import { IRoom } from "../types/IRoom.js";
-import { BaseRepository } from "./base.repository.js";
+import { IFavoritesRepository } from "../interfaces/repositories/favorites.repository.interface";
+import { Favorites } from "../models/favorites.model";
+import { IFavorites } from "../types/IFavorites";
+import { IRoom } from "../types/IRoom";
+import { BaseRepository } from "./base.repository";
 
 export class FavoritesRepository
   extends BaseRepository<IFavorites>

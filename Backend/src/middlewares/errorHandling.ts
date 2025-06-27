@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import createHttpError from "http-errors";
-import { HttpStatus } from "../constants/enum.statusCode.js";
+import { HttpStatus } from "../constants/enum.statusCode";
 
 const errorHandler = (
   error: Error,

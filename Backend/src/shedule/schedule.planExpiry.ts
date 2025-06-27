@@ -1,7 +1,7 @@
 import cron from "node-cron";
-import { PremiumRepository } from "../repositories/premium.repository.js";
-import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface.js";
-import { IPremium } from "../types/IPremium.js";
+import { PremiumRepository } from "../repositories/premium.repository";
+import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface";
+import { IPremium } from "../types/IPremium";
 
 cron.schedule("* * * * *", async () => {
   try {

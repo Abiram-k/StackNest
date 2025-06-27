@@ -1,5 +1,5 @@
 import { IsString } from "class-validator";
-import { RoomResTypeDTO } from "../../public/roomData.dto.js"
+import { RoomResTypeDTO } from "../../public/roomData.dto"
 
 export class FetchAvailableRoomDTO {
   @IsString()

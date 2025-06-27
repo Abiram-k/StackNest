@@ -1,8 +1,8 @@
 import { Types } from "mongoose";
-import { IReportRepository } from "../interfaces/repositories/report .repository.interface.js";
-import { ReportModel } from "../models/reports.model.js";
-import { IReport } from "../types/IReport.js";
-import { BaseRepository } from "./base.repository.js";
+import { IReportRepository } from "../interfaces/repositories/report .repository.interface";
+import { ReportModel } from "../models/reports.model";
+import { IReport } from "../types/IReport";
+import { BaseRepository } from "./base.repository";
 
 enum SortOptions {
   "Latest" = "Latest",

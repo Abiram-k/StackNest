@@ -1,6 +1,6 @@
 import mongoose, { Types } from "mongoose";
 import crypto from "crypto";
-import { IUser } from "../types/IUser.js";
+import { IUser } from "../types/IUser";
 import { v4 as uuidv4 } from "uuid";
 
 const PremiumHistorySchema = new mongoose.Schema(
@@ -62,9 +62,9 @@ const userSchema = new mongoose.Schema<IUser>(
       default: "",
     },
     gender: {
-      type: "String",
-      enu: ["Male", "Female", "Others", ""],
-      default: "",
+      type: String,
+      enum: ["Male", "Female", "Others"],
+      default: "Others",
     },
     role: {
       type: String,
@@ -183,7 +183,7 @@ userSchema.index({ lastLogin: -1 });
 userSchema.index({ "premiumHistory.status": 1 });
 userSchema.index({ isBlocked: 1 });
 
-userSchema.pre("save", function (next) {
+userSchema.pre<IUser>("save", function (next) {
   if (!this.avatar) {
     const hash = crypto
       .createHash("md5")

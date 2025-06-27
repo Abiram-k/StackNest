@@ -1,7 +1,7 @@
-import { IChallengeSubmissionRepository } from "../interfaces/repositories/challengeSubmission.repository.interface.js";
-import { IChallengeSubmission } from "../types/IChallengeSubmissionSchema.js";
-import { ChallengeSubmission } from "../models/challengeSubmission.model.js";
-import { BaseRepository } from "./base.repository.js";
+import { IChallengeSubmissionRepository } from "../interfaces/repositories/challengeSubmission.repository.interface";
+import { IChallengeSubmission } from "../types/IChallengeSubmissionSchema";
+import { ChallengeSubmission } from "../models/challengeSubmission.model";
+import { BaseRepository } from "./base.repository";
 
 export class ChallengeSubmissionRepository
   extends BaseRepository<IChallengeSubmission>

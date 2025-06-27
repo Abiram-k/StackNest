@@ -1,8 +1,8 @@
 import { Types } from "mongoose";
-import { ICommentRepository } from "../interfaces/repositories/comment.repository.interface.js";
-import CommentsModel from "../models/comments.model.js";
-import { IComment } from "../types/IFeed.js";
-import { BaseRepository } from "./base.repository.js";
+import { ICommentRepository } from "../interfaces/repositories/comment.repository.interface";
+import CommentsModel from "../models/comments.model";
+import { IComment } from "../types/IFeed";
+import { BaseRepository } from "./base.repository";
 
 export class CommentRepository
   extends BaseRepository<IComment>

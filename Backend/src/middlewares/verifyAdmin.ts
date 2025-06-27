@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { HttpStatus } from "../constants/enum.statusCode.js";
+import { HttpStatus } from "../constants/enum.statusCode";
 interface AuthRequest extends Request {
   user?: {
     userId: string;

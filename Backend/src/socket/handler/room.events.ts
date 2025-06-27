@@ -1,8 +1,8 @@
 import { Server, Socket } from "socket.io";
-import { RoomService } from "../../services/room.service.js";
-import { RoomRespository } from "../../repositories/room.repository.js";
-import { UserBaseRepository } from "../../repositories/user.repository.js";
-import { RoomSessionRespository } from "../../repositories/room.session.repository.js";
+import { RoomService } from "../../services/room.service";
+import { RoomRespository } from "../../repositories/room.repository";
+import { UserBaseRepository } from "../../repositories/user.repository";
+import { RoomSessionRespository } from "../../repositories/room.session.repository";
 
 const roomRepo = new RoomRespository();
 const userBaseRepo = new UserBaseRepository();

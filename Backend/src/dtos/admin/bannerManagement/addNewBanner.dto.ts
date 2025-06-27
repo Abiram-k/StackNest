@@ -2,7 +2,7 @@ import { IsString, IsUrl, MinLength } from "class-validator";
 
 export class AddNewBannerDTO {
   @IsString()
-  title: string;
+  title: string; 
   @IsString()
   @MinLength(8, { message: "Minum 8 charactors required*" })
   description: string;

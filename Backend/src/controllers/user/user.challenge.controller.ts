@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { IUserChallengeController } from "../../interfaces/controllers/user.challenge.controller.interface.js";
-import { IChallengeService } from "../../interfaces/services/challenge.service.interface.js";
-import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { IUserChallengeController } from "../../interfaces/controllers/user.challenge.controller.interface";
+import { IChallengeService } from "../../interfaces/services/challenge.service.interface";
+import { HttpStatus } from "../../constants/enum.statusCode";
 
 export class UserChallengeController implements IUserChallengeController {
   private _challengeService: IChallengeService;

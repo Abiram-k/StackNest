@@ -1,5 +1,7 @@
-import { FetchCallLogsDTO } from "../../dtos/user/connection/fetchCallLogs.dto.js";
-import { GetMessageDTO } from "../../dtos/user/connection/useGetMessage.dto.js";
+import { FetchCallLogsDTO } from "../../dtos/user/connection/fetchCallLogs.dto";
+import { ResGetFriendDTO } from "../../dtos/user/connection/useGetFriends.dto";
+import { GetMessageDTO } from "../../dtos/user/connection/useGetMessage.dto";
+import { ResGetNotificationDTO } from "../../dtos/user/connection/useGetNotification.dto";
 
 export interface IConnectionService {
   sendConnectionRequest(
@@ -22,6 +24,10 @@ export interface IConnectionService {
   ): Promise<string>;
   getMessages(userId: string, friendId: string): Promise<GetMessageDTO>;
   fetchCallLogs(userId: string): Promise<FetchCallLogsDTO[]>;
-  removeReaction(messageId:string,emoji:string,userId:string):Promise<void>
-  addReaction(messageId:string,emoji:string,userId:string):Promise<void>
+  removeReaction(
+    messageId: string,
+    emoji: string,
+    userId: string
+  ): Promise<void>;
+  addReaction(messageId: string, emoji: string, userId: string): Promise<void>;
 }

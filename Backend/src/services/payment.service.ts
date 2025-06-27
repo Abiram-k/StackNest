@@ -1,17 +1,17 @@
 import client, {
   getOrdersCaptureRequest,
   getOrdersCreateRequest,
-} from "../config/paypal-client.js";
-import { HttpStatus } from "../constants/enum.statusCode.js";
-import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface.js";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
-import { IPaymentService } from "../interfaces/services/payment.service.interface.js";
-import { IPremium } from "../types/IPremium.js";
-import { IUser } from "../types/IUser.js";
+} from "../config/paypal-client";
+import { HttpStatus } from "../constants/enum.statusCode";
+import { IPremiumRepository } from "../interfaces/repositories/premium.repository.interface";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
+import { IPaymentService } from "../interfaces/services/payment.service.interface";
+import { IPremium } from "../types/IPremium";
+import { IUser } from "../types/IUser";
 import createHttpError from "http-errors";
 import { config } from "dotenv";
 import Stripe from "stripe";
-import { IPremiumHistory } from "../types/IPremiumHistory.js";
+import { IPremiumHistory } from "../types/IPremiumHistory";
 import mongoose, { ClientSession } from "mongoose";
 config();
 // const stripe = new Stripe(process.env.STRIPE_SECERET!, {
@@ -130,7 +130,7 @@ export class PaymentService implements IPaymentService {
       if (session.inTransaction()) {
         await session.abortTransaction();
       }
-      throw error; 
+      throw error;
     } finally {
       session.endSession();
     }

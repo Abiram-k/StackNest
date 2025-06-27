@@ -1,7 +1,7 @@
-import { ChallengeRespository } from "../repositories/challenge.repository.js";
-import { ChallengeSubmissionRepository } from "../repositories/challengeSubmission.repository.js";
-import { UserBaseRepository } from "../repositories/user.repository.js";
-import { ChallengeService } from "../services/challenge.service.js";
+import { ChallengeRespository } from "../repositories/challenge.repository";
+import { ChallengeSubmissionRepository } from "../repositories/challengeSubmission.repository";
+import { UserBaseRepository } from "../repositories/user.repository";
+import { ChallengeService } from "../services/challenge.service";
 import cron from "node-cron";
 
 const challengeRepo = new ChallengeRespository();

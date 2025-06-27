@@ -1,17 +1,17 @@
 import { Request, Response, NextFunction } from "express";
-import { IFeedController } from "../../interfaces/controllers/user.feed.controller.interface.js";
-import { IFeedService } from "../../interfaces/services/feed.service.interface.js";
+import { IFeedController } from "../../interfaces/controllers/user.feed.controller.interface";
+import { IFeedService } from "../../interfaces/services/feed.service.interface";
 import { plainToInstance } from "class-transformer";
 import {
   ResAddFeedDTO,
   uploadFeedDTO,
-} from "../../dtos/user/feeds/uploadFeed.dto.js";
+} from "../../dtos/user/feeds/uploadFeed.dto";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError.js";
-import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { validateDtoError } from "../../utils/ValidateDtoError";
+import { HttpStatus } from "../../constants/enum.statusCode";
 import { Types } from "mongoose";
-import { ResGetMyFeedsDTO } from "../../dtos/user/feeds/getMyFeeds.dto.js";
-import { TrieService } from "../../services/trie.service.js";
+import { ResGetMyFeedsDTO } from "../../dtos/user/feeds/getMyFeeds.dto";
+import { TrieService } from "../../services/trie.service";
 
 export class FeedController implements IFeedController {
   private _feedService: IFeedService;

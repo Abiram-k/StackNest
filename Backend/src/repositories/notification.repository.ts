@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
-import { INotificationRepository } from "../interfaces/repositories/notification.repository.interface.js";
-import { Notification } from "../models/notification.model.js";
-import { INotification } from "../types/INotification.js";
+import { INotificationRepository } from "../interfaces/repositories/notification.repository.interface";
+import { Notification } from "../models/notification.model";
+import { INotification } from "../types/INotification";
 
 export class NotificationRepository
   implements INotificationRepository<INotification>

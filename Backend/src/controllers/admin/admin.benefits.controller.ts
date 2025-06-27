@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { IAdminBenefitController } from "../../interfaces/controllers/admin.benefits.controller.interface.js";
-import { IBenefitsService } from "../../interfaces/services/benefits.service.interface.js";
-import { HttpStatus } from "../../constants/enum.statusCode.js";
+import { IAdminBenefitController } from "../../interfaces/controllers/admin.benefits.controller.interface";
+import { IBenefitsService } from "../../interfaces/services/benefits.service.interface";
+import { HttpStatus } from "../../constants/enum.statusCode";
 import { plainToInstance } from "class-transformer";
-import { AddOrUpdateBenefitDTO } from "../../dtos/admin/benefitManagement/addOrUpdateBenefit.dto.js";
+import { AddOrUpdateBenefitDTO } from "../../dtos/admin/benefitManagement/addOrUpdateBenefit.dto";
 import { validate } from "class-validator";
-import { validateDtoError } from "../../utils/ValidateDtoError.js";
+import { validateDtoError } from "../../utils/ValidateDtoError";
 
 export class AdminBenefitsController implements IAdminBenefitController {
   private _benefitsService: IBenefitsService;

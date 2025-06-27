@@ -1,17 +1,133 @@
+// {
+//   "compilerOptions": {
+//     "experimentalDecorators": true,
+//     "strictPropertyInitialization": false,
+//     "target": "es2015",
+//     "module": "commonjs",
+//     "moduleResolution": "node",
+//     // "moduleResolution": "bundler" ,
+//     "outDir": "./dist",
+//     "rootDir": "./src",
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true
+//   },
+//   "include": ["src/**/*"],
+//   "exclude": ["node_modules"]
+// }
+
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
+    "target": "es2016",
+    "module": "commonjs",
     "strictPropertyInitialization": false,
-    "target": "ES2020",
-    "module": "ESNext",
     "moduleResolution": "node",
-    // "moduleResolution": "bundler" ,
     "outDir": "./dist",
     "rootDir": "./src",
-    "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
+
+// //////////////////// PACKAGE ///////////////
+
+// {
+//   "name": "backend",
+//   "version": "1.0.0",
+//   "description": "Stack nest backend Sever",
+//   "main": "src/server.ts",
+//   "type": "module",
+//   "scripts": {
+//     "test": "echo \"Error: no test specified\" && exit 1",
+//     "start": "nodemon --exec tsx src/server.ts",
+//     "build": "tsc"
+//   },
+//   "author": "Abiram",
+//   "license": "ISC",
+//   "dependencies": {
+//     "@paypal/checkout-server-sdk": "^1.0.3",
+//     "@types/socket.io": "^3.0.2",
+//     "axios": "^1.8.0",
+//     "bcrypt": "^5.1.1",
+//     "class-transformer": "^0.5.1",
+//     "class-validator": "^0.14.1",
+//     "cloudinary": "^2.6.0",
+//     "cookie-parser": "^1.4.7",
+//     "cors": "^2.8.5",
+//     "crypto": "^1.0.1",
+//     "date-fns": "^4.1.0",
+//     "dotenv": "^16.4.7",
+//     "express": "^4.21.2",
+//     "fs-extra": "^11.3.0",
+//     "google-auth-library": "^9.15.1",
+//     "helmet": "^8.0.0",
+//     "js": "^0.1.0",
+//     "jsonwebtoken": "^9.0.2",
+//     "moment": "^2.30.1",
+//     "mongoose": "^8.10.1",
+//     "morgan": "^1.10.0",
+//     "nanoid": "^5.1.2",
+//     "node-cron": "^3.0.3",
+//     "nodemailer": "^6.10.0",
+//     "openai": "^4.86.2",
+//     "passport": "^0.7.0",
+//     "passport-github2": "^0.1.12",
+//     "reflect-metadata": "^0.2.2",
+//     "socket.io": "^4.8.1",
+//     "stripe": "^18.0.0",
+//     "uuid": "^11.1.0",
+//     "web-push": "^3.6.7"
+//   },
+//   "devDependencies": {
+//     "@types/bcrypt": "^5.0.2",
+//     "@types/cookie-parser": "^1.4.8",
+//     "@types/cors": "^2.8.17",
+//     "@types/express": "^5.0.0",
+//     "@types/fs-extra": "^11.0.4",
+//     "@types/jsonwebtoken": "^9.0.9",
+//     "@types/morgan": "^1.9.9",
+//     "@types/node": "^22.13.5",
+//     "@types/node-cron": "^3.0.11",
+//     "@types/nodemailer": "^6.4.17",
+//     "@types/passport": "^1.0.17",
+//     "@types/passport-github2": "^1.2.9",
+//     "@types/paypal__checkout-server-sdk": "^1.0.8",
+//     "@types/web-push": "^3.6.4",
+//     "esbuild": "^0.25.5",
+//     "nodemon": "^3.1.9",
+//     "ts-node": "^10.9.2",
+//     "tsx": "^4.19.3",
+//     "typescript": "^5.7.3"
+//   }
+// }
+
+// ///////////////////////////////////////////////
+
+//    TSCONFIG
+
+// {
+//   "compilerOptions": {
+//     "experimentalDecorators": true,
+//     "strictPropertyInitialization": false,
+//     "target": "ES2020",
+//     "module": "ESNext",
+//     "moduleResolution": "node",
+//     // "moduleResolution": "bundler" ,
+//     "outDir": "./dist",
+//     "rootDir": "./src",
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true
+//   },
+//   "include": ["src/**/*"],
+//   "exclude": ["node_modules"]
+// }
+
+// /////////////////////////////////////////////

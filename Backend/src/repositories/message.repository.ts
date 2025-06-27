@@ -1,7 +1,7 @@
-import { IMessageRepository } from "../interfaces/repositories/message.repository.interface.js";
-import { Message } from "../models/message.model.js";
-import { IMessage } from "../types/IMessage.js";
-import { BaseRepository } from "./base.repository.js";
+import { IMessageRepository } from "../interfaces/repositories/message.repository.interface";
+import { Message } from "../models/message.model";
+import { IMessage } from "../types/IMessage";
+import { BaseRepository } from "./base.repository";
 
 export class MessageRepository
   extends BaseRepository<IMessage>

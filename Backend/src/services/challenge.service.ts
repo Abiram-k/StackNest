@@ -1,14 +1,14 @@
-import { HttpStatus } from "../constants/enum.statusCode.js";
-import { UpdateChallengeDTO } from "../dtos/admin/challengeManagement/updateChallenge.dto.js";
-import { challengeResDTO } from "../dtos/public/challenges.dto.js";
-import { IChallengeRespository } from "../interfaces/repositories/challenge.repository.interface.js";
-import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface.js";
-import { IChallengeService } from "../interfaces/services/challenge.service.interface.js";
-import { IChallenge } from "../types/IChallenge.js";
+import { HttpStatus } from "../constants/enum.statusCode";
+import { UpdateChallengeDTO } from "../dtos/admin/challengeManagement/updateChallenge.dto";
+import { challengeResDTO } from "../dtos/public/challenges.dto";
+import { IChallengeRespository } from "../interfaces/repositories/challenge.repository.interface";
+import { IUserBaseRepository } from "../interfaces/repositories/user.repository.interface";
+import { IChallengeService } from "../interfaces/services/challenge.service.interface";
+import { IChallenge } from "../types/IChallenge";
 import createHttpError from "http-errors";
-import { IUser } from "../types/IUser.js";
-import { IChallengeSubmissionRepository } from "../interfaces/repositories/challengeSubmission.repository.interface.js";
-import { IChallengeSubmission } from "../types/IChallengeSubmissionSchema.js";
+import { IUser } from "../types/IUser";
+import { IChallengeSubmissionRepository } from "../interfaces/repositories/challengeSubmission.repository.interface";
+import { IChallengeSubmission } from "../types/IChallengeSubmissionSchema";
 
 type typeChallengeReq = {
   answer: string;

@@ -1,4 +1,4 @@
-type notificationType = {
+export type notificationType = {
   sender: {
     userName: string;
     avatar: string;
@@ -7,6 +7,6 @@ type notificationType = {
   sendedAt:Date
 };
 
-interface ResGetNotificationDTO {
+export interface ResGetNotificationDTO {
   notifications: notificationType[];
 }

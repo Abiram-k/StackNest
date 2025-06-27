@@ -1,7 +1,7 @@
-import { IBannerRepository } from "../interfaces/repositories/banner.repository.interface.js";
-import { IBanner } from "../types/IBanner.js";
-import { Banner } from "../models/banner.model.js";
-import { BaseRepository } from "./base.repository.js";
+import { IBannerRepository } from "../interfaces/repositories/banner.repository.interface";
+import { IBanner } from "../types/IBanner";
+import { Banner } from "../models/banner.model";
+import { BaseRepository } from "./base.repository";
 
 export class BannerRepository
   extends BaseRepository<IBanner>

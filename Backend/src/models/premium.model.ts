@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IPremium } from "../types/IPremium.js";
+import { IPremium } from "../types/IPremium";
 
 const PremiumSchema = new mongoose.Schema(
   {

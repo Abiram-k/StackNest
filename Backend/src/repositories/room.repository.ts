@@ -1,8 +1,8 @@
 import { Types } from "mongoose";
-import { IRoomRepository } from "../interfaces/repositories/room.repository.interface.js";
-import Room from "../models/room.model.js";
-import { IRoom } from "../types/IRoom.js";
-import { BaseRepository } from "./base.repository.js";
+import { IRoomRepository } from "../interfaces/repositories/room.repository.interface";
+import Room from "../models/room.model";
+import { IRoom } from "../types/IRoom";
+import { BaseRepository } from "./base.repository";
 
 enum FilterTags {
   "Private" = "Private",

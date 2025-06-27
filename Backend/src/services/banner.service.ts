@@ -1,8 +1,8 @@
 import createHttpError from "http-errors";
-import { IBannerRepository } from "../interfaces/repositories/banner.repository.interface.js";
-import { IBannerService } from "../interfaces/services/banner.service.interface.js";
-import { IBanner } from "../types/IBanner.js";
-import { HttpStatus } from "../constants/enum.statusCode.js";
+import { IBannerRepository } from "../interfaces/repositories/banner.repository.interface";
+import { IBannerService } from "../interfaces/services/banner.service.interface";
+import { IBanner } from "../types/IBanner";
+import { HttpStatus } from "../constants/enum.statusCode";
 
 export class BannerService implements IBannerService {
   private _bannerRepo: IBannerRepository<IBanner>;
