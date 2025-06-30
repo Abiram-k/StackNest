@@ -54,7 +54,7 @@ const HeroSection = () => {
 
           <div className="flex justify-center gap-8 md:justify-start">
             <div className="text-center p-4  bg-primary-500 text-white dark:bg-primary-600  rounded-lg">
-              <div className="text-2xl font-bold ">100+ Edited</div>
+              <div className="text-2xl font-bold ">100+</div>
               <div className="text-sm ">{t("Tech Rooms Hosted")}</div>
             </div>
             <div className="text-center p-4 bg-primary-500 text-white dark:bg-primary-600 rounded-lg ">
