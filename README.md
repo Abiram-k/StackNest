@@ -1,7 +1,7 @@
 # 🚀 StackNest – Developer Collaboration Platform
 
 StackNest is a **full-stack MERN** application that allows developers to **connect, join rooms, share projects, write articles, and participate in daily coding challenges** to improve problem-solving skills.
-
+<!-- Abiram@personal.example.com -->
 ---
 
 ## 📜 Features
